@@ -712,7 +712,7 @@ wheels = [
 
 [[package]]
 name = "django-streaming"
-version = "0.1"
+version = "0.2"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "click" },
@@ -721,9 +721,9 @@ dependencies = [
     { name = "markdown" },
     { name = "requests" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/87/2e/b7b8449527c5c97b336c23375270e898bbeb2e963e3a0878ecebd4d3f128/django_streaming-0.1.tar.gz", hash = "sha256:0f87ebdd48f42cf6cde5e82c9a842a0677145270b11aa157b7f54f15519768cd", size = 8700, upload-time = "2025-09-18T12:38:02.413Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/01/5b/17f6b3ae79fa85579b889f7823aa784b3dcf1ece9480a7c70670e0d63088/django_streaming-0.2.tar.gz", hash = "sha256:ffa950c79f8ba5f16d5e81db692b341b3443e09c5e823563554665f764c156ff", size = 8774, upload-time = "2025-09-18T15:34:40.065Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/22/cd/dab52c189b94bf41fef7cde0ff99846ec1c3e24ccde611a1c56d440f4206/django_streaming-0.1-py3-none-any.whl", hash = "sha256:9f216ee6132efbed4de3a25b23dabd7c6ba6264c98f1dac38d336888c8150a2b", size = 13597, upload-time = "2025-09-18T12:38:01.331Z" },
+    { url = "https://files.pythonhosted.org/packages/1c/a9/3d75be8cbb296e9c5f3d50fad4cab33387b447c02aa8376cb89dc57d2563/django_streaming-0.2-py3-none-any.whl", hash = "sha256:3f7f6662690d6c0f67c338d5fef88aaa2ae2d7d0635040eaac1942869c6f2601", size = 13669, upload-time = "2025-09-18T15:34:39.054Z" },
 ]
 
 [package.optional-dependencies]
@@ -1033,7 +1033,7 @@ requires-dist = [
     { name = "django-redis", specifier = ">=6" },
     { name = "django-regex", specifier = ">=0.5" },
     { name = "django-smart-env", specifier = ">=0.1" },
-    { name = "django-streaming", extras = ["rabbitmq"], specifier = ">=0.1" },
+    { name = "django-streaming", extras = ["rabbitmq"], specifier = ">=0.2" },
     { name = "django-stubs", specifier = ">=5.2" },
     { name = "django-stubs-ext", specifier = ">=5.2.5" },
     { name = "django-tailwind", specifier = ">=4.2" },
