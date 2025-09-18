@@ -1,8 +1,9 @@
 import logging
+from collections.abc import Mapping
 from typing import Any
 
 from constance import config
-from django.forms import ChoiceField, HiddenInput, TextInput, Textarea
+from django.forms import ChoiceField, HiddenInput, TextInput, Textarea, Widget
 from django.template import Context, Template
 from django.utils.safestring import SafeString, mark_safe
 
@@ -25,11 +26,11 @@ class ObfuscatedInput(HiddenInput):
         return mark_safe(tpl.render(Context(context)))  # noqa: S308
 
 
-class WriteOnlyWidget:
-    def format_value(self, value: Any) -> str:
+class WriteOnlyWidget(Widget):
+    def format_value(self, value: Any) -> str | None:
         return super().format_value("***")
 
-    def value_from_datadict(self, data: dict[str, Any], files: Any, name: str) -> Any:
+    def value_from_datadict(self, data: Mapping[str, Any], files: Any, name: str) -> Any:
         value = data.get(name)
         if value == "***":
             return getattr(config, name)

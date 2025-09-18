@@ -1,6 +1,7 @@
 import factory.fuzzy
-from country_workspace.models import User
 from django.contrib.auth.models import Group
+
+from hope_live.models import User
 
 from .base import AutoRegisterModelFactory
 

@@ -141,4 +141,4 @@ def badge_callback(request: HttpRequest) -> str:
 
 
 def environment_callback(request: "HttpRequest") -> tuple[str, str]:
-    return settings.ENVIRONMENT, "info"  # type: ignore[return-value]
+    return settings.ENVIRONMENT, "info"

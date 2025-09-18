@@ -6,3 +6,6 @@ include MANIFEST.in
 recursive-include docs *
 recursive-include src/hope_live *
 recursive-exclude tests *
+
+recursive-exclude **/node_modules *
+recursive-exclude **/static_src *

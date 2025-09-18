@@ -1,5 +1,6 @@
 import factory
-from country_workspace.models import UserRole
+
+from hope_live.models import UserRole
 
 from .base import AutoRegisterModelFactory
 from .django_auth import GroupFactory

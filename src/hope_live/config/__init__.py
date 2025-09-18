@@ -26,7 +26,7 @@ DEFAULTS = {
     "EXTRA_AUTHENTICATION_BACKENDS": (list, [], [], False, "Extra authentications backends enabled to add."),
     "EXTRA_MIDDLEWARES": (list, "", "", False, ""),  # nosec
     "LOG_LEVEL": (str, "ERROR"),
-    "REDIS_SERVER": (str, "", "", True, "Redis Key/Value storage server"),
+    "REDIS_URL": (str, "", "", True, "Redis Key/Value storage server"),
     "SECRET_KEY": (str, ""),
     "SENTRY_DSN": (str, ""),
     "SENTRY_ENABLE_TRACING": (bool, False, False, "", ""),

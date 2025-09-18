@@ -1,0 +1,20 @@
+from django.db import models
+
+from .base import BaseModel
+
+
+class Office(BaseModel):
+    HQ = "HQ"
+
+    hope_id = models.CharField(max_length=100, blank=True, default="", unique=True)
+    name = models.CharField(max_length=100, blank=True, default="", db_index=True)
+    long_name = models.CharField(max_length=100, blank=True, default="", db_index=True)
+    code = models.CharField(max_length=100, blank=True, default="", db_index=True, unique=True)
+    slug = models.SlugField(max_length=100, blank=True, default="", db_index=True, unique=True)
+    active = models.BooleanField(default=False, db_index=True, help_text="Is this office active in the HOPE core?")
+    kobo_country_code = models.CharField(max_length=3, blank=True, default="")
+    extra_fields = models.JSONField(default=dict, blank=True, null=False)
+    enabled = models.BooleanField(default=True, db_index=True, help_text="Is this office enabled in the workspace?")
+
+    def __str__(self) -> str:
+        return str(self.name)

@@ -26,11 +26,11 @@ dependencies = [
   "django-debug-toolbar>=6",
   "django-environ>=0.12",
   "django-flags>=5.0.14",
-  "django-online-issues[github]>=0.2",
+  "django-online-issues[github]>=0.4",
   "django-redis>=6",
   "django-regex>=0.5",
   "django-smart-env>=0.1",
-  "django-streaming[rabbitmq]",
+  "django-streaming[rabbitmq]>=0.1",
   "django-stubs>=5.2",
   "django-stubs-ext>=5.2.5",
   "django-tailwind>=4.2",
@@ -59,6 +59,7 @@ dev = [
   "pytest-cov>=7",
   "pytest-coverage>=0",
   "pytest-django>=4.11.1",
+  "pytest-docker>=3.1.1",
   "pytest-echo>=2.0.1",
   "pytest-factoryboy>=2.8.1",
   "pytest-xdist>=3.8",
@@ -105,15 +106,9 @@ build.hooks.vcs.version-file = "src/hope_live/version.py"
 version.source = "vcs"
 raw-options = { root = "../.." }
 
-[tool.hatch.build.targets.sdist]
-ignore-vcs = true
-include = [
-  "src/hope_live/**/*.*",
-]
-
 [tool.hatch.build.targets.wheel]
 packages = [ "src/hope_live" ]
 
-[tool.uv.sources]
-django-streaming = { path = "../django-streaming", editable = true }
-django-online-issues = { path = "../../saxix/django-issues", editable = true }
+[tool.hatch.build.targets.sdist]
+ignore-vcs = true
+only-include = [ "src/hope_live" ]

@@ -5,5 +5,5 @@ admin.site.unregister([Config])
 
 
 @admin.register(Config)
-class ConstanceConfigAdmin(ConstanceAdmin):
+class ConstanceConfigAdmin(ConstanceAdmin[Config]):  # type: ignore[misc]
     pass
