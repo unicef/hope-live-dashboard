@@ -1,0 +1,119 @@
+[build-system]
+build-backend = "hatchling.build"
+requires = [
+  "hatch-vcs>=0.4",
+  "hatchling>=1.25",
+]
+
+[project]
+name = "hope-live-dashboard"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+classifiers = [ "Programming Language :: Python :: 3 :: Only", "Programming Language :: Python :: 3.13" ]
+dependencies = [
+  "channels>=4.3.1",
+  "channels-redis>=4.3",
+  "click>=8.2.1",
+  "daphne>=4.2.1",
+  "django>=5.2.6",
+  "django-admin-extra-buttons>=2.1.1",
+  "django-adminactions>=2.4",
+  "django-adminfilters>=2.6",
+  "django-constance>=4.3.2",
+  "django-csp>=4",
+  "django-debug-toolbar>=6",
+  "django-environ>=0.12",
+  "django-flags>=5.0.14",
+  "django-online-issues[github]>=0.2",
+  "django-redis>=6",
+  "django-regex>=0.5",
+  "django-smart-env>=0.1",
+  "django-streaming[rabbitmq]",
+  "django-stubs>=5.2",
+  "django-stubs-ext>=5.2.5",
+  "django-tailwind>=4.2",
+  "django-timezone-field>=7",
+  "django-unfold>=0.65",
+  "psycopg2-binary>=2.9.10",
+  "redis>=6.4",
+  "sentry-sdk>=2.37.1",
+  "social-auth-app-django>=5.5.1",
+  "unicef-security>=1.8",
+]
+urls.Documentation = "https://github.com/UNICEF/hope-live-dashboard"
+urls.Homepage = "https://github.com/UNICEF/hope-live-dashboard"
+
+scripts.live = "hope_live.__cli__:cli"
+
+[dependency-groups]
+dev = [
+  "django-browser-reload>=1.19",
+  "django-webtest>=1.9.13",
+  "factory-boy>=3.3.3",
+  "freezegun>=1.5.5",
+  "pre-commit>=4.3",
+  "pyquery>=2.0.1",
+  "pytest>=8.4.2",
+  "pytest-cov>=7",
+  "pytest-coverage>=0",
+  "pytest-django>=4.11.1",
+  "pytest-echo>=2.0.1",
+  "pytest-factoryboy>=2.8.1",
+  "pytest-xdist>=3.8",
+  "responses>=0.25.8",
+  "ruff>=0.13",
+  "seleniumbase>=4.41.6",
+  "tox>=4.30.2",
+]
+
+docs = [
+  "markupsafe>=2.1.5",
+  "mdx-gh-links>=0.4",
+  "mkdocs>=1.6.1",
+  "mkdocs-autolinks-plugin>=0.7.1",
+  "mkdocs-awesome-pages-plugin>=2.10.1",
+  "mkdocs-click>=0.8.1",
+  "mkdocs-embed-external-markdown>=3.0.2",
+  "mkdocs-ezglossary-plugin>=1.6.10",
+  "mkdocs-ezlinks-plugin>=0.1.14",
+  "mkdocs-gen-files>=0.5",
+  "mkdocs-get-deps>=0.2",
+  "mkdocs-include-markdown-plugin>=6.2.2",
+  "mkdocs-link-marker>=0.1.3",
+  "mkdocs-macros-plugin>=1.0.5",
+  "mkdocs-material>=9.5.15",
+  "mkdocs-minify-plugin>=0.8",
+  "mkdocs-redirects>=1.2.1",
+  "mkdocs-simple-hooks>=0.1.5",
+  "mkdocstrings[python]>=0.27",
+  "pymdown-extensions>=10.14",
+]
+type-check = [
+  "django-stubs[compatible-mypy]",
+  "mypy",
+  "types-markdown",
+  "types-pika",
+  "types-python-dateutil",
+  "types-redis",
+  "types-requests",
+]
+
+[tool.hatch]
+build.hooks.vcs.version-file = "src/hope_live/version.py"
+version.source = "vcs"
+raw-options = { root = "../.." }
+
+[tool.hatch.build.targets.sdist]
+ignore-vcs = true
+include = [
+  "src/hope_live/**/*.*",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = [ "src/hope_live" ]
+
+[tool.uv.sources]
+django-streaming = { path = "../django-streaming", editable = true }
+django-online-issues = { path = "../../saxix/django-issues", editable = true }

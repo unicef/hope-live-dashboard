@@ -1,0 +1,9 @@
+{% extends "admin/base.html" %}
+
+{% block title %}1111{% if subtitle %}{{ subtitle }} | {% endif %}{{ title }} | {{ site_title|default:_('Django site admin') }}{% endblock %}
+
+{% block branding %}
+    {% include "unfold/helpers/site_branding.html" %}
+{% endblock branding %}
+
+{% block nav-global %}{% endblock %}

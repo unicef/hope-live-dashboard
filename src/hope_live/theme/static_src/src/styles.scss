@@ -1,0 +1,30 @@
+@import "tailwindcss";
+@plugin "daisyui";
+
+/**
+  * A catch-all path to Django template files, JavaScript, and Python files
+  * that contain Tailwind CSS classes and will be scanned by Tailwind to generate the final CSS file.
+  *
+  * If your final CSS file is not being updated after code changes, you may want to broaden or narrow
+  * the scope of this path.
+  */
+@source "../../../**/*.{html,py,js}";
+@source "../../../../**/*.{html,py,js}";
+@custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
+@custom-variant dark2 (&:where(.dark, .dark *));
+
+
+aside {
+    @apply text-gray-900 bg-gray-100;
+    @apply dark:text-white dark:bg-gray-900;
+  ul {
+    li{
+      a{
+        @apply flex items-center p-2 rounded-lg;
+        @apply bg-gray-100 text-gray-700;
+        @apply dark:text-white dark:bg-gray-900;
+        @apply hover:bg-gray-300 dark:hover:bg-gray-700;
+      }
+    }
+  }
+}

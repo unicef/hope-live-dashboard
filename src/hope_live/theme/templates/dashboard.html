@@ -1,0 +1,14 @@
+{% extends "layout.html" %}
+
+{% block content %}
+    <div class="grid grid-cols-3 gap-1">
+        <div><a href="{% url "web:details" %}">{% include "panels/histogram.html" %}</a></div>
+        <div><a href="{% url "web:details" %}">{% include "panels/map.html" %}</a></div>
+
+        <div>{% include "panels/base2.html" %}</div>
+        <div>{% include "panels/base3.html" %}</div>
+        <div>{% include "panels/base4.html" %}</div>
+        <div>{% include "panels/base5.html" %}</div>
+        <div class="content-center">{% include "panels/base6.html" %}</div>
+    </div>
+{% endblock content %}
