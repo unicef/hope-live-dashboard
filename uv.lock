@@ -649,7 +649,7 @@ wheels = [
 
 [[package]]
 name = "django-online-issues"
-version = "0.4"
+version = "0.5"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "django" },
@@ -657,9 +657,9 @@ dependencies = [
     { name = "markdown" },
     { name = "requests" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/1e/56/a48391c761b7a295eea46d95cdd85986eaef050e88d6d2fd6b60360bf82c/django_online_issues-0.4.tar.gz", hash = "sha256:d6bbf1dc38a77dfeb23a4b6c0621e1891623c4e523d137bbeb916464c2182f1a", size = 188961, upload-time = "2025-09-18T12:34:57.833Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/6e/82/34a04e0ff07c355bf4a9b6c7e15f28d5fe34f53026372dc739245aab6b36/django_online_issues-0.5.tar.gz", hash = "sha256:16c14fac23cd73323b540e55608586af9be282e631076ee65a6931ab98626aa3", size = 321855, upload-time = "2025-09-18T17:59:41.294Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/5b/16/4572c952a8198f003a6befca755a4cce3b3e5a9dee7e5d3dc3373d91d720/django_online_issues-0.4-py3-none-any.whl", hash = "sha256:5ca5dd29ca1bda0aeebf7f7e2484bf40d74baad2a5c1d4acda91f2a39a98c38d", size = 203957, upload-time = "2025-09-18T12:34:56.091Z" },
+    { url = "https://files.pythonhosted.org/packages/11/20/32206d5a0f24feb2231a66d178c8185d866cad86b092480aa291fa0167a9/django_online_issues-0.5-py3-none-any.whl", hash = "sha256:4b1d250c33324737375f0fadf96f2414b773a13f72e16253542ad3a64cb3e280", size = 338826, upload-time = "2025-09-18T17:59:39.663Z" },
 ]
 
 [package.optional-dependencies]
@@ -712,7 +712,7 @@ wheels = [
 
 [[package]]
 name = "django-streaming"
-version = "0.2"
+version = "0.3"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "click" },
@@ -721,9 +721,9 @@ dependencies = [
     { name = "markdown" },
     { name = "requests" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/01/5b/17f6b3ae79fa85579b889f7823aa784b3dcf1ece9480a7c70670e0d63088/django_streaming-0.2.tar.gz", hash = "sha256:ffa950c79f8ba5f16d5e81db692b341b3443e09c5e823563554665f764c156ff", size = 8774, upload-time = "2025-09-18T15:34:40.065Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/8b/27/310792b6aa66367e03e6f0dfcb78b7384b4bc1f0b08db36163b866a507e7/django_streaming-0.3.tar.gz", hash = "sha256:45ea23cad80450f9d0ab1fd706eab3a61b47694f3bd9c1e51e8b7b9a26c11a50", size = 8789, upload-time = "2025-09-19T12:18:38.995Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/1c/a9/3d75be8cbb296e9c5f3d50fad4cab33387b447c02aa8376cb89dc57d2563/django_streaming-0.2-py3-none-any.whl", hash = "sha256:3f7f6662690d6c0f67c338d5fef88aaa2ae2d7d0635040eaac1942869c6f2601", size = 13669, upload-time = "2025-09-18T15:34:39.054Z" },
+    { url = "https://files.pythonhosted.org/packages/07/90/bfc5b87222636ede461af5d4dbe63e2334fe78489f1ed001f02f9eff5ea8/django_streaming-0.3-py3-none-any.whl", hash = "sha256:802967ba119e20193bb1eee8fb1c43a273632c2aa49760d6599c1aba11f890bf", size = 13686, upload-time = "2025-09-19T12:18:37.92Z" },
 ]
 
 [package.optional-dependencies]
@@ -1007,6 +1007,7 @@ docs = [
 type-check = [
     { name = "django-stubs", extra = ["compatible-mypy"] },
     { name = "mypy" },
+    { name = "types-channels" },
     { name = "types-markdown" },
     { name = "types-pika" },
     { name = "types-python-dateutil" },
@@ -1029,11 +1030,11 @@ requires-dist = [
     { name = "django-debug-toolbar", specifier = ">=6" },
     { name = "django-environ", specifier = ">=0.12" },
     { name = "django-flags", specifier = ">=5.0.14" },
-    { name = "django-online-issues", extras = ["github"], specifier = ">=0.4" },
+    { name = "django-online-issues", extras = ["github"], specifier = ">=0.5" },
     { name = "django-redis", specifier = ">=6" },
     { name = "django-regex", specifier = ">=0.5" },
     { name = "django-smart-env", specifier = ">=0.1" },
-    { name = "django-streaming", extras = ["rabbitmq"], specifier = ">=0.2" },
+    { name = "django-streaming", extras = ["rabbitmq"], specifier = ">=0.3" },
     { name = "django-stubs", specifier = ">=5.2" },
     { name = "django-stubs-ext", specifier = ">=5.2.5" },
     { name = "django-tailwind", specifier = ">=4.2" },
@@ -1092,6 +1093,7 @@ docs = [
 type-check = [
     { name = "django-stubs", extras = ["compatible-mypy"] },
     { name = "mypy" },
+    { name = "types-channels" },
     { name = "types-markdown" },
     { name = "types-pika" },
     { name = "types-python-dateutil" },
@@ -2788,6 +2790,19 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/2a/98/ea454cea03e5f351323af6a482c65924f3c26c515efd9090dede58f2b4b6/types_cffi-1.17.0.20250915.tar.gz", hash = "sha256:4362e20368f78dabd5c56bca8004752cc890e07a71605d9e0d9e069dbaac8c06", size = 17229, upload-time = "2025-09-15T03:01:25.31Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/aa/ec/092f2b74b49ec4855cdb53050deb9699f7105b8fda6fe034c0781b8687f3/types_cffi-1.17.0.20250915-py3-none-any.whl", hash = "sha256:cef4af1116c83359c11bb4269283c50f0688e9fc1d7f0eeb390f3661546da52c", size = 20112, upload-time = "2025-09-15T03:01:24.187Z" },
+]
+
+[[package]]
+name = "types-channels"
+version = "4.3.0.20250822"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "asgiref" },
+    { name = "django-stubs" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/22/3d/e0a164b7eaab18ab2302b7a3d90843824b729d9fe1d7bdbb3769dfc9d77b/types_channels-4.3.0.20250822.tar.gz", hash = "sha256:29a4928fdaed6d444b93b69d44fcdb5a8fe32fa72d6a41016c5d39fa7bd7f474", size = 15357, upload-time = "2025-08-22T03:04:26.444Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/cb/52/4e3094e43d460feacb9051ec4c3498f8272f69d92b772647211478b25079/types_channels-4.3.0.20250822-py3-none-any.whl", hash = "sha256:d3fc0a1467c8cc901686826408c8a673822e07aa79cbe1a6d21946e7e55d9ddf", size = 21125, upload-time = "2025-08-22T03:04:25.539Z" },
 ]
 
 [[package]]

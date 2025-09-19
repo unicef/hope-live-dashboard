@@ -1,3 +1,4 @@
+from django.conf import settings
 from unfold.contrib.constance.settings import UNFOLD_CONSTANCE_ADDITIONAL_FIELDS
 
 from .. import env
@@ -8,8 +9,38 @@ CONSTANCE_ADDITIONAL_FIELDS = {
     **UNFOLD_CONSTANCE_ADDITIONAL_FIELDS,
     "group_select": [
         "hope_live.utils.constance.GroupChoiceField",
-        {"initial": None},
+        {"initial": None, "required": False},
+    ],
+    "password": [
+        "django.forms.fields.CharField",
+        {
+            "widget": "hope_live.utils.constance.ObfuscatedInput",
+            "required": False,
+        },
+    ],
+    "token": [
+        "django.forms.fields.CharField",
+        {
+            "widget": "hope_live.utils.constance.WriteOnlyInput",
+            "required": False,
+        },
     ],
 }
 
 CONSTANCE_DBS = ("default",)
+
+addr = settings.ALLOWED_HOSTS[0] if settings.ALLOWED_HOSTS else None  # type: ignore[has-type]
+
+CONSTANCE_CONFIG = {
+    "NEW_USER_DEFAULT_GROUP": (
+        None,
+        "Group to assign to any new user",
+        "group_select",
+    ),
+    "SERVER_ADDRESS": (addr, "Public DNS address of this instance (https://<server>:<port>)", str),
+    "ROUTING_KEY": (
+        "",
+        "Secret Key used for internal event notifications",
+        "token",
+    ),
+}

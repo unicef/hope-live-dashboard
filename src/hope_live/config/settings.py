@@ -21,6 +21,8 @@ ALLOWED_HOSTS = env("ALLOWED_HOSTS")
 # Application definition
 
 INSTALLED_APPS = [
+    "daphne",
+    "channels",
     "hope_live.theme",
     "hope_live.web",
     "unfold",  # before django.contrib.admin
@@ -52,6 +54,7 @@ INSTALLED_APPS = [
     "tailwind",
     "flags",
     "hope_live",
+    "hope_live.ws",
     *env("EXTRA_APPS"),
 ]
 
@@ -88,6 +91,16 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = "hope_live.config.wsgi.application"
+
+ASGI_APPLICATION = "hope_live.config.asgi.application"
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [env("CHANNEL_BROKER") or env("REDIS_URL")],
+        },
+    },
+}
 
 
 # Database

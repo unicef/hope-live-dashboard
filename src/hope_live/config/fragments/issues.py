@@ -1,4 +1,4 @@
 ISSUES = {
     "BACKEND": "issues.backends.console.Backend",
-    "RENDERER": "html2canvas",
+    "RENDERER": "html2canvas-pro",
 }

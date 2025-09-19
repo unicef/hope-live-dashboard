@@ -9,6 +9,7 @@ urlpatterns = [
     path(r"social/", include("social_django.urls", namespace="social")),
     path(r"adminactions/", include("adminactions.urls")),
     path("issues/", include("issues.urls")),
+    path("ws/", include("hope_live.ws.urls", namespace="ws")),
     path(r"__debug__/", include(debug_toolbar.urls)),
 ]
 

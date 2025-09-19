@@ -1,0 +1,27 @@
+{% extends "layout.html" %}
+
+{% block extra_js %}
+<script>
+    const hopeSocket = new WebSocket(
+        'ws://'
+        + window.location.host
+        + '/ws/hope/'
+    );
+
+    hopeSocket.onopen = function(e) {
+        console.log('WebSocket connection opened.');
+        hopeSocket.send(JSON.stringify({
+            'message': 'Hello from client!'
+        }));
+    };
+
+    hopeSocket.onmessage = function(e) {
+        const data = JSON.parse(e.data);
+        console.log('Received message:', data.message);
+    };
+
+    hopeSocket.onclose = function(e) {
+        console.log('WebSocket connection closed unexpectedly.');
+    };
+</script>
+{% endblock extra_js %}

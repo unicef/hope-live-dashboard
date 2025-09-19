@@ -1,6 +1,5 @@
-{% extends 'unfold/layouts/skeleton.html' %}
-
-{% load admin_list i18n unfold %}
+{% extends 'unfold/~layouts/skeleton.html' %}{% load admin_list i18n issues unfold %}
+{% block extrahead %}{% issues_tags %}{% endblock %}
 
 {% block base %}
     <div id="page" class="flex max-w-full min-h-screen {% element_classes 'page' %}">

@@ -1,4 +1,5 @@
 from django.urls import path
+from django.views.generic import TemplateView
 
 from . import views
 
@@ -10,4 +11,6 @@ urlpatterns = [
     path("details/", views.DetailsView.as_view(), name="details"),
     path("transfers/", views.TransfersView.as_view(), name="transfers"),
     path("live/", views.LiveView.as_view(), name="live"),
+    path("about/", views.AboutView.as_view(), name="about"),
+    path("contacts/", TemplateView.as_view(template_name="pages/contacts.html"), name="contacts"),
 ]

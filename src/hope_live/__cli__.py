@@ -1,13 +1,15 @@
 import datetime
 import json
 import logging
-import random
 from typing import TYPE_CHECKING
+from urllib.parse import ParseResult, urlparse
 
 import click
+import requests
+from constance import config
+from django.urls import reverse
 from pika.adapters.blocking_connection import BlockingChannel
 from pika.spec import Basic, BasicProperties
-from streaming.__cli__ import names
 from streaming.utils import make_event
 
 if TYPE_CHECKING:
@@ -27,7 +29,9 @@ def cli() -> None:
 @cli.command()
 @click.option("--name", default=None, help="Consumer name")
 @click.option("--domain", default="", help="Domain name")
-def listen(name: str, domain: str) -> None:
+@click.option("--local", default=False, is_flag=True)
+@click.option("--address", default="")
+def listen(name: str, domain: str, local: bool, address: str = "") -> None:
     from streaming.backends.rabbitmq import RabbitMQBackend
     from streaming.manager import initialize_engine
 
@@ -37,21 +41,36 @@ def listen(name: str, domain: str) -> None:
     if not isinstance(backend, RabbitMQBackend):
         raise click.ClickException("RabbitMQ backend is not configured. Please set BROKER_URL to a rabbit:// URL.")
 
-    if not name:
-        name = random.choice(names)  # noqa S311
-    if name != backend.connection_name:
-        backend.connection_name = name
-        backend.connect()
+    web_address = address or config.SERVER_ADDRESS
+    can_notify = False
+    notification_url = "---"
+    if web_address:
+        parsed_url: ParseResult = urlparse(web_address)
+        if not (parsed_url.scheme and parsed_url.netloc):
+            can_notify = False
+        else:
+            can_notify = True
+            notification_url = f"{web_address}{reverse('ws:notify')}"
+    backend.connection_name = web_address
+    backend.connect()
 
-    click.secho(f"Server: {backend.host}:{backend.port}")
-    click.secho(f"Consumer: {name}")
+    click.secho(f"Server   : {backend.host}:{backend.port}")
+    click.secho(f"Consumer : {backend.connection_name}")
     click.secho(f"Listen on: {backend.exchange} {domain}")
 
+    if can_notify or local:
+        click.secho(f"Url      : {notification_url}")
+    else:
+        click.secho("Server address is invalid. Live Notifications will not work. Aborting.", fg="red")
+        click.get_current_context().exit()
+
     def callback(ch: BlockingChannel, method: Basic.Deliver, properties: BasicProperties, body: bytes) -> None:
+        click.echo(f"web_address {notification_url}")
         click.echo(f"Received {body.decode()}")
+        requests.post(notification_url, json=json.loads(body.decode()), timeout=2)
 
     try:
-        backend.listen([domain], callback)
+        backend.listen([domain], callback, ack=not local)
     except KeyboardInterrupt:
         click.secho("\nStopping listener.", fg="yellow")
     finally:
@@ -73,7 +92,6 @@ def send(message: str, domain: str) -> None:
         raise click.ClickException("RabbitMQ backend is not configured. Please set BROKER_URL to a rabbit:// URL.")
 
     backend.connection_name = "sender"
-    backend.connect()
     timestamp = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
 
     try:
@@ -84,8 +102,9 @@ def send(message: str, domain: str) -> None:
             "message": message,
         }
     msg: EventType = make_event(payload, event="Test", domain=domain)
-    backend.publish(msg)
-    click.secho(f"Server: {backend.host}:{backend.port}")
+    click.secho(f"Server    : {backend.host}:{backend.port}")
     click.secho(f"Publish to: {backend.exchange} {domain}")
+    backend.connect()
+    backend.publish(msg)
     click.secho(f"Sent: {msg}")
     backend.connection.close()  # type: ignore[union-attr]
