@@ -12,5 +12,4 @@ document.addEventListener("DOMContentLoaded", function () {
         HTML.dataset.theme = toggler.checked ? "dark" : "light"
         localStorage.theme = HTML.dataset.theme;
     })
-
 })

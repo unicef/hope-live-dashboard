@@ -75,4 +75,5 @@ line-ending = "auto"
 [lint.per-file-ignores]
 "src/hope_live/migrations/*.py" = ["E501", ]
 "src/hope_live/version.py" = ["Q000", "I001", "UP"]
-"tests/**.py" = ["S101", "PLR2004", "S", "SIM117", "D", "UP", "PLR0913", "ANN", "N999", "ERA001"]
+"src/hope_live/config/fragments/*.py" = ["PLC0415"]
+"tests/**.py" = ["S101", "PLR2004", "S", "SIM117", "D", "UP", "PLR0913", "ANN", "N999", "ERA001", "PLC0415"]
