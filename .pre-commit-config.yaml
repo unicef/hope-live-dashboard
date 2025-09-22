@@ -38,7 +38,7 @@ repos:
           - --check
 
   - repo: https://github.com/saxix/pch
-    rev: '7b53c09'
+    rev: '0a8492b'
     hooks:
 
       - id: check-missed-migrations
@@ -64,6 +64,7 @@ repos:
       - id: check-tailwind
         name: check tailwind CSS ready for production
         files: src/hope_live/theme/static_src/src/styles.scss
+        entry: python /Users/sax/Documents/data/PROGETTI/saxix/pch/src/pch/check_tailwind.py
         args:
           - -o
           - src/hope_live/theme/static/css/styles.css
