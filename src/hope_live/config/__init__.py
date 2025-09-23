@@ -21,6 +21,7 @@ DEFAULTS = {
     "CSRF_COOKIE_SECURE": (bool, True, False, True, setting("csrf-cookie-secure")),
     "CSRF_TRUSTED_ORIGINS": (list, ["http://localhost"], "", True, ""),
     "DATABASE_URL": (str, "sqlite://", "", "", f"{DJ_ENVIRON_DOC}types.html#environ-env-db-url"),
+    "DATABASE_HOPE_URL": (str, "sqlite://", "", "", f"{DJ_ENVIRON_DOC}types.html#environ-env-db-url"),
     "DEBUG": (bool, False, "", "", ""),
     "ENVIRONMENT": (str, "production", "develop", False, "Environment"),
     "EXTRA_APPS": (list, "", "", False, ""),  # nosec

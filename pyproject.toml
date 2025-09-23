@@ -117,7 +117,3 @@ packages = [ "src/hope_live" ]
 [tool.hatch.build.targets.sdist]
 ignore-vcs = true
 only-include = [ "src/hope_live" ]
-
-[tool.uv.sources]
-django-streaming = { path = "../django-streaming", editable = true }
-django-online-issues = { path = "../../saxix/django-issues", editable = true }

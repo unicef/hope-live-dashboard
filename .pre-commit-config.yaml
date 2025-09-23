@@ -38,7 +38,7 @@ repos:
           - --check
 
   - repo: https://github.com/saxix/pch
-    rev: '0a8492b'
+    rev: '79b0c0e'
     hooks:
 
       - id: check-missed-migrations
@@ -64,7 +64,6 @@ repos:
       - id: check-tailwind
         name: check tailwind CSS ready for production
         files: src/hope_live/theme/static_src/src/styles.scss
-        entry: python /Users/sax/Documents/data/PROGETTI/saxix/pch/src/pch/check_tailwind.py
         args:
           - -o
           - src/hope_live/theme/static/css/styles.css
@@ -72,6 +71,15 @@ repos:
       - id: check-minimized
         name: check missing minimized javascript
         files: (\.js)$
+        exclude: (\.min\.js)$
         args:
           - -i
           - "src/hope_live/theme/static_src/*.js"
+
+      - id: check-forbidden
+        name: check pyproject to avoid editable sources/deps
+        files: pyproject.toml
+        language: python
+        args:
+          - -p
+          - /\[tool\.uv\.sources\]\s/s

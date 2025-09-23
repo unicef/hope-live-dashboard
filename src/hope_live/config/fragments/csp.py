@@ -6,7 +6,14 @@ CONTENT_SECURITY_POLICY = {
         "img-src": ["i.pravatar.cc", "'self'", "data:", "https://img.daisyui.com/", "https://www.unicef.org"]
         + env("CSP_IMG_SRC"),
         "style-src": ["'unsafe-inline'", "'self'"] + [],
-        "script-src": ["'unsafe-inline'", "'self'", "'unsafe-eval'", "https://cdn.jsdelivr.net", "https://unpkg.com/"]
+        "script-src": [
+            "'unsafe-inline'",
+            "'self'",
+            "'unsafe-eval'",
+            "https://cdn.jsdelivr.net",
+            "https://unpkg.com/",
+            "https://cdn.tailwindcss.com",
+        ]
         + [],
     }
 }

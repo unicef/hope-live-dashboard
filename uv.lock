@@ -649,71 +649,22 @@ wheels = [
 
 [[package]]
 name = "django-online-issues"
-source = { editable = "../../saxix/django-issues" }
+version = "0.5"
+source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "django" },
     { name = "django-stubs-ext" },
     { name = "markdown" },
     { name = "requests" },
 ]
+sdist = { url = "https://files.pythonhosted.org/packages/6e/82/34a04e0ff07c355bf4a9b6c7e15f28d5fe34f53026372dc739245aab6b36/django_online_issues-0.5.tar.gz", hash = "sha256:16c14fac23cd73323b540e55608586af9be282e631076ee65a6931ab98626aa3", size = 321855, upload-time = "2025-09-18T17:59:41.294Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/11/20/32206d5a0f24feb2231a66d178c8185d866cad86b092480aa291fa0167a9/django_online_issues-0.5-py3-none-any.whl", hash = "sha256:4b1d250c33324737375f0fadf96f2414b773a13f72e16253542ad3a64cb3e280", size = 338826, upload-time = "2025-09-18T17:59:39.663Z" },
+]
 
 [package.optional-dependencies]
 github = [
     { name = "pygithub" },
-]
-
-[package.metadata]
-requires-dist = [
-    { name = "django", specifier = ">=4" },
-    { name = "django-stubs-ext" },
-    { name = "markdown", specifier = ">=3.8.2" },
-    { name = "pygithub", marker = "extra == 'github'", specifier = ">=2.8" },
-    { name = "python-gitlab", marker = "extra == 'gitlab'", specifier = ">=6.3" },
-    { name = "requests", specifier = ">=2.32.5" },
-]
-provides-extras = ["github", "gitlab"]
-
-[package.metadata.requires-dev]
-dev = [
-    { name = "django-webtest", specifier = ">=1.9.13" },
-    { name = "factory-boy", specifier = ">=3.3.3" },
-    { name = "pre-commit", specifier = ">=3.3.3" },
-    { name = "pytest", specifier = ">=8.4.1" },
-    { name = "pytest-cov", specifier = ">=6.2.1" },
-    { name = "pytest-django", specifier = ">=4.11.1" },
-    { name = "pytest-responses", specifier = ">=0.5.1" },
-    { name = "responses", specifier = ">=0.25.8" },
-    { name = "seleniumbase", specifier = ">=4.38.2" },
-    { name = "tox", specifier = ">=4.29" },
-    { name = "tox-uv", specifier = ">=1.28" },
-]
-docs = [
-    { name = "markupsafe", specifier = ">=2.1.5" },
-    { name = "mdx-gh-links", specifier = ">=0.4" },
-    { name = "mkdocs", specifier = ">=1.6.1" },
-    { name = "mkdocs-autolinks-plugin", specifier = ">=0.7.1" },
-    { name = "mkdocs-awesome-pages-plugin", specifier = ">=2.10.1" },
-    { name = "mkdocs-click", specifier = ">=0.8.1" },
-    { name = "mkdocs-embed-external-markdown", specifier = ">=3.0.2" },
-    { name = "mkdocs-ezglossary-plugin", specifier = ">=1.6.10" },
-    { name = "mkdocs-ezlinks-plugin", specifier = ">=0.1.14" },
-    { name = "mkdocs-gen-files", specifier = ">=0.5" },
-    { name = "mkdocs-get-deps", specifier = ">=0.2" },
-    { name = "mkdocs-include-markdown-plugin", specifier = ">=6.2.2" },
-    { name = "mkdocs-link-marker", specifier = ">=0.1.3" },
-    { name = "mkdocs-macros-plugin", specifier = ">=1.0.5" },
-    { name = "mkdocs-material", specifier = ">=9.5.15" },
-    { name = "mkdocs-minify-plugin", specifier = ">=0.8" },
-    { name = "mkdocs-redirects", specifier = ">=1.2.1" },
-    { name = "mkdocs-simple-hooks", specifier = ">=0.1.5" },
-    { name = "mkdocstrings", extras = ["python"], specifier = ">=0.27" },
-    { name = "pymdown-extensions", specifier = ">=10.14" },
-]
-type-check = [
-    { name = "django-stubs", extras = ["compatible-mypy"] },
-    { name = "mypy" },
-    { name = "types-markdown" },
-    { name = "types-requests" },
 ]
 
 [[package]]
@@ -761,7 +712,8 @@ wheels = [
 
 [[package]]
 name = "django-streaming"
-source = { editable = "../django-streaming" }
+version = "0.3"
+source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "click" },
     { name = "django" },
@@ -769,68 +721,14 @@ dependencies = [
     { name = "markdown" },
     { name = "requests" },
 ]
+sdist = { url = "https://files.pythonhosted.org/packages/8b/27/310792b6aa66367e03e6f0dfcb78b7384b4bc1f0b08db36163b866a507e7/django_streaming-0.3.tar.gz", hash = "sha256:45ea23cad80450f9d0ab1fd706eab3a61b47694f3bd9c1e51e8b7b9a26c11a50", size = 8789, upload-time = "2025-09-19T12:18:38.995Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/07/90/bfc5b87222636ede461af5d4dbe63e2334fe78489f1ed001f02f9eff5ea8/django_streaming-0.3-py3-none-any.whl", hash = "sha256:802967ba119e20193bb1eee8fb1c43a273632c2aa49760d6599c1aba11f890bf", size = 13686, upload-time = "2025-09-19T12:18:37.92Z" },
+]
 
 [package.optional-dependencies]
 rabbitmq = [
     { name = "pika" },
-]
-
-[package.metadata]
-requires-dist = [
-    { name = "click", specifier = ">=8" },
-    { name = "django", specifier = ">=4" },
-    { name = "django-stubs-ext" },
-    { name = "markdown", specifier = ">=3.8.2" },
-    { name = "pika", marker = "extra == 'rabbitmq'", specifier = ">=1.3.2" },
-    { name = "redis", marker = "extra == 'redis'", specifier = ">=5" },
-    { name = "requests", specifier = ">=2.32.5" },
-]
-provides-extras = ["rabbitmq", "redis"]
-
-[package.metadata.requires-dev]
-dev = [
-    { name = "django-webtest", specifier = ">=1.9.13" },
-    { name = "factory-boy", specifier = ">=3.3.3" },
-    { name = "pre-commit", specifier = ">=3.3.3" },
-    { name = "pytest", specifier = ">=8.4.1" },
-    { name = "pytest-cov", specifier = ">=6.2.1" },
-    { name = "pytest-django", specifier = ">=4.11.1" },
-    { name = "pytest-docker", specifier = ">=3.2.3" },
-    { name = "pytest-responses", specifier = ">=0.5.1" },
-    { name = "responses", specifier = ">=0.25.8" },
-    { name = "seleniumbase", specifier = ">=4.38.2" },
-    { name = "tox", specifier = ">=4.29" },
-    { name = "tox-uv", specifier = ">=1.28" },
-]
-docs = [
-    { name = "markupsafe", specifier = ">=2.1.5" },
-    { name = "mdx-gh-links", specifier = ">=0.4" },
-    { name = "mkdocs", specifier = ">=1.6.1" },
-    { name = "mkdocs-autolinks-plugin", specifier = ">=0.7.1" },
-    { name = "mkdocs-awesome-pages-plugin", specifier = ">=2.10.1" },
-    { name = "mkdocs-click", specifier = ">=0.8.1" },
-    { name = "mkdocs-embed-external-markdown", specifier = ">=3.0.2" },
-    { name = "mkdocs-ezglossary-plugin", specifier = ">=1.6.10" },
-    { name = "mkdocs-ezlinks-plugin", specifier = ">=0.1.14" },
-    { name = "mkdocs-gen-files", specifier = ">=0.5" },
-    { name = "mkdocs-get-deps", specifier = ">=0.2" },
-    { name = "mkdocs-include-markdown-plugin", specifier = ">=6.2.2" },
-    { name = "mkdocs-link-marker", specifier = ">=0.1.3" },
-    { name = "mkdocs-macros-plugin", specifier = ">=1.0.5" },
-    { name = "mkdocs-material", specifier = ">=9.5.15" },
-    { name = "mkdocs-minify-plugin", specifier = ">=0.8" },
-    { name = "mkdocs-redirects", specifier = ">=1.2.1" },
-    { name = "mkdocs-simple-hooks", specifier = ">=0.1.5" },
-    { name = "mkdocstrings", extras = ["python"], specifier = ">=0.27" },
-    { name = "pymdown-extensions", specifier = ">=10.14" },
-]
-type-check = [
-    { name = "django-stubs", extras = ["compatible-mypy"] },
-    { name = "mypy" },
-    { name = "types-markdown" },
-    { name = "types-pika" },
-    { name = "types-redis" },
-    { name = "types-requests" },
 ]
 
 [[package]]
@@ -1167,11 +1065,11 @@ requires-dist = [
     { name = "django-debug-toolbar", specifier = ">=6" },
     { name = "django-environ", specifier = ">=0.12" },
     { name = "django-flags", specifier = ">=5.0.14" },
-    { name = "django-online-issues", extras = ["github"], editable = "../../saxix/django-issues" },
+    { name = "django-online-issues", extras = ["github"], specifier = ">=0.5" },
     { name = "django-redis", specifier = ">=6" },
     { name = "django-regex", specifier = ">=0.5" },
     { name = "django-smart-env", specifier = ">=0.1" },
-    { name = "django-streaming", extras = ["rabbitmq"], editable = "../django-streaming" },
+    { name = "django-streaming", extras = ["rabbitmq"], specifier = ">=0.3" },
     { name = "django-stubs", specifier = ">=5.2" },
     { name = "django-stubs-ext", specifier = ">=5.2.5" },
     { name = "django-tailwind", specifier = ">=4.2" },

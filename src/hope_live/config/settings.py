@@ -76,7 +76,6 @@ TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
         "DIRS": [
-            str(PACKAGE_DIR / "theme/templates"),
             str(PACKAGE_DIR / "templates"),
         ],
         "APP_DIRS": True,
@@ -110,6 +109,7 @@ CHANNEL_LAYERS = {
 
 DATABASES = {
     "default": env.db("DATABASE_URL"),
+    "hope": env.db("DATABASE_HOPE_URL"),
 }
 
 CACHE_URL = env("CACHE_URL")
