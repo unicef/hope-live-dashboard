@@ -1,14 +1,180 @@
 {% extends "layout.html" %}
 
 {% block content %}
-    <div class="grid grid-cols-3 gap-1">
-        <div><a href="{% url "web:details" %}">{% include "panels/histogram.html" %}</a></div>
-        <div><a href="{% url "web:details" %}">{% include "panels/map.html" %}</a></div>
+    <div class="flex flex-col space-y-4">
 
-        <div>{% include "panels/base2.html" %}</div>
-        <div>{% include "panels/base3.html" %}</div>
-        <div>{% include "panels/base4.html" %}</div>
-        <div>{% include "panels/base5.html" %}</div>
-        <div class="content-center">{% include "panels/base6.html" %}</div>
+        <!-- Metrics Row -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="stats shadow bg-base-200">
+                <div class="stat">
+                    <div class="stat-title">Total Amount Paid</div>
+                    <div class="stat-value text-primary" id="total-amount-display">Loading...</div>
+                    <div class="stat-desc">USD value of delivered payments</div>
+                </div>
+            </div>
+            <div class="stats shadow bg-base-200">
+                <div class="stat">
+                    <div class="stat-title">Total Payments</div>
+                    <div class="stat-value text-secondary" id="total-count-display">Loading...</div>
+                    <div class="stat-desc">Number of transactions</div>
+                </div>
+            </div>
+            <div class="stats shadow bg-base-200">
+                <div class="stat">
+                    <div class="stat-title">Filtered Amount</div>
+                    <div class="stat-value" id="filtered-amount-display">--</div>
+                    <div class="stat-desc">Based on current selection</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Charts Row 1 -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            <!-- Payments by Sector -->
+            <div class="card bg-base-100 shadow-xl">
+                <div class="card-body">
+                    <h2 class="card-title text-sm">Payments by Sector</h2>
+                    <div id="payments-by-sector" class="w-full h-64"></div>
+                </div>
+            </div>
+
+            <!-- Payments by Delivery Mechanism -->
+            <div class="card bg-base-100 shadow-xl">
+                <div class="card-body">
+                    <h2 class="card-title text-sm">Payments by Delivery Mechanism</h2>
+                    <div id="payments-by-delivery" class="w-full h-64"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Charts Row 2 -->
+        <div class="grid grid-cols-1 gap-4">
+            <!-- Payments by Country -->
+            <div class="card bg-base-100 shadow-xl">
+                <div class="card-body">
+                    <h2 class="card-title text-sm">Payments by Country</h2>
+                    <div id="payments-by-country" class="w-full h-96"></div>
+                </div>
+            </div>
+        </div>
     </div>
 {% endblock content %}
+
+{% block extra_js %}
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    const apiUrl = "{% url 'web:dashboard_api' %}";
+    const numberFormat = d3.format(",.2f");
+    const integerFormat = d3.format(",");
+
+    d3.json(apiUrl).then(data => {
+        if (!data || data.length === 0) {
+            console.warn("No data available");
+            return;
+        }
+
+        // 1. Pre-process data
+        // The API returns aggregated rows. We treat them as facts.
+        data.forEach(d => {
+            d.total_delivered_quantity_usd = +d.total_delivered_quantity_usd || 0;
+            d.payments = +d.payments || 0;
+        });
+
+        // 2. Create Crossfilter instance
+        const ndx = crossfilter(data);
+        const all = ndx.groupAll();
+
+        // 3. Define Dimensions
+        const sectorDim = ndx.dimension(d => d.sector || "Unknown");
+        const deliveryDim = ndx.dimension(d => d.delivery_types || "Unknown");
+        const countryDim = ndx.dimension(d => d.country || "Unknown");
+
+        // 4. Define Groups (Summing the pre-aggregated USD values)
+        const sectorGroup = sectorDim.group().reduceSum(d => d.total_delivered_quantity_usd);
+        const deliveryGroup = deliveryDim.group().reduceSum(d => d.total_delivered_quantity_usd);
+        const countryGroup = countryDim.group().reduceSum(d => d.total_delivered_quantity_usd);
+
+        // 5. Define Charts
+        const sectorChart = dc.rowChart("#payments-by-sector");
+        const deliveryChart = dc.rowChart("#payments-by-delivery");
+        const countryChart = dc.barChart("#payments-by-country");
+
+        // Helper to calculate totals for metrics
+        const updateMetrics = () => {
+            const totalUSD = ndx.groupAll().reduceSum(d => d.total_delivered_quantity_usd).value();
+            const totalCount = ndx.groupAll().reduceSum(d => d.payments).value();
+
+            document.getElementById("total-amount-display").innerText = numberFormat(totalUSD);
+            document.getElementById("total-count-display").innerText = integerFormat(totalCount);
+
+            // For filtered amount, we can use the current filtered sum
+            // Note: groupAll observes filters on *other* dimensions, but we want the global filtered state.
+            // A simple way in DC is to hook into the redraw event.
+        };
+
+        // Configure Sector Chart
+        sectorChart
+            .dimension(sectorDim)
+            .group(sectorGroup)
+            .elasticX(true)
+            .height(250)
+            .margins({top: 10, right: 10, bottom: 20, left: 10})
+            .label(d => d.key)
+            .title(d => `${d.key}: $${numberFormat(d.value)}`)
+            .colors(d3.scaleOrdinal(d3.schemeCategory10));
+
+        // Configure Delivery Chart
+        deliveryChart
+            .dimension(deliveryDim)
+            .group(deliveryGroup)
+            .elasticX(true)
+            .height(250)
+            .margins({top: 10, right: 10, bottom: 20, left: 10})
+            .label(d => d.key)
+            .title(d => `${d.key}: $${numberFormat(d.value)}`)
+            .colors(d3.scaleOrdinal(d3.schemeSet3));
+
+        // Configure Country Chart
+        countryChart
+            .dimension(countryDim)
+            .group(countryGroup)
+            .x(d3.scaleBand())
+            .xUnits(dc.units.ordinal)
+            .elasticY(true)
+            .height(350)
+            .margins({top: 10, right: 10, bottom: 60, left: 60})
+            .barPadding(0.1)
+            .outerPadding(0.05)
+            .brushOn(false)
+            .title(d => `${d.key}: $${numberFormat(d.value)}`)
+            .colors("#3b82f6"); // Tailwind blue-500
+
+        countryChart.on('renderlet', function(chart) {
+            chart.selectAll('g.x text')
+                .attr('transform', 'translate(-10,10) rotate(-45)')
+                .style('text-anchor', 'end');
+        });
+
+        // Render
+        dc.renderAll();
+        updateMetrics();
+
+        // Update metrics on filter changes
+        dc.chartRegistry.list().forEach(chart => {
+            chart.on("filtered", () => {
+                // Recalculate filtered totals
+                // We can use a separate groupAll that observes all filters
+                // Or just sum the current groups (approximate for this demo)
+                const filteredData = sectorDim.top(Infinity);
+                const filteredSum = d3.sum(filteredData, d => d.total_delivered_quantity_usd);
+                document.getElementById("filtered-amount-display").innerText = numberFormat(filteredSum);
+            });
+        });
+
+        // Initial filtered amount
+        const initialData = sectorDim.top(Infinity);
+        document.getElementById("filtered-amount-display").innerText = numberFormat(d3.sum(initialData, d => d.total_delivered_quantity_usd));
+    });
+});
+</script>
+{% endblock extra_js %}

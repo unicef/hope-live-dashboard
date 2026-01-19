@@ -6,35 +6,28 @@ SETTINGS_DIR = Path(__file__).parent
 PACKAGE_DIR = SETTINGS_DIR.parent
 DEVELOPMENT_DIR = PACKAGE_DIR.parent.parent
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = env("SECRET_KEY")
 
-# SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env("DEBUG")
 
 ALLOWED_HOSTS = env("ALLOWED_HOSTS")
 
-
-# Application definition
 
 INSTALLED_APPS = [
     "daphne",
     "channels",
     "hope_live.theme",
     "hope_live.web",
-    "unfold",  # before django.contrib.admin
-    "unfold.contrib.filters",  # optional, if special filters are needed
-    "unfold.contrib.forms",  # optional, if special form elements are needed
-    "unfold.contrib.inlines",  # optional, if special inlines are needed
-    "unfold.contrib.import_export",  # optional, if django-import-export package is used
-    "unfold.contrib.guardian",  # optional, if django-guardian package is used
-    "unfold.contrib.simple_history",  # optional, if django-simple-history package is used
-    "unfold.contrib.location_field",  # optional, if django-location-field package is used
-    "unfold.contrib.constance",  # optional, if django-constance package is used
-    "django.contrib.admin",  # required
+    "unfold",
+    "unfold.contrib.filters",
+    "unfold.contrib.forms",
+    "unfold.contrib.inlines",
+    "unfold.contrib.import_export",
+    "unfold.contrib.guardian",
+    "unfold.contrib.simple_history",
+    "unfold.contrib.location_field",
+    "unfold.contrib.constance",
+    "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
@@ -104,18 +97,35 @@ CHANNEL_LAYERS = {
 }
 
 
-# Database
-# https://docs.djangoproject.com/en/5.2/ref/settings/#databases
-
 DATABASES = {
     "default": env.db("DATABASE_URL"),
     "hope": env.db("DATABASE_HOPE_URL"),
 }
 
+DATABASE_ROUTERS = ["hope_live.db_routers.HopeRouter"]
+
 CACHE_URL = env("CACHE_URL")
 
-# Password validation
-# https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
+if CACHE_URL:
+    CACHES = {
+        "default": {
+            "BACKEND": "django_redis.cache.RedisCache",
+            "LOCATION": CACHE_URL,
+            "OPTIONS": {
+                "CLIENT_CLASS": "django_redis.client.DefaultClient",
+                "IGNORE_EXCEPTIONS": True,
+            },
+            "TIMEOUT": 60 * 60 * 24,
+        }
+    }
+else:
+    CACHES = {
+        "default": {
+            "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
+            "LOCATION": "unique-snowflake",
+            "TIMEOUT": 60 * 60 * 24,
+        }
+    }
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -139,8 +149,6 @@ AUTHENTICATION_BACKENDS = (
     "django.contrib.auth.backends.ModelBackend",
     *env("EXTRA_AUTHENTICATION_BACKENDS"),
 )
-# Internationalization
-# https://docs.djangoproject.com/en/5.2/topics/i18n/
 
 LANGUAGE_CODE = "en-us"
 ugettext = lambda s: s  # noqa E731
@@ -158,13 +166,8 @@ USE_I18N = True
 USE_TZ = True
 
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/5.2/howto/static-files/
-
 STATIC_URL = "static/"
 
-# Default primary key field type
-# https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
@@ -172,6 +175,7 @@ CSRF_COOKIE_SECURE = env("CSRF_COOKIE_SECURE")
 CSRF_TRUSTED_ORIGINS = env("CSRF_TRUSTED_ORIGINS")
 
 from .fragments.app import *  # noqa: E402 F403
+from .fragments.celery import *  # noqa: E402 F403
 from .fragments.constance import *  # noqa: E402 F403
 from .fragments.csp import *  # noqa: E402 F403
 from .fragments.debug_toolbar import *  # noqa: E402 F403

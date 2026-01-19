@@ -14,6 +14,7 @@ DEFAULTS = {
     "AZURE_TENANT_KEY": (str, "", "", "", ""),
     "ALLOWED_HOSTS": (list, [], ["*"], False, ""),
     "CACHE_URL": (str, "", "", True, setting("cache-url")),
+    "CELERY_BROKER_URL": (str, "", "", True, "Celery Broker URL"),
     "CHANNEL_BROKER": (str, ""),
     "CONSTANCE_REDIS_URL": (str, "", "", True, "Redis server to store django-constance data"),
     "CSP_DEFAULT_SRC": (list, [], [], False, ""),

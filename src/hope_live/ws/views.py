@@ -4,6 +4,7 @@ import sentry_sdk
 from django.http import HttpRequest, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 
+from hope_live.utils.cache import DashboardCache
 from hope_live.ws.utils import notify_ui
 
 
@@ -11,6 +12,9 @@ from hope_live.ws.utils import notify_ui
 def callback(request: HttpRequest) -> HttpResponse:
     try:
         payload = json.loads(request.body)
+
+        DashboardCache.invalidate()
+
         notify_ui(payload)
         return HttpResponse()
     except json.decoder.JSONDecodeError as e:

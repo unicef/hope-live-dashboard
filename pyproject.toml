@@ -10,7 +10,11 @@ name = "hope-live-dashboard"
 description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.13"
-classifiers = [ "Programming Language :: Python :: 3 :: Only", "Programming Language :: Python :: 3.13" ]
+classifiers = [
+  "Programming Language :: Python :: 3 :: Only",
+  "Programming Language :: Python :: 3.13",
+  "Programming Language :: Python :: 3.14",
+]
 dynamic = [
   "version",
 ]

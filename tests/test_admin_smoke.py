@@ -1,6 +1,7 @@
 from typing import TYPE_CHECKING, Any, Iterable, Mapping, Optional
 from unittest.mock import Mock
 
+import django
 import pytest
 from admin_extra_buttons.handlers import ButtonHandler, ChoiceHandler
 from django.contrib.admin.sites import site
@@ -55,6 +56,9 @@ GLOBAL_EXCLUDED_BUTTONS = RegexList(
 KWARGS: Mapping[str, Any] = {}
 
 
+django.setup()
+
+
 def reverse_model_admin(model_admin: "ModelAdmin[Model]", op: str, args: Optional[list[Any]] = None) -> str:
     if args:
         return reverse(admin_urlname(model_admin.model._meta, mark_safe(op)), args=args)
@@ -69,8 +73,6 @@ def log_submit_error(res: "DjangoWebtestResponse") -> str:
 
 
 def pytest_generate_tests(metafunc: "Metafunc") -> None:  # noqa: C901, PLR0912
-    import django
-
     ids: list[str]
 
     markers = metafunc.definition.own_markers
@@ -82,14 +84,14 @@ def pytest_generate_tests(metafunc: "Metafunc") -> None:  # noqa: C901, PLR0912
     if "skip_buttons" in [m.name for m in markers]:
         skip_rule = next(filter(lambda m: m.name == "skip_buttons", markers))
         excluded_buttons.extend(skip_rule.args)
-    django.setup()
+
     if "button_handler" in metafunc.fixturenames:
         m1: list[tuple[ModelAdmin[ExtraButtonsMixin], ButtonHandler]] = []
         ids = []
         for model, admin in site._registry.items():
             if hasattr(admin, "extra_button_handlers"):
                 name = model._meta.object_name
-                assert admin.urls  # we need to force this call
+                assert admin.urls
                 buttons = admin.extra_button_handlers.values()
                 full_name = f"{model._meta.app_label}.{name}"
                 admin_name = f"{model._meta.app_label}.{admin.__class__.__name__}"

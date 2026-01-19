@@ -22,7 +22,6 @@ logger = logging.getLogger(__name__)
 
 @click.group()
 def cli() -> None:
-    """HOPE live dashboard."""
     import django  # noqa: PLC0415
 
     django.setup()
