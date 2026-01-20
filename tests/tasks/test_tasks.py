@@ -1,3 +1,4 @@
+import uuid
 from unittest.mock import patch
 
 import pytest
@@ -6,18 +7,18 @@ from django.utils import timezone
 from hope_live.models import BusinessArea, Payment
 from hope_live.tasks import refresh_business_area_stats, update_dashboard_cache
 
-pytestmark = [pytest.mark.django_db]
+pytestmark = [pytest.mark.django_db(databases=["default", "hope"])]
 
 
 @pytest.fixture
 def business_area():
-    return BusinessArea.objects.create(id="ba-task-1", name="Task Country", slug="task-country", active=True)
+    return BusinessArea.objects.create(id=uuid.uuid4(), name="Task Country", slug="task-country", active=True)
 
 
 @pytest.fixture
 def payment(business_area):
     return Payment.objects.create(
-        id="pay-task-1",
+        id=uuid.uuid4(),
         status="Distribution Successful",
         delivered_quantity_usd=100.00,
         business_area=business_area,

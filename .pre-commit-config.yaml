@@ -58,8 +58,8 @@ repos:
         name: check tailwind CSS ready for production
         files: src/hope_live/theme/static_src/src/styles.scss
         args:
-          - -o
-          - src/hope_live/theme/static/css/styles.css
+          - -d
+          - src/hope_live/theme/static/css
 
       - id: check-minimized
         name: check missing minimized javascript

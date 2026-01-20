@@ -80,6 +80,10 @@ TEMPLATES = [
                 "django.contrib.messages.context_processors.messages",
                 "hope_live.web.context_processors.app",
             ],
+            "libraries": {
+                "unfold": "unfold.templatetags.unfold",
+            },
+            "builtins": ["unfold.templatetags.unfold"],
         },
     },
 ]
@@ -167,7 +171,7 @@ USE_TZ = True
 
 
 STATIC_URL = "static/"
-
+STATIC_ROOT = str(DEVELOPMENT_DIR / "staticfiles")
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
@@ -175,7 +179,7 @@ CSRF_COOKIE_SECURE = env("CSRF_COOKIE_SECURE")
 CSRF_TRUSTED_ORIGINS = env("CSRF_TRUSTED_ORIGINS")
 
 from .fragments.app import *  # noqa: E402 F403
-from .fragments.celery import *  # noqa: E402 F403
+from .fragments.celery import *  # noqa: E402 F403  # noqa: E402 F403
 from .fragments.constance import *  # noqa: E402 F403
 from .fragments.csp import *  # noqa: E402 F403
 from .fragments.debug_toolbar import *  # noqa: E402 F403

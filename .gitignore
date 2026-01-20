@@ -21,3 +21,6 @@ src/hope_live/version.py
 !tests/.coveragerc
 !.python-version
 !.pre-commit-config.yaml
+.tox/
+static/
+staticfiles/
