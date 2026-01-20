@@ -46,7 +46,7 @@ jobs:
       fail-fast: false
       matrix:
         cfg: [ "d52-py313",
-               "d42-py310" ]
+               "d60-py313" ]
     steps:
       - uses: actions/checkout@v5
         with:

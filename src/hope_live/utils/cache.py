@@ -9,7 +9,7 @@ class DashboardCache:
 
     @classmethod
     def _get_version(cls) -> int:
-        return cache.get_or_set(cls.VERSION_KEY, 1, timeout=None)
+        return int(cache.get_or_set(cls.VERSION_KEY, 1, timeout=None) or 1)
 
     @classmethod
     def invalidate(cls) -> None:

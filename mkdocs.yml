@@ -1,5 +1,5 @@
 site_name: HOPE Live Dashboard
-docs_dir: docs/src
+docs_dir: docs
 copyright: Copyright &copy; 2025
 repo_url: https://github.com/UNICEF/hope-live-dashboard
 site_author: saxix
