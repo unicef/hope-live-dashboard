@@ -43,6 +43,12 @@ def test_update_dashboard_cache(payment):
             assert "timestamp" in result
 
 
+def test_update_dashboard_cache_error():
+    with patch("hope_live.tasks.DashboardCache.invalidate", side_effect=Exception("Boom")):
+        with pytest.raises(Exception, match="Boom"):
+            update_dashboard_cache()
+
+
 def test_refresh_business_area_stats_success(payment, business_area):
     with patch("hope_live.tasks.DashboardCache.invalidate") as mock_invalidate:
         with patch("hope_live.tasks.BusinessArea.objects.get") as mock_get:
@@ -77,3 +83,9 @@ def test_refresh_business_area_stats_not_found():
 
             assert result is None
             mock_log.assert_called()
+
+
+def test_refresh_business_area_stats_error():
+    with patch("hope_live.tasks.BusinessArea.objects.get", side_effect=Exception("Boom")):
+        with pytest.raises(Exception, match="Boom"):
+            refresh_business_area_stats("slug")

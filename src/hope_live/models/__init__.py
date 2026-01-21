@@ -9,7 +9,7 @@ from .hope import (
     PaymentVerification,
 )
 from .office import Office
-from .program import Program as LocalProgram
+from .program import Program
 from .role import UserRole
 from .user import User
 
@@ -17,13 +17,13 @@ __all__ = [
     "User",
     "UserRole",
     "Office",
-    "LocalProgram",
+    "Program",
     "BusinessArea",
     "Payment",
     "HopeProgram",
     "Household",
     "PaymentPlan",
-    "PaymentVerification",
     "DeliveryMechanism",
     "FinancialServiceProvider",
+    "PaymentVerification",
 ]

@@ -6,10 +6,15 @@ from factory.django import DjangoModelFactory
 from pytest_factoryboy import register
 
 from .base import AutoRegisterModelFactory, TAutoRegisterModelFactory, factories_registry
-from .log import LogEntryFactory  # noqa
-from .social import SocialAuthUserFactory  # noqa
-from .user import GroupFactory, SuperUserFactory, User, UserFactory  # noqa
-from .userrole import UserRole, UserRoleFactory  # noqa
+from .log import LogEntryFactory as LogEntryFactory
+from .office import OfficeFactory as OfficeFactory
+from .social import SocialAuthUserFactory as SocialAuthUserFactory
+from .user import GroupFactory as GroupFactory
+from .user import SuperUserFactory as SuperUserFactory
+from .user import User as User
+from .user import UserFactory as UserFactory
+from .userrole import UserRole as UserRole
+from .userrole import UserRoleFactory as UserRoleFactory
 
 for _, name, _ in pkgutil.iter_modules([str(Path(__file__).parent)]):
     importlib.import_module(f".{name}", __package__)
