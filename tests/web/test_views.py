@@ -8,13 +8,13 @@ from django.utils import timezone
 from hope_live.models import BusinessArea, DeliveryMechanism, FinancialServiceProvider, HopeProgram, Payment
 from hope_live.utils.cache import DashboardCache
 
-pytestmark = [pytest.mark.django_db(databases=["default", "hope"])]
+pytestmark = [pytest.mark.django_db]
 
 
 @pytest.fixture
 def business_area():
     return BusinessArea.objects.create(
-        id=uuid.uuid4(), name="Web Test Country", slug="web-test-country", active=True, region_name="WEB"
+        id=uuid.uuid4(), name="Afghanistan", slug="afghanistan", active=True, region_name="ROSA"
     )
 
 
@@ -75,10 +75,11 @@ def test_payment_aggregates_view_caching(client, payment):
         assert mock_set.called
 
     # Second call uses cache
-    with patch("django.core.cache.cache.get") as mock_get:
-        mock_get.return_value = [{"cached": True}]
-        response = client.get(url)
-        assert response.json() == [{"cached": True}]
+    with patch("hope_live.utils.cache.DashboardCache.get_key", return_value="test_key"):
+        with patch("django.core.cache.cache.get") as mock_get:
+            mock_get.return_value = [{"cached": True}]
+            response = client.get(url)
+            assert response.json() == [{"cached": True}]
 
 
 def test_dashboard_data_view_get_aggregates(client, payment):

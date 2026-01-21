@@ -11,7 +11,7 @@ from hope_live.utils.cache import DashboardCache
 logger = logging.getLogger(__name__)
 
 
-@shared_task()  # type: ignore
+@shared_task()  # type: ignore[untyped-decorator]
 def update_dashboard_cache() -> dict[str, Any]:
     try:
         DashboardCache.invalidate()
@@ -40,7 +40,7 @@ def update_dashboard_cache() -> dict[str, Any]:
         raise
 
 
-@shared_task()  # type: ignore
+@shared_task()  # type: ignore[untyped-decorator]
 def refresh_business_area_stats(business_area_slug: str) -> dict[str, Any] | None:
     try:
         DashboardCache.invalidate()

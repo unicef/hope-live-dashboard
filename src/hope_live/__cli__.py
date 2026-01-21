@@ -1,10 +1,12 @@
 import datetime
 import json
 import logging
-from typing import TYPE_CHECKING
+from collections.abc import Callable
+from typing import TYPE_CHECKING, Any
 from urllib.parse import ParseResult, urlparse
 
 import click
+import django
 import requests
 from constance import config
 from django.urls import reverse
@@ -21,9 +23,45 @@ logger = logging.getLogger(__name__)
 
 @click.group()
 def cli() -> None:
-    import django  # noqa: PLC0415
-
     django.setup()
+
+
+def _validate_backend(backend: Any) -> None:
+    if not isinstance(backend, RabbitMQBackend):
+        raise click.ClickException("RabbitMQ backend is not configured. Please set BROKER_URL to a rabbit:// URL.")
+
+
+def _get_notification_url(web_address: str) -> tuple[bool, str]:
+    can_notify = False
+    notification_url = "---"
+    if web_address:
+        parsed_url: ParseResult = urlparse(web_address)
+        can_notify = bool(parsed_url.scheme and parsed_url.netloc)
+        if can_notify:
+            notification_url = f"{web_address}{reverse('ws:notify')}"
+    return can_notify, notification_url
+
+
+def _create_callback(
+    notification_url: str,
+) -> Callable[[str, "BlockingChannel", "Basic.Deliver", "BasicProperties", bytes], bool]:
+    def callback(
+        queue_name: str, ch: "BlockingChannel", method: "Basic.Deliver", properties: "BasicProperties", body: bytes
+    ) -> bool:
+        click.echo(f"web_address {notification_url}")
+        click.echo(f"Received {body.decode()}")
+        try:
+            res = requests.post(notification_url, json=json.loads(body.decode()), timeout=2)
+            if res.status_code != requests.codes.ok:
+                raise requests.exceptions.RequestException("Request failed with status code: " + str(res.status_code))
+            if method.delivery_tag is not None:
+                ch.basic_ack(delivery_tag=method.delivery_tag)
+        except requests.exceptions.RequestException:
+            if method.delivery_tag is not None:
+                ch.basic_reject(method.delivery_tag, requeue=True)
+        return True
+
+    return callback
 
 
 @cli.command()
@@ -32,23 +70,18 @@ def cli() -> None:
 @click.option("--local", default=False, is_flag=True)
 @click.option("--dry-run", default=False, is_flag=True)
 @click.option("--address", default="")
-def listen(name: str, domain: str, local: bool, address: str = "", dry_run: bool = False) -> None:  # noqa: C901
+def listen(name: str, domain: str, local: bool, address: str = "", dry_run: bool = False) -> None:
     manager = initialize_engine(True)
     backend = manager.backend
 
-    if not isinstance(backend, RabbitMQBackend):
-        raise click.ClickException("RabbitMQ backend is not configured. Please set BROKER_URL to a rabbit:// URL.")
+    _validate_backend(backend)
 
     web_address = address or config.SERVER_ADDRESS
-    can_notify = False
-    notification_url = "---"
-    if web_address:
-        parsed_url: ParseResult = urlparse(web_address)
-        can_notify = bool(parsed_url.scheme and parsed_url.netloc)
-        if can_notify:
-            notification_url = f"{web_address}{reverse('ws:notify')}"
+    can_notify, notification_url = _get_notification_url(web_address)
+
     backend.connect()
     consume_message = not dry_run
+
     click.secho(f"Server   : {backend.host}:{backend.port}")
     click.secho(f"Listen on: {backend.exchange} {domain}")
     click.secho(f"Ack      : {consume_message}")
@@ -59,27 +92,12 @@ def listen(name: str, domain: str, local: bool, address: str = "", dry_run: bool
         click.secho("Server address is invalid. Live Notifications will not work. Aborting.", fg="red")
         click.get_current_context().exit()
 
-    def callback(
-        queue_name: str, ch: "BlockingChannel", method: "Basic.Deliver", properties: "BasicProperties", body: bytes
-    ) -> bool:
-        click.echo(f"web_address {notification_url}")
-        click.echo(f"Received {body.decode()}")
-        try:
-            res = requests.post(notification_url, json=json.loads(body.decode()), timeout=2)
-            if res.status_code != requests.codes.ok:
-                raise requests.exceptions.RequestException("Request failed with status code: " + str(res.status_code))
-            ch.basic_ack(delivery_tag=method.delivery_tag)  # type: ignore[arg-type]
-        except requests.exceptions.RequestException:
-            if method.delivery_tag:
-                ch.basic_reject(method.delivery_tag, requeue=True)
-        return True
+    callback = _create_callback(notification_url)
 
     try:
         backend.listen(callback, [domain], ack=consume_message)
     except KeyboardInterrupt:
         click.secho("\nStopping listener.", fg="yellow")
-    finally:
-        pass
 
 
 @cli.command()
@@ -88,8 +106,7 @@ def listen(name: str, domain: str, local: bool, address: str = "", dry_run: bool
 def send(message: str, domain: str) -> None:
     manager = initialize_engine(True)
     backend = manager.backend
-    if not isinstance(backend, RabbitMQBackend):
-        raise click.ClickException("RabbitMQ backend is not configured. Please set BROKER_URL to a rabbit:// URL.")
+    _validate_backend(backend)
 
     timestamp = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
 
@@ -100,7 +117,6 @@ def send(message: str, domain: str) -> None:
             "timestamp": timestamp,
             "message": message,
         }
-    # Based on the error, make_event likely only takes 1 argument
     msg = make_event(payload)
     click.secho(f"Server    : {backend.host}:{backend.port}")
     click.secho(f"Publish to: {backend.exchange} {domain}")

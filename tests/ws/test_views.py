@@ -1,8 +1,11 @@
 from unittest.mock import patch
 
+import pytest
 from django.urls import reverse
 
 from hope_live.utils.cache import DashboardCache
+
+pytestmark = [pytest.mark.django_db]
 
 
 def test_callback_success(client):

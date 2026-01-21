@@ -11,8 +11,8 @@ class BusinessArea(HopeModel):
     id = models.UUIDField(primary_key=True)
     name = models.CharField(max_length=255)
     slug = models.CharField(max_length=250, unique=True)
-    active = models.BooleanField(null=True)  # noqa: DJ001
-    region_name = models.CharField(max_length=8, null=True, blank=True)  # noqa: DJ001
+    active = models.BooleanField(null=True)
+    region_name = models.CharField(max_length=8, blank=True)
 
     class Meta:
         db_table = "core_businessarea"
@@ -73,9 +73,9 @@ class Household(HopeModel):
 
 class PaymentPlan(HopeModel):
     id = models.UUIDField(primary_key=True)
-    name = models.CharField(max_length=255, blank=True, null=True)  # noqa: DJ001
+    name = models.CharField(max_length=255, blank=True)
     business_area = models.ForeignKey(BusinessArea, on_delete=models.DO_NOTHING, db_column="business_area_id")
-    status = models.CharField(max_length=50, null=True)  # noqa: DJ001
+    status = models.CharField(max_length=50)
 
     class Meta:
         db_table = "payment_paymentplan"
@@ -87,7 +87,7 @@ class PaymentPlan(HopeModel):
 class Payment(HopeModel):
     id = models.UUIDField(primary_key=True)
     status = models.CharField(max_length=255)
-    currency = models.CharField(max_length=4, blank=True, null=True)  # noqa: DJ001
+    currency = models.CharField(max_length=4, blank=True)
     delivered_quantity_usd = models.DecimalField(max_digits=15, decimal_places=2, blank=True, null=True)
     delivered_quantity = models.DecimalField(max_digits=15, decimal_places=2, blank=True, null=True)
     entitlement_quantity_usd = models.DecimalField(max_digits=15, decimal_places=2, blank=True, null=True)
@@ -97,7 +97,6 @@ class Payment(HopeModel):
     is_removed = models.BooleanField(default=False)
     conflicted = models.BooleanField(default=False)
 
-    # Foreign keys
     business_area = models.ForeignKey(BusinessArea, on_delete=models.DO_NOTHING, db_column="business_area_id")
     program = models.ForeignKey(HopeProgram, on_delete=models.DO_NOTHING, db_column="program_id", blank=True, null=True)
     delivery_type = models.ForeignKey(
@@ -126,7 +125,7 @@ class Payment(HopeModel):
 
 class PaymentVerification(HopeModel):
     id = models.UUIDField(primary_key=True)
-    status = models.CharField(max_length=50, null=True)  # noqa: DJ001
+    status = models.CharField(max_length=50)
     payment = models.ForeignKey(
         Payment, on_delete=models.DO_NOTHING, db_column="payment_id", related_name="verifications"
     )
