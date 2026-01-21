@@ -21,6 +21,7 @@ class DisableMigrations:
 def pytest_configure(config):
     os.environ["DJANGO_SETTINGS_MODULE"] = "hope_live.config.settings"
     os.environ.setdefault("CONSTANCE_REDIS_URL", "redis://localhost:6379/0")
+    os.environ.setdefault("CHANNEL_BROKER", "redis://localhost:6379/0")
 
     from django.conf import settings
 
