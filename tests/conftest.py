@@ -10,13 +10,24 @@ sys.path.insert(0, str(here / "../src"))
 sys.path.insert(0, str(here / "extras"))
 
 
+class DisableMigrations:
+    def __contains__(self, item):
+        return True
+
+    def __getitem__(self, item):
+        return None
+
+
 def pytest_configure(config):
     os.environ["DJANGO_SETTINGS_MODULE"] = "hope_live.config.settings"
+    os.environ.setdefault("CONSTANCE_REDIS_URL", "redis://localhost:6379/0")
 
     from django.conf import settings
 
-    # Disable routers to allow migrations on all DBs
     settings.DATABASE_ROUTERS = []
+    settings.MIGRATION_MODULES = DisableMigrations()
+    settings.DEBUG_TOOLBAR_CONFIG = {"SHOW_TOOLBAR_CALLBACK": lambda r: False}
+    settings.CONSTANCE_REDIS_CONNECTION = os.environ.get("CONSTANCE_REDIS_URL", "redis://localhost:6379/0")
 
     import django
     from django.apps import apps

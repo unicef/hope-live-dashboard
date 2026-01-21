@@ -36,7 +36,7 @@ def payment(business_area, program):
         delivered_quantity_usd=50.00,
         delivered_quantity=50.00,
         entitlement_quantity_usd=50.00,
-        delivery_date=timezone.now(),
+        delivery_date=timezone.now() - timezone.timedelta(days=1),
         business_area=business_area,
         program=program,
         delivery_type=dm,
