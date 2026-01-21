@@ -29,6 +29,9 @@ def pytest_configure(config):
     settings.MIGRATION_MODULES = DisableMigrations()
     settings.DEBUG_TOOLBAR_CONFIG = {"SHOW_TOOLBAR_CALLBACK": lambda r: False}
     settings.CONSTANCE_REDIS_CONNECTION = os.environ.get("CONSTANCE_REDIS_URL", "redis://localhost:6379/0")
+    channel_layers = settings.CHANNEL_LAYERS.copy()
+    channel_layers["default"]["CONFIG"]["hosts"] = [os.environ.get("CHANNEL_BROKER", "redis://localhost:6379/0")]
+    settings.CHANNEL_LAYERS = channel_layers
 
     import django
     from django.apps import apps
