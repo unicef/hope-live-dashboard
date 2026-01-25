@@ -1,4 +1,5 @@
 from .hope import (
+    Area,
     BusinessArea,
     DeliveryMechanism,
     FinancialServiceProvider,
@@ -18,6 +19,7 @@ __all__ = [
     "UserRole",
     "Office",
     "Program",
+    "Area",
     "BusinessArea",
     "Payment",
     "HopeProgram",

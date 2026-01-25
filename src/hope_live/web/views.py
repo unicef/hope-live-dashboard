@@ -1,8 +1,8 @@
 from collections import defaultdict
 from datetime import date, timedelta
-from typing import Any
+from typing import Any, TypedDict
+from uuid import UUID
 
-from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.cache import cache
 from django.db.models import Q, Sum, Value
 from django.db.models.functions import Coalesce, TruncDate
@@ -15,6 +15,17 @@ from hope_live.models import BusinessArea, HopeProgram, Payment
 from hope_live.utils.cache import DashboardCache
 
 
+class GroupData(TypedDict):
+    total_delivered_quantity_usd: float
+    total_delivered_quantity: float
+    total_entitlement_quantity_usd: float
+    payments: int
+    individuals: int
+    households_seen: set[UUID]
+    children_counts: int
+    pwd_counts: int
+
+
 class ContactView(TemplateView):
     template_name = "pages/contacts.html"
 
@@ -23,7 +34,7 @@ class AboutView(TemplateView):
     template_name = "pages/about.html"
 
 
-class DashboardView(LoginRequiredMixin, TemplateView):
+class DashboardView(TemplateView):
     template_name = "pages/dashboard.html"
 
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
@@ -190,7 +201,7 @@ class DashboardDataView(View):
         )
 
         # Aggregate in Python to correctly handle unique households per bucket
-        grouped_data = defaultdict(
+        grouped_data: dict[tuple[Any, ...], GroupData] = defaultdict(
             lambda: {
                 "total_delivered_quantity_usd": 0.0,
                 "total_delivered_quantity": 0.0,
