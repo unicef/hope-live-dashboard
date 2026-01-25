@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     "debug_toolbar",
     "social_django",
     "admin_extra_buttons",
+    "django_extensions",
     "adminactions",
     "issues",
     "smart_env",
@@ -177,6 +178,10 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 CSRF_COOKIE_SECURE = env("CSRF_COOKIE_SECURE")
 CSRF_TRUSTED_ORIGINS = env("CSRF_TRUSTED_ORIGINS")
+
+LOGIN_URL = "web:login"
+LOGIN_REDIRECT_URL = "web:dashboard"
+LOGOUT_REDIRECT_URL = "web:login"
 
 from .fragments.app import *  # noqa: E402 F403
 from .fragments.celery import *  # noqa: E402 F403  # noqa: E402 F403

@@ -59,16 +59,57 @@ class FinancialServiceProvider(HopeModel):
         return self.name
 
 
+class Area(HopeModel):
+    id = models.UUIDField(primary_key=True)
+    name = models.CharField(max_length=255)
+
+    class Meta:
+        db_table = "geo_area"
+
+    def __str__(self) -> str:
+        return self.name
+
+
 class Household(HopeModel):
     id = models.UUIDField(primary_key=True)
     business_area = models.ForeignKey(BusinessArea, on_delete=models.DO_NOTHING, db_column="business_area_id")
+    admin1 = models.ForeignKey(Area, on_delete=models.DO_NOTHING, db_column="admin1_id", blank=True, null=True)
     is_removed = models.BooleanField(default=False)
+    size = models.IntegerField(default=1)
+
+    children_count = models.IntegerField(null=True, blank=True)
+    female_age_group_0_5_disabled_count = models.IntegerField(default=0, null=True)
+    female_age_group_6_11_disabled_count = models.IntegerField(default=0, null=True)
+    female_age_group_12_17_disabled_count = models.IntegerField(default=0, null=True)
+    female_age_group_18_59_disabled_count = models.IntegerField(default=0, null=True)
+    female_age_group_60_disabled_count = models.IntegerField(default=0, null=True)
+    male_age_group_0_5_disabled_count = models.IntegerField(default=0, null=True)
+    male_age_group_6_11_disabled_count = models.IntegerField(default=0, null=True)
+    male_age_group_12_17_disabled_count = models.IntegerField(default=0, null=True)
+    male_age_group_18_59_disabled_count = models.IntegerField(default=0, null=True)
+    male_age_group_60_disabled_count = models.IntegerField(default=0, null=True)
 
     class Meta:
         db_table = "household_household"
 
     def __str__(self) -> str:
         return f"Household {self.id}"
+
+    @property
+    def pwd_count(self) -> int:
+        fields = [
+            self.female_age_group_0_5_disabled_count,
+            self.female_age_group_6_11_disabled_count,
+            self.female_age_group_12_17_disabled_count,
+            self.female_age_group_18_59_disabled_count,
+            self.female_age_group_60_disabled_count,
+            self.male_age_group_0_5_disabled_count,
+            self.male_age_group_6_11_disabled_count,
+            self.male_age_group_12_17_disabled_count,
+            self.male_age_group_18_59_disabled_count,
+            self.male_age_group_60_disabled_count,
+        ]
+        return sum(f or 0 for f in fields)
 
 
 class PaymentPlan(HopeModel):

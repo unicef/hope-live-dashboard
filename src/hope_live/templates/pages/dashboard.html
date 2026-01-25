@@ -1,61 +1,244 @@
 {% extends "layout.html" %}
+{% load i18n %}
 
 {% block content %}
-    <div class="flex flex-col space-y-4">
+    <style>
+        /* Tooltip styles adapted for this dashboard */
+        .info-icon {
+            cursor: pointer;
+            font-size: 0.8em;
+            color: #007bff;
+            margin-left: 5px;
+            position: relative;
+            display: inline-block;
+        }
+        .tooltip {
+            visibility: hidden;
+            width: 220px;
+            background-color: #333;
+            color: #fff;
+            text-align: left;
+            border-radius: 6px;
+            padding: 8px 10px;
+            position: absolute;
+            z-index: 10;
+            bottom: 135%;
+            left: 50%;
+            margin-left: -110px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-size: 0.85em;
+            font-weight: normal;
+            line-height: 1.4;
+            box-shadow: 0px 0px 5px rgba(0,0,0,0.2);
+        }
+        .tooltip::after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: #333 transparent transparent transparent;
+        }
+        .info-icon.active .tooltip {
+            visibility: visible;
+            opacity: 1;
+        }
+        .dc-chart g.row text { fill: currentColor; }
+        .dc-chart .pie-slice { fill: currentColor; }
+        .dc-chart .axis text { fill: currentColor; }
+    </style>
 
-        <!-- Metrics Row -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div class="stats shadow bg-base-200">
-                <div class="stat">
-                    <div class="stat-title">Total Amount Paid</div>
-                    <div class="stat-value text-primary" id="total-amount-display">Loading...</div>
-                    <div class="stat-desc">USD value of delivered payments</div>
-                </div>
-            </div>
-            <div class="stats shadow bg-base-200">
-                <div class="stat">
-                    <div class="stat-title">Total Payments</div>
-                    <div class="stat-value text-secondary" id="total-count-display">Loading...</div>
-                    <div class="stat-desc">Number of transactions</div>
-                </div>
-            </div>
-            <div class="stats shadow bg-base-200">
-                <div class="stat">
-                    <div class="stat-title">Filtered Amount</div>
-                    <div class="stat-value" id="filtered-amount-display">--</div>
-                    <div class="stat-desc">Based on current selection</div>
-                </div>
-            </div>
+    <div id="dashboard-loading-status" class="text-center p-4 mb-4 text-gray-700 bg-yellow-100 border border-yellow-300 rounded" style="display: none;"></div>
+
+    <!-- Timeline Chart: Full Width, First Row -->
+    <div class="bg-base-100 p-4 rounded shadow mb-4">
+        <h3 class="text-sm font-semibold">
+            <span class="icon icon-calendar icon-blue"></span>
+            {% translate "Timeline" %}
+        </h3>
+        <div id="payments-by-time" class="dc-chart w-full h-[150px]"></div>
+    </div>
+
+    <!-- Metric Cards Grid (3x3) -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-4">
+        <!-- Total Amount Paid -->
+        <div class="col-span-1 bg-base-100 p-4 rounded shadow flex flex-col justify-center items-center">
+            <h3 class="text-xs font-bold">
+                <span class="icon icon-financing icon-blue"></span>
+                {% translate "Total Amount Paid" %}
+                <span class="info-icon" id="info-icon-total-amount-paid">ⓘ
+                    <div class="tooltip" id="tooltip-total-amount-paid">{% translate "Sum of USD value for payments that are Delivered Fully or Delivered Partially." %}</div>
+                </span>
+            </h3>
+            <div id="total-amount-paid" class="text-cyan-700 text-base font-bold"></div>
         </div>
-
-        <!-- Charts Row 1 -->
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
-            <!-- Payments by Sector -->
-            <div class="card bg-base-100 shadow-xl">
-                <div class="card-body">
-                    <h2 class="card-title text-sm">Payments by Sector</h2>
-                    <div id="payments-by-sector" class="w-full h-64"></div>
-                </div>
-            </div>
-
-            <!-- Payments by Delivery Mechanism -->
-            <div class="card bg-base-100 shadow-xl">
-                <div class="card-body">
-                    <h2 class="card-title text-sm">Payments by Delivery Mechanism</h2>
-                    <div id="payments-by-delivery" class="w-full h-64"></div>
-                </div>
-            </div>
+        <!-- Number of Payments -->
+        <div class="col-span-1 bg-base-100 p-4 rounded shadow flex flex-col justify-center items-center">
+            <h3 class="text-xs font-bold">
+                <span class="icon icon-preparedness icon-blue"></span>
+                {% translate "Number of Payments" %}
+                <span class="info-icon" id="info-icon-number-of-payments">ⓘ
+                    <div class="tooltip" id="tooltip-number-of-payments">{% translate "Total count of all payments processed, regardless of their status." %}</div>
+                </span>
+            </h3>
+            <div id="number-of-payments" class="text-cyan-700 text-base font-bold"></div>
+            <p class="text-xs italic">{% translate "payments" %}</p>
         </div>
-
-        <!-- Charts Row 2 -->
-        <div class="grid grid-cols-1 gap-4">
-            <!-- Payments by Country -->
-            <div class="card bg-base-100 shadow-xl">
-                <div class="card-body">
-                    <h2 class="card-title text-sm">Payments by Country</h2>
-                    <div id="payments-by-country" class="w-full h-96"></div>
-                </div>
+        <!-- Outstanding Payment -->
+        <div class="col-span-1 bg-base-100 p-4 rounded shadow flex flex-col justify-center items-center">
+            <h3 class="text-xs font-bold">
+                <span class="icon icon-financing icon-blue"></span>
+                {% translate "Outstanding Payment" %}
+                <span class="info-icon" id="info-icon-outstanding-payment">ⓘ
+                    <div class="tooltip" id="tooltip-outstanding-payment">{% translate "Sum of USD value for payments that are Sent to Payment Gateway, Sent to FSP, or Pending." %}</div>
+                </span>
+            </h3>
+            <div id="outstanding-payments" class="text-cyan-700 text-base font-bold"></div>
+        </div>
+        <!-- Households Reached -->
+        <div class="col-span-1 bg-base-100 p-4 rounded shadow flex flex-col justify-center items-center">
+            <h3 class="text-xs font-bold">
+                <span class="icon icon-house icon-blue"></span>
+                {% translate "Households Reached" %}
+                <span class="info-icon" id="info-icon-households-reached">ⓘ
+                    <div class="tooltip" id="tooltip-households-reached">{% translate "Total count of unique households that have received at least one payment." %}</div>
+                </span>
+            </h3>
+            <div id="households-reached" class="text-cyan-700 text-base font-bold"></div>
+            <p class="text-xs italic">{% translate "households" %}</p>
+        </div>
+        <!-- Individuals Reached -->
+        <div class="col-span-1 bg-base-100 p-4 rounded shadow flex flex-col justify-center items-center">
+            <h3 class="text-xs font-bold">
+                <span class="icon icon-people-targeted icon-blue"></span>
+                {% translate "Individuals Reached" %}
+                <span class="info-icon" id="info-icon-individuals-reached">ⓘ
+                    <div class="tooltip" id="tooltip-individuals-reached">{% translate "This is an approximate figure on individuals registered." %}</div>
+                </span>
+            </h3>
+            <div id="individuals-reached" class="text-cyan-700 text-base font-bold"></div>
+            <p class="text-xs italic">{% translate "persons" %}</p>
+        </div>
+        <!-- Children Reached -->
+        <div class="col-span-1 bg-base-100 p-4 rounded shadow flex flex-col justify-center items-center">
+            <h3 class="text-xs font-bold">
+                <span class="icon icon-children icon-blue"></span>
+                {% translate "Children Reached" %}
+                <span class="info-icon" id="info-icon-children-reached">ⓘ
+                    <div class="tooltip" id="tooltip-children-reached">{% translate "Total count of children within households that have received payments." %}</div>
+                </span>
+            </h3>
+            <div id="children-reached" class="text-cyan-700 text-base font-bold"></div>
+            <p class="text-xs italic">{% translate "children" %}</p>
+        </div>
+        <!-- PWD Reached -->
+        <div class="col-span-1 bg-base-100 p-4 rounded shadow flex flex-col justify-center items-center">
+            <h3 class="text-sm font-bold">
+                <span class="icon icon-users icon-blue"></span>
+                {% translate "PWD Reached" %}
+                <span class="info-icon" id="info-icon-pwd-reached">ⓘ
+                    <div class="tooltip" id="tooltip-pwd-reached">{% translate "Total count of persons with disabilities within households that have received payments." %}</div>
+                </span>
+            </h3>
+            <div id="pwd-reached" class="text-cyan-700 text-base font-bold"></div>
+            <p class="text-xs italic">{% translate "of persons with disabilities" %}</p>
+        </div>
+        <!-- Reconciliation -->
+        <div class="col-span-1 bg-base-100 p-4 rounded shadow flex flex-col justify-center items-center">
+            <h3 class="text-sm font-bold">
+                <span class="icon icon-report icon-blue"></span>
+                {% translate "Reconciliation" %}
+                <span class="info-icon" id="info-icon-reconciliation">ⓘ
+                    <div class="tooltip" id="tooltip-reconciliation">{% translate "Ratio of reconciled payments to total payments." %}</div>
+                </span>
+            </h3>
+            <div class="text-cyan-700 text-base font-bold">
+                <span class="reconciliation-percentage-value"></span>%
             </div>
+            <p class="text-xs italic">{% translate "of payments reconciled" %} (<span class="reconciliation-amount-value"></span> USD)</p>
+        </div>
+        <!-- Verification -->
+        <div class="col-span-1 bg-base-100 p-4 rounded shadow flex flex-col justify-center items-center">
+            <h3 class="text-sm font-bold">
+                <span class="icon icon-report icon-blue"></span>
+                {% translate "Verification" %}
+                <span class="info-icon" id="info-icon-verification">ⓘ
+                    <div class="tooltip" id="tooltip-verification">{% translate "Ratio of finished Payment Plans to total Payment Plans." %}</div>
+                </span>
+            </h3>
+            <div class="text-cyan-700 text-base font-bold pending-reconciliation-percentage">%</div>
+            <p class="text-xs italic">{% translate "of payments plans verified" %}</p>
+        </div>
+    </div>
+
+    <!-- Disbursed and Planned Amounts -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+        <div class="bg-base-100 p-4 rounded shadow flex flex-col justify-center items-center">
+            <h3 class="text-sm font-semibold">
+                <span class="icon icon-financing icon-blue"></span>
+                {% translate "Total Disbursed Payments" %}
+                <span class="info-icon" id="info-icon-total-disbursed-payments">ⓘ
+                    <div class="tooltip" id="tooltip-total-disbursed-payments">{% translate "The sum of total amount paid and outstanding payments" %}</div>
+                </span>
+            </h3>
+            <div id="total-disbursed-payments" class="text-cyan-700 text-base font-bold"></div>
+        </div>
+        <div class="bg-base-100 p-4 rounded shadow flex flex-col justify-center items-center">
+            <h3 class="text-xs font-bold">
+                <span class="icon icon-file-text icon-blue"></span>
+                {% translate "Planned Payments Amount" %}
+                <span class="info-icon" id="info-icon-planned-payments-amount">ⓘ
+                    <div class="tooltip" id="tooltip-planned-payments-amount">{% translate "Total entitlement quantities that are still pending approval or authorization" %}</div>
+                </span>
+            </h3>
+            <div id="planned-payments-amount" class="text-cyan-700 text-base font-bold">0.00 USD</div>
+        </div>
+    </div>
+
+    <!-- Bottom Charts -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-8">
+        <!-- Payments by Sector -->
+        <div class="bg-base-100 p-3 rounded shadow h-[450px]">
+            <h3 class="text-sm font-semibold mb-2">
+                <span class="icon icon-analysis icon-blue"></span>
+                {% translate "Payments by Sector" %}
+            </h3>
+            <div id="payments-by-sector" class="dc-chart w-full h-full"></div>
+        </div>
+        <!-- Payments by Admin area -->
+        <div class="bg-base-100 p-3 rounded shadow h-[450px]">
+            <h3 class="text-sm font-semibold mb-2">
+                <span class="icon icon-cash-transfer icon-blue"></span>
+                {% translate "Payments by Admin area" %}
+            </h3>
+            <div id="payments-by-admin1" class="dc-chart w-full h-full"></div>
+        </div>
+        <!-- Payments by Programme -->
+        <div class="bg-base-100 p-4 rounded shadow h-[450px]">
+            <h3 class="text-sm font-semibold mb-2">
+                <span class="icon icon-people-targeted icon-blue"></span>
+                {% translate "Payments by Programme" %}
+            </h3>
+            <div id="volume-by-program" class="dc-chart w-full h-full"></div>
+        </div>
+        <!-- Payments by FSP -->
+        <div class="bg-base-100 p-4 rounded shadow h-[450px]">
+            <h3 class="text-sm font-semibold mb-2">
+                <span class="icon icon-logistics icon-blue"></span>
+                {% translate "Payments by FSP" %}
+            </h3>
+            <div id="payments-by-fsp" class="dc-chart w-full h-full"></div>
+        </div>
+        <!-- Payments by Delivery Mechanism -->
+        <div class="bg-base-100 p-4 rounded shadow h-[450px]">
+            <h3 class="text-sm font-semibold mb-2">
+                <span class="icon icon-financing icon-blue"></span>
+                {% translate "Payments by Delivery Mechanism" %}
+            </h3>
+            <div id="payments-by-delivery" class="dc-chart w-full h-full"></div>
         </div>
     </div>
 {% endblock content %}
@@ -63,117 +246,310 @@
 {% block extra_js %}
 <script>
 document.addEventListener("DOMContentLoaded", () => {
-    const apiUrl = "{% url 'web:dashboard_api' %}";
-    const numberFormat = d3.format(",.2f");
-    const integerFormat = d3.format(",");
+    const loadingStatusDiv = document.getElementById("dashboard-loading-status");
+    const url = "{% url 'web:dashboard_api' %}";
 
-    d3.json(apiUrl).then(data => {
-        if (!data || data.length === 0) {
-            console.warn("No data available");
-            return;
+    const pendingList = ["Sent to Payment Gateway", "Sent to FSP", "Pending"];
+    const successfulList = [
+        "Distribution Successful",
+        "Partially Distributed",
+        "Transaction Successful",
+    ];
+
+    function showSpinner(chartId) {
+        const chartElement = document.getElementById(chartId);
+        if (chartElement) {
+            chartElement.innerHTML = `<div class="flex justify-center items-center h-full"><span class="loading loading-spinner loading-lg text-primary"></span></div>`;
         }
+    }
 
-        // 1. Pre-process data
-        // The API returns aggregated rows. We treat them as facts.
-        data.forEach(d => {
-            d.total_delivered_quantity_usd = +d.total_delivered_quantity_usd || 0;
-            d.payments = +d.payments || 0;
-        });
+    function hideSpinner(chartId) {
+        const chartElement = document.getElementById(chartId);
+        if (chartElement) {
+            chartElement.innerHTML = "";
+        }
+    }
 
-        // 2. Create Crossfilter instance
-        const ndx = crossfilter(data);
-        const all = ndx.groupAll();
+    function initializeChartsAndMetrics(data) {
+        const chartIds = [
+            "payments-by-fsp",
+            "payments-by-delivery",
+            "payments-by-sector",
+            "volume-by-program",
+            "payments-by-admin1",
+            "payments-by-time",
+        ];
+        chartIds.forEach(hideSpinner);
 
-        // 3. Define Dimensions
-        const sectorDim = ndx.dimension(d => d.sector || "Unknown");
-        const deliveryDim = ndx.dimension(d => d.delivery_types || "Unknown");
-        const countryDim = ndx.dimension(d => d.country || "Unknown");
-
-        // 4. Define Groups (Summing the pre-aggregated USD values)
-        const sectorGroup = sectorDim.group().reduceSum(d => d.total_delivered_quantity_usd);
-        const deliveryGroup = deliveryDim.group().reduceSum(d => d.total_delivered_quantity_usd);
-        const countryGroup = countryDim.group().reduceSum(d => d.total_delivered_quantity_usd);
-
-        // 5. Define Charts
-        const sectorChart = dc.rowChart("#payments-by-sector");
-        const deliveryChart = dc.rowChart("#payments-by-delivery");
-        const countryChart = dc.barChart("#payments-by-country");
-
-        // Helper to calculate totals for metrics
-        const updateMetrics = () => {
-            const totalUSD = ndx.groupAll().reduceSum(d => d.total_delivered_quantity_usd).value();
-            const totalCount = ndx.groupAll().reduceSum(d => d.payments).value();
-
-            document.getElementById("total-amount-display").innerText = numberFormat(totalUSD);
-            document.getElementById("total-count-display").innerText = integerFormat(totalCount);
-
-            // For filtered amount, we can use the current filtered sum
-            // Note: groupAll observes filters on *other* dimensions, but we want the global filtered state.
-            // A simple way in DC is to hook into the redraw event.
+        dc.config.defaultColors(d3.schemePaired);
+        const decimalNumberFormatter = d3.format(",.2f");
+        const simplenumberFormatter = d3.format(",");
+        const truncateLabel = (label, maxLength = 28) => {
+            return label.length > maxLength ? `${label.slice(0, maxLength)}...` : label;
         };
 
-        // Configure Sector Chart
-        sectorChart
+        const processedPayments = (data || []).map((item) => {
+            const dateObj = item.payment_date ? new Date(item.payment_date) : null;
+            return {
+                currency: item.currency || "USD",
+                delivered_quantity_usd: Number.parseFloat(item.total_delivered_quantity_usd) || 0.0,
+                delivered_quantity: Number.parseFloat(item.total_delivered_quantity) || 0.0,
+                total_planned_usd: Number.parseFloat(item.total_planned_usd) || 0.0,
+                payments: item.payments || 0,
+                individuals: item.individuals || 0,
+                households: item.households || 0,
+                reconciled: item.reconciled || 0,
+                finished_payment_plans: item.finished_payment_plans || 0,
+                total_payment_plans: item.total_payment_plans || 0,
+                children_counts: item.children_counts || 0,
+                date: dateObj,
+                year: dateObj ? dateObj.getFullYear() : "Unknown year",
+                program: item.program || "Unknown program",
+                sector: item.sector || "Unknown sector",
+                payment_status: item.status || "Unknown status",
+                admin1: item.admin1 || "Unknown admin1",
+                fsp: item.fsp || "Unknown fsp",
+                delivery_types: item.delivery_types || "Unknown delivery type",
+                pwd_counts: item.pwd_counts || 0,
+            };
+        });
+
+        const ndx = crossfilter(processedPayments);
+
+        // Dimensions
+        const idDim = ndx.dimension((d) => d.id || d.program + d.payment_status);
+        const fspDim = ndx.dimension((d) => d.fsp);
+        const deliveryDim = ndx.dimension((d) => d.delivery_types);
+        const sectorDim = ndx.dimension((d) => d.sector);
+        const programDim = ndx.dimension((d) => d.program);
+        const dateDim = ndx.dimension((d) => d.date);
+        const admin1Dim = ndx.dimension((d) => d.admin1);
+        const currencyDim = ndx.dimension((d) => d.currency || "UNK");
+
+        // Groups
+        const fspGroup = fspDim.group().reduceSum((d) => d.delivered_quantity_usd);
+        const deliveryGroup = deliveryDim.group().reduceSum((d) => d.delivered_quantity_usd);
+        const sectorGroup = sectorDim.group().reduceSum((d) => d.delivered_quantity_usd);
+        const programGroup = programDim.group().reduceSum((d) => d.delivered_quantity_usd);
+        const admin1Group = admin1Dim.group().reduceSum((d) => d.delivered_quantity_usd);
+        const dateGroup = dateDim.group().reduceSum((d) => d.delivered_quantity_usd);
+
+        const topProgramGroup = { all: () => programGroup.all().sort((a, b) => b.value - a.value).slice(0, 30) };
+        const topAdmin1Group = { all: () => admin1Group.all().sort((a, b) => b.value - a.value).slice(0, 30) };
+
+        // Charts
+        const fspChart = dc.pieChart("#payments-by-fsp")
+            .dimension(fspDim)
+            .group(fspGroup)
+            .radius(100)
+            .innerRadius(40)
+            .renderLabel(true)
+            .useViewBoxResizing(true)
+            .label((d) => {
+                const total = fspGroup.all().reduce((sum, g) => sum + g.value, 0);
+                const pct = total > 0 ? ((d.value / total) * 100).toFixed(0) : '0';
+                return `${truncateLabel(d.key)}: ${pct}%`;
+            })
+            .title((d) => `${d.key}: ${decimalNumberFormatter(d.value)}`);
+
+        const deliveryChart = dc.pieChart("#payments-by-delivery")
+            .dimension(deliveryDim)
+            .group(deliveryGroup)
+            .radius(100)
+            .innerRadius(30)
+            .renderLabel(true)
+            .useViewBoxResizing(true)
+            .label((d) => {
+                const total = deliveryGroup.all().reduce((sum, g) => sum + g.value, 0);
+                const pct = total > 0 ? ((d.value / total) * 100).toFixed(0) : '0';
+                return `${d.key} ${pct}%`;
+            })
+            .title((d) => `${d.key}: ${decimalNumberFormatter(d.value)}`);
+
+        const sectorChart = dc.rowChart("#payments-by-sector")
             .dimension(sectorDim)
             .group(sectorGroup)
             .elasticX(true)
-            .height(250)
-            .margins({top: 10, right: 10, bottom: 20, left: 10})
-            .label(d => d.key)
-            .title(d => `${d.key}: $${numberFormat(d.value)}`)
-            .colors(d3.scaleOrdinal(d3.schemeCategory10));
+            .height(400)
+            .label((d) => {
+                const total = sectorGroup.all().reduce((sum, g) => sum + g.value, 0);
+                const pct = total > 0 ? ((d.value / total) * 100).toFixed(0) : '0';
+                return `${d.key}: ${decimalNumberFormatter(d.value)} USD (${pct}%)`;
+            })
+            .title((d) => `${d.key}: ${decimalNumberFormatter(d.value)} USD`)
+            .xAxis().ticks(3);
 
-        // Configure Delivery Chart
-        deliveryChart
-            .dimension(deliveryDim)
-            .group(deliveryGroup)
+        const programChart = dc.rowChart("#volume-by-program")
+            .dimension(programDim)
+            .group(topProgramGroup)
             .elasticX(true)
-            .height(250)
-            .margins({top: 10, right: 10, bottom: 20, left: 10})
-            .label(d => d.key)
-            .title(d => `${d.key}: $${numberFormat(d.value)}`)
-            .colors(d3.scaleOrdinal(d3.schemeSet3));
+            .height(400)
+            .margins({ top: 10, right: 20, bottom: 30, left: 5 })
+            .label((d) => {
+                const total = programGroup.all().reduce((sum, g) => sum + g.value, 0);
+                const pct = total > 0 ? ((d.value / total) * 100).toFixed(0) : '0';
+                return `${truncateLabel(d.key)}: ${decimalNumberFormatter(d.value)} USD (${pct}%)`;
+            })
+            .title((d) => `${d.key}: ${decimalNumberFormatter(d.value)} USD`)
+            .xAxis().ticks(3);
 
-        // Configure Country Chart
-        countryChart
-            .dimension(countryDim)
-            .group(countryGroup)
-            .x(d3.scaleBand())
-            .xUnits(dc.units.ordinal)
+        const admin1Chart = dc.rowChart("#payments-by-admin1")
+            .dimension(admin1Dim)
+            .group(topAdmin1Group)
+            .elasticX(true)
+            .height(400)
+            .margins({ top: 0, right: 20, bottom: 30, left: 5 })
+            .label((d) => {
+                const total = admin1Group.all().reduce((sum, g) => sum + g.value, 0);
+                const pct = total > 0 ? ((d.value / total) * 100).toFixed(0) : '0';
+                return `${truncateLabel(d.key)}: ${decimalNumberFormatter(d.value)} USD (${pct}%)`;
+            })
+            .title((d) => `${d.key}: ${decimalNumberFormatter(d.value)} USD`)
+            .xAxis().ticks(3);
+
+        // Timeline Chart
+        const minDate = dateDim.bottom(1)[0]?.date || new Date();
+        const maxDate = dateDim.top(1)[0]?.date || new Date();
+        // Add buffer to max date
+        const maxDateBuffer = new Date(maxDate);
+        maxDateBuffer.setDate(maxDateBuffer.getDate() + 30);
+
+        const timeChart = dc.barChart("#payments-by-time")
+            .width(null) // Responsive
+            .height(150)
+            .dimension(dateDim)
+            .group(dateGroup)
+            .x(d3.scaleTime().domain([minDate, maxDateBuffer]))
+            .xUnits(d3.timeDays)
             .elasticY(true)
-            .height(350)
-            .margins({top: 10, right: 10, bottom: 60, left: 60})
-            .barPadding(0.1)
-            .outerPadding(0.05)
-            .brushOn(false)
-            .title(d => `${d.key}: $${numberFormat(d.value)}`)
-            .colors("#3b82f6"); // Tailwind blue-500
+            .renderHorizontalGridLines(true)
+            .brushOn(true)
+            .centerBar(true)
+            .title((d) => `${d.key.toLocaleDateString()}: ${decimalNumberFormatter(d.value)} USD`);
 
-        countryChart.on('renderlet', function(chart) {
-            chart.selectAll('g.x text')
-                .attr('transform', 'translate(-10,10) rotate(-45)')
-                .style('text-anchor', 'end');
-        });
+        timeChart.yAxis().ticks(5);
 
-        // Render
-        dc.renderAll();
-        updateMetrics();
+        function updateTopMetrics() {
+            const totalPaymentsCount = ndx.groupAll().reduceSum(d => d.payments || 0).value();
 
-        // Update metrics on filter changes
-        dc.chartRegistry.list().forEach(chart => {
-            chart.on("filtered", () => {
-                // Recalculate filtered totals
-                // We can use a separate groupAll that observes all filters
-                // Or just sum the current groups (approximate for this demo)
-                const filteredData = sectorDim.top(Infinity);
-                const filteredSum = d3.sum(filteredData, d => d.total_delivered_quantity_usd);
-                document.getElementById("filtered-amount-display").innerText = numberFormat(filteredSum);
+            const pendingPaymentsGroupUSD = ndx.groupAll().reduce(
+                (p, v) => { if (pendingList.includes(v.payment_status)) { p.sum += v.delivered_quantity_usd || 0; } return p; },
+                (p, v) => { if (pendingList.includes(v.payment_status)) { p.sum -= v.delivered_quantity_usd || 0; } return p; },
+                () => ({ sum: 0 })
+            ).value();
+
+            const successfulPaymentsGroupUSD = ndx.groupAll().reduce(
+                (p, v) => { if (successfulList.includes(v.payment_status)) { p.sum += v.delivered_quantity_usd || 0; } return p; },
+                (p, v) => { if (successfulList.includes(v.payment_status)) { p.sum -= v.delivered_quantity_usd || 0; } return p; },
+                () => ({ sum: 0 })
+            ).value();
+
+            const totalSuccessfulUSD = successfulPaymentsGroupUSD.sum;
+
+            // Reconciliation logic approximation
+            const nonPendingCount = ndx.groupAll().reduceSum(d =>
+                (pendingList.includes(d.payment_status) && d.payment_status !== 'Pending') || successfulList.includes(d.payment_status) ? d.payments : 0
+            ).value();
+            const reconciliationPercentage = totalPaymentsCount > 0 ? (nonPendingCount / totalPaymentsCount) * 100 : 0;
+
+            // Verification logic approximation
+            const paymentPlanMetrics = ndx.groupAll().reduce(
+                (p, v) => { p.finished += v.finished_payment_plans || 0; p.total += v.total_payment_plans || 0; return p; },
+                (p, v) => { p.finished -= v.finished_payment_plans || 0; p.total -= v.total_payment_plans || 0; return p; },
+                () => ({ finished: 0, total: 0 })
+            ).value();
+            const verificationPercentage = paymentPlanMetrics.total > 0 ? (paymentPlanMetrics.finished / paymentPlanMetrics.total) * 100 : 0;
+
+            const householdsReached = ndx.groupAll().reduceSum(d => d.households).value();
+            const individualsReached = ndx.groupAll().reduceSum(d => d.individuals).value();
+            const pwdReached = ndx.groupAll().reduceSum(d => d.pwd_counts).value();
+            const childrenReached = ndx.groupAll().reduceSum(d => d.children_counts).value();
+            const plannedPaymentsAmount = ndx.groupAll().reduceSum(d => d.total_planned_usd || 0).value();
+
+            // Update DOM
+            document.getElementById("number-of-payments").innerHTML = simplenumberFormatter(totalPaymentsCount);
+            document.getElementById("outstanding-payments").innerHTML = `${decimalNumberFormatter(pendingPaymentsGroupUSD.sum)} USD`;
+            document.getElementById("total-amount-paid").innerHTML = `${decimalNumberFormatter(totalSuccessfulUSD)} USD`;
+            document.getElementById("planned-payments-amount").innerHTML = `${decimalNumberFormatter(plannedPaymentsAmount)} USD`;
+
+            // Disbursed by currency
+            const disbursedGroup = currencyDim.group().reduceSum(d => (pendingList.includes(d.payment_status) || successfulList.includes(d.payment_status)) ? d.delivered_quantity : 0);
+            let disbursedHtml = '';
+            disbursedGroup.all().forEach(item => {
+                if (item.value > 0 && item.key !== 'UNK') {
+                    disbursedHtml += `<p class="text-xs mb-1">${decimalNumberFormatter(item.value)} ${item.key}</p>`;
+                }
             });
-        });
+            document.getElementById("total-disbursed-payments").innerHTML = disbursedHtml || '<p class="text-xs text-gray-500">No disbursed payments</p>';
 
-        // Initial filtered amount
-        const initialData = sectorDim.top(Infinity);
-        document.getElementById("filtered-amount-display").innerText = numberFormat(d3.sum(initialData, d => d.total_delivered_quantity_usd));
+            document.getElementById("households-reached").innerHTML = simplenumberFormatter(householdsReached);
+            document.getElementById("individuals-reached").innerHTML = simplenumberFormatter(individualsReached);
+            document.getElementById("pwd-reached").innerHTML = simplenumberFormatter(pwdReached);
+            document.getElementById("children-reached").innerHTML = simplenumberFormatter(childrenReached);
+
+            document.querySelector(".reconciliation-percentage-value").innerHTML = decimalNumberFormatter(reconciliationPercentage);
+            document.querySelector(".reconciliation-amount-value").innerHTML = `${decimalNumberFormatter(totalSuccessfulUSD)} USD`;
+            document.querySelector(".pending-reconciliation-percentage").innerHTML = `${decimalNumberFormatter(verificationPercentage)}%`;
+        }
+
+        updateTopMetrics();
+        for (const chart of dc.chartRegistry.list()) {
+            chart.on("filtered", () => updateTopMetrics());
+        }
+        dc.renderAll();
+    }
+
+    // Fetch Data
+    [
+        "payments-by-fsp", "payments-by-delivery", "payments-by-sector",
+        "volume-by-program", "payments-by-admin1", "payments-by-time"
+    ].forEach(showSpinner);
+
+    d3.json(url).then((data) => {
+        if (!data || data.length === 0) {
+            loadingStatusDiv.textContent = "No data available.";
+            loadingStatusDiv.style.display = 'block';
+            initializeChartsAndMetrics([]);
+        } else {
+            initializeChartsAndMetrics(data);
+        }
+    }).catch(error => {
+        console.error(error);
+        loadingStatusDiv.textContent = "Error loading data.";
+        loadingStatusDiv.style.display = 'block';
+        initializeChartsAndMetrics([]);
+    });
+
+    // Tooltip Toggle Logic
+    function setupTooltipToggle(iconId, tooltipId) {
+        const icon = document.getElementById(iconId);
+        if (icon) {
+            icon.addEventListener('click', function(event) {
+                event.stopPropagation();
+                const isActive = icon.classList.contains('active');
+                document.querySelectorAll('.info-icon.active').forEach(activeIcon => activeIcon.classList.remove('active'));
+                icon.classList.toggle('active', !isActive);
+            });
+        }
+    }
+
+    const tooltips = [
+        ['info-icon-total-amount-paid', 'tooltip-total-amount-paid'],
+        ['info-icon-number-of-payments', 'tooltip-number-of-payments'],
+        ['info-icon-outstanding-payment', 'tooltip-outstanding-payment'],
+        ['info-icon-households-reached', 'tooltip-households-reached'],
+        ['info-icon-individuals-reached', 'tooltip-individuals-reached'],
+        ['info-icon-children-reached', 'tooltip-children-reached'],
+        ['info-icon-pwd-reached', 'tooltip-pwd-reached'],
+        ['info-icon-reconciliation', 'tooltip-reconciliation'],
+        ['info-icon-verification', 'tooltip-verification'],
+        ['info-icon-total-disbursed-payments', 'tooltip-total-disbursed-payments'],
+        ['info-icon-planned-payments-amount', 'tooltip-planned-payments-amount']
+    ];
+    tooltips.forEach(pair => setupTooltipToggle(pair[0], pair[1]));
+
+    document.addEventListener('click', () => {
+        document.querySelectorAll('.info-icon.active').forEach(icon => icon.classList.remove('active'));
     });
 });
 </script>

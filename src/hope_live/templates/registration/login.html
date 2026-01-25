@@ -1,0 +1,41 @@
+{% extends "layout.html" %}
+{% load i18n %}
+
+{% block menu %}{% endblock %}
+
+{% block content %}
+<div class="flex justify-center items-center min-h-[50vh]">
+    <div class="card w-96 bg-base-100 shadow-xl">
+        <div class="card-body">
+            <h2 class="card-title justify-center mb-4">{% translate "Login" %}</h2>
+            <form method="post">
+                {% csrf_token %}
+                {% if form.errors %}
+                    <div class="alert alert-error shadow-lg mb-4 text-sm">
+                        <span>{% translate "Invalid username or password." %}</span>
+                    </div>
+                {% endif %}
+
+                <div class="form-control w-full">
+                    <label class="label">
+                        <span class="label-text">{% translate "Username" %}</span>
+                    </label>
+                    <input type="text" name="username" placeholder="{% translate 'Username' %}" class="input input-bordered w-full" required id="id_username" autofocus />
+                </div>
+
+                <div class="form-control w-full mt-4">
+                    <label class="label">
+                        <span class="label-text">{% translate "Password" %}</span>
+                    </label>
+                    <input type="password" name="password" placeholder="{% translate 'Password' %}" class="input input-bordered w-full" required id="id_password" />
+                </div>
+
+                <div class="card-actions justify-end mt-6">
+                    <button class="btn btn-primary w-full" type="submit">{% translate "Login" %}</button>
+                </div>
+                <input type="hidden" name="next" value="{{ next }}" />
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock content %}

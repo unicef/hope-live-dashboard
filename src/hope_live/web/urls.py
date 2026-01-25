@@ -1,4 +1,4 @@
-from django.contrib.auth.views import LogoutView
+from django.contrib.auth.views import LoginView, LogoutView
 from django.urls import path
 from django.views.generic import TemplateView
 
@@ -7,7 +7,8 @@ from . import views
 app_name = "web"
 
 urlpatterns = [
-    path("", views.IndexView.as_view(), name="index"),
+    path("", views.DashboardView.as_view(), name="index"),
+    path("login/", LoginView.as_view(), name="login"),
     path("logout/", LogoutView.as_view(), name="logout"),
     path("dashboard/", views.DashboardView.as_view(), name="dashboard"),
     path("dashboard/data/", views.PaymentAggregatesView.as_view(), name="dashboard_data"),

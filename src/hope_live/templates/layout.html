@@ -8,8 +8,8 @@
     <!-- D3, Crossfilter, DC.js -->
     <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/crossfilter2@1.5.4/crossfilter.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/dc@4.2.7/dist/dc.min.js"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/dc@4.2.7/dist/dc.min.css">
+    <script src="{% static 'js/dc.min.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'css/dc.min.css' %}">
 
     <script src="https://cdn.jsdelivr.net/npm/topojson-client@3/dist/topojson-client.min.js"></script>
     <script src="{% static 'js/theme.min.js' %}"></script>
@@ -21,16 +21,24 @@
         .dc-chart g.row text { fill: currentColor; }
         .dc-chart .axis text { fill: currentColor; }
         .dc-chart .axis line, .dc-chart .axis path { stroke: currentColor; }
+
+        /* UNICEF Dashboard Theme Overrides */
+        [data-theme="dark"] body {
+            background-color: #0f172a; /* Deep Slate Blue Background */
+        }
+        [data-theme="dark"] .card {
+            background-color: #1e293b; /* Lighter Slate Blue for Cards */
+        }
     </style>
 </head>
 <body  data-timeout="{{ LOGOUT_TIMEOUT_MS|default:300000 }}" data-logout-url="{% url 'web:logout' %}">
 {% include "header.html" %}
 {% block page %}
-    <div class="flex flex-row">
+    <div class="min-h-screen">
         {% block menu %}
         {% include "menu.html" %}
         {% endblock menu %}
-        <div class="flex-grow p-4">
+        <div class="flex-grow">
             {% block content %}
             {% endblock content %}
         </div>

@@ -1,8 +1,10 @@
+from collections import defaultdict
 from datetime import date, timedelta
 from typing import Any
 
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.cache import cache
-from django.db.models import Count, Q, Sum, Value
+from django.db.models import Q, Sum, Value
 from django.db.models.functions import Coalesce, TruncDate
 from django.http import HttpRequest, JsonResponse
 from django.utils import timezone
@@ -21,11 +23,7 @@ class AboutView(TemplateView):
     template_name = "pages/about.html"
 
 
-class IndexView(TemplateView):
-    template_name = "pages/index.html"
-
-
-class DashboardView(TemplateView):
+class DashboardView(LoginRequiredMixin, TemplateView):
     template_name = "pages/dashboard.html"
 
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
@@ -108,7 +106,7 @@ class PaymentAggregatesView(View):
             queryset = queryset.filter(business_area__slug=business_area)
 
         queryset = queryset.select_related(
-            "program", "business_area", "delivery_type", "financial_service_provider"
+            "program", "business_area", "delivery_type", "financial_service_provider", "household"
         ).annotate(
             payment_date=Coalesce("delivery_date", "entitlement_date", "status_date"),
             business_area_name=Coalesce("business_area__name", Value("Unknown Country")),
@@ -178,7 +176,7 @@ class DashboardDataView(View):
             queryset = queryset.filter(business_area__slug=business_area_slug)
 
         queryset = queryset.select_related(
-            "program", "business_area", "delivery_type", "financial_service_provider"
+            "program", "business_area", "delivery_type", "financial_service_provider", "household"
         ).annotate(
             payment_date=TruncDate(Coalesce("delivery_date", "entitlement_date", "status_date")),
             business_area_name=Coalesce("business_area__name", Value("Unknown Country")),
@@ -188,53 +186,91 @@ class DashboardDataView(View):
             delivery_type_name=Coalesce("delivery_type__name", Value("Unknown Delivery Type")),
             fsp_name=Coalesce("financial_service_provider__name", Value("Unknown FSP")),
             currency_code=Coalesce("currency", Value("UNK")),
-            admin1_name=Value("Unknown Admin1"),
+            admin1_name=Coalesce("household__admin1__name", Value("Unknown Admin1")),
         )
 
-        aggregates = queryset.values(
-            "payment_date",
-            "business_area_name",
-            "region_name",
-            "program_name",
-            "sector_name",
-            "status",
-            "delivery_type_name",
-            "fsp_name",
-            "currency_code",
-            "admin1_name",
-        ).annotate(
-            payment_count=Count("id"),
-            total_delivered_quantity_usd=Sum("delivered_quantity_usd"),
-            total_delivered_quantity=Sum("delivered_quantity"),
-            total_entitlement_quantity_usd=Sum("entitlement_quantity_usd"),
-        )
-
-        data = [
-            {
-                "total_delivered_quantity_usd": float(agg["total_delivered_quantity_usd"] or 0),
-                "total_delivered_quantity": float(agg["total_delivered_quantity"] or 0),
-                "payments": agg["payment_count"],
+        # Aggregate in Python to correctly handle unique households per bucket
+        grouped_data = defaultdict(
+            lambda: {
+                "total_delivered_quantity_usd": 0.0,
+                "total_delivered_quantity": 0.0,
+                "total_entitlement_quantity_usd": 0.0,
+                "payments": 0,
                 "individuals": 0,
-                "households": 0,
+                "households_seen": set(),
                 "children_counts": 0,
                 "pwd_counts": 0,
-                "reconciled": 0,
-                "finished_payment_plans": 0,
-                "total_payment_plans": 0,
-                "payment_date": agg["payment_date"],
-                "program": agg["program_name"],
-                "sector": agg["sector_name"],
-                "status": agg["status"],
-                "fsp": agg["fsp_name"],
-                "delivery_types": agg["delivery_type_name"],
-                "currency": agg["currency_code"],
-                "admin1": agg["admin1_name"],
-                "country": agg["business_area_name"],
-                "region": agg["region_name"],
-                "total_planned_usd": float(agg["total_entitlement_quantity_usd"] or 0),
             }
-            for agg in aggregates
-        ]
+        )
+
+        for payment in queryset:
+            key = (
+                payment.payment_date,
+                payment.business_area_name,
+                payment.region_name,
+                payment.program_name,
+                payment.sector_name,
+                payment.status,
+                payment.delivery_type_name,
+                payment.fsp_name,
+                payment.currency_code,
+                payment.admin1_name,
+            )
+
+            group = grouped_data[key]
+
+            group["total_delivered_quantity_usd"] += float(payment.delivered_quantity_usd or 0)
+            group["total_delivered_quantity"] += float(payment.delivered_quantity or 0)
+            group["total_entitlement_quantity_usd"] += float(payment.entitlement_quantity_usd or 0)
+            group["payments"] += 1
+
+            hh = payment.household
+            if hh and hh.id not in group["households_seen"]:
+                group["households_seen"].add(hh.id)
+                group["individuals"] += hh.size or 1
+                group["children_counts"] += hh.children_count or 0
+                group["pwd_counts"] += hh.pwd_count
+
+        data = []
+        for key, group in grouped_data.items():
+            (
+                payment_date,
+                business_area_name,
+                region_name,
+                program_name,
+                sector_name,
+                status,
+                delivery_type_name,
+                fsp_name,
+                currency_code,
+                admin1_name,
+            ) = key
+
+            data.append(
+                {
+                    "total_delivered_quantity_usd": group["total_delivered_quantity_usd"],
+                    "total_delivered_quantity": group["total_delivered_quantity"],
+                    "payments": group["payments"],
+                    "individuals": group["individuals"],
+                    "households": len(group["households_seen"]),
+                    "children_counts": group["children_counts"],
+                    "pwd_counts": group["pwd_counts"],
+                    "reconciled": 0,
+                    "finished_payment_plans": 0,
+                    "total_payment_plans": 0,
+                    "payment_date": payment_date,
+                    "program": program_name,
+                    "sector": sector_name,
+                    "status": status,
+                    "fsp": fsp_name,
+                    "delivery_types": delivery_type_name,
+                    "currency": currency_code,
+                    "admin1": admin1_name,
+                    "country": business_area_name,
+                    "region": region_name,
+                    "total_planned_usd": group["total_entitlement_quantity_usd"],
+                }
+            )
 
         cache.set(cache_key, data, DashboardCache.TTL)
 
