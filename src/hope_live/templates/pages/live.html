@@ -1,6 +1,23 @@
 {% extends "layout.html" %}
 
+{% block content %}
+{% if not request.user.is_authenticated %}
+    <div class="hero min-h-[calc(100vh-8rem)] bg-base-200">
+        <div class="hero-content text-center">
+            <div class="max-w-md">
+                <h1 class="text-5xl font-bold">Access Denied</h1>
+                <p class="py-6">Please log in to view this page.</p>
+                <a href="{% url 'web:login' %}" class="btn btn-primary">Login</a>
+            </div>
+        </div>
+    </div>
+{% else %}
+<!-- Add your live content here -->
+{% endif %}
+{% endblock content %}
+
 {% block extra_js %}
+{% if request.user.is_authenticated %}
 <script>
     const hopeSocket = new WebSocket(
         'ws://'
@@ -24,4 +41,5 @@
         console.log('WebSocket connection closed unexpectedly.');
     };
 </script>
+{% endif %}
 {% endblock extra_js %}

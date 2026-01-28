@@ -2,7 +2,7 @@
 
 
 export UWSGI_PROCESSES="${UWSGI_PROCESSES:-"4"}"
-export DJANGO_SETTINGS_MODULE="country_workspace.config.settings"
+export DJANGO_SETTINGS_MODULE="hope_live.config.settings"
 mkdir -p "${MEDIA_ROOT}" "${STATIC_ROOT}" || echo "Cannot create dirs ${MEDIA_ROOT} ${STATIC_ROOT}"
 
 if [ -d "${MEDIA_ROOT}" ];then
@@ -28,7 +28,7 @@ case "$1" in
       set -- tini -- "$@"
 	    set -- uwsgi --http :8000 \
 	          -H /venv \
-	          --module country_workspace.config.wsgi \
+	          --module hope_live.config.wsgi \
 	          --mimefile=/conf/mime.types \
 	          --uid hope \
 	          --gid unicef \
@@ -41,16 +41,16 @@ case "$1" in
       ;;
     worker)
       set -- tini -- "$@"
-      set -- gosu hope:unicef celery -A country_workspace.config.celery worker --statedb worker -E --loglevel=DEBUG
+      set -- gosu hope:unicef celery -A hope_live.config.celery_app worker --statedb worker -E --loglevel=DEBUG
       ;;
     beat)
       set -- tini -- "$@"
-      set -- gosu hope:unicef celery -A country_workspace.config.celery beat --loglevel=DEBUG --scheduler django_celery_beat.schedulers:DatabaseScheduler
+      set -- gosu hope:unicef celery -A hope_live.config.celery_app beat --loglevel=DEBUG --scheduler django_celery_beat.schedulers:DatabaseScheduler
       ;;
     flower)
       export DATABASE_URL="sqlite://:memory:"
       set -- tini -- "$@"
-      set -- gosu hope:unicef celery -A country_workspace.config.celery flower
+      set -- gosu hope:unicef celery -A hope_live.config.celery_app flower
       ;;
 esac
 

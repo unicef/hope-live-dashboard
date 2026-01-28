@@ -3,7 +3,14 @@ from .. import env
 CONTENT_SECURITY_POLICY = {
     "DIRECTIVES": {
         "default-src": ["data:", "'self'", "'unsafe-inline'", "http://unpkg.com/"] + env("CSP_DEFAULT_SRC"),
-        "img-src": ["i.pravatar.cc", "'self'", "data:", "https://img.daisyui.com/", "https://www.unicef.org"]
+        "img-src": [
+            "i.pravatar.cc",
+            "'self'",
+            "data:",
+            "https://img.daisyui.com/",
+            "https://www.unicef.org",
+            "https://ui-avatars.com/",
+        ]
         + env("CSP_IMG_SRC"),
         "style-src": ["'unsafe-inline'", "'self'"] + [],
         "script-src": [

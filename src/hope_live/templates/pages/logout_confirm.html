@@ -1,0 +1,24 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="min-h-[calc(100vh-8rem)] flex items-center justify-center">
+    <div class="card w-full max-w-md bg-base-100 shadow-xl">
+        <div class="card-body items-center text-center">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 text-warning mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+            </svg>
+            <h2 class="card-title text-2xl mb-2">Confirm Logout</h2>
+            <p class="mb-6">Are you sure you want to log out of your account?</p>
+            <div class="card-actions w-full">
+                <form method="post" action="{% url 'web:logout' %}" class="w-full">
+                    {% csrf_token %}
+                    <div class="flex gap-4">
+                        <a href="{% url 'web:dashboard' %}" class="btn btn-ghost flex-1">Cancel</a>
+                        <button type="submit" class="btn btn-warning flex-1">Logout</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

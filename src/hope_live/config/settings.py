@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from . import env
+from hope_live.config import env
 
 SETTINGS_DIR = Path(__file__).parent
 PACKAGE_DIR = SETTINGS_DIR.parent
@@ -49,6 +49,8 @@ INSTALLED_APPS = [
     "flags",
     "hope_live",
     "hope_live.ws",
+    "hope_live.analysis",
+    "rest_framework",
     *env("EXTRA_APPS"),
 ]
 
@@ -103,11 +105,21 @@ CHANNEL_LAYERS = {
 
 
 DATABASES = {
-    "default": env.db("DATABASE_URL"),
-    "hope": env.db("DATABASE_HOPE_URL"),
+    "default": env.db(
+        "DATABASE_URL",
+        default="postgres://postgres:postgres@db:5432/hcr",
+        engine="django.db.backends.postgresql",
+    ),
+    "hope": env.db(
+        "DATABASE_HOPE_URL",
+        default="postgres://postgres:postgres@hopedb:5432/hopedb?options=-c%20default_transaction_read_only=on",
+        engine="django.db.backends.postgresql",
+    ),
 }
 
 DATABASE_ROUTERS = ["hope_live.db_routers.HopeRouter"]
+
+DATABASE_APPS_MAPPING: dict[str, str] = {}
 
 CACHE_URL = env("CACHE_URL")
 
@@ -156,12 +168,17 @@ AUTHENTICATION_BACKENDS = (
 )
 
 LANGUAGE_CODE = "en-us"
-ugettext = lambda s: s  # noqa E731
+
+
+def ugettext(s: str) -> str:
+    return str(s)
+
+
 LANGUAGES = (
-    ("es", ugettext("Spanish")),  # type: ignore[no-untyped-call]
-    ("fr", ugettext("French")),  # type: ignore[no-untyped-call]
-    ("en", ugettext("English")),  # type: ignore[no-untyped-call]
-    ("ar", ugettext("Arabic")),  # type: ignore[no-untyped-call]
+    ("es", ugettext("Spanish")),
+    ("fr", ugettext("French")),
+    ("en", ugettext("English")),
+    ("ar", ugettext("Arabic")),
 )
 
 TIME_ZONE = "UTC"
@@ -184,7 +201,7 @@ LOGIN_REDIRECT_URL = "web:dashboard"
 LOGOUT_REDIRECT_URL = "web:login"
 
 from .fragments.app import *  # noqa: E402 F403
-from .fragments.celery import *  # noqa: E402 F403  # noqa: E402 F403
+from .fragments.celery import *  # noqa: E402 F403
 from .fragments.constance import *  # noqa: E402 F403
 from .fragments.csp import *  # noqa: E402 F403
 from .fragments.debug_toolbar import *  # noqa: E402 F403

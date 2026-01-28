@@ -1,2 +1,3 @@
+from .analysis import DailyAggregateAdmin  # noqa
 from .constance import ConstanceConfigAdmin  # noqa
 from .user import UserAdmin  # noqa

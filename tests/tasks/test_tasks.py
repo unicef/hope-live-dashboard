@@ -5,7 +5,7 @@ import pytest
 from django.utils import timezone
 
 from hope_live.models import BusinessArea, Payment
-from hope_live.tasks import refresh_business_area_stats, update_dashboard_cache
+from hope_live.tasks import refresh_business_area_stats
 
 pytestmark = [pytest.mark.django_db]
 
@@ -26,49 +26,26 @@ def payment(business_area):
     )
 
 
-def test_update_dashboard_cache(payment):
-    with patch("hope_live.tasks.DashboardCache.invalidate") as mock_invalidate:
-        with patch("hope_live.tasks.Payment.objects.all") as mock_all:
-            mock_queryset = MagicMock()
-            mock_filter = MagicMock()
-
-            mock_all.return_value = mock_queryset
-            mock_queryset.filter.return_value = mock_filter
-            mock_filter.aggregate.return_value = {"total": 100.00}
-
-            result = update_dashboard_cache()
-
-            mock_invalidate.assert_called_once()
-            assert result["total_delivered"] == 100.00
-            assert "timestamp" in result
-
-
-def test_update_dashboard_cache_error():
-    with patch("hope_live.tasks.DashboardCache.invalidate", side_effect=Exception("Boom")):
-        with pytest.raises(Exception, match="Boom"):
-            update_dashboard_cache()
-
-
 def test_refresh_business_area_stats_success(payment, business_area):
-    with patch("hope_live.tasks.DashboardCache.invalidate") as mock_invalidate:
+    with patch("hope_live.tasks.DashboardCache.invalidate") as mk_invalidate:
         with patch("hope_live.tasks.BusinessArea.objects.get") as mock_get:
             mock_get.return_value = business_area
 
             with patch("hope_live.tasks.Payment.objects.filter") as mock_filter:
-                mock_queryset = MagicMock()
-                mock_filter.return_value = mock_queryset
+                mk_queryset = MagicMock()
+                mock_filter.return_value = mk_queryset
 
-                mock_queryset.count.return_value = 1
+                mk_queryset.count.return_value = 1
 
                 mock_success_filter = MagicMock()
-                mock_queryset.filter.return_value = mock_success_filter
+                mk_queryset.filter.return_value = mock_success_filter
                 mock_success_filter.count.return_value = 1
 
-                mock_queryset.aggregate.return_value = {"total": 100.00}
+                mk_queryset.aggregate.return_value = {"total": 100.00}
 
                 result = refresh_business_area_stats(business_area.slug)
 
-                mock_invalidate.assert_called_once()
+                mk_invalidate.assert_called_once()
                 assert result["business_area"] == business_area.slug
                 assert result["total_payments"] == 1
                 assert result["total_amount"] == 100.00

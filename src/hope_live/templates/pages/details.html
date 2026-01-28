@@ -1,7 +1,19 @@
 {% extends "layout.html" %}
 
 {% block content %}
+{% if not request.user.is_authenticated %}
+    <div class="hero min-h-[calc(100vh-8rem)] bg-base-200">
+        <div class="hero-content text-center">
+            <div class="max-w-md">
+                <h1 class="text-5xl font-bold">Access Denied</h1>
+                <p class="py-6">Please log in to view this page.</p>
+                <a href="{% url 'web:login' %}" class="btn btn-primary">Login</a>
+            </div>
+        </div>
+    </div>
+{% else %}
 {# <div class="grid grid-cols-3 gap-1"> #}
         <div>{% include "panels/histogram.html" %}</div>
 {# </div> #}
+{% endif %}
 {% endblock content %}

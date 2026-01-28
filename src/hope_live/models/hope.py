@@ -15,6 +15,7 @@ class BusinessArea(HopeModel):
     region_name = models.CharField(max_length=8, blank=True)
 
     class Meta:
+        managed = False
         db_table = "core_businessarea"
 
     def __str__(self) -> str:
@@ -31,6 +32,7 @@ class HopeProgram(HopeModel):
     business_area = models.ForeignKey(BusinessArea, on_delete=models.DO_NOTHING, db_column="business_area_id")
 
     class Meta:
+        managed = False
         db_table = "program_program"
 
     def __str__(self) -> str:
@@ -42,6 +44,7 @@ class DeliveryMechanism(HopeModel):
     name = models.CharField(max_length=255)
 
     class Meta:
+        managed = False
         db_table = "payment_deliverymechanism"
 
     def __str__(self) -> str:
@@ -53,6 +56,7 @@ class FinancialServiceProvider(HopeModel):
     name = models.CharField(max_length=100)
 
     class Meta:
+        managed = False
         db_table = "payment_financialserviceprovider"
 
     def __str__(self) -> str:
@@ -64,6 +68,7 @@ class Area(HopeModel):
     name = models.CharField(max_length=255)
 
     class Meta:
+        managed = False
         db_table = "geo_area"
 
     def __str__(self) -> str:
@@ -76,7 +81,7 @@ class Household(HopeModel):
     admin1 = models.ForeignKey(Area, on_delete=models.DO_NOTHING, db_column="admin1_id", blank=True, null=True)
     is_removed = models.BooleanField(default=False)
     size = models.IntegerField(default=1)
-
+    program = models.ForeignKey(HopeProgram, on_delete=models.DO_NOTHING, db_column="program_id", blank=True, null=True)
     children_count = models.IntegerField(null=True, blank=True)
     female_age_group_0_5_disabled_count = models.IntegerField(default=0, null=True)
     female_age_group_6_11_disabled_count = models.IntegerField(default=0, null=True)
@@ -90,6 +95,7 @@ class Household(HopeModel):
     male_age_group_60_disabled_count = models.IntegerField(default=0, null=True)
 
     class Meta:
+        managed = False
         db_table = "household_household"
 
     def __str__(self) -> str:
@@ -119,6 +125,7 @@ class PaymentPlan(HopeModel):
     status = models.CharField(max_length=50)
 
     class Meta:
+        managed = False
         db_table = "payment_paymentplan"
 
     def __str__(self) -> str:
@@ -158,6 +165,7 @@ class Payment(HopeModel):
     )
 
     class Meta:
+        managed = False
         db_table = "payment_payment"
 
     def __str__(self) -> str:
@@ -172,6 +180,7 @@ class PaymentVerification(HopeModel):
     )
 
     class Meta:
+        managed = False
         db_table = "payment_paymentverification"
 
     def __str__(self) -> str:

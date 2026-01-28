@@ -5,49 +5,51 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HOPE Dashboard</title>
-    <!-- D3, Crossfilter, DC.js -->
-    <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/crossfilter2@1.5.4/crossfilter.min.js"></script>
-    <script src="{% static 'js/dc.min.js' %}"></script>
-    <link rel="stylesheet" href="{% static 'css/dc.min.css' %}">
-
+    <style src="{% static 'css/styles.css' %}"></style>
     <script src="https://cdn.jsdelivr.net/npm/topojson-client@3/dist/topojson-client.min.js"></script>
     <script src="{% static 'js/theme.min.js' %}"></script>
     <script src="{% static 'js/ws.js' %}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
     {% tailwind_css %}
     {% issues_tags %}
     <style>
-        /* Fix DC.js text color for dark mode if needed, or general tweaks */
-        .dc-chart g.row text { fill: currentColor; }
-        .dc-chart .axis text { fill: currentColor; }
-        .dc-chart .axis line, .dc-chart .axis path { stroke: currentColor; }
-
-        /* UNICEF Dashboard Theme Overrides */
-        [data-theme="dark"] body {
-            background-color: #0f172a; /* Deep Slate Blue Background */
-        }
-        [data-theme="dark"] .card {
-            background-color: #1e293b; /* Lighter Slate Blue for Cards */
-        }
+        [data-theme="dark"] body { background-color: #0f172a; }
+        [data-theme="dark"] .card { background-color: #1e293b; }
+        /* Ensure charts have size */
+        .chart-container { width: 100%; height: 100%; min-height: 300px; }
     </style>
 </head>
-<body  data-timeout="{{ LOGOUT_TIMEOUT_MS|default:300000 }}" data-logout-url="{% url 'web:logout' %}">
-{% include "header.html" %}
-{% block page %}
-    <div class="min-h-screen">
-        {% block menu %}
-        {% include "menu.html" %}
-        {% endblock menu %}
-        <div class="flex-grow">
+<body data-timeout="{{ LOGOUT_TIMEOUT_MS|default:300000 }}" data-logout-url="{% url 'web:logout' %}" class="h-screen flex flex-col overflow-hidden bg-base-100 text-base-content">
+
+    {% if request.user.is_authenticated %}
+        {% include "header.html" %}
+    {% endif %}
+
+    <div class="flex flex-1 overflow-hidden">
+        <!-- Sidebar Menu - Only show when authenticated -->
+        {% if request.user.is_authenticated %}
+            {% block menu %}
+            {% include "menu.html" %}
+            {% endblock menu %}
+        {% endif %}
+
+        <!-- Main Content -->
+        <main class="flex-1 overflow-y-auto p-4 bg-base-200 {% if not request.user.is_authenticated %}flex items-center justify-center{% endif %}">
             {% block content %}
             {% endblock content %}
-        </div>
+
+            {% if request.user.is_authenticated %}
+                <div class="mt-8">
+                    {% block footer %}
+                    {% include "footer.html" %}
+                    {% endblock footer %}
+                </div>
+            {% endif %}
+        </main>
     </div>
-{% endblock page %}
-<script src="https://unpkg.com/flowbite@1.3.4/dist/flowbite.js"></script>
-{% block footer %}
-    {% include "footer.html" %}
-{% endblock footer %}
-{% block extra_js %}{% endblock %}
+
+    <script src="https://unpkg.com/flowbite@1.3.4/dist/flowbite.js"></script>
+    {% block extra_js %}{% endblock %}
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.13.3/dist/cdn.min.js"></script>
 </body>
 </html>
