@@ -71,7 +71,7 @@ LABEL org.opencontainers.image.created="$BUILD_DATE"
 LABEL org.opencontainers.image.version="$VERSION"
 
 ENV PATH=/venv/bin:/usr/local/bin/:/usr/bin:/bin \
-    DJANGO_SETTINGS_MODULE=country_workspace.config.settings \
+    DJANGO_SETTINGS_MODULE=hope_live.config.settings \
     PYTHONUNBUFFERED=1 \
     PYTHONDONTWRITEBYTECODE=1 \
     UV_PROJECT_ENVIRONMENT=/venv \
@@ -90,12 +90,12 @@ RUN --mount=type=cache,target=/root/.uv-cache \
     && uv sync --cache-dir=/root/.uv-cache \
         --python=/usr/local/bin/python \
         --python-preference=system \
-        --frozen --group dev
+        --frozen --all-groups --verbose
 
 # ------- production only deps-------
 FROM builder AS production
 ENV PATH=/venv/bin:/usr/local/bin/:/usr/bin:/bin \
-    DJANGO_SETTINGS_MODULE=country_workspace.config.settings \
+    DJANGO_SETTINGS_MODULE=hope_live.config.settings \
     PYTHONUNBUFFERED=1 \
     PYTHONDONTWRITEBYTECODE=1 \
     UV_PROJECT_ENVIRONMENT=/venv \
@@ -110,7 +110,8 @@ RUN --mount=type=cache,target=/root/.uv-cache \
     uv sync --cache-dir=/root/.uv-cache \
         --python=/usr/local/bin/python \
         --python-preference=system \
-        --no-dev --frozen
+        --frozen \
+        --verbose
 
 
 
@@ -121,7 +122,7 @@ ARG SOURCE_COMMIT
 ARG BRANCH
 
 ENV PATH=/venv/bin:/usr/local/bin/:/usr/bin:/bin \
-    DJANGO_SETTINGS_MODULE=country_workspace.config.settings \
+    DJANGO_SETTINGS_MODULE=hope_live.config.settings \
     BUILD_DATE=$BUILD_DATE \
     SOURCE_COMMIT=$SOURCE_COMMIT \
     VERSION=$VERSION \
@@ -164,13 +165,13 @@ CMD ["run"]
 
 LABEL maintainer="hope@unicef.org"
 LABEL org.opencontainers.image.authors="hope@unicef.org"
-LABEL org.opencontainers.image.description="Hope Country Workspace"
-LABEL org.opencontainers.image.documentation="https://github.com/unicef/hope-country-workspace/"
-LABEL org.opencontainers.image.title="Hope Country Workspace"
+LABEL org.opencontainers.image.description="Hope Live Dashboard"
+LABEL org.opencontainers.image.documentation="https://github.com/unicef/hope-live-dashboard/"
+LABEL org.opencontainers.image.title="Hope Live Dashboard"
 LABEL org.opencontainers.image.licenses="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/blob/${SOURCE_COMMIT:-master}/LICENSE"
 LABEL org.opencontainers.image.revision=$SOURCE_COMMIT
 LABEL org.opencontainers.image.source="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/tree/${SOURCE_COMMIT:-master}/"
-LABEL org.opencontainers.image.url="https://hub.docker.com/repository/docker/unicef/hope-country-workspace/tags/"
+LABEL org.opencontainers.image.url="https://hub.docker.com/repository/docker/unicef/hope-live-dashboard/tags/"
 LABEL org.opencontainers.image.vendor="UNICEF"
 LABEL org.opencontainers.image.created="$BUILD_DATE"
 LABEL org.opencontainers.image.version="$VERSION"

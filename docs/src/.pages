@@ -1,0 +1,5 @@
+nav:
+  - Home: index.md
+  - contributing.md
+  - settings.md
+  - docker.md

@@ -18,6 +18,7 @@ Procfile.tailwind
 src/hope_live/version.py
 !.gitignore
 !.github
+!.importlinter
 !tests/.coveragerc
 !.python-version
 !.pre-commit-config.yaml
