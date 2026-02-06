@@ -1,7 +1,7 @@
 import shutil
 from pathlib import Path
 
-source_images = Path("src/hope_live/ui/theme/static/images/")
+source_images = Path("src/hope_live/theme/static/images/")
 destination = "docs/src/images/"
 
 for ext in [".png"]:

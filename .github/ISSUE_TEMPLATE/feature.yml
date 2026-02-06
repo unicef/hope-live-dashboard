@@ -5,9 +5,9 @@ body:
     id: problem
     attributes:
       label: Problem Statement
-      description: What problem could Hope Workspace solve that it doesn't?
+      description: What problem could Hope Live Dashboard solve that it doesn't?
       placeholder: |-
-        I want to make good espresso, but Hope Workspace doesn't make it.
+        I want to make good espresso, but Hope Live Dashboard doesn't make it.
     validations:
       required: true
   - type: textarea
@@ -16,7 +16,7 @@ body:
       label: Solution Brainstorm
       description: We know you have bright ideas to share ... share away, friend.
       placeholder: |-
-        Add a blender to Hope Workspace.
+        Add a blender to Hope Live Dashboard.
     validations:
       required: false
   - type: dropdown
@@ -27,10 +27,8 @@ body:
       options:
         # begin product areas
         - 'Unknown'
-        - 'Data cleaners'
-        - 'DataCheckers/Validators'
-        - 'Import data (Aurora/Kobo/RDI)'
-        - 'Send to HOPE'
+        - 'Frontend/UI'
+        - 'Backend'
         - 'Background jobs'
         - 'Security/Permission'
         # end product areas
