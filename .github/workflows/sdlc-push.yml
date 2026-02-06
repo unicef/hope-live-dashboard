@@ -54,13 +54,11 @@ jobs:
           enable-cache: true
           cache-dependency-glob: "pyproject.toml"
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          python-version: "3.13"
 
       - name: Set target input
         id: config
         run: |
-          raw_version=$(uvx --with hatch-vcs hatchling metadata version)
-          version=$(echo "$raw_version" | sed -E 's/^([a-z])/0.\1/; s/-dirty$/.dev0/')
+          version=$(uvx --with hatch-vcs hatchling metadata version)
           COMMIT_SHA=$(git rev-parse "$GITHUB_SHA")
           git_reference="${{ github.event.inputs.git_reference }}"
           tag="${{ github.event.inputs.tag }}"
