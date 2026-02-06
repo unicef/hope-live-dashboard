@@ -65,6 +65,7 @@ RUN pip install uv uwsgi
 FROM builder AS tests
 ARG BUILD_DATE
 ARG SOURCE_COMMIT
+ARG VERSION
 
 LABEL distro="tests"
 LABEL org.opencontainers.image.created="$BUILD_DATE"
@@ -72,12 +73,12 @@ LABEL org.opencontainers.image.version="$VERSION"
 
 ENV PATH=/venv/bin:/usr/local/bin/:/usr/bin:/bin \
     DJANGO_SETTINGS_MODULE=hope_live.config.settings \
-
     PYTHONUNBUFFERED=1 \
     PYTHONDONTWRITEBYTECODE=1 \
     UV_PROJECT_ENVIRONMENT=/venv \
     VIRTUAL_ENV=/venv \
-    UWSGI_PROCESSES=4
+    UWSGI_PROCESSES=4 \
+    SETUPTOOLS_SCM_PRETEND_VERSION=${VERSION:-0.0.0.dev0}
 
 WORKDIR /app
 COPY uv.lock README.md MANIFEST.in pyproject.toml /app/
@@ -95,14 +96,15 @@ RUN --mount=type=cache,target=/root/.uv-cache \
 
 # ------- production only deps-------
 FROM builder AS production
+ARG VERSION
 ENV PATH=/venv/bin:/usr/local/bin/:/usr/bin:/bin \
     DJANGO_SETTINGS_MODULE=hope_live.config.settings \
-
     PYTHONUNBUFFERED=1 \
     PYTHONDONTWRITEBYTECODE=1 \
     UV_PROJECT_ENVIRONMENT=/venv \
     VIRTUAL_ENV=/venv \
-    UWSGI_PROCESSES=4
+    UWSGI_PROCESSES=4 \
+    SETUPTOOLS_SCM_PRETEND_VERSION=${VERSION:-0.0.0.dev0}
 
 WORKDIR /app
 COPY uv.lock README.md MANIFEST.in pyproject.toml /app/
@@ -124,7 +126,6 @@ ARG BRANCH
 
 ENV PATH=/venv/bin:/usr/local/bin/:/usr/bin:/bin \
     DJANGO_SETTINGS_MODULE=hope_live.config.settings \
-
     BUILD_DATE=$BUILD_DATE \
     SOURCE_COMMIT=$SOURCE_COMMIT \
     VERSION=$VERSION \
