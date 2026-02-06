@@ -3,7 +3,7 @@
 
 #BASE?=$(shell echo "${VERSION}" | sed "s/\([0-9]*\)\.\([0-9]*\)\.\(.*\)/\1.\2/g" )
 # Clean version for PEP 440 compliance
-CLEAN_VERSION := $(shell git describe --tags --always --dirty 2>/dev/null | sed -E 's/^([a-z])/0.\1/; s/-dirty$$/.dev0/' || echo "0.0.0.dev0")
+CLEAN_VERSION := $(shell (git describe --tags --dirty 2>/dev/null || echo "0.0.0.dev0") | sed -E 's/-dirty$$/.dev0/')
 VERSION := $(CLEAN_VERSION)
 RELEASE := $(shell git describe --tags --always --dirty 2>/dev/null || echo "dev")
 LOCK_CHECKSUM?=$(shell sha1sum ../uv.lock | awk '{print $$1}')

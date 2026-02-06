@@ -1143,7 +1143,7 @@ requires-dist = [
     { name = "channels-redis" },
     { name = "click" },
     { name = "daphne" },
-    { name = "django", specifier = ">=5.2.6,<6.0.0" },
+    { name = "django", specifier = ">=5.2.6,<6" },
     { name = "django-admin-extra-buttons" },
     { name = "django-adminactions" },
     { name = "django-adminfilters", specifier = ">=2.7" },
@@ -2236,7 +2236,6 @@ sdist = { url = "https://files.pythonhosted.org/packages/1b/7d/92392ff7815c21062
 wheels = [
     { url = "https://files.pythonhosted.org/packages/0c/c3/44f3fbbfa403ea2a7c779186dc20772604442dde72947e7d01069cbe98e3/pycparser-3.0-py3-none-any.whl", hash = "sha256:b727414169a36b7d524c1c3e31839a521725078d7b2ff038656844266160a992", size = 48172, upload-time = "2026-01-21T14:26:50.693Z" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/e1/70/c7a4f46dbf06048c6d57d9489b8e0f9c4c3d36b7479f03c5ca97eaa2541d/PyGetWindow-0.0.9.tar.gz", hash = "sha256:17894355e7d2b305cd832d717708384017c1698a90ce24f6f7fbf0242dd0a688", size = 9699, upload-time = "2020-10-04T02:12:50.806Z" }
 
 [[package]]
 name = "pygetwindow"

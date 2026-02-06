@@ -82,6 +82,7 @@ jobs:
             uv.lock
           cache-suffix: ${{ matrix.cfg }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
+          python-version: "3.13"
           python-version: ${{ matrix.python }}
 
       - name: Install tox

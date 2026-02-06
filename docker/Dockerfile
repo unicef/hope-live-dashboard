@@ -33,9 +33,7 @@ curl \
 gcc \
 git \
 libfontconfig1 \
-libgconf-2-4 \
 libglib2.0-0 \
-libnss3 \
 libssl-dev \
 libxml2-dev  \
 python3-dev \
@@ -45,19 +43,6 @@ zlib1g-dev  \
     && apt-get install -y --no-install-recommends $buildDeps \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
-
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends gnupg wget curl unzip && \
-    wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - && \
-    echo "deb http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google.list && \
-    apt-get update -y && \
-    apt-get install -y --no-install-recommends google-chrome-stable && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/* /var/cache/apt/* && \
-    CHROME_VERSION=$(google-chrome --product-version) && \
-    wget -q --continue -P /chromedriver "https://edgedl.me.gvt1.com/edgedl/chrome/chrome-for-testing/$CHROME_VERSION/linux64/chromedriver-linux64.zip" && \
-    unzip /chromedriver/chromedriver* -d /usr/local/bin/ && \
-    rm -rf /chromedriver
 
 RUN pip install uv uwsgi
 
@@ -78,7 +63,8 @@ ENV PATH=/venv/bin:/usr/local/bin/:/usr/bin:/bin \
     UV_PROJECT_ENVIRONMENT=/venv \
     VIRTUAL_ENV=/venv \
     UWSGI_PROCESSES=4 \
-    SETUPTOOLS_SCM_PRETEND_VERSION=${VERSION:-0.0.0.dev0}
+    SETUPTOOLS_SCM_PRETEND_VERSION=${VERSION:-0.0.0.dev0} \
+    HATCH_BUILD_NO_HOOKS=1
 
 WORKDIR /app
 COPY uv.lock README.md MANIFEST.in pyproject.toml /app/
@@ -104,7 +90,8 @@ ENV PATH=/venv/bin:/usr/local/bin/:/usr/bin:/bin \
     UV_PROJECT_ENVIRONMENT=/venv \
     VIRTUAL_ENV=/venv \
     UWSGI_PROCESSES=4 \
-    SETUPTOOLS_SCM_PRETEND_VERSION=${VERSION:-0.0.0.dev0}
+    SETUPTOOLS_SCM_PRETEND_VERSION=${VERSION:-0.0.0.dev0} \
+    HATCH_BUILD_NO_HOOKS=1
 
 WORKDIR /app
 COPY uv.lock README.md MANIFEST.in pyproject.toml /app/
@@ -124,6 +111,8 @@ FROM base_os AS dist
 ARG BUILD_DATE
 ARG SOURCE_COMMIT
 ARG BRANCH
+ARG GITHUB_SERVER_URL
+ARG GITHUB_REPOSITORY
 
 ENV PATH=/venv/bin:/usr/local/bin/:/usr/bin:/bin \
     DJANGO_SETTINGS_MODULE=hope_live.config.settings \
@@ -139,13 +128,15 @@ ENV PATH=/venv/bin:/usr/local/bin/:/usr/bin:/bin \
     UV_PROJECT_ENVIRONMENT=/venv \
     VIRTUAL_ENV=/venv \
     UWSGI_PROCESSES=4 \
-    MEDIA_ROOT="${MEDIA_ROOT:-/var/run/app/media}" \
-    STATIC_ROOT="${STATIC_ROOT:-/var/run/app/static}"
+    MEDIA_ROOT="/var/run/app/media" \
+    STATIC_ROOT="/var/run/app/static" \
+    SETUPTOOLS_SCM_PRETEND_VERSION=${VERSION:-0.0.0.dev0} \
+    HATCH_BUILD_NO_HOOKS=1
 
 RUN <<EOF cat> /RELEASE
 {"version": "$VERSION",
  "commit": "$SOURCE_COMMIT",
- "date": "$BUILD_DATE",
+ "date": "$BUILD_DATE"
 }
 EOF
 WORKDIR /app
@@ -158,12 +149,10 @@ COPY --chown=hope:unicef --from=production /venv /venv
 COPY --from=builder /usr/local/bin/uwsgi /usr/local/bin/uv /usr/local/bin/
 RUN --mount=type=cache,target=/root/.uv-cache \
     uv --cache-dir=/root/.uv-cache  pip install --no-deps . \
-    && rm -fr /app/* \
-
-
+    && rm -fr /app/*
 
 EXPOSE 8000
-ENTRYPOINT exec docker-entrypoint.sh "$0" "$@"
+ENTRYPOINT ["docker-entrypoint.sh"]
 CMD ["run"]
 
 
