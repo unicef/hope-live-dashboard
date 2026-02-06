@@ -1,14 +1,110 @@
 {% extends "layout.html" %}
 
 {% block content %}
-    <div class="grid grid-cols-3 gap-1">
-        <div><a href="{% url "web:details" %}">{% include "panels/histogram.html" %}</a></div>
-        <div><a href="{% url "web:details" %}">{% include "panels/map.html" %}</a></div>
-
-        <div>{% include "panels/base2.html" %}</div>
-        <div>{% include "panels/base3.html" %}</div>
-        <div>{% include "panels/base4.html" %}</div>
-        <div>{% include "panels/base5.html" %}</div>
-        <div class="content-center">{% include "panels/base6.html" %}</div>
+<div class="container mx-auto px-4 py-8">
+    <div class="mb-8 flex justify-between items-center">
+        <div>
+            <h1 class="text-3xl font-bold text-gray-900">Dashboard {{ year }}</h1>
+            <p class="text-gray-600">Overview of Financial and Demographic Metrics</p>
+        </div>
+        <div>
+            <!-- Date Filter could go here -->
+            <span class="bg-unicef-blue text-white text-xs font-medium mr-2 px-2.5 py-0.5 rounded">Live Data</span>
+        </div>
     </div>
+
+    <!-- Stats Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <!-- Financial -->
+        <div class="bg-white rounded-lg shadow p-6 border-l-4 border-unicef-blue">
+            <h3 class="text-gray-500 text-sm font-medium uppercase">Total Disbursed</h3>
+            <p class="text-3xl font-bold text-gray-900 mt-2">${{ financial.total_usd|floatformat:2 }}</p>
+        </div>
+        <div class="bg-white rounded-lg shadow p-6 border-l-4 border-unicef-primary">
+            <h3 class="text-gray-500 text-sm font-medium uppercase">Transactions</h3>
+            <p class="text-3xl font-bold text-gray-900 mt-2">{{ financial.total_payments }}</p>
+        </div>
+
+        <!-- Demographic -->
+        <div class="bg-white rounded-lg shadow p-6 border-l-4 border-unicef-blue">
+            <h3 class="text-gray-500 text-sm font-medium uppercase">Individuals Reached</h3>
+            <p class="text-3xl font-bold text-gray-900 mt-2">{{ demographic.total_individuals }}</p>
+        </div>
+        <!--
+        <div class="bg-white rounded-lg shadow p-6 border-l-4 border-purple-500">
+            <h3 class="text-gray-500 text-sm font-medium uppercase">Households</h3>
+             <p class="text-3xl font-bold text-gray-900 mt-2">{{ demographic.total_households }}</p>
+        </div>
+        -->
+    </div>
+
+    <!-- Charts Section -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <!-- By Sector -->
+        <div class="bg-white rounded-lg shadow p-6">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">Distribution by Sector</h3>
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead>
+                        <tr>
+                            <th
+                                class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Sector</th>
+                            <th
+                                class="px-6 py-3 bg-gray-50 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Amount (USD)</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                        {% for item in by_sector %}
+                        <tr>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ item.dimension_value }}
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-right text-gray-900">${{
+                                item.value|floatformat:2 }}</td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="2" class="px-6 py-4 text-center text-gray-500">No data available</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- By Country -->
+        <div class="bg-white rounded-lg shadow p-6">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">Top Countries</h3>
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead>
+                        <tr>
+                            <th
+                                class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Country</th>
+                            <th
+                                class="px-6 py-3 bg-gray-50 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Amount (USD)</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                        {% for item in by_country|slice:":10" %}
+                        <tr>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ item.country_slug|upper }}
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-right text-gray-900">${{
+                                item.value|floatformat:2 }}</td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="2" class="px-6 py-4 text-center text-gray-500">No data available</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock content %}

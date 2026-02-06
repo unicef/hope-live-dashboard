@@ -1,7 +1,7 @@
 import datetime
 import json
 import logging
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 from urllib.parse import ParseResult, urlparse
 
 import click
@@ -15,7 +15,6 @@ from streaming.utils import make_event
 if TYPE_CHECKING:
     from pika.adapters.blocking_connection import BlockingChannel
     from pika.spec import Basic, BasicProperties
-    from streaming.types import EventType
 
 logger = logging.getLogger(__name__)
 
@@ -49,11 +48,11 @@ def listen(name: str, domain: str, local: bool, address: str = "", dry_run: bool
         can_notify = bool(parsed_url.scheme and parsed_url.netloc)
         if can_notify:
             notification_url = f"{web_address}{reverse('ws:notify')}"
-    backend.connection_name = web_address
+    backend.client_name = web_address
     backend.connect()
     consume_message = not dry_run
     click.secho(f"Server   : {backend.host}:{backend.port}")
-    click.secho(f"Consumer : {backend.connection_name}")
+    click.secho(f"Consumer : {backend.client_name}")
     click.secho(f"Listen on: {backend.exchange} {domain}")
     click.secho(f"Ack      : {consume_message}")
 
@@ -63,7 +62,9 @@ def listen(name: str, domain: str, local: bool, address: str = "", dry_run: bool
         click.secho("Server address is invalid. Live Notifications will not work. Aborting.", fg="red")
         click.get_current_context().exit()
 
-    def callback(ch: "BlockingChannel", method: "Basic.Deliver", properties: "BasicProperties", body: bytes) -> None:
+    def callback(
+        queue_name: str, ch: "BlockingChannel", method: "Basic.Deliver", properties: "BasicProperties", body: bytes
+    ) -> bool:
         click.echo(f"web_address {notification_url}")
         click.echo(f"Received {body.decode()}")
         try:
@@ -74,14 +75,15 @@ def listen(name: str, domain: str, local: bool, address: str = "", dry_run: bool
         except requests.exceptions.RequestException:
             if method.delivery_tag:
                 ch.basic_reject(method.delivery_tag, requeue=True)
+        return True
 
     try:
-        backend.listen([domain], callback, ack=consume_message)
+        backend.listen(callback, [domain], ack=consume_message)
     except KeyboardInterrupt:
         click.secho("\nStopping listener.", fg="yellow")
     finally:
-        if backend.connection and backend.connection.is_open:
-            backend.connection.close()
+        if backend._connection and backend._connection.is_open:
+            backend.disconnect()
 
 
 @cli.command()
@@ -93,7 +95,7 @@ def send(message: str, domain: str) -> None:
     if not isinstance(backend, RabbitMQBackend):
         raise click.ClickException("RabbitMQ backend is not configured. Please set BROKER_URL to a rabbit:// URL.")
 
-    backend.connection_name = "sender"
+    backend.client_name = "sender"
     timestamp = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
 
     try:
@@ -103,11 +105,11 @@ def send(message: str, domain: str) -> None:
             "timestamp": timestamp,
             "message": message,
         }
-    msg: EventType = make_event(payload, event="Test", domain=domain)
+    msg: Any = make_event(payload)
     click.secho(f"Server    : {backend.host}:{backend.port}")
     click.secho(f"Publish to: {backend.exchange} {domain}")
 
     backend.connect()
-    backend.publish(msg)
+    backend.publish(domain, msg)
     click.secho(f"Sent: {msg}")
-    backend.close()
+    backend.disconnect()

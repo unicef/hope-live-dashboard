@@ -7,7 +7,7 @@ RELEASE = $(shell grep -m 1 version ../pyproject.toml | tr -s ' ' | tr -d '"' | 
 LOCK_CHECKSUM?=$(shell sha1sum ../uv.lock | awk '{print $$1}')
 LOCK_HASH?=$(shell echo ${LOCK_CHECKSUM} | cut -c 1-8)
 
-DOCKER_IMAGE_NAME?=unicef/hope-country-workspace
+DOCKER_IMAGE_NAME?=unicef/hope-live-dashboard
 
 CMD?=run
 VERSION?=dev

@@ -55,6 +55,8 @@ INSTALLED_APPS = [
     "flags",
     "hope_live",
     "hope_live.ws",
+    "hope_live.analysis",
+    "widget_tweaks",
     *env("EXTRA_APPS"),
 ]
 
@@ -171,7 +173,11 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 CSRF_COOKIE_SECURE = env("CSRF_COOKIE_SECURE")
 CSRF_TRUSTED_ORIGINS = env("CSRF_TRUSTED_ORIGINS")
 
+LOGIN_URL = "web:login"
+LOGIN_REDIRECT_URL = "web:dashboard"
+
 from .fragments.app import *  # noqa: E402 F403
+from .fragments.celery import *  # noqa: E402 F403
 from .fragments.constance import *  # noqa: E402 F403
 from .fragments.csp import *  # noqa: E402 F403
 from .fragments.debug_toolbar import *  # noqa: E402 F403
