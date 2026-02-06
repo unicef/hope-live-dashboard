@@ -101,7 +101,7 @@ class Command(BaseCommand):
         if self.verbosity >= 1:
             echo = self.stdout.write
         else:
-            echo = lambda *a, **kw: None
+            echo = lambda *a, **kw: None  # noqa
 
         try:
             extra = {
