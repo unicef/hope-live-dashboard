@@ -567,16 +567,16 @@ wheels = [
 
 [[package]]
 name = "django"
-version = "6.0.2"
+version = "5.2.11"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "asgiref" },
     { name = "sqlparse" },
     { name = "tzdata", marker = "sys_platform == 'win32'" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/26/3e/a1c4207c5dea4697b7a3387e26584919ba987d8f9320f59dc0b5c557a4eb/django-6.0.2.tar.gz", hash = "sha256:3046a53b0e40d4b676c3b774c73411d7184ae2745fe8ce5e45c0f33d3ddb71a7", size = 10886874, upload-time = "2026-02-03T13:50:31.596Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/17/f2/3e57ef696b95067e05ae206171e47a8e53b9c84eec56198671ef9eaa51a6/django-5.2.11.tar.gz", hash = "sha256:7f2d292ad8b9ee35e405d965fbbad293758b858c34bbf7f3df551aeeac6f02d3", size = 10885017, upload-time = "2026-02-03T13:52:50.554Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/96/ba/a6e2992bc5b8c688249c00ea48cb1b7a9bc09839328c81dc603671460928/django-6.0.2-py3-none-any.whl", hash = "sha256:610dd3b13d15ec3f1e1d257caedd751db8033c5ad8ea0e2d1219a8acf446ecc6", size = 8339381, upload-time = "2026-02-03T13:50:15.501Z" },
+    { url = "https://files.pythonhosted.org/packages/91/a7/2b112ab430575bf3135b8304ac372248500d99c352f777485f53fdb9537e/django-5.2.11-py3-none-any.whl", hash = "sha256:e7130df33ada9ab5e5e929bc19346a20fe383f5454acb2cc004508f242ee92c0", size = 8291375, upload-time = "2026-02-03T13:52:42.47Z" },
 ]
 
 [[package]]
@@ -865,6 +865,18 @@ wheels = [
 ]
 
 [[package]]
+name = "django-widget-tweaks"
+version = "1.5.1"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "django" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/01/6d/d1b5a3ae3bccfee96e10315373298cea51e5e0d6853d022181b7b0861a4d/django_widget_tweaks-1.5.1.tar.gz", hash = "sha256:084acc9eeb5a3208f2670522de6284287973e54d54488ce6d402f4b99bc5f452", size = 16233, upload-time = "2026-01-02T12:46:28.907Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/64/6a/ad176284371005426b9a1c424e6cd77a9018ab1b17dc23948bfbeb2f6a21/django_widget_tweaks-1.5.1-py3-none-any.whl", hash = "sha256:3f5080f8365740fc1c14607498c975cbfed896dd0c40e1b563095716ee31e3b5", size = 9634, upload-time = "2026-01-02T12:46:02.18Z" },
+]
+
+[[package]]
 name = "exceptiongroup"
 version = "1.3.1"
 source = { registry = "https://pypi.org/simple" }
@@ -1060,6 +1072,7 @@ dependencies = [
     { name = "django-tailwind" },
     { name = "django-timezone-field" },
     { name = "django-unfold" },
+    { name = "django-widget-tweaks" },
     { name = "psycopg2-binary" },
     { name = "redis" },
     { name = "sentry-sdk" },
@@ -1126,33 +1139,34 @@ type-check = [
 
 [package.metadata]
 requires-dist = [
-    { name = "channels", specifier = ">=4.3.1" },
-    { name = "channels-redis", specifier = ">=4.3" },
-    { name = "click", specifier = ">=8.2.1" },
-    { name = "daphne", specifier = ">=4.2.1" },
-    { name = "django", specifier = ">=5.2.6" },
-    { name = "django-admin-extra-buttons", specifier = ">=2.1.1" },
-    { name = "django-adminactions", specifier = ">=2.4" },
-    { name = "django-adminfilters", specifier = ">=2.6" },
-    { name = "django-constance", specifier = ">=4.3.2" },
-    { name = "django-csp", specifier = ">=4" },
-    { name = "django-debug-toolbar", specifier = ">=6" },
-    { name = "django-environ", specifier = ">=0.12" },
-    { name = "django-flags", specifier = ">=5.0.14" },
-    { name = "django-online-issues", extras = ["github"], specifier = ">=0.5" },
-    { name = "django-redis", specifier = ">=6" },
-    { name = "django-regex", specifier = ">=0.5" },
-    { name = "django-smart-env", specifier = ">=0.1" },
-    { name = "django-streaming", extras = ["rabbitmq"], specifier = ">=0.3" },
-    { name = "django-stubs", specifier = ">=5.2" },
-    { name = "django-stubs-ext", specifier = ">=5.2.5" },
-    { name = "django-tailwind", specifier = ">=4.2" },
-    { name = "django-timezone-field", specifier = ">=7" },
-    { name = "django-unfold", specifier = ">=0.65" },
+    { name = "channels" },
+    { name = "channels-redis" },
+    { name = "click" },
+    { name = "daphne" },
+    { name = "django", specifier = ">=5.2.6,<6" },
+    { name = "django-admin-extra-buttons" },
+    { name = "django-adminactions" },
+    { name = "django-adminfilters", specifier = ">=2.7" },
+    { name = "django-constance" },
+    { name = "django-csp" },
+    { name = "django-debug-toolbar" },
+    { name = "django-environ" },
+    { name = "django-flags" },
+    { name = "django-online-issues", extras = ["github"] },
+    { name = "django-redis" },
+    { name = "django-regex" },
+    { name = "django-smart-env" },
+    { name = "django-streaming", extras = ["rabbitmq"] },
+    { name = "django-stubs" },
+    { name = "django-stubs-ext" },
+    { name = "django-tailwind" },
+    { name = "django-timezone-field" },
+    { name = "django-unfold" },
+    { name = "django-widget-tweaks" },
     { name = "psycopg2-binary", specifier = ">=2.9.10" },
-    { name = "redis", specifier = ">=6.4" },
-    { name = "sentry-sdk", specifier = ">=2.37.1" },
-    { name = "social-auth-app-django", specifier = ">=5.5.1" },
+    { name = "redis" },
+    { name = "sentry-sdk" },
+    { name = "social-auth-app-django" },
     { name = "unicef-security", specifier = ">=1.8" },
 ]
 
