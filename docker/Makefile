@@ -9,7 +9,7 @@ RELEASE := $(shell git describe --tags --always --dirty 2>/dev/null || echo "dev
 LOCK_CHECKSUM?=$(shell sha1sum ../uv.lock | awk '{print $$1}')
 LOCK_HASH?=$(shell echo ${LOCK_CHECKSUM} | cut -c 1-8)
 
-DOCKER_IMAGE_NAME?=unicef/hope-live-dashboard
+DOCKER_IMAGE_NAME?=unicef/hope_live
 
 CMD?=run
 VERSION?=dev
@@ -48,6 +48,7 @@ help:
 			--build-arg RELEASE=${RELEASE} \
 			--build-arg BUILD_DATE=${BUILD_DATE} \
 			--build-arg GIT_SHA=${SOURCE_COMMIT} \
+			--platform=linux/amd64 \
 			--target ${STAGE} \
 			${BUILD_OPTIONS} \
 			-t ${DOCKER_IMAGE} \

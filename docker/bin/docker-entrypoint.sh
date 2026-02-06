@@ -2,7 +2,8 @@
 
 export UWSGI_PROCESSES="${UWSGI_PROCESSES:-"4"}"
 export DJANGO_SETTINGS_MODULE="hope_live.config.settings"
-mkdir -p "${MEDIA_ROOT}" "${STATIC_ROOT}" || echo "Cannot create dirs ${MEDIA_ROOT} ${STATIC_ROOT}"
+
+mkdir -p /var/run ${MEDIA_ROOT} ${STATIC_ROOT}
 
 if [ -d "${MEDIA_ROOT}" ];then
   chown -R hope:unicef ${MEDIA_ROOT}
