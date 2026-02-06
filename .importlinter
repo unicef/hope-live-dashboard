@@ -1,0 +1,19 @@
+[importlinter]
+root_package = hope_live
+exclude_type_checking_imports = True
+include_external_packages = True
+
+
+[importlinter:contract:1]
+name = Models must not import Views or Forms
+type = layers
+containers =
+    hope_live
+layers =
+    admin
+    models
+    security
+    utils
+    web
+    ws
+exhaustive = false
