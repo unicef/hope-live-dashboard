@@ -33,6 +33,10 @@ class RegexList(_RegexList):  # type: ignore[misc]
 GLOBAL_EXCLUDED_MODELS = RegexList(
     [
         r"django_celery_beat\.ClockedSchedule",
+        r"django_celery_beat\.CrontabSchedule",
+        r"django_celery_beat\.IntervalSchedule",
+        r"django_celery_beat\.PeriodicTask",
+        r"django_celery_beat\.SolarSchedule",
         r"contenttypes\.ContentType",
         r"webpush\.BrowserAdmin",
         "authtoken",

@@ -16,7 +16,8 @@ app = Celery("hope_live")
 app.config_from_object("django.conf:settings", namespace="CELERY")
 
 # Load task modules from all registered Django apps.
-app.autodiscover_tasks()
+# Explicitly list the apps to ensure tasks are discovered
+app.autodiscover_tasks(packages=["hope_live.analysis"])
 
 logger = logging.getLogger(__name__)
 

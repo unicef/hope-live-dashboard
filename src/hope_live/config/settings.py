@@ -25,6 +25,7 @@ INSTALLED_APPS = [
     "channels",
     "hope_live.theme",
     "hope_live.web",
+    "adminactions",
     "unfold",  # before django.contrib.admin
     "unfold.contrib.filters",  # optional, if special filters are needed
     "unfold.contrib.forms",  # optional, if special form elements are needed
@@ -46,7 +47,6 @@ INSTALLED_APPS = [
     "debug_toolbar",
     "social_django",
     "admin_extra_buttons",
-    "adminactions",
     "issues",
     "smart_env",
     "adminfilters",
@@ -58,6 +58,7 @@ INSTALLED_APPS = [
     "hope_live.ws",
     "hope_live.analysis",
     "widget_tweaks",
+    "django_celery_beat",
     *env("EXTRA_APPS"),
 ]
 

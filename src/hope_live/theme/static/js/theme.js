@@ -5,11 +5,14 @@ document.addEventListener("DOMContentLoaded", function () {
     const stored = localStorage.getItem("theme") || "light"
 
     HTML.dataset.theme = stored;
-    toggler.checked = (HTML.dataset.theme === "dark");
-    HTML.dataset.theme = localStorage.theme || "light";
-    localStorage.setItem("theme", HTML.dataset.theme);
-    toggler.addEventListener("click", () => {
-        HTML.dataset.theme = toggler.checked ? "dark" : "light"
-        localStorage.theme = HTML.dataset.theme;
-    })
+
+    if (toggler) {
+        toggler.checked = (stored === "dark");
+        toggler.addEventListener("click", () => {
+            const newTheme = toggler.checked ? "dark" : "light";
+            HTML.dataset.theme = newTheme;
+            localStorage.setItem("theme", newTheme);
+        });
+    }
+
 })

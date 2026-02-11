@@ -1,0 +1,68 @@
+{% extends "layout.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <div class="mb-8 flex justify-between items-center">
+        <div>
+            <h1 class="text-3xl font-bold text-gray-900">Completion Rate Dashboard</h1>
+            <p class="text-gray-600">Payment Reconciliation and Completion Status Tracking</p>
+        </div>
+        <div>
+            <span class="bg-unicef-blue text-white text-xs font-medium mr-2 px-2.5 py-0.5 rounded">Live Data</span>
+        </div>
+    </div>
+
+    <!-- Timeline Filter -->
+    <div class="bg-white rounded-lg shadow p-6 mb-8">
+        <h3 class="text-lg font-semibold text-gray-900 mb-2">Reconciliation Timeline</h3>
+        <div id="time-focus-chart" class="w-full"></div>
+        <div id="time-range-chart" class="w-full mt-4"></div>
+        <p class="text-xs text-gray-500 mt-2 italic">* Select a range on the smaller chart at the bottom to zoom in on
+            the focus chart</p>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6 mb-8">
+        <div class="bg-white rounded-lg shadow p-6 border-l-4 border-unicef-blue">
+            <h3 class="text-gray-500 text-sm font-medium uppercase">Reconciled Payments</h3>
+            <p id="total-reconciled" class="text-3xl font-bold text-gray-900 mt-2">0</p>
+        </div>
+        <div class="bg-white rounded-lg shadow p-6 border-l-4 border-unicef-primary">
+            <h3 class="text-gray-500 text-sm font-medium uppercase">Still Opened</h3>
+            <p id="total-opened" class="text-3xl font-bold text-gray-900 mt-2">0</p>
+        </div>
+    </div>
+
+    <!-- Main Completion Charts -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+        <div class="bg-white rounded-lg shadow p-6">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">Status by Sector</h3>
+            <div id="status-sector-chart" class="w-full"></div>
+        </div>
+        <div class="bg-white rounded-lg shadow p-6 border-unicef-blue">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">Reconciliation Ratio</h3>
+            <div id="reconciliation-pie-chart" class="w-full flex justify-center"></div>
+        </div>
+    </div>
+
+    <!-- Geographic Breakdown -->
+    <div class="grid grid-cols-1 lg:grid-cols-1 gap-8">
+        <div class="bg-white rounded-lg shadow p-6">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">Status by Country</h3>
+            <div id="status-country-chart" class="w-full"></div>
+        </div>
+    </div>
+</div>
+
+<script id="dashboard-data" type="application/json">
+    {{ dashboard_data_json|safe }}
+</script>
+{% endblock content %}
+
+{% block extra_js %}
+<script src="{% static 'js/crossfilter.min.js' %}"></script>
+<script src="{% static 'js/dc.min.js' %}"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dc/4.2.7/style/dc.min.css" />
+<script src="{% static 'js/completion_visuals.js' %}"></script>
+{% endblock extra_js %}

@@ -14,95 +14,126 @@ logger = logging.getLogger(__name__)
 BATCH_SIZE = 1000
 
 
-@shared_task  # type: ignore[untyped-decorator]
+@shared_task(name="hope_live.analysis.tasks.sync_daily_aggregates")  # type: ignore[untyped-decorator]
 def sync_daily_aggregates(target_years: list[int] | None = None) -> None:
     """Fetch DailyAggregate data from Country Report API and update local DB."""
     api_url = config.HOPE_COUNTRY_REPORT_API_URL
     token = config.HOPE_COUNTRY_REPORT_API_TOKEN
     query_id = config.HOPE_COUNTRY_REPORT_QUERY_ID
 
-    # Verify logic:
-    # 1. We need to run the query? Or fetch dataset?
-    # Country Report Query API usually runs asynchronously.
-    # For now, let's assume we can fetch the Latest execution result or trigger a run.
-    # Simpler approach: Fetch from `data/dataset/{id}/content/` ? No, Query.
-    # The URL pattern for query execution result: /api/queries/{id}/execute/ ?
-    # Let's assume we use the Run endpoint.
-
     if not target_years:
         target_years = [date.today().year]
 
     headers = {"Authorization": f"Token {token}"}
+    context = _prepare_sync_context(api_url, query_id, headers)
+    if not context:
+        return
 
-    # First, fetch the query details to get the office slug
-    query_url = f"{api_url}queries/{query_id}/"
+    office_slug, datasets = context
+
+    for target_year in target_years:
+        try:
+            dataset_id = _find_dataset_id_for_year(datasets, target_year)
+            if not dataset_id:
+                logger.info(f"No dataset found for year {target_year}")
+                continue
+
+            logger.info(f"Processing dataset ID {dataset_id} for year {target_year}")
+            data_endpoint = f"{api_url}offices/{office_slug}/queries/{query_id}/dataset/{dataset_id}/data/"
+            all_rows = _fetch_all_pages(data_endpoint, headers)
+
+            if not all_rows:
+                logger.warning(f"No data returned for year {target_year}")
+                continue
+
+            logger.info(f"Total rows fetched for year {target_year}: {len(all_rows)}")
+            save_aggregates(all_rows, target_year)
+
+        except Exception as e:
+            logger.exception(f"Error syncing aggregates for year {target_year}: {e}")
+
+
+def _prepare_sync_context(
+    api_url: str, query_id: str, headers: dict[str, str]
+) -> tuple[str, list[dict[str, Any]]] | None:
+    """Fetch query and available datasets."""
     try:
-        resp = requests.get(query_url, headers=headers, timeout=10)
+        resp = requests.get(f"{api_url}queries/{query_id}/", headers=headers, timeout=10)
         if resp.status_code != requests.codes.ok:
             logger.error(f"Failed to fetch query details: {resp.status_code}")
-            return
+            return None
+
         query_data = resp.json()
         office_url = query_data.get("office")
         if not office_url:
             logger.error("Query does not have an associated office")
-            return
+            return None
 
-        # Extract slug from office URL (assuming format .../offices/SLUG/)
         office_slug = office_url.rstrip("/").split("/")[-1]
-        run_endpoint = f"{api_url}offices/{office_slug}/queries/{query_id}/execute/"
+        datasets_url = f"{api_url}offices/{office_slug}/queries/{query_id}/dataset/"
+        datasets_resp = requests.get(datasets_url, headers=headers, timeout=10)
+        if datasets_resp.status_code != requests.codes.ok:
+            logger.error(f"Failed to fetch datasets: {datasets_resp.status_code}")
+            return None
 
-    except Exception as e:
-        logger.exception(f"Error preparing query execution: {e}")
-        return
+        datasets = datasets_resp.json().get("results", [])
+        logger.info(f"Found {len(datasets)} datasets")
+        return office_slug, datasets
 
-    # Warning: sync wait for execution might timeout if dataset is huge.
-    # Better: check if recent dataset exists?
-    # For now, proceed with execute (synchronous wait usually not supported properly by API if long).
+    except Exception:
+        logger.exception("Error preparing sync context")
+        return None
 
-    for year in target_years:
+
+def _find_dataset_id_for_year(datasets: list[dict[str, Any]], year: int) -> int | None:
+    """Locate the dataset ID matching the target year."""
+    for dataset in datasets:
+        if dataset.get("arguments", {}).get("year") == year:
+            return int(dataset["id"])
+    return None
+
+
+def _fetch_all_pages(data_endpoint: str, headers: dict[str, str]) -> list[dict[str, Any]]:
+    """Fetch all rows from the endpoint handling pagination."""
+    all_rows: list[dict[str, Any]] = []
+    current_url: str | None = f"{data_endpoint}?page_size=500"
+    page_count = 0
+
+    while current_url:
+        page_count += 1
+        logger.info(f"Fetching page {page_count}...")
         try:
-            # We want to filter by year. Arguments format depends on Parametrizer.
-            # Assuming Arguments are passed as payload?
-            # Or if it's a simple query without params?
-            # Let's try passing arguments.
-            payload = {"arguments": {"year": year}}
-            logger.info(f"Syncing DailyAggregates for {year}...")
-
-            # Note: This is an assumption on Country Report API.
-            response = requests.post(run_endpoint, json=payload, headers=headers, timeout=30)
-
-            if response.status_code == requests.codes.ok:
-                raw_data: dict[str, Any] = response.json()
-                # Expected format: {"data": [...], ...} or direct list if preview?
-                # PQ generic returns usually: { "data": [rows...], "columns": ... }
-
-                rows: list[dict[str, Any]] = raw_data.get("data", [])
-                if not rows and isinstance(raw_data, list):
-                    rows = raw_data
-
-                if not rows:
-                    logger.warning(f"No data returned for Year {year}")
-                    continue
-
-                save_aggregates(rows, year)
-
-            else:
-                logger.error(f"Failed to run query for {year}: {response.status_code} {response.text}")
-
+            response = requests.get(current_url, headers=headers, timeout=60)
         except Exception as e:
-            logger.exception(f"Error syncing year {year}: {e}")
+            logger.exception(f"Error fetching page {page_count}: {e}")
+            break
+
+        if response.status_code != requests.codes.ok:
+            logger.error(f"Failed to fetch page {page_count}: {response.status_code}")
+            logger.error(f"Response: {response.text[:500]}")
+            break
+
+        raw_data: dict[str, Any] = response.json()
+        if isinstance(raw_data, dict) and "results" in raw_data:
+            rows = raw_data.get("results", [])
+            all_rows.extend(rows)
+            current_url = raw_data.get("next")
+        else:
+            rows = raw_data.get("data", []) or (raw_data if isinstance(raw_data, list) else [])
+            all_rows.extend(rows)
+            logger.info(f"Received {len(rows)} rows (non-paginated)")
+            break
+
+    return all_rows
 
 
+@shared_task(name="hope_live.analysis.tasks.save_aggregates")  # type: ignore[untyped-decorator]
 def save_aggregates(rows: list[dict[str, Any]], year: int) -> None:
     with transaction.atomic():
-        # Clean up existing data for this year to avoid duplicates
-        # (Assuming rows cover the whole year)
-        # We filter by date__year = year
         DailyAggregate.objects.filter(date__year=year).delete()
 
         batch = []
         for item in rows:
-            # Parse date if string
             item_date = item.get("date")
             if not item_date:
                 continue

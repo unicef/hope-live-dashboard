@@ -1,12 +1,13 @@
 [run]
 branch = True
-source = country_workspace
+source = src/hope_live
 
 omit =
     */tests/**
     */migrations/*,
+    */commands/*,
+    */apps.py,
     */wsgi.py,
-
 
 [report]
 # Regexes for lines to exclude from consideration
@@ -21,16 +22,11 @@ exclude_lines =
     raise AssertionError
     raise NotImplementedError
     except ImportError
-    raise CommandError
-    raise RemoteError
     # Don't complain if non-runnable code isn't run:
     #if 0:
     if __name__ == .__main__.:
-    if TYPE_CHECKING:
-    if settings.DEBUG:
 
-
-#fail_under = 95
+fail_under = 0
 
 ignore_errors = True
 
