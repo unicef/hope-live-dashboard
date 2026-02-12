@@ -23,8 +23,10 @@ logger = logging.getLogger(__name__)
 def cli() -> None:
     """HOPE live dashboard."""
     import django  # noqa: PLC0415
+    from django.conf import settings  # noqa: PLC0415
 
-    django.setup()
+    if not settings.configured:
+        django.setup()
 
 
 @cli.command()
@@ -111,5 +113,5 @@ def send(message: str, domain: str) -> None:
 
     backend.connect()
     backend.publish(domain, msg)
-    click.secho(f"Sent: {msg}")
+    click.secho(f"Sent: {payload}")
     backend.disconnect()

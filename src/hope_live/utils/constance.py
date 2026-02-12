@@ -20,7 +20,7 @@ class ObfuscatedInput(HiddenInput):
         renderer: Any | None = None,
     ) -> "SafeString":
         context = self.get_context(name, value, attrs)
-        context["value"] = str(value)
+        context["value"] = ""
         context["label"] = "Set" if value else "Not Set"
 
         tpl = Template('<input type="hidden" name="{{ widget.name }}" value="{{ value }}">{{ label }}')

@@ -1,6 +1,9 @@
 [run]
 branch = True
 source = src/hope_live
+data_file = .coverage
+relative_files = True
+parallel = True
 
 omit =
     */tests/**
@@ -8,6 +11,13 @@ omit =
     */commands/*,
     */apps.py,
     */wsgi.py,
+    */__pycache__/*
+    */test_*.py
+    */conftest.py
+    */setup.py
+    */manage.py
+    */settings.py
+    */fragments/*
 
 [report]
 # Regexes for lines to exclude from consideration
@@ -32,3 +42,7 @@ ignore_errors = True
 
 [html]
 directory = ~build/coverage
+title = HOPE Live Dashboard Coverage Report
+
+[xml]
+output = ~build/coverage.xml

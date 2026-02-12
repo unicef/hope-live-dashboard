@@ -24,6 +24,7 @@ def pytest_configure(config):
     config.addinivalue_line("markers", "django_db: mark test as requiring django database")
     config.addinivalue_line("markers", "skip_models: skip specific models in tests")
     config.addinivalue_line("markers", "skip_buttons: skip specific buttons in tests")
+    config.addinivalue_line("markers", "asyncio: mark test as async test")
 
 
 @pytest.fixture
