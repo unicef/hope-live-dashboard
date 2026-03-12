@@ -19,39 +19,49 @@ cd /app
 
 case "$1" in
     run)
-      django-admin upgrade --with-check
-	    set -- tini -- "$@"
-	    MAPPING=""
-	    if [ "${STATIC_URL}" = "/static/" ]; then
-	      MAPPING="--static-map ${STATIC_URL}=${STATIC_ROOT}"
-	    fi
-      set -- tini -- "$@"
-	    set -- uwsgi --http :8000 \
-	          -H /venv \
-	          --module hope_live.config.wsgi \
-	          --mimefile=/conf/mime.types \
-	          --uid hope \
-	          --gid unicef \
+        django-admin upgrade --with-check
+        MAPPING=""
+        if [ "${STATIC_URL}" = "/static/" ]; then
+            MAPPING="--static-map ${STATIC_URL}=${STATIC_ROOT}"
+        fi
+        exec tini -- uwsgi --http :8000 \
+            -H /venv \
+            --module hope_live.config.wsgi \
+            --mimefile=/conf/mime.types \
+            --uid hope \
+            --gid unicef \
             --buffer-size 8192 \
             --http-buffer-size 8192 \
-	          $MAPPING
-	    ;;
+            $MAPPING
+        ;;
+    dev)
+        until pg_isready -h db -p 5432; do
+            echo "waiting for database"
+            sleep 2
+        done
+        django-admin collectstatic --no-input
+        django-admin migrate
+        exec django-admin runserver 0.0.0.0:8000
+        ;;
     upgrade)
-      django-admin upgrade --with-check
-      ;;
+        exec django-admin upgrade --with-check
+        ;;
     worker)
-      set -- tini -- "$@"
-      set -- gosu hope:unicef celery -A hope_live.config.celery worker --statedb worker -E --loglevel=DEBUG
-      ;;
+        exec tini -- gosu hope:unicef celery -A hope_live.config.celery worker \
+            --statedb worker -E --loglevel=DEBUG
+        ;;
     beat)
-      set -- tini -- "$@"
-      set -- gosu hope:unicef celery -A hope_live.config.celery beat --loglevel=DEBUG --scheduler django_celery_beat.schedulers:DatabaseScheduler
-      ;;
+        exec tini -- gosu hope:unicef celery -A hope_live.config.celery beat \
+            --loglevel=DEBUG --scheduler django_celery_beat.schedulers:DatabaseScheduler
+        ;;
     flower)
-      export DATABASE_URL="sqlite://:memory:"
-      set -- tini -- "$@"
-      set -- gosu hope:unicef celery -A hope_live.config.celery flower
-      ;;
+        export DATABASE_URL="sqlite://:memory:"
+        exec tini -- gosu hope:unicef celery -A hope_live.config.celery flower
+        ;;
+    *)
+        exec "$@"
+        ;;
 esac
+<<<<<<< Updated upstream
 
 exec "$@"

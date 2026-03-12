@@ -7,8 +7,10 @@ ARG SOURCE_COMMIT
 
 RUN set -x \
   && runtimeDeps=" \
+    libexpat1 \
     libmagic1 \
     libxml2 \
+    tini \
   " \
   && buildDeps=" \
 wget \
@@ -128,10 +130,8 @@ ENV PATH=/venv/bin:/usr/local/bin/:/usr/bin:/bin \
     UV_PROJECT_ENVIRONMENT=/venv \
     VIRTUAL_ENV=/venv \
     UWSGI_PROCESSES=4 \
-    MEDIA_ROOT="/var/run/app/media" \
-    STATIC_ROOT="/var/run/app/static" \
-    SETUPTOOLS_SCM_PRETEND_VERSION=${VERSION:-0.0.0.dev0} \
-    HATCH_BUILD_NO_HOOKS=1
+    MEDIA_ROOT="${MEDIA_ROOT:-/var/run/app/media}" \
+    STATIC_ROOT="${STATIC_ROOT:-/var/run/app/static}"
 
 RUN <<EOF cat> /RELEASE
 {"version": "$VERSION",
