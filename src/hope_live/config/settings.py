@@ -64,6 +64,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "csp.middleware.CSPMiddleware",
@@ -102,7 +103,12 @@ CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
         "CONFIG": {
-            "hosts": [env("CHANNEL_BROKER") or env("REDIS_URL")],
+            "hosts": [
+                {
+                    "address": env("CHANNEL_BROKER") or env("REDIS_URL"),
+                    "health_check_interval": 5,
+                }
+            ],
         },
     },
 }

@@ -44,11 +44,14 @@ dependencies = [
   "django-timezone-field",
   "django-unfold",
   "django-widget-tweaks",
+  "gunicorn>=25.1",
   "psycopg2-binary>=2.9.10",
   "redis",
   "sentry-sdk",
   "social-auth-app-django",
   "unicef-security>=1.8",
+  "uvicorn>=0.41",
+  "whitenoise>=6.12",
 ]
 urls.Documentation = "https://github.com/UNICEF/hope-live-dashboard"
 urls.Homepage = "https://github.com/UNICEF/hope-live-dashboard"
