@@ -75,7 +75,6 @@ dev = [
   "seleniumbase>=4.41.6",
   "tox>=4.30.2",
 ]
-
 docs = [
   "markupsafe>=2.1.5",
   "mdx-gh-links>=0.4",
@@ -114,11 +113,8 @@ type-check = [
 
 [tool.hatch]
 build.hooks.vcs.version-file = "src/hope_live/version.py"
+build.targets.sdist.ignore-vcs = true
+build.targets.sdist.only-include = [ "src/hope_live" ]
+build.targets.wheel.packages = [ "src/hope_live" ]
 version.source = "vcs"
 raw-options = { root = "../.." }
-
-[tool.hatch.build.targets.sdist]
-ignore-vcs = true
-only-include = [ "src/hope_live" ]
-[tool.hatch.build.targets.wheel]
-packages = [ "src/hope_live" ]
