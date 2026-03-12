@@ -22,19 +22,10 @@ cd /app
 case "$1" in
     run)
         django-admin upgrade --with-check
-        MAPPING=""
-        if [ "${STATIC_URL}" = "/static/" ]; then
-            MAPPING="--static-map ${STATIC_URL}=${STATIC_ROOT}"
-        fi
-        exec tini -- uwsgi --http :8000 \
-            -H /venv \
-            --module hope_live.config.wsgi \
-            --mimefile=/conf/mime.types \
-            --uid hope \
-            --gid unicef \
-            --buffer-size 8192 \
-            --http-buffer-size 8192 \
-            $MAPPING
+        exec tini -- gosu hope:unicef gunicorn hope_live.config.asgi:application \
+            --bind 0.0.0.0:8000 \
+            --worker-class uvicorn.workers.UvicornWorker \
+            --workers ${UWSGI_PROCESSES:-4}
         ;;
     dev)
         until pg_isready -h db -p 5432; do
