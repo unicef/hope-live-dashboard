@@ -73,30 +73,6 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-<<<<<<< Updated upstream
-          version: "latest"
-          enable-cache: true
-          cache-dependency-glob: |
-            pyproject.toml
-            uv.lock
-          cache-suffix: ${{ matrix.cfg }}
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          python-version: "3.13"
-          python-version: ${{ matrix.python }}
-
-      - name: Install tox
-        run: uv tool install --python-preference only-managed --python 3.13 tox --with tox-uv --with tox-gh-actions
-
-      - name: Setup test suite
-        run: tox run -vv --notest --skip-missing-interpreters false -e tests
-
-      - name: Run test suite tests
-        run: tox -e tests
-
-      - name: Archive selenium results
-        uses: actions/upload-artifact@v7
-        if: failure()
-=======
           images: "${{ vars.DOCKERHUB_ORGANIZATION }}/${{ vars.DOCKERHUB_REPOSITORY }}"
           tags: |
             type=ref,event=branch
@@ -104,19 +80,10 @@ jobs:
 
       - name: DockerHub login
         uses: docker/login-action@v3
->>>>>>> Stashed changes
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-<<<<<<< Updated upstream
-      - name: Upload pytest test results
-        uses: actions/upload-artifact@v7
-        with:
-          name: pytest-results-tests
-          path: junit.xml
-        if: ${{ always() }}
-=======
       - id: calc
         shell: bash
         run: |
@@ -151,7 +118,13 @@ jobs:
               -v "./pytest.ini:/app/pytest.ini" \
               -t ${{env.IMAGE}} \
               tox -e tests
->>>>>>> Stashed changes
+
+      - name: Upload pytest test results
+        uses: actions/upload-artifact@v7
+        with:
+          name: pytest-results-tests
+          path: junit.xml
+        if: ${{ always() }}
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v5
