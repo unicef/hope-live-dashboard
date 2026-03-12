@@ -2,8 +2,10 @@
 
 export UWSGI_PROCESSES="${UWSGI_PROCESSES:-"4"}"
 export DJANGO_SETTINGS_MODULE="hope_live.config.settings"
+export MEDIA_ROOT="${MEDIA_ROOT:-/var/run/app/media}"
+export STATIC_ROOT="${STATIC_ROOT:-/var/run/app/static}"
 
-mkdir -p /var/run ${MEDIA_ROOT} ${STATIC_ROOT}
+mkdir -p /var/run "${MEDIA_ROOT}" "${STATIC_ROOT}"
 
 if [ -d "${MEDIA_ROOT}" ];then
   chown -R hope:unicef ${MEDIA_ROOT}
@@ -62,6 +64,5 @@ case "$1" in
         exec "$@"
         ;;
 esac
-<<<<<<< Updated upstream
 
 exec "$@"

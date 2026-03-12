@@ -116,6 +116,8 @@ jobs:
               -v "./src/:/app/src" \
               -v "./tests:/app/tests" \
               -v "./pytest.ini:/app/pytest.ini" \
+              -v "./tox.ini:/app/tox.ini" \
+              -v "./pyproject.toml:/app/pyproject.toml" \
               -t ${{env.IMAGE}} \
               tox -e tests
 
