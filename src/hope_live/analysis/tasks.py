@@ -1,5 +1,4 @@
 import logging
-from datetime import date
 from typing import Any
 
 import requests
@@ -21,15 +20,24 @@ def sync_daily_aggregates(target_years: list[int] | None = None) -> None:
     token = config.HOPE_COUNTRY_REPORT_API_TOKEN
     query_id = config.HOPE_COUNTRY_REPORT_QUERY_ID
 
-    if not target_years:
-        target_years = [date.today().year]
-
     headers = {"Authorization": f"Token {token}"}
     context = _prepare_sync_context(api_url, query_id, headers)
     if not context:
         return
 
     office_slug, datasets = context
+
+    if not target_years:
+        target_years = []
+        for d in datasets:
+            y = d.get("arguments", {}).get("year")
+            if y:
+                target_years.append(int(y))
+        target_years = sorted(set(target_years))
+
+    if not target_years:
+        logger.warning("No target years found in datasets.")
+        return
 
     for target_year in target_years:
         try:
@@ -39,7 +47,7 @@ def sync_daily_aggregates(target_years: list[int] | None = None) -> None:
                 continue
 
             logger.info(f"Processing dataset ID {dataset_id} for year {target_year}")
-            data_endpoint = f"{api_url}offices/{office_slug}/queries/{query_id}/dataset/{dataset_id}/data/"
+            data_endpoint = f"{api_url}queries/{query_id}/dataset/{dataset_id}/data/"
             all_rows = _fetch_all_pages(data_endpoint, headers)
 
             if not all_rows:
@@ -58,26 +66,26 @@ def _prepare_sync_context(
 ) -> tuple[str, list[dict[str, Any]]] | None:
     """Fetch query and available datasets."""
     try:
-        resp = requests.get(f"{api_url}queries/{query_id}/", headers=headers, timeout=10)
+        url = f"{api_url}queries/{query_id}/dataset"
+        logger.info(f"Fetching datasets from: {url}")
+        resp = requests.get(url, headers=headers, timeout=10)
         if resp.status_code != requests.codes.ok:
-            logger.error(f"Failed to fetch query details: {resp.status_code}")
+            logger.error(f"Failed to fetch datasets: {resp.status_code}")
+            logger.error(f"Response: {resp.text}")
             return None
 
-        query_data = resp.json()
-        office_url = query_data.get("office")
-        if not office_url:
-            logger.error("Query does not have an associated office")
-            return None
+        # API URL usually ends with /offices/<slug>/
+        # e.g. https://.../api/offices/global/
+        try:
+            office_slug = api_url.rstrip("/").split("/")[-1]
+        except IndexError:
+            office_slug = "global"
 
-        office_slug = office_url.rstrip("/").split("/")[-1]
-        datasets_url = f"{api_url}offices/{office_slug}/queries/{query_id}/dataset/"
-        datasets_resp = requests.get(datasets_url, headers=headers, timeout=10)
-        if datasets_resp.status_code != requests.codes.ok:
-            logger.error(f"Failed to fetch datasets: {datasets_resp.status_code}")
-            return None
+        datasets = resp.json()
+        if isinstance(datasets, dict) and "results" in datasets:
+            datasets = datasets["results"]
 
-        datasets = datasets_resp.json().get("results", [])
-        logger.info(f"Found {len(datasets)} datasets")
+        logger.info(f"Found {len(datasets)} datasets for office '{office_slug}'")
         return office_slug, datasets
 
     except Exception:

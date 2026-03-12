@@ -10,6 +10,7 @@ https://docs.djangoproject.com/en/5.2/howto/deployment/asgi/
 import logging
 import os
 import sys
+from typing import Any, cast
 
 from channels.auth import AuthMiddlewareStack
 from channels.routing import ProtocolTypeRouter, URLRouter
@@ -25,29 +26,25 @@ if project_root not in sys.path:
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "hope_live.config.settings")
 django_asgi_app = get_asgi_application()
 
+websocket_application: Any | None = None
+
 try:
     from hope_live.ws import routing
 
-    websocket_application = AllowedHostsOriginValidator(AuthMiddlewareStack(URLRouter(routing.websocket_urlpatterns)))
+    websocket_patterns = cast("Any", routing.websocket_urlpatterns)
+    websocket_application = AllowedHostsOriginValidator(AuthMiddlewareStack(URLRouter(websocket_patterns)))
 except ImportError as e:
     logger.warning(f"Could not import WebSocket routing: {e}")
-    websocket_application = None
 except (AttributeError, KeyError, TypeError, ValueError) as e:
-    # Catch specific exceptions that could occur during WebSocket setup
-    # - AttributeError: missing attribute in routing module
-    # - KeyError: missing key in configuration
-    # - TypeError: wrong type passed to a function
-    # - ValueError: invalid value passed to a function
     logger.error(f"Error setting up WebSocket routing: {e}")
-    websocket_application = None
 
-# Define the main ASGI application
-application = ProtocolTypeRouter(
-    {
-        "http": django_asgi_app,
-        "websocket": websocket_application or None,
-    }
-)
+application_dict: dict[str, Any] = {
+    "http": django_asgi_app,
+}
+if websocket_application is not None:
+    application_dict["websocket"] = websocket_application
+
+application = ProtocolTypeRouter(application_dict)
 
 # Export the application
 __all__ = ["application"]

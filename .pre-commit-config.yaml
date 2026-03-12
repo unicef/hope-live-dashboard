@@ -8,7 +8,7 @@ repos:
       - id: trailing-whitespace
 
   - repo: https://github.com/adamchainz/djade-pre-commit
-    rev: "1.7.0"
+    rev: "1.9.0"
     hooks:
     -   id: djade
         args: [--target-version, "5.1"]  # Use current Django version
@@ -21,12 +21,12 @@ repos:
         args: [ "-p", "lint" ]
 
   - repo: https://github.com/tox-dev/pyproject-fmt
-    rev: "v2.12.1"
+    rev: "v2.18.1"
     hooks:
       - id: pyproject-fmt
 
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.15.0
+    rev: v0.15.5
     hooks:
       - id: ruff
       - id: ruff-format
