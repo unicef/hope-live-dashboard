@@ -1091,7 +1091,6 @@ dependencies = [
     { name = "sentry-sdk" },
     { name = "social-auth-app-django" },
     { name = "unicef-security" },
-    { name = "uwsgi" },
     { name = "whitenoise" },
 ]
 
@@ -1184,7 +1183,6 @@ requires-dist = [
     { name = "sentry-sdk" },
     { name = "social-auth-app-django" },
     { name = "unicef-security", specifier = ">=1.8" },
-    { name = "uwsgi" },
     { name = "whitenoise", specifier = ">=6.12" },
 ]
 
@@ -3423,12 +3421,6 @@ wheels = [
 socks = [
     { name = "pysocks" },
 ]
-
-[[package]]
-name = "uwsgi"
-version = "2.0.31"
-source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/9f/49/2f57640e889ba509fd1fae10cccec1b58972a07c2724486efba94c5ea448/uwsgi-2.0.31.tar.gz", hash = "sha256:e8f8b350ccc106ff93a65247b9136f529c14bf96b936ac5b264c6ff9d0c76257", size = 822796, upload-time = "2025-10-11T19:17:28.794Z" }
 
 [[package]]
 name = "vine"
