@@ -1,59 +1,39 @@
-#!/bin/sh -e
+#!/bin/bash
+set -e
+export MEDIA_ROOT="${MEDIA_ROOT:-/var/media}"
+export STATIC_ROOT="${STATIC_ROOT:-/var/static}"
 
-export UWSGI_PROCESSES="${UWSGI_PROCESSES:-"4"}"
-export DJANGO_SETTINGS_MODULE="hope_live.config.settings"
-export MEDIA_ROOT="${MEDIA_ROOT:-/var/run/app/media}"
-export STATIC_ROOT="${STATIC_ROOT:-/var/run/app/static}"
+export REDIS_LOGLEVEL="${REDIS_LOGLEVEL:-warning}"
+export REDIS_MAXMEMORY="${REDIS_MAXMEMORY:-100Mb}"
+export REDIS_MAXMEMORY_POLICY="${REDIS_MAXMEMORY_POLICY:-volatile-ttl}"
 
-mkdir -p /var/run "${MEDIA_ROOT}" "${STATIC_ROOT}"
+export DOLLAR='$'
 
-if [ -d "${MEDIA_ROOT}" ];then
-  chown -R hope:unicef ${MEDIA_ROOT}
-fi
-
-if [ -d "${STATIC_ROOT}" ];then
-  chown -R hope:unicef ${STATIC_ROOT}
-fi
-
-mkdir -p /app/
-chown -R hope:unicef /app
-cd /app
+mkdir -p /var/run ${MEDIA_ROOT} ${STATIC_ROOT}
+chown -R hope:unicef /var/run ${MEDIA_ROOT} ${STATIC_ROOT}
+echo "created support dirs /var/run '${MEDIA_ROOT}' '${STATIC_ROOT}' "
+echo "Startup command is: '$1'"
 
 case "$1" in
-    run)
-        django-admin upgrade --with-check
-        exec tini -- gosu hope:unicef gunicorn hope_live.config.asgi:application \
-            --bind 0.0.0.0:8000 \
-            --worker-class uvicorn.workers.UvicornWorker \
-            --workers ${UWSGI_PROCESSES:-4}
-        ;;
-    dev)
-        until pg_isready -h db -p 5432; do
-            echo "waiting for database"
-            sleep 2
-        done
+    "run")
+        django-admin upgrade
+
+        exec uwsgi --ini /conf/uwsgi.ini
+
+    ;;
+    "dev")
+        until pg_isready -h db -p 5432;
+          do echo "waiting for database"; sleep 2; done;
         django-admin collectstatic --no-input
         django-admin migrate
-        exec django-admin runserver 0.0.0.0:8000
-        ;;
-    upgrade)
-        exec django-admin upgrade --with-check
-        ;;
-    worker)
-        exec tini -- gosu hope:unicef celery -A hope_live.config.celery worker \
-            --statedb worker -E --loglevel=INFO
-        ;;
-    beat)
-        exec tini -- gosu hope:unicef celery -A hope_live.config.celery beat \
-            --loglevel=INFO --scheduler django_celery_beat.schedulers:DatabaseScheduler
-        ;;
-    flower)
-        export DATABASE_URL="sqlite://:memory:"
-        exec tini -- gosu hope:unicef celery -A hope_live.config.celery flower
-        ;;
-    *)
-        exec "$@"
-        ;;
-esac
-
+        django-admin runserver 0.0.0.0:8000
+    ;;
+    "setup")
+        until pg_isready -h db -p 5432;
+          do echo "waiting for database"; sleep 2; done;
+        django-admin upgrade
+    ;;
+*)
 exec "$@"
+;;
+esac

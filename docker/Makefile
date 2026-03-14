@@ -1,29 +1,11 @@
 # envs to set before use this script
 .ONESHELL:
-
-#BASE?=$(shell echo "${VERSION}" | sed "s/\([0-9]*\)\.\([0-9]*\)\.\(.*\)/\1.\2/g" )
-# Clean version for PEP 440 compliance
-CLEAN_VERSION := $(shell (git describe --tags --dirty 2>/dev/null || echo "0.0.0.dev0") | sed -E 's/-dirty$$/.dev0/')
-VERSION := $(CLEAN_VERSION)
-RELEASE := $(shell git describe --tags --always --dirty 2>/dev/null || echo "dev")
-LOCK_CHECKSUM?=$(shell sha1sum ../uv.lock | awk '{print $$1}')
-LOCK_HASH?=$(shell echo ${LOCK_CHECKSUM} | cut -c 1-8)
-
-DOCKER_IMAGE_NAME?=unicef/hope_live
-
-CMD?=run
-VERSION?=dev
-STAGE?=dist
-
-RUN_OPTIONS?=
-BUILD_OPTIONS?=
-
+VERSION:=$(shell cd .. && uvx --with hatch-vcs hatchling metadata version)
+DOCKER_IMAGE_NAME:=unicef/hope_live
 BUILD_DATE:="$(shell date +"%Y-%m-%d %H:%M")"
 SOURCE_COMMIT=$(shell git rev-parse --short HEAD)
-
-.PHONY: help runlocal tests
-.DEFAULT_GOAL := help
-
+STAGE?=dist
+TAG?=${VERSION}
 
 define PRINT_HELP_PYSCRIPT
 import re, sys
@@ -36,145 +18,62 @@ for line in sys.stdin:
 endef
 export PRINT_HELP_PYSCRIPT
 
-BROWSER := python -c "$$BROWSER_PYSCRIPT"
-
 help:
 	@python -c "$$PRINT_HELP_PYSCRIPT" < $(MAKEFILE_LIST)
 
 
-.build:
+build: ## build docker image
+	@cd .. && uv build
 	DOCKER_BUILDKIT=1 cd .. && docker build \
+			--progress=plain \
 			--build-arg VERSION=${VERSION} \
-			--build-arg RELEASE=${RELEASE} \
-			--build-arg BUILD_DATE=${BUILD_DATE} \
 			--build-arg GIT_SHA=${SOURCE_COMMIT} \
+			--build-arg BUILD_DATE=${BUILD_DATE} \
 			--platform=linux/amd64 \
-			--target ${STAGE} \
-			${BUILD_OPTIONS} \
-			-t ${DOCKER_IMAGE} \
+			--cache-from ${DOCKER_IMAGE_NAME}:local \
+			--cache-from ${DOCKER_IMAGE_NAME}:latest \
+			-t ${DOCKER_IMAGE_NAME}:local \
 			-f docker/Dockerfile .
-	docker images | grep "${DOCKER_IMAGE_NAME}" | grep ${VERSION}-${STAGE}
-	docker inspect ${DOCKER_IMAGE} | jq -r '.[0].Config.Labels'
-
-build:  ## build image
-	DOCKER_IMAGE=${DOCKER_IMAGE_NAME}:${VERSION}-${STAGE} \
-	$(MAKE) .build
-
-.build-stage:
-	DOCKER_IMAGE=${DOCKER_IMAGE_NAME}:${VERSION}-${STAGE} \
-	$(MAKE) .build
-
-base_os:
-	STAGE=base_os $(MAKE) .build-stage
-
-builder:
-	STAGE=builder $(MAKE) .build-stage
-
-tests:
-	STAGE=tests $(MAKE) .build-stage
-
-production:
-	STAGE=production $(MAKE) .build-stage
-
-dist:
-	STAGE=dist $(MAKE) .build-stage
-
-
-step1: base_os
-step2: builder
-step3: tests
-step4: production
-step5: dist
-
-build1: base_os
-build2: builder
-build3: tests
-build4: production
-build5: dist
+	docker images | grep "${DOCKER_IMAGE_NAME}" | grep local
 
 .run:
 	cd .. && docker run \
 	 		--rm \
 			-p 8000:8000 \
-			-e HOPE_API_TOKEN=${HOPE_API_TOKEN} \
 			-e ADMIN_EMAIL="${ADMIN_EMAIL}" \
 			-e ADMIN_PASSWORD="${ADMIN_PASSWORD}" \
 			-e ALLOWED_HOSTS="*" \
-			-e AUTHENTICATION_BACKENDS=\
-			-e CACHE_URL="redis://192.168.66.66:6379/0" \
-			-e CELERY_BROKER_URL=redis://192.168.66.66:6379/0 \
+			-e CACHE_DEFAULT="redis://host.docker.internal:6379/0" \
+			-e CELERY_BROKER_URL=redis://host.docker.internal:6379/0 \
 			-e CSRF_COOKIE_SECURE=False \
 			-e CSRF_TRUSTED_ORIGINS=http://localhost \
-			-e DATABASE_URL="${DATABASE_URL}" \
+			-e DATABASE_URL="postgres://postgres:@host.docker.internal:5432/hope_live" \
 			-e DEBUG="1" \
 			-e DJANGO_ADMIN_URL=admin/ \
+			-e DJANGO_SETTINGS_MODULE=hope_live.config.settings \
+			-e FERNET_KEY=123 \
 			-e LOGGING_LEVEL="DEBUG" \
-			-e SECRET_KEY=liujhljhlkjhlkjhlkj \
-			-e SOCIAL_AUTH_REDIRECT_IS_HTTPS="False" \
+			-e SECRET_KEY="super-secret-key-just-for-testing" \
 			-e SENTRY_DSN="${SENTRY_DSN}" \
-			-e SUPERUSERS="sax," \
+			-e SOCIAL_AUTH_REDIRECT_IS_HTTPS="False" \
+			-e SECURE_HSTS_PRELOAD=1 \
+			-e SESSION_COOKIE_DOMAIN= \
+			-e SESSION_COOKIE_SECURE=false \
 			${RUN_OPTIONS} \
 			-t ${DOCKER_IMAGE} \
 			${CMD}
 
-run:
-	DOCKER_IMAGE=${DOCKER_IMAGE_NAME}:${VERSION}-dist \
- 	STAGE='dist' \
- 	CMD='run' \
+run: ## Run docker build
+	DOCKER_IMAGE=${DOCKER_IMAGE_NAME}:${VERSION} \
 	$(MAKE) .run
 
-.run-step:
-	DOCKER_IMAGE=${DOCKER_IMAGE_NAME}:${VERSION}-${STAGE} \
+check: ## Check docker build
+	CMD='sh /usr/local/bin/check.sh' \
+	DOCKER_IMAGE=${DOCKER_IMAGE_NAME}:${VERSION} \
+	$(MAKE) .run
+
+shell:  ## Run shell into docker
+	DOCKER_IMAGE=${DOCKER_IMAGE_NAME}:${VERSION} \
 	RUN_OPTIONS="-it" \
  	CMD='/bin/bash' \
 	$(MAKE) .run
-
-
-
-run1:
-	STAGE=base_os \
-	$(MAKE) .run-step
-
-run2:
-	STAGE=builder \
-	$(MAKE) .run-step
-
-run3:
-	STAGE=tests \
-	$(MAKE) .run-step
-
-run4:
-	STAGE=production \
-	$(MAKE) .run-step
-
-run5:
-	STAGE=dist \
-	$(MAKE) .run-step
-
-all: step1 step2 step3 step4 step5
-
-
-.shell:
-	RUN_OPTIONS=-it \
-	CMD=/bin/bash \
-	$(MAKE) .run
-
-shell1:
-	DOCKER_IMAGE=${DOCKER_IMAGE_NAME}:${VERSION}-base_os \
-	$(MAKE) .shell
-
-shell2:
-	DOCKER_IMAGE=${DOCKER_IMAGE_NAME}:${VERSION}-builder \
-	$(MAKE) .shell
-
-shell3:
-	DOCKER_IMAGE=${DOCKER_IMAGE_NAME}:${VERSION}-tests \
-	$(MAKE) .shell
-
-shell4:
-	DOCKER_IMAGE=${DOCKER_IMAGE_NAME}:${VERSION}-production \
-	$(MAKE) .shell
-
-shell5:
-	DOCKER_IMAGE=${DOCKER_IMAGE_NAME}:${VERSION}-dist \
-	$(MAKE) .shell

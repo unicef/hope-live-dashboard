@@ -4,7 +4,7 @@ from unittest.mock import MagicMock, patch
 import pytest
 from click.testing import CliRunner
 from django.conf import settings
-from django.urls import reverse
+from streaming.backends.rabbitmq import RabbitMQBackend
 
 from hope_live.__cli__ import cli
 from hope_live.models import Office
@@ -19,12 +19,16 @@ def test_base_queryset_get_does_not_exist():
 
 
 @pytest.mark.django_db
-def test_base_model_get_change_url(office_factory):
+@patch("hope_live.models.base.reverse")
+def test_base_model_get_change_url(mock_reverse, office_factory):
     """Test that BaseModel.get_change_url returns the correct admin URL."""
     office = office_factory()
+    mock_reverse.return_value = "/admin/hope_live/office/1/change/"
     url = office.get_change_url(namespace="admin")
-    expected_url = reverse(f"admin:{office._meta.app_label}_{office._meta.model_name}_change", args=[office.pk])
-    assert url == expected_url
+    mock_reverse.assert_called_once_with(
+        f"admin:{office._meta.app_label}_{office._meta.model_name}_change", args=[office.pk]
+    )
+    assert url == "/admin/hope_live/office/1/change/"
 
 
 def test_urls_debug_true(monkeypatch):
@@ -47,6 +51,7 @@ def test_cli_listen_callback():
 
     with patch("hope_live.__cli__.initialize_engine") as mock_init:
         mock_backend = MagicMock()
+        mock_backend.__class__ = RabbitMQBackend
         mock_backend.host = "localhost"
         mock_backend.port = 5672
         mock_backend.exchange = "test"
@@ -90,12 +95,13 @@ def test_cli_listen_keyboard_interrupt():
     runner = CliRunner()
     with patch("hope_live.__cli__.initialize_engine") as mock_init:
         mock_backend = MagicMock()
+        mock_backend.__class__ = RabbitMQBackend
         mock_backend._connection.is_open = True
         mock_init.return_value.backend = mock_backend
 
         mock_backend.listen.side_effect = KeyboardInterrupt()
 
-        result = runner.invoke(cli, ["listen"])
+        result = runner.invoke(cli, ["listen", "--local"])
         assert "Stopping listener" in result.output
         mock_backend.disconnect.assert_called_once()
 

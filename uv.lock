@@ -1040,18 +1040,6 @@ wheels = [
 ]
 
 [[package]]
-name = "gunicorn"
-version = "25.1.0"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "packaging" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/66/13/ef67f59f6a7896fdc2c1d62b5665c5219d6b0a9a1784938eb9a28e55e128/gunicorn-25.1.0.tar.gz", hash = "sha256:1426611d959fa77e7de89f8c0f32eed6aa03ee735f98c01efba3e281b1c47616", size = 594377, upload-time = "2026-02-13T11:09:58.989Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/da/73/4ad5b1f6a2e21cf1e85afdaad2b7b1a933985e2f5d679147a1953aaa192c/gunicorn-25.1.0-py3-none-any.whl", hash = "sha256:d0b1236ccf27f72cfe14bce7caadf467186f19e865094ca84221424e839b8b8b", size = 197067, upload-time = "2026-02-13T11:09:57.146Z" },
-]
-
-[[package]]
 name = "h11"
 version = "0.16.0"
 source = { registry = "https://pypi.org/simple" }
@@ -1098,13 +1086,12 @@ dependencies = [
     { name = "django-timezone-field" },
     { name = "django-unfold" },
     { name = "django-widget-tweaks" },
-    { name = "gunicorn" },
     { name = "psycopg2-binary" },
     { name = "redis" },
     { name = "sentry-sdk" },
     { name = "social-auth-app-django" },
     { name = "unicef-security" },
-    { name = "uvicorn" },
+    { name = "uwsgi" },
     { name = "whitenoise" },
 ]
 
@@ -1192,14 +1179,13 @@ requires-dist = [
     { name = "django-timezone-field" },
     { name = "django-unfold" },
     { name = "django-widget-tweaks" },
-    { name = "gunicorn", specifier = ">=25.1.0" },
     { name = "psycopg2-binary", specifier = ">=2.9.10" },
     { name = "redis" },
     { name = "sentry-sdk" },
     { name = "social-auth-app-django" },
     { name = "unicef-security", specifier = ">=1.8" },
-    { name = "uvicorn", specifier = ">=0.41.0" },
-    { name = "whitenoise", specifier = ">=6.12.0" },
+    { name = "uwsgi" },
+    { name = "whitenoise", specifier = ">=6.12" },
 ]
 
 [package.metadata.requires-dev]
@@ -3439,17 +3425,10 @@ socks = [
 ]
 
 [[package]]
-name = "uvicorn"
-version = "0.41.0"
+name = "uwsgi"
+version = "2.0.31"
 source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "click" },
-    { name = "h11" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/32/ce/eeb58ae4ac36fe09e3842eb02e0eb676bf2c53ae062b98f1b2531673efdd/uvicorn-0.41.0.tar.gz", hash = "sha256:09d11cf7008da33113824ee5a1c6422d89fbc2ff476540d69a34c87fab8b571a", size = 82633, upload-time = "2026-02-16T23:07:24.1Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/83/e4/d04a086285c20886c0daad0e026f250869201013d18f81d9ff5eada73a88/uvicorn-0.41.0-py3-none-any.whl", hash = "sha256:29e35b1d2c36a04b9e180d4007ede3bcb32a85fbdfd6c6aeb3f26839de088187", size = 68783, upload-time = "2026-02-16T23:07:22.357Z" },
-]
+sdist = { url = "https://files.pythonhosted.org/packages/9f/49/2f57640e889ba509fd1fae10cccec1b58972a07c2724486efba94c5ea448/uwsgi-2.0.31.tar.gz", hash = "sha256:e8f8b350ccc106ff93a65247b9136f529c14bf96b936ac5b264c6ff9d0c76257", size = 822796, upload-time = "2025-10-11T19:17:28.794Z" }
 
 [[package]]
 name = "vine"
