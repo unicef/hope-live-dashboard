@@ -28,6 +28,7 @@ dependencies = [
   "django-adminactions",
   "django-adminfilters>=2.7",
   "django-celery-beat>=2.8.1",
+  "django-celery-boost>=0.7",
   "django-constance",
   "django-csp",
   "django-debug-toolbar",

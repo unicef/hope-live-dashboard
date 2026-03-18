@@ -5,11 +5,7 @@ import responses
 from constance import config
 
 from hope_live.analysis.models import DailyAggregate
-from hope_live.analysis.tasks import (
-    _find_dataset_id_for_year,
-    save_aggregates,
-    sync_daily_aggregates,
-)
+from hope_live.analysis.tasks import _find_dataset_id_for_year, save_aggregates, sync_daily_aggregates
 
 
 @pytest.mark.django_db
@@ -83,7 +79,7 @@ def test_sync_daily_aggregates_e2e_success(mocked_responses):
     )
 
     # Execute the actual function
-    sync_daily_aggregates([2023])
+    sync_daily_aggregates(None, target_years=[2023])
 
     # Verify the database was populated correctly
     assert DailyAggregate.objects.count() == 2
@@ -111,7 +107,7 @@ def test_sync_daily_aggregates_extracts_years(mocked_responses):
     )
 
     # Execute without passing target_years
-    sync_daily_aggregates()
+    sync_daily_aggregates(None)
 
     assert DailyAggregate.objects.count() == 1
 
@@ -125,7 +121,7 @@ def test_sync_daily_aggregates_api_failure(mocked_responses):
     mocked_responses.add(responses.GET, f"{api_url}queries/{query_id}/dataset", status=500)
 
     # Should return early without raising an exception
-    sync_daily_aggregates([2023])
+    sync_daily_aggregates(None, target_years=[2023])
     assert DailyAggregate.objects.count() == 0
 
 
@@ -145,5 +141,5 @@ def test_sync_daily_aggregates_no_data_for_year(mocked_responses):
         responses.GET, f"{api_url}queries/{query_id}/dataset/1/data/?page_size=500", json={"results": []}, status=200
     )
 
-    sync_daily_aggregates([2023])
+    sync_daily_aggregates(None, target_years=[2023])
     assert DailyAggregate.objects.count() == 0

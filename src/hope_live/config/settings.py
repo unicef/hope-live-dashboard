@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     "debug_toolbar",
     "social_django",
     "admin_extra_buttons",
+    "django_celery_boost",
     "issues",
     "smart_env",
     "adminfilters",

@@ -649,6 +649,30 @@ wheels = [
 ]
 
 [[package]]
+name = "django-celery-boost"
+version = "0.7"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "celery" },
+    { name = "django-admin-extra-buttons" },
+    { name = "django-concurrency" },
+    { name = "sentry-sdk" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/9f/cf/fcbb25a54c83bc39ebb7bafd4616ad92b18b9ca824f456d1d51a0126c963/django_celery_boost-0.7.tar.gz", hash = "sha256:1d3549cdcc3dbaa8d23f08adc03e8a7d52d920ece88af14186d3a8ac2a5cdca1", size = 9537, upload-time = "2025-12-01T10:16:40.902Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/38/b6/d45b5f832c677364b82d5f3b50ecba7d8b66679c69a8fb34f3733fc70d8c/django_celery_boost-0.7-py3-none-any.whl", hash = "sha256:9a51b22986ac6988226166310b0cd325361666b46dc4caca69344c5c1d343444", size = 12310, upload-time = "2025-12-01T10:16:39.555Z" },
+]
+
+[[package]]
+name = "django-concurrency"
+version = "2.7"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/7d/b7/34f3f007ba189497bebb48eb543572f00cfdd40b86061baf8ca649a978d0/django_concurrency-2.7.tar.gz", hash = "sha256:90b7091039920e759a6b6feb1d481d918f3d6105bd1e2bff09ab781c2734cff3", size = 20701, upload-time = "2025-04-03T17:27:19.496Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/4d/e9/7a332cef95a91598674994a6fda02ef88eee7d903af364444f15ddeab660/django_concurrency-2.7-py3-none-any.whl", hash = "sha256:3dfc1e7d1db436d578faf782c0027fac8296d34c175230ebcf91086c380ade88", size = 28017, upload-time = "2025-04-03T17:27:18.168Z" },
+]
+
+[[package]]
 name = "django-constance"
 version = "4.3.4"
 source = { registry = "https://pypi.org/simple" }
@@ -1070,6 +1094,7 @@ dependencies = [
     { name = "django-adminactions" },
     { name = "django-adminfilters" },
     { name = "django-celery-beat" },
+    { name = "django-celery-boost" },
     { name = "django-constance" },
     { name = "django-csp" },
     { name = "django-debug-toolbar" },
@@ -1162,6 +1187,7 @@ requires-dist = [
     { name = "django-adminactions" },
     { name = "django-adminfilters", specifier = ">=2.7" },
     { name = "django-celery-beat", specifier = ">=2.8.1" },
+    { name = "django-celery-boost", specifier = ">=0.7" },
     { name = "django-constance" },
     { name = "django-csp" },
     { name = "django-debug-toolbar" },

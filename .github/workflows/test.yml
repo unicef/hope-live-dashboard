@@ -64,8 +64,7 @@ jobs:
       DOCKER_BUILDKIT: 1
       STREAMING_BROKER_URL: "rabbit://guest:guest@localhost:5672?exchange=hope_live"
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v6
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0
 

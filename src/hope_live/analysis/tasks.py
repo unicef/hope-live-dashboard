@@ -5,6 +5,7 @@ import requests
 from celery import shared_task  # type: ignore[import-untyped]
 from constance import config
 from django.db import transaction
+from django_celery_boost.task import TaskRunFromSignature
 
 from hope_live.analysis.models import DailyAggregate
 
@@ -13,8 +14,10 @@ logger = logging.getLogger(__name__)
 BATCH_SIZE = 1000
 
 
-@shared_task(name="hope_live.analysis.tasks.sync_daily_aggregates")  # type: ignore[untyped-decorator]
-def sync_daily_aggregates(target_years: list[int] | None = None) -> None:
+@shared_task(name="hope_live.analysis.tasks.sync_daily_aggregates", base=TaskRunFromSignature, bind=True)  # type: ignore[untyped-decorator]
+def sync_daily_aggregates(
+    self: Any, pk: int | None = None, version: int | None = None, target_years: list[int] | None = None
+) -> str:
     """Fetch DailyAggregate data from Country Report API and update local DB."""
     api_url = config.HOPE_COUNTRY_REPORT_API_URL
     token = config.HOPE_COUNTRY_REPORT_API_TOKEN
@@ -23,7 +26,7 @@ def sync_daily_aggregates(target_years: list[int] | None = None) -> None:
     headers = {"Authorization": f"Token {token}"}
     context = _prepare_sync_context(api_url, query_id, headers)
     if not context:
-        return
+        return "Failed to prepare sync context."
 
     office_slug, datasets = context
 
@@ -37,9 +40,14 @@ def sync_daily_aggregates(target_years: list[int] | None = None) -> None:
 
     if not target_years:
         logger.warning("No target years found in datasets.")
-        return
+        return "No target years found."
 
-    for target_year in target_years:
+    total_rows = 0
+    for idx, target_year in enumerate(target_years, 1):
+        self.update_state(
+            state="PROGRESS", meta={"current_year": target_year, "progress": f"{idx}/{len(target_years)}"}
+        )
+
         try:
             dataset_id = _find_dataset_id_for_year(datasets, target_year)
             if not dataset_id:
@@ -56,9 +64,12 @@ def sync_daily_aggregates(target_years: list[int] | None = None) -> None:
 
             logger.info(f"Total rows fetched for year {target_year}: {len(all_rows)}")
             save_aggregates(all_rows, target_year)
+            total_rows += len(all_rows)
 
         except Exception as e:
             logger.exception(f"Error syncing aggregates for year {target_year}: {e}")
+
+    return f"Successfully synced {total_rows} rows for years: {target_years}"
 
 
 def _prepare_sync_context(
@@ -169,3 +180,12 @@ def save_aggregates(rows: list[dict[str, Any]], year: int) -> None:
             DailyAggregate.objects.bulk_create(batch)
 
         logger.info(f"Saved {len(rows)} records for {year}")
+
+
+@shared_task(name="hope_live.analysis.tasks.schedule_sync_daily_aggregates")  # type: ignore[untyped-decorator]
+def schedule_sync_daily_aggregates() -> None:
+    """Periodic task to create and queue a SyncDailyAggregatesJob."""
+    from hope_live.analysis.models import SyncDailyAggregatesJob  # noqa: PLC0415
+
+    job = SyncDailyAggregatesJob.objects.create(description="Scheduled Daily Aggregate Sync")
+    job.queue()

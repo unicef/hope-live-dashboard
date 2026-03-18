@@ -1,4 +1,5 @@
 from django.db import models
+from django_celery_boost.models import AsyncJobModel
 
 
 class DailyAggregate(models.Model):
@@ -30,3 +31,12 @@ class DailyAggregate(models.Model):
 
     def __str__(self) -> str:
         return f"{self.date} {self.country_slug} {self.dimension_type}:{self.dimension_value}"
+
+
+class SyncDailyAggregatesJob(AsyncJobModel):
+    default_celery_task_name = "hope_live.analysis.tasks.sync_daily_aggregates"
+    celery_task_name = "hope_live.analysis.tasks.sync_daily_aggregates"
+
+    class Meta(AsyncJobModel.Meta):
+        verbose_name = "Sync Daily Aggregates Job"
+        verbose_name_plural = "Sync Daily Aggregates Jobs"

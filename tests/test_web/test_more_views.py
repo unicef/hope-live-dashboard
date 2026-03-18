@@ -2,14 +2,7 @@ import pytest
 from django.test import RequestFactory
 from django.urls import reverse
 
-from hope_live.web.views import (
-    AboutView,
-    ContactView,
-    DetailsView,
-    IndexView,
-    LiveView,
-    TransfersView,
-)
+from hope_live.web.views import AboutView, ContactView, DetailsView, IndexView, LiveView, TransfersView
 
 
 @pytest.mark.django_db

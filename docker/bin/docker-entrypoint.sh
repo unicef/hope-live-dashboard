@@ -33,6 +33,19 @@ case "$1" in
           do echo "waiting for database"; sleep 2; done;
         django-admin upgrade
     ;;
+    "worker")
+        until pg_isready -h db -p 5432;
+          do echo "waiting for database"; sleep 2; done;
+        exec tini -- gosu hope:unicef celery -A hope_live.config worker --concurrency=4 -E -l "${CELERY_LOGLEVEL:-INFO}"
+    ;;
+    "beat")
+        until pg_isready -h db -p 5432;
+          do echo "waiting for database"; sleep 2; done;
+        exec tini -- gosu hope:unicef celery -A hope_live.config beat --scheduler django_celery_beat.schedulers:DatabaseScheduler -l "${CELERY_LOGLEVEL:-INFO}"
+    ;;
+    "flower")
+        exec tini -- gosu hope:unicef celery -A hope_live.config flower
+    ;;
 *)
 exec "$@"
 ;;
