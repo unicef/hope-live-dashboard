@@ -43,11 +43,11 @@ build: ## build docker image
 			-e ADMIN_EMAIL="${ADMIN_EMAIL}" \
 			-e ADMIN_PASSWORD="${ADMIN_PASSWORD}" \
 			-e ALLOWED_HOSTS="*" \
-			-e CACHE_DEFAULT="redis://host.docker.internal:6379/0" \
-			-e CELERY_BROKER_URL=redis://host.docker.internal:6379/0 \
+			-e CACHE_DEFAULT="redis://localhost:6379/0" \
+			-e CELERY_BROKER_URL=redis://localhost:6379/0 \
 			-e CSRF_COOKIE_SECURE=False \
 			-e CSRF_TRUSTED_ORIGINS=http://localhost \
-			-e DATABASE_URL="postgres://postgres:@host.docker.internal:5432/hope_live" \
+			-e DATABASE_URL="postgres://postgres:@localhost:5432/hope_live" \
 			-e DEBUG="1" \
 			-e DJANGO_ADMIN_URL=admin/ \
 			-e DJANGO_SETTINGS_MODULE=hope_live.config.settings \

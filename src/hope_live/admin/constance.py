@@ -1,15 +1,11 @@
 # mypy: ignore-errors
-from typing import Any
 
 from constance.admin import Config, ConstanceAdmin
 from django.contrib import admin
 from django_celery_beat.admin import ClockedScheduleAdmin as BaseClockedScheduleAdmin
 from django_celery_beat.admin import CrontabScheduleAdmin as BaseCrontabScheduleAdmin
 from django_celery_beat.admin import PeriodicTaskAdmin as BasePeriodicTaskAdmin
-from django_celery_beat.admin import PeriodicTaskForm, TaskSelectWidget
 from django_celery_beat.models import ClockedSchedule, CrontabSchedule, IntervalSchedule, PeriodicTask, SolarSchedule
-from unfold.admin import ModelAdmin
-from unfold.widgets import UnfoldAdminSelectWidget, UnfoldAdminTextInputWidget
 
 admin.site.unregister([Config])
 
@@ -21,39 +17,28 @@ admin.site.unregister(SolarSchedule)
 admin.site.unregister(ClockedSchedule)
 
 
-class UnfoldTaskSelectWidget(UnfoldAdminSelectWidget, TaskSelectWidget):
+@admin.register(PeriodicTask)
+class PeriodicTaskAdmin(BasePeriodicTaskAdmin):
     pass
 
 
-class UnfoldPeriodicTaskForm(PeriodicTaskForm):
-    def __init__(self, *args: Any, **kwargs: Any) -> None:
-        super().__init__(*args, **kwargs)
-        self.fields["task"].widget = UnfoldAdminTextInputWidget()
-        self.fields["regtask"].widget = UnfoldTaskSelectWidget()
-
-
-@admin.register(PeriodicTask)
-class PeriodicTaskAdmin(BasePeriodicTaskAdmin, ModelAdmin):
-    form = UnfoldPeriodicTaskForm
-
-
 @admin.register(IntervalSchedule)
-class IntervalScheduleAdmin(ModelAdmin):
+class IntervalScheduleAdmin(admin.ModelAdmin):
     pass
 
 
 @admin.register(CrontabSchedule)
-class CrontabScheduleAdmin(BaseCrontabScheduleAdmin, ModelAdmin):
+class CrontabScheduleAdmin(BaseCrontabScheduleAdmin):
     pass
 
 
 @admin.register(SolarSchedule)
-class SolarScheduleAdmin(ModelAdmin):
+class SolarScheduleAdmin(admin.ModelAdmin):
     pass
 
 
 @admin.register(ClockedSchedule)
-class ClockedScheduleAdmin(BaseClockedScheduleAdmin, ModelAdmin):
+class ClockedScheduleAdmin(BaseClockedScheduleAdmin):
     pass
 
 
