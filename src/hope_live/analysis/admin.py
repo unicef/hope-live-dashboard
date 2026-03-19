@@ -11,8 +11,9 @@ from .models import SyncDailyAggregatesJob
 
 @admin.register(SyncDailyAggregatesJob)
 class SyncDailyAggregatesJobAdmin(CeleryTaskModelAdmin):
-    list_display = ("id", "description", "task_status", "datetime_created", "datetime_queued")
+    list_display = ("id", "description", "task_status", "datetime_created", "datetime_queued", "error_message")
     list_filter = ("local_status",)
+    readonly_fields = ("error_message",)
 
     @button(permission=lambda r, o, handler: handler.model_admin.has_queue_permission("inspect", r, o))
     def celery_inspect(self, request: Any, pk: str) -> Any:

@@ -64,3 +64,8 @@ DEFAULTS = {
 }
 
 env = SmartEnv(**DEFAULTS)
+
+# Load Celery app on Django startup so the Admin uses the configured backend
+from .celery import app as celery_app  # noqa: E402
+
+__all__ = ("env", "setting", "celery_app")

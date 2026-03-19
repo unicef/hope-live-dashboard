@@ -1,4 +1,4 @@
-from unittest.mock import patch
+from unittest.mock import MagicMock, patch
 
 import pytest
 import responses
@@ -79,12 +79,15 @@ def test_sync_daily_aggregates_e2e_success(mocked_responses):
     )
 
     # Execute the actual function
-    sync_daily_aggregates(None, target_years=[2023])
+    mock_task = MagicMock()
+    result = sync_daily_aggregates(mock_task, target_years=[2023])
 
     # Verify the database was populated correctly
     assert DailyAggregate.objects.count() == 2
     assert DailyAggregate.objects.filter(date="2023-01-01").exists()
     assert DailyAggregate.objects.filter(date="2023-01-02").exists()
+    assert "Successfully synced 2 rows" in result
+    mock_task.update_state.assert_called_once()
 
 
 @pytest.mark.django_db
@@ -107,9 +110,11 @@ def test_sync_daily_aggregates_extracts_years(mocked_responses):
     )
 
     # Execute without passing target_years
-    sync_daily_aggregates(None)
+    mock_task = MagicMock()
+    result = sync_daily_aggregates(mock_task)
 
     assert DailyAggregate.objects.count() == 1
+    assert "Successfully synced 1 rows" in result
 
 
 @pytest.mark.django_db
@@ -121,8 +126,11 @@ def test_sync_daily_aggregates_api_failure(mocked_responses):
     mocked_responses.add(responses.GET, f"{api_url}queries/{query_id}/dataset", status=500)
 
     # Should return early without raising an exception
-    sync_daily_aggregates(None, target_years=[2023])
+    mock_task = MagicMock()
+    result = sync_daily_aggregates(mock_task, target_years=[2023])
+
     assert DailyAggregate.objects.count() == 0
+    assert result == "Failed to prepare sync context."
 
 
 @pytest.mark.django_db
@@ -141,5 +149,8 @@ def test_sync_daily_aggregates_no_data_for_year(mocked_responses):
         responses.GET, f"{api_url}queries/{query_id}/dataset/1/data/?page_size=500", json={"results": []}, status=200
     )
 
-    sync_daily_aggregates(None, target_years=[2023])
+    mock_task = MagicMock()
+    result = sync_daily_aggregates(mock_task, target_years=[2023])
+
     assert DailyAggregate.objects.count() == 0
+    assert "Successfully synced 0 rows" in result

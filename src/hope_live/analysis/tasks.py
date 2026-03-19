@@ -5,71 +5,92 @@ import requests
 from celery import shared_task  # type: ignore[import-untyped]
 from constance import config
 from django.db import transaction
-from django_celery_boost.task import TaskRunFromSignature
 
-from hope_live.analysis.models import DailyAggregate
+from hope_live.analysis.models import DailyAggregate, SyncDailyAggregatesJob
 
 logger = logging.getLogger(__name__)
 
 BATCH_SIZE = 1000
 
 
-@shared_task(name="hope_live.analysis.tasks.sync_daily_aggregates", base=TaskRunFromSignature, bind=True)  # type: ignore[untyped-decorator]
-def sync_daily_aggregates(
+@shared_task(name="hope_live.analysis.tasks.sync_daily_aggregates", bind=True)  # type: ignore[untyped-decorator]
+def sync_daily_aggregates(  # noqa: C901, PLR0912, PLR0915
     self: Any, pk: int | None = None, version: int | None = None, target_years: list[int] | None = None
 ) -> str:
     """Fetch DailyAggregate data from Country Report API and update local DB."""
-    api_url = config.HOPE_COUNTRY_REPORT_API_URL
-    token = config.HOPE_COUNTRY_REPORT_API_TOKEN
-    query_id = config.HOPE_COUNTRY_REPORT_QUERY_ID
+    job = SyncDailyAggregatesJob.objects.filter(pk=pk).first() if pk else None
+    if job:
+        job.error_message = None
+        job.save(update_fields=["error_message"])
 
-    headers = {"Authorization": f"Token {token}"}
-    context = _prepare_sync_context(api_url, query_id, headers)
-    if not context:
-        return "Failed to prepare sync context."
+    try:
+        api_url = config.HOPE_COUNTRY_REPORT_API_URL
+        token = config.HOPE_COUNTRY_REPORT_API_TOKEN
+        query_id = config.HOPE_COUNTRY_REPORT_QUERY_ID
 
-    office_slug, datasets = context
+        headers = {"Authorization": f"Token {token}"}
+        context = _prepare_sync_context(api_url, query_id, headers)
+        if not context:
+            msg = "Failed to prepare sync context."
+            if job:
+                job.error_message = msg
+                job.save(update_fields=["error_message"])
+            return msg
 
-    if not target_years:
-        target_years = []
-        for d in datasets:
-            y = d.get("arguments", {}).get("year")
-            if y:
-                target_years.append(int(y))
-        target_years = sorted(set(target_years))
+        office_slug, datasets = context
 
-    if not target_years:
-        logger.warning("No target years found in datasets.")
-        return "No target years found."
+        if not target_years:
+            target_years = []
+            for d in datasets:
+                y = d.get("arguments", {}).get("year")
+                if y:
+                    target_years.append(int(y))
+            target_years = sorted(set(target_years))
 
-    total_rows = 0
-    for idx, target_year in enumerate(target_years, 1):
-        self.update_state(
-            state="PROGRESS", meta={"current_year": target_year, "progress": f"{idx}/{len(target_years)}"}
-        )
+        if not target_years:
+            logger.warning("No target years found in datasets.")
+            return "No target years found."
 
-        try:
-            dataset_id = _find_dataset_id_for_year(datasets, target_year)
-            if not dataset_id:
-                logger.info(f"No dataset found for year {target_year}")
-                continue
+        total_rows = 0
+        errors = []
+        for idx, target_year in enumerate(target_years, 1):
+            self.update_state(
+                state="PROGRESS", meta={"current_year": target_year, "progress": f"{idx}/{len(target_years)}"}
+            )
 
-            logger.info(f"Processing dataset ID {dataset_id} for year {target_year}")
-            data_endpoint = f"{api_url}queries/{query_id}/dataset/{dataset_id}/data/"
-            all_rows = _fetch_all_pages(data_endpoint, headers)
+            try:
+                dataset_id = _find_dataset_id_for_year(datasets, target_year)
+                if not dataset_id:
+                    logger.info(f"No dataset found for year {target_year}")
+                    continue
 
-            if not all_rows:
-                logger.warning(f"No data returned for year {target_year}")
-                continue
+                logger.info(f"Processing dataset ID {dataset_id} for year {target_year}")
+                data_endpoint = f"{api_url}queries/{query_id}/dataset/{dataset_id}/data/"
+                all_rows = _fetch_all_pages(data_endpoint, headers)
 
-            logger.info(f"Total rows fetched for year {target_year}: {len(all_rows)}")
-            save_aggregates(all_rows, target_year)
-            total_rows += len(all_rows)
+                if not all_rows:
+                    logger.warning(f"No data returned for year {target_year}")
+                    continue
 
-        except Exception as e:
-            logger.exception(f"Error syncing aggregates for year {target_year}: {e}")
+                logger.info(f"Total rows fetched for year {target_year}: {len(all_rows)}")
+                save_aggregates(all_rows, target_year)
+                total_rows += len(all_rows)
 
-    return f"Successfully synced {total_rows} rows for years: {target_years}"
+            except Exception as e:
+                logger.exception(f"Error syncing aggregates for year {target_year}: {e}")
+                errors.append(f"Year {target_year}: {e}")
+
+        if errors and job:
+            job.error_message = "\n".join(errors)
+            job.save(update_fields=["error_message"])
+
+        return f"Successfully synced {total_rows} rows for years: {target_years}"
+
+    except Exception as e:
+        if job:
+            job.error_message = str(e)
+            job.save(update_fields=["error_message"])
+        raise
 
 
 def _prepare_sync_context(
