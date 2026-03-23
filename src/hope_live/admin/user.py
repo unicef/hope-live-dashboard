@@ -9,10 +9,10 @@ admin.site.unregister(Group)
 
 
 @admin.register(User)
-class UserAdmin(BaseUserAdmin[User]):  # type: ignore[misc]
+class UserAdmin(BaseUserAdmin):  # type: ignore[type-arg]
     pass
 
 
 @admin.register(Group)
-class GroupAdmin(BaseGroupAdmin):  # type: ignore[misc]
+class GroupAdmin(BaseGroupAdmin):  # type: ignore[type-arg]
     pass

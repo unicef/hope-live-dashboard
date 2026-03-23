@@ -31,6 +31,13 @@ jobs:
     needs: [ changes ]
     if: github.event_name == 'workflow_dispatch' || needs.changes.outputs.run_tests == 'true'
     runs-on: ubuntu-latest
+    env:
+      DATABASE_URL: postgres://postgres:postgres@localhost:5432/hope_live
+      CELERY_BROKER_URL: redis://localhost:6379/1
+      CACHE_URL: redis://localhost:6379/2
+      REDIS_URL: redis://localhost:6379/3
+      CONSTANCE_REDIS_URL: redis://localhost:6379/3
+      STREAMING_BROKER_URL: "rabbit://guest:guest@localhost:5672?exchange=hope_live"
     services:
       db:
         image: postgres:15

@@ -33,12 +33,12 @@ class DailyAggregate(models.Model):
         return f"{self.date} {self.country_slug} {self.dimension_type}:{self.dimension_value}"
 
 
-class SyncDailyAggregatesJob(CeleryTaskModel):
+class SyncDailyAggregatesJob(CeleryTaskModel):  # type: ignore[misc]
     default_celery_task_name = "hope_live.analysis.tasks.sync_daily_aggregates"
     celery_task_name = "hope_live.analysis.tasks.sync_daily_aggregates"
 
-    error_message = models.TextField(blank=True, null=True)  # noqa: DJ001
+    error_message = models.TextField(blank=True, default="")
 
-    class Meta(CeleryTaskModel.Meta):
+    class Meta(CeleryTaskModel.Meta):  # type: ignore[misc]
         verbose_name = "Sync Daily Aggregates Job"
         verbose_name_plural = "Sync Daily Aggregates Jobs"
