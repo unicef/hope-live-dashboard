@@ -53,75 +53,32 @@ jobs:
         image: rabbitmq:3-management
         ports:
           - 5672:5672
-    env:
-      DOCKER_DEFAULT_PLATFORM: linux/amd64
-      DOCKER_METADATA_ANNOTATIONS_LEVELS: manifest,index
-      DATABASE_URL: postgres://postgres:postgres@localhost:5432/hope_live
-      CELERY_BROKER_URL: redis://redis:6379/1
-      CACHE_URL: redis://localhost:6379/2
-      REDIS_URL: redis://localhost:6379/3
-      CONSTANCE_REDIS_URL: redis://localhost:6379/3
-      DOCKER_BUILDKIT: 1
-      STREAMING_BROKER_URL: "rabbit://guest:guest@localhost:5672?exchange=hope_live"
     steps:
       - uses: actions/checkout@v6
         with:
           fetch-depth: 0
 
-      - name: Docker meta
-        id: meta
-        uses: docker/metadata-action@v5
+      - name: Install the latest version of uv
+        uses: astral-sh/setup-uv@v7
         with:
-          images: "${{ vars.DOCKERHUB_ORGANIZATION }}/${{ vars.DOCKERHUB_REPOSITORY }}"
-          tags: |
-            type=ref,event=branch
-            type=ref,event=pr
+          version: "latest"
+          enable-cache: true
+          cache-dependency-glob: |
+            pyproject.toml
+            uv.lock
+          github-token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: DockerHub login
-        uses: docker/login-action@v3
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Install tox
+        run: uv tool install --python-preference only-managed --python 3.13 tox --with tox-uv --with tox-gh-actions
 
-      - id: calc
-        shell: bash
-        run: |
-          IMAGE=$(echo '${{env.DOCKER_METADATA_OUTPUT_JSON}}' | jq -r '.tags[0]')
-          echo "IMAGE=$IMAGE" >> $GITHUB_ENV
+      - name: Setup test suite
+        run: tox run -vv --notest --skip-missing-interpreters false -e tests
 
-      - name: Build Test Image
-        run: |
-             docker build \
-                --target tests \
-                -t ${{env.IMAGE}} \
-                --cache-from "type=gha" \
-                --cache-to "type=gha,mode=max" \
-                -f docker/Dockerfile .
-
-      - name: Run Test suite
-        run: |
-            mkdir -p output
-            docker run --rm \
-              --network host \
-              -e PYTHONPATH=/app/src \
-              -e DATABASE_URL=${DATABASE_URL} \
-              -e CELERY_BROKER_URL=${CELERY_BROKER_URL} \
-              -e CACHE_URL=${CACHE_URL} \
-              -e REDIS_URL=${REDIS_URL} \
-              -e CONSTANCE_REDIS_URL=${CONSTANCE_REDIS_URL} \
-              -e STREAMING_BROKER_URL=${STREAMING_BROKER_URL} \
-              -e SECRET_KEY=super-secret-key-just-for-testing \
-              -v "./output/:/app/output" \
-              -v "./src/:/app/src" \
-              -v "./tests:/app/tests" \
-              -v "./pytest.ini:/app/pytest.ini" \
-              -v "./tox.ini:/app/tox.ini" \
-              -v "./pyproject.toml:/app/pyproject.toml" \
-              -t ${{env.IMAGE}} \
-              tox -e tests
+      - name: Run test suite tests
+        run: tox -e tests
 
       - name: Upload pytest test results
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@v6
         with:
           name: pytest-results-tests
           path: junit.xml
@@ -133,7 +90,9 @@ jobs:
         with:
           env_vars: OS,PYTHON
           fail_ci_if_error: true
-          files: ./output/coverage.xml
+          flags: unittests
+          files: ./coverage.xml
+          verbose: true
           token: ${{ secrets.CODECOV_TOKEN }}
-          verbose: false
           name: codecov-${{env.GITHUB_REF_NAME}}
+          slug: ${{ github.repository }}
