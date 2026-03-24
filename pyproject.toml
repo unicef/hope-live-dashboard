@@ -49,6 +49,7 @@ dependencies = [
   "redis",
   "sentry-sdk",
   "social-auth-app-django",
+  "tenacity>=9.1.4",
   "unicef-security>=1.8",
   "whitenoise>=6.12",
 ]

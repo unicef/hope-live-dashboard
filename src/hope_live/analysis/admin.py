@@ -16,7 +16,7 @@ class SyncDailyAggregatesJobAdmin(CeleryTaskModelAdmin):  # type: ignore[misc]
     @button(permission=lambda r, o, handler: handler.model_admin.has_queue_permission("inspect", r, o))
     def celery_inspect(self, request: HttpRequest, pk: str) -> HttpResponse:
         try:
-            return super().celery_inspect(request, pk)  # type: ignore[no-any-return]
+            return CeleryTaskModelAdmin.celery_inspect(self, request, pk)  # type: ignore[no-any-return]
         except (OperationalError, ConnectionError):
             self.message_user(request, "Celery broker not available.", level=messages.WARNING)
             return HttpResponseRedirect("..")
