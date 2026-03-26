@@ -10,39 +10,48 @@ name = "hope-live-dashboard"
 description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.13"
-classifiers = [ "Programming Language :: Python :: 3 :: Only", "Programming Language :: Python :: 3.13" ]
+classifiers = [
+  "Programming Language :: Python :: 3 :: Only",
+  "Programming Language :: Python :: 3.13",
+  "Programming Language :: Python :: 3.14",
+]
 dynamic = [
   "version",
 ]
 dependencies = [
-  "channels>=4.3.1",
-  "channels-redis>=4.3",
-  "click>=8.2.1",
-  "daphne>=4.2.1",
-  "django>=5.2.6",
-  "django-admin-extra-buttons>=2.1.1",
-  "django-adminactions>=2.4",
-  "django-adminfilters>=2.6",
-  "django-constance>=4.3.2",
-  "django-csp>=4",
-  "django-debug-toolbar>=6",
-  "django-environ>=0.12",
-  "django-flags>=5.0.14",
-  "django-online-issues[github]>=0.5",
-  "django-redis>=6",
-  "django-regex>=0.5",
-  "django-smart-env>=0.1",
-  "django-streaming[rabbitmq]>=0.3",
-  "django-stubs>=5.2",
-  "django-stubs-ext>=5.2.5",
-  "django-tailwind>=4.2",
-  "django-timezone-field>=7",
-  "django-unfold>=0.65",
+  "channels",
+  "channels-redis",
+  "click",
+  "daphne",
+  "django>=5.2.6,<6",
+  "django-admin-extra-buttons",
+  "django-adminactions",
+  "django-adminfilters>=2.7",
+  "django-celery-beat>=2.8.1",
+  "django-celery-boost>=0.7",
+  "django-constance",
+  "django-csp",
+  "django-debug-toolbar",
+  "django-environ",
+  "django-flags",
+  "django-online-issues[github]",
+  "django-redis",
+  "django-regex",
+  "django-smart-env",
+  "django-streaming[rabbitmq]",
+  "django-stubs",
+  "django-stubs-ext",
+  "django-tailwind",
+  "django-timezone-field",
+  "django-unfold",
+  "django-widget-tweaks",
   "psycopg2-binary>=2.9.10",
-  "redis>=6.4",
-  "sentry-sdk>=2.37.1",
-  "social-auth-app-django>=5.5.1",
+  "redis",
+  "sentry-sdk",
+  "social-auth-app-django",
+  "tenacity>=9.1.4",
   "unicef-security>=1.8",
+  "whitenoise>=6.12",
 ]
 urls.Documentation = "https://github.com/UNICEF/hope-live-dashboard"
 urls.Homepage = "https://github.com/UNICEF/hope-live-dashboard"
@@ -69,7 +78,6 @@ dev = [
   "seleniumbase>=4.41.6",
   "tox>=4.30.2",
 ]
-
 docs = [
   "markupsafe>=2.1.5",
   "mdx-gh-links>=0.4",
@@ -108,12 +116,8 @@ type-check = [
 
 [tool.hatch]
 build.hooks.vcs.version-file = "src/hope_live/version.py"
+build.targets.sdist.ignore-vcs = true
+build.targets.sdist.only-include = [ "src/hope_live" ]
+build.targets.wheel.packages = [ "src/hope_live" ]
 version.source = "vcs"
 raw-options = { root = "../.." }
-
-[tool.hatch.build.targets.wheel]
-packages = [ "src/hope_live" ]
-
-[tool.hatch.build.targets.sdist]
-ignore-vcs = true
-only-include = [ "src/hope_live" ]

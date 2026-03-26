@@ -25,19 +25,12 @@ INSTALLED_APPS = [
     "channels",
     "hope_live.theme",
     "hope_live.web",
-    "unfold",  # before django.contrib.admin
-    "unfold.contrib.filters",  # optional, if special filters are needed
-    "unfold.contrib.forms",  # optional, if special form elements are needed
-    "unfold.contrib.inlines",  # optional, if special inlines are needed
-    "unfold.contrib.import_export",  # optional, if django-import-export package is used
-    "unfold.contrib.guardian",  # optional, if django-guardian package is used
-    "unfold.contrib.simple_history",  # optional, if django-simple-history package is used
-    "unfold.contrib.location_field",  # optional, if django-location-field package is used
-    "unfold.contrib.constance",  # optional, if django-constance package is used
+    "adminactions",
     "django.contrib.admin",  # required
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
+    "django.contrib.sites",
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "unicef_security",
@@ -45,7 +38,7 @@ INSTALLED_APPS = [
     "debug_toolbar",
     "social_django",
     "admin_extra_buttons",
-    "adminactions",
+    "django_celery_boost",
     "issues",
     "smart_env",
     "adminfilters",
@@ -55,11 +48,15 @@ INSTALLED_APPS = [
     "flags",
     "hope_live",
     "hope_live.ws",
+    "hope_live.analysis",
+    "widget_tweaks",
+    "django_celery_beat",
     *env("EXTRA_APPS"),
 ]
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "csp.middleware.CSPMiddleware",
@@ -98,7 +95,12 @@ CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
         "CONFIG": {
-            "hosts": [env("CHANNEL_BROKER") or env("REDIS_URL")],
+            "hosts": [
+                {
+                    "address": env("CHANNEL_BROKER") or env("REDIS_URL"),
+                    "health_check_interval": 5,
+                }
+            ],
         },
     },
 }
@@ -157,11 +159,17 @@ USE_I18N = True
 
 USE_TZ = True
 
+# See: https://docs.djangoproject.com/en/dev/ref/settings/#site-id
+SITE_ID = 1
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = "static/"
+
+# See: https://docs.djangoproject.com/en/dev/ref/settings/#static-root
+STATIC_ROOT = env.str("STATIC_ROOT")
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
@@ -171,7 +179,11 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 CSRF_COOKIE_SECURE = env("CSRF_COOKIE_SECURE")
 CSRF_TRUSTED_ORIGINS = env("CSRF_TRUSTED_ORIGINS")
 
+LOGIN_URL = "web:login"
+LOGIN_REDIRECT_URL = "web:dashboard"
+
 from .fragments.app import *  # noqa: E402 F403
+from .fragments.celery import *  # noqa: E402 F403
 from .fragments.constance import *  # noqa: E402 F403
 from .fragments.csp import *  # noqa: E402 F403
 from .fragments.debug_toolbar import *  # noqa: E402 F403
@@ -181,4 +193,3 @@ from .fragments.sentry import *  # noqa: E402 F403
 from .fragments.social_auth import *  # noqa: E402 F403
 from .fragments.streaming import *  # noqa: E402 F403
 from .fragments.tailwind import *  # noqa: E402 F403
-from .fragments.unfold import *  # noqa: E402 F403

@@ -1,14 +1,110 @@
 {% extends "layout.html" %}
+{% load static %}
 
 {% block content %}
-    <div class="grid grid-cols-3 gap-1">
-        <div><a href="{% url "web:details" %}">{% include "panels/histogram.html" %}</a></div>
-        <div><a href="{% url "web:details" %}">{% include "panels/map.html" %}</a></div>
-
-        <div>{% include "panels/base2.html" %}</div>
-        <div>{% include "panels/base3.html" %}</div>
-        <div>{% include "panels/base4.html" %}</div>
-        <div>{% include "panels/base5.html" %}</div>
-        <div class="content-center">{% include "panels/base6.html" %}</div>
+<div class="container mx-auto px-4 py-8">
+    <div class="mb-8 flex justify-between items-center">
+        <div>
+            <h1 class="text-3xl font-bold text-gray-900">Financial Dashboard</h1>
+            <p class="text-gray-600">Overview of Financial and Demographic Metrics</p>
+        </div>
+        <div>
+            <!-- Date Filter could go here -->
+            <span class="bg-unicef-blue text-white text-xs font-medium mr-2 px-2.5 py-0.5 rounded">Live Data</span>
+        </div>
     </div>
+
+    <!-- Timeline Filter -->
+    <div class="bg-white rounded-lg shadow p-6 mb-8">
+        <h3 class="text-lg font-semibold text-gray-900 mb-2">Spending Timeline</h3>
+        <div id="time-focus-chart" class="w-full"></div>
+        <div id="time-range-chart" class="w-full mt-4"></div>
+        <p class="text-xs text-gray-500 mt-2 italic">* Select a range on the smaller chart at the bottom to zoom in on
+            the focus chart</p>
+    </div>
+
+
+    <!-- Stats Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+        <!-- Financial -->
+        <div class="bg-white rounded-lg shadow p-6 border-l-4 border-unicef-blue">
+            <h3 class="text-gray-500 text-sm font-medium uppercase">Total Disbursed</h3>
+            <p id="total-disbursed" class="text-3xl font-bold text-gray-900 mt-2">${{ financial.total_usd|floatformat:2
+                }}</p>
+        </div>
+        <div class="bg-white rounded-lg shadow p-6 border-l-4 border-unicef-primary">
+            <h3 class="text-gray-500 text-sm font-medium uppercase">Transactions</h3>
+            <p id="total-payments" class="text-3xl font-bold text-gray-900 mt-2">{{ financial.total_payments }}</p>
+        </div>
+
+        <!-- Demographic -->
+        <div class="bg-white rounded-lg shadow p-6 border-l-4 border-unicef-blue">
+            <h3 class="text-gray-500 text-sm font-medium uppercase">Individuals Reached</h3>
+            <p id="total-individuals" class="text-3xl font-bold text-gray-900 mt-2">{{ demographic.total_individuals }}
+            </p>
+        </div>
+    </div>
+
+    <!-- Charts Section -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+        <!-- By Sector -->
+        <div class="bg-white rounded-lg shadow p-6">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">Distribution by Sector</h3>
+            <div id="sector-chart" class="w-full"></div>
+        </div>
+    </div>
+
+    <!-- Geographic Breakdown -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+        <div class="bg-white rounded-lg shadow p-6">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">Top Countries</h3>
+            <div id="country-chart" class="w-full"></div>
+        </div>
+        <div class="bg-white rounded-lg shadow p-6">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">Administrative Areas</h3>
+            <div id="admin-chart" class="w-full"></div>
+        </div>
+    </div>
+
+    <!-- Additional Segments (Program, Delivery Type, FSP) -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+        <div class="bg-white rounded-lg shadow p-6">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">Distribution by Program</h3>
+            <div id="program-chart" class="w-full"></div>
+        </div>
+        <div class="bg-white rounded-lg shadow p-6">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">Delivery Types</h3>
+            <div id="delivery-chart" class="w-full"></div>
+        </div>
+    </div>
+
+    <!-- FSP and Status -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div class="bg-white rounded-lg shadow p-6">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">Financial Service Providers (FSP)</h3>
+            <div id="fsp-chart" class="w-full"></div>
+        </div>
+        <div class="bg-white rounded-lg shadow p-6">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">Transaction Status</h3>
+            <div id="status-chart" class="w-full"></div>
+        </div>
+    </div>
+    <!-- By Region -->
+    <div class="bg-white rounded-lg shadow p-6">
+        <h3 class="text-lg font-semibold text-gray-900 mb-4">Regions</h3>
+        <div id="region-chart" class="w-full"></div>
+    </div>
+</div>
+</div>
+
+<script id="dashboard-data" type="application/json">
+    {{ dashboard_data_json|safe }}
+</script>
 {% endblock content %}
+
+{% block extra_js %}
+<script src="{% static 'js/crossfilter.min.js' %}"></script>
+<script src="{% static 'js/dc.min.js' %}"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dc/4.2.7/style/dc.min.css" />
+<script src="{% static 'js/dashboard_visuals.js' %}"></script>
+{% endblock extra_js %}

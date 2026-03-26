@@ -1,9 +1,6 @@
+exclude: '^.*/migrations/.*$'
 repos:
 
-  - repo: https://github.com/seddonym/import-linter
-    rev: v2.5
-    hooks:
-    - id: import-linter
 
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v6.0.0
@@ -12,25 +9,25 @@ repos:
       - id: trailing-whitespace
 
   - repo: https://github.com/adamchainz/djade-pre-commit
-    rev: "1.6.0"
+    rev: "1.9.0"
     hooks:
     -   id: djade
         args: [--target-version, "5.1"]  # Use current Django version
 
 
   - repo: https://github.com/tox-dev/tox-ini-fmt
-    rev: "1.6.0"
+    rev: "1.7.1"
     hooks:
       - id: tox-ini-fmt
         args: [ "-p", "lint" ]
 
   - repo: https://github.com/tox-dev/pyproject-fmt
-    rev: "v2.6.0"
+    rev: "v2.18.1"
     hooks:
       - id: pyproject-fmt
 
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.15.0
+    rev: v0.15.5
     hooks:
       - id: ruff
       - id: ruff-format
@@ -38,7 +35,7 @@ repos:
           - --check
 
   - repo: https://github.com/saxix/pch
-    rev: '79b0c0e'
+    rev: '0.5'
     hooks:
 
       - id: check-missed-migrations
@@ -65,8 +62,8 @@ repos:
         name: check tailwind CSS ready for production
         files: src/hope_live/theme/static_src/src/styles.scss
         args:
-          - -o
-          - src/hope_live/theme/static/css/styles.css
+          - -d
+          - src/hope_live/theme/static/css/
 
       - id: check-minimized
         name: check missing minimized javascript
@@ -75,6 +72,10 @@ repos:
         args:
           - -i
           - "src/hope_live/theme/static_src/*.js"
+          - -i
+          - "src/hope_live/theme/static/unfold/*"
+          - -i
+          - "docs/*"
 
       - id: check-forbidden
         name: check pyproject to avoid editable sources/deps

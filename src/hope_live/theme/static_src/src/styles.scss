@@ -1,6 +1,7 @@
 @import "tailwindcss";
 
 @plugin "daisyui";
+
 @plugin "daisyui/theme" {
   name: "dark";
   default: true;
@@ -42,12 +43,20 @@
   default: false;
   prefersdark: false;
   color-scheme: "light";
-  --color-base-100: oklch(92% 0.013 255.508);
-  --color-base-200: oklch(98% 0.002 247.839);
-  --color-base-300: oklch(98% 0.002 247.839);
-  --color-base-content: oklch(20% 0.042 265.755);
-  --color-primary: oklch(68% 0.169 237.323);
-  --color-primary-content: oklch(12% 0.042 264.695);
+  /* BRAND COLORS */
+  /* #00ADEF converted to OKLCH */
+  --color-primary: oklch(67.93% 0.176 237.98);
+  --color-primary-content: oklch(100% 0 0);
+  /* White text on blue */
+
+  /* BACKGROUNDS */
+  --color-base-100: oklch(100% 0 0);
+  /* Pure White (Card backgrounds) */
+  --color-base-200: oklch(98.5% 0 0);
+  /* Very Light Gray (Page background) */
+  --color-base-content: oklch(20% 0.04 265);
+  /* Dark Text */
+
   --color-secondary: oklch(50% 0.134 242.749);
   --color-secondary-content: oklch(98% 0.003 247.858);
   --color-accent: oklch(62% 0.214 259.815);
@@ -86,11 +95,14 @@
 
 
 aside {
-    @apply text-gray-900 bg-gray-100;
-    @apply dark:text-white dark:bg-gray-900;
+  @apply text-gray-900 bg-gray-100;
+  @apply dark:text-white dark:bg-gray-900;
+
   ul {
-    li{
-      a{
+    li {
+
+      a,
+      button {
         @apply flex items-center p-2 rounded-lg;
         @apply bg-gray-100 text-gray-700;
         @apply dark:text-white dark:bg-gray-900;

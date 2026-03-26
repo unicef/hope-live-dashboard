@@ -43,4 +43,19 @@ CONSTANCE_CONFIG = {
         "Secret Key used for internal event notifications",
         "token",
     ),
+    "HOPE_COUNTRY_REPORT_API_URL": (
+        "https://reporting-hope-dev.unitst.org/api/",
+        "Country Report API URL",
+        str,
+    ),
+    "HOPE_COUNTRY_REPORT_API_TOKEN": (
+        "8ac98d372760c5db87b73e1c283dcb1bc8c4f0e6",
+        "Country Report API Token",
+        "token",
+    ),
+    "HOPE_COUNTRY_REPORT_QUERY_ID": (
+        6,
+        "Query ID for Daily Aggregate Dataset",
+        int,
+    ),
 }

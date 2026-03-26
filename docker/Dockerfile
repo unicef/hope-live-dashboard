@@ -7,13 +7,16 @@ ARG SOURCE_COMMIT
 
 RUN set -x \
   && runtimeDeps=" \
+    libexpat1 \
     libmagic1 \
     libxml2 \
+    libpcre3 \
+    mime-support \
   " \
   && buildDeps=" \
 wget \
 " \
-  && apt-get update && apt-get install -y --no-install-recommends ${buildDeps} ${runtimeDeps} \
+  && apt-get update && apt-get upgrade -y && apt-get install -y --no-install-recommends ${buildDeps} ${runtimeDeps} \
   && rm -rf /var/lib/apt/lists/* \
   && wget --quiet -O /usr/local/bin/gosu "https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/gosu-amd64" \
   && echo "$GOSU_SHA256 /usr/local/bin/gosu" | sha256sum --check --status \
@@ -36,6 +39,7 @@ libfontconfig1 \
 libgconf-2-4 \
 libglib2.0-0 \
 libnss3 \
+libpcre3-dev \
 libssl-dev \
 libxml2-dev  \
 python3-dev \
@@ -46,24 +50,12 @@ zlib1g-dev  \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends gnupg wget curl unzip && \
-    wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - && \
-    echo "deb http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google.list && \
-    apt-get update -y && \
-    apt-get install -y --no-install-recommends google-chrome-stable && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/* /var/cache/apt/* && \
-    CHROME_VERSION=$(google-chrome --product-version) && \
-    wget -q --continue -P /chromedriver "https://edgedl.me.gvt1.com/edgedl/chrome/chrome-for-testing/$CHROME_VERSION/linux64/chromedriver-linux64.zip" && \
-    unzip /chromedriver/chromedriver* -d /usr/local/bin/ && \
-    rm -rf /chromedriver
-
 RUN pip install uv uwsgi
 
 # ------- tests -------
 FROM builder AS tests
 ARG BUILD_DATE
+ARG VERSION
 ARG SOURCE_COMMIT
 
 LABEL distro="tests"
@@ -76,31 +68,8 @@ ENV PATH=/venv/bin:/usr/local/bin/:/usr/bin:/bin \
     PYTHONDONTWRITEBYTECODE=1 \
     UV_PROJECT_ENVIRONMENT=/venv \
     VIRTUAL_ENV=/venv \
-    UWSGI_PROCESSES=4
-
-WORKDIR /app
-COPY uv.lock README.md MANIFEST.in pyproject.toml /app/
-COPY src /app/src/
-
-RUN --mount=type=cache,target=/root/.uv-cache \
-    find ./src -name 'node_modules' -prune \
-        -o -name *.py -o -name *.html -o -name *.js -o -name *.css \
-        -type f \
-        -exec ls -l "{}" \;  | sha1sum | awk '{print $1}' > CODE_CHECKSUM \
-    && uv sync --cache-dir=/root/.uv-cache \
-        --python=/usr/local/bin/python \
-        --python-preference=system \
-        --frozen --all-groups --verbose
-
-# ------- production only deps-------
-FROM builder AS production
-ENV PATH=/venv/bin:/usr/local/bin/:/usr/bin:/bin \
-    DJANGO_SETTINGS_MODULE=hope_live.config.settings \
-    PYTHONUNBUFFERED=1 \
-    PYTHONDONTWRITEBYTECODE=1 \
-    UV_PROJECT_ENVIRONMENT=/venv \
-    VIRTUAL_ENV=/venv \
-    UWSGI_PROCESSES=4
+    UWSGI_PROCESSES=4 \
+    SETUPTOOLS_SCM_PRETEND_VERSION=${VERSION:-0.0.0.dev0}
 
 WORKDIR /app
 COPY uv.lock README.md MANIFEST.in pyproject.toml /app/
@@ -110,8 +79,29 @@ RUN --mount=type=cache,target=/root/.uv-cache \
     uv sync --cache-dir=/root/.uv-cache \
         --python=/usr/local/bin/python \
         --python-preference=system \
-        --frozen \
-        --verbose
+        --frozen --group dev
+
+# ------- production only deps-------
+FROM builder AS production
+ARG VERSION
+ENV PATH=/venv/bin:/usr/local/bin/:/usr/bin:/bin \
+    DJANGO_SETTINGS_MODULE=hope_live.config.settings \
+    PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1 \
+    UV_PROJECT_ENVIRONMENT=/venv \
+    VIRTUAL_ENV=/venv \
+    UWSGI_PROCESSES=4 \
+    SETUPTOOLS_SCM_PRETEND_VERSION=${VERSION:-0.0.0.dev0}
+
+WORKDIR /app
+COPY uv.lock README.md MANIFEST.in pyproject.toml /app/
+COPY src /app/src/
+
+RUN --mount=type=cache,target=/root/.uv-cache \
+    uv sync --cache-dir=/root/.uv-cache \
+        --python=/usr/local/bin/python \
+        --python-preference=system \
+        --frozen
 
 
 
@@ -120,9 +110,12 @@ FROM base_os AS dist
 ARG BUILD_DATE
 ARG SOURCE_COMMIT
 ARG BRANCH
+ARG VERSION
+ARG GITHUB_SERVER_URL
+ARG GITHUB_REPOSITORY
+ENV VERSION=$VERSION
 
 ENV PATH=/venv/bin:/usr/local/bin/:/usr/bin:/bin \
-    DJANGO_SETTINGS_MODULE=hope_live.config.settings \
     BUILD_DATE=$BUILD_DATE \
     SOURCE_COMMIT=$SOURCE_COMMIT \
     VERSION=$VERSION \
@@ -132,16 +125,16 @@ ENV PATH=/venv/bin:/usr/local/bin/:/usr/bin:/bin \
     STATIC_URL="/static/" \
     PYTHONPATH=""\
     PGSSLCERT="/tmp/postgresql.crt" \
+    DJANGO_SETTINGS_MODULE=hope_live.config.settings \
     UV_PROJECT_ENVIRONMENT=/venv \
     VIRTUAL_ENV=/venv \
     UWSGI_PROCESSES=4 \
-    MEDIA_ROOT="${MEDIA_ROOT:-/var/run/app/media}" \
-    STATIC_ROOT="${STATIC_ROOT:-/var/run/app/static}"
+    SETUPTOOLS_SCM_PRETEND_VERSION=${VERSION:-0.0.0.dev0}
 
 RUN <<EOF cat> /RELEASE
 {"version": "$VERSION",
  "commit": "$SOURCE_COMMIT",
- "date": "$BUILD_DATE",
+ "date": "$BUILD_DATE"
 }
 EOF
 WORKDIR /app
@@ -154,12 +147,11 @@ COPY --chown=hope:unicef --from=production /venv /venv
 COPY --from=builder /usr/local/bin/uwsgi /usr/local/bin/uv /usr/local/bin/
 RUN --mount=type=cache,target=/root/.uv-cache \
     uv --cache-dir=/root/.uv-cache  pip install --no-deps . \
-    && rm -fr /app/* \
-
+    && rm -fr /app/*
 
 
 EXPOSE 8000
-ENTRYPOINT exec docker-entrypoint.sh "$0" "$@"
+ENTRYPOINT ["docker-entrypoint.sh"]
 CMD ["run"]
 
 

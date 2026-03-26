@@ -5,7 +5,7 @@ CONTENT_SECURITY_POLICY = {
         "default-src": ["data:", "'self'", "'unsafe-inline'", "http://unpkg.com/"] + env("CSP_DEFAULT_SRC"),
         "img-src": ["i.pravatar.cc", "'self'", "data:", "https://img.daisyui.com/", "https://www.unicef.org"]
         + env("CSP_IMG_SRC"),
-        "style-src": ["'unsafe-inline'", "'self'"] + [],
+        "style-src": ["'unsafe-inline'", "'self'", "cdnjs.cloudflare.com"] + [],
         "script-src": [
             "'unsafe-inline'",
             "'self'",
