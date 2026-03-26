@@ -14,7 +14,11 @@ module.exports = {
     ],
     theme: {
         extend: {
-            // your customizations
+            colors: {
+                'unicef-blue': 'oklch(var(--p))',
+                'unicef-dark': '#003C8F',
+                'unicef-primary': '#00AEEF',
+            },
         },
     },
     plugins: [

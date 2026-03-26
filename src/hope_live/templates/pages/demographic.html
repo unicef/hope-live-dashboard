@@ -1,0 +1,78 @@
+{% extends "layout.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <div class="mb-8 flex justify-between items-center">
+        <div>
+            <h1 class="text-3xl font-bold text-gray-900">Demographic Dashboard</h1>
+            <p class="text-gray-600">Breakdown of Individuals, Children, and PWD Reached</p>
+        </div>
+        <div>
+            <span class="bg-unicef-blue text-white text-xs font-medium mr-2 px-2.5 py-0.5 rounded">Live Data</span>
+        </div>
+    </div>
+
+    <!-- Timeline Filter -->
+    <div class="bg-white rounded-lg shadow p-6 mb-8">
+        <h3 class="text-lg font-semibold text-gray-900 mb-2">Reach Timeline</h3>
+        <div id="time-focus-chart" class="w-full"></div>
+        <div id="time-range-chart" class="w-full mt-4"></div>
+        <p class="text-xs text-gray-500 mt-2 italic">* Select a range on the smaller chart at the bottom to zoom in on
+            the focus chart</p>
+    </div>
+
+
+    <!-- Stats Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+        <div class="bg-white rounded-lg shadow p-6 border-l-4 border-unicef-blue">
+            <h3 class="text-gray-500 text-sm font-medium uppercase">Individuals Reached</h3>
+            <p id="total-individuals" class="text-3xl font-bold text-gray-900 mt-2">{{ demographic.total_individuals }}
+            </p>
+        </div>
+        <div class="bg-white rounded-lg shadow p-6 border-l-4 border-unicef-primary">
+            <h3 class="text-gray-500 text-sm font-medium uppercase">Children</h3>
+            <p id="total-children" class="text-3xl font-bold text-gray-900 mt-2">{{ demographic.total_children }}</p>
+        </div>
+        <div class="bg-white rounded-lg shadow p-6 border-l-4 border-purple-500">
+            <h3 class="text-gray-500 text-sm font-medium uppercase">PWD Reached</h3>
+            <p id="total-pwd" class="text-3xl font-bold text-gray-900 mt-2">{{ demographic.total_pwd }}</p>
+        </div>
+    </div>
+
+    <!-- Main Demographic Charts -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+        <div class="bg-white rounded-lg shadow p-6">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">Individuals by Sector</h3>
+            <div id="sector-individuals-chart" class="w-full"></div>
+        </div>
+        <div class="bg-white rounded-lg shadow p-6">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">Children by Sector</h3>
+            <div id="sector-children-chart" class="w-full"></div>
+        </div>
+    </div>
+
+    <!-- Geographic Breakdown -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div class="bg-white rounded-lg shadow p-6">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">Top Countries (Individuals)</h3>
+            <div id="country-individuals-chart" class="w-full"></div>
+        </div>
+        <div class="bg-white rounded-lg shadow p-6">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">Top Countries (PWD)</h3>
+            <div id="country-pwd-chart" class="w-full"></div>
+        </div>
+    </div>
+</div>
+
+<script id="dashboard-data" type="application/json">
+    {{ dashboard_data_json|safe }}
+</script>
+{% endblock content %}
+
+{% block extra_js %}
+<script src="{% static 'js/crossfilter.min.js' %}"></script>
+<script src="{% static 'js/dc.min.js' %}"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dc/4.2.7/style/dc.min.css" />
+<script src="{% static 'js/demographic_visuals.js' %}"></script>
+{% endblock extra_js %}

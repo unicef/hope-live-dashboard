@@ -31,6 +31,13 @@ jobs:
     needs: [ changes ]
     if: github.event_name == 'workflow_dispatch' || needs.changes.outputs.run_tests == 'true'
     runs-on: ubuntu-latest
+    env:
+      DATABASE_URL: postgres://postgres:postgres@localhost:5432/hope_live
+      CELERY_BROKER_URL: redis://localhost:6379/1
+      CACHE_URL: redis://localhost:6379/2
+      REDIS_URL: redis://localhost:6379/3
+      CONSTANCE_REDIS_URL: redis://localhost:6379/3
+      STREAMING_BROKER_URL: "rabbit://guest:guest@localhost:5672?exchange=hope_live"
     services:
       db:
         image: postgres:15
@@ -53,20 +60,6 @@ jobs:
         image: rabbitmq:3-management
         ports:
           - 5672:5672
-    env:
-      DOCKER_DEFAULT_PLATFORM: linux/amd64
-      DOCKER_METADATA_ANNOTATIONS_LEVELS: manifest,index
-      DATABASE_URL: postgres://postgres:postgres@localhost:5432/hope_live
-      CELERY_BROKER_URL: redis://redis:6379/1
-      CACHE_URL: redis://localhost:6379/2
-      REDIS_URL: redis://localhost:6379/3
-      CONSTANCE_REDIS_URL: redis://localhost:6379/3
-      DOCKER_BUILDKIT: 1
-      STREAMING_BROKER_URL: "rabbit://guest:guest@localhost:5672?exchange=hope_live"
-    strategy:
-      fail-fast: false
-      matrix:
-        cfg: [ "tests" ]
     steps:
       - uses: actions/checkout@v6
         with:
@@ -80,9 +73,7 @@ jobs:
           cache-dependency-glob: |
             pyproject.toml
             uv.lock
-          cache-suffix: ${{ matrix.cfg }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          python-version: ${{ matrix.python }}
 
       - name: Install tox
         run: uv tool install --python-preference only-managed --python 3.13 tox --with tox-uv --with tox-gh-actions
@@ -92,14 +83,6 @@ jobs:
 
       - name: Run test suite tests
         run: tox -e tests
-
-      - name: Archive selenium results
-        uses: actions/upload-artifact@v6
-        if: failure()
-        with:
-          name: selenium-log-report
-          path: latest_logs
-          retention-days: 5
 
       - name: Upload pytest test results
         uses: actions/upload-artifact@v6
