@@ -95,7 +95,7 @@ runs:
       uses: ./.github/actions/last_commit
     - name: Docker meta
       id: meta
-      uses: docker/metadata-action@v5
+      uses: docker/metadata-action@v6
       with:
         images: ${{ inputs.image }}
         flavor: |
@@ -139,7 +139,11 @@ runs:
         fi
     - name: Set up Docker BuildX
       if: steps.image_status.outputs.updated != 'true' || inputs.rebuild == 'true'
+<<<<<<< Updated upstream
       uses: docker/setup-buildx-action@v4.3.0
+=======
+      uses: docker/setup-buildx-action@v4
+>>>>>>> Stashed changes
       with:
         platforms: linux/amd64
         driver: docker-container
