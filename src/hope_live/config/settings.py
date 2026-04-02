@@ -26,6 +26,7 @@ INSTALLED_APPS = [
     "hope_live.theme",
     "hope_live.web",
     "adminactions",
+    "unicef_security",
     "django.contrib.admin",  # required
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -33,7 +34,6 @@ INSTALLED_APPS = [
     "django.contrib.sites",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "unicef_security",
     "csp",
     "debug_toolbar",
     "social_django",
