@@ -84,8 +84,6 @@ jobs:
       - name: Run test suite tests
         run: tox -e tests
 
-<<<<<<< Updated upstream
-=======
       - name: Archive selenium results
         uses: actions/upload-artifact@v7
         if: failure()
@@ -94,7 +92,6 @@ jobs:
           path: latest_logs
           retention-days: 5
 
->>>>>>> Stashed changes
       - name: Upload pytest test results
         uses: actions/upload-artifact@v7
         with:
@@ -103,7 +100,7 @@ jobs:
         if: ${{ always() }}
 
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v5
+        uses: codecov/codecov-action@v6
         continue-on-error: true
         with:
           env_vars: OS,PYTHON
