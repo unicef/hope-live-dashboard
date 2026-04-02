@@ -15,17 +15,16 @@ SOCIAL_AUTH_ADMIN_USER_SEARCH_FIELDS = [
 SOCIAL_AUTH_JSONFIELD_ENABLED = True
 
 SOCIAL_AUTH_PIPELINE = (
-    "hct_mis_api.apps.account.authentication.social_details",
+    "unicef_security.pipeline.social_details",
     "social_core.pipeline.social_auth.social_uid",
     "social_core.pipeline.social_auth.auth_allowed",
     "social_core.pipeline.social_auth.social_user",
     "social_core.pipeline.user.get_username",
-    "hct_mis_api.apps.account.authentication.require_email",
     "social_core.pipeline.social_auth.associate_by_email",
-    "hct_mis_api.apps.account.authentication.create_user",
+    "unicef_security.pipeline.create_unicef_user",
     "social_core.pipeline.social_auth.associate_user",
     "social_core.pipeline.social_auth.load_extra_data",
-    "hct_mis_api.apps.account.authentication.user_details",
+    "unicef_security.pipeline.user_details",
 )
 SOCIAL_AUTH_AZUREAD_B2C_OAUTH2_USER_FIELDS = [
     "email",
