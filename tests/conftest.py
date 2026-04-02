@@ -66,3 +66,18 @@ def user_role_factory():
     from factories import UserRoleFactory
 
     return UserRoleFactory
+
+
+@pytest.fixture
+def admin_user(db):
+    from hope_live.models import User
+
+    return User.objects.create_superuser(username="admin", email="admin@test.com", password="password")
+
+
+@pytest.fixture(autouse=True)
+def cleanup_flags(db):
+    from flags.models import FlagState
+
+    yield
+    FlagState.objects.all().delete()

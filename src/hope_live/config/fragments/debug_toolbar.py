@@ -14,7 +14,6 @@ MIDDLEWARE.append("debug_toolbar.middleware.DebugToolbarMiddleware")
 def show_ddt(request: "HttpRequest") -> bool:  # pragma: no-cover
     from flags.state import flag_enabled
 
-    return True
     if request.path in RegexList(("/api/.*", "/dal/.*", "/healthcheck/", "/autocomplete/")):
         return False
     return bool(flag_enabled("DEVELOP_DEBUG_TOOLBAR", request=request))
