@@ -78,12 +78,12 @@ def admin_user(db):
 
 @pytest.fixture(autouse=True)
 def cleanup_flags(db):
-    from django.db import transaction
+    from django.db import DatabaseError, transaction
     from flags.models import FlagState
 
     yield
 
-    with contextlib.suppress(transaction.TransactionManagementError):
-        transaction.rollback()
-
-    FlagState.objects.all().delete()
+    # Try to cleanup, but if it fails (e.g., due to broken transaction), just skip it
+    # The test database will be destroyed after the test run anyway
+    with contextlib.suppress(DatabaseError, transaction.TransactionManagementError):
+        FlagState.objects.all().delete()
