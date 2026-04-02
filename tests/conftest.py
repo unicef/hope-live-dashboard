@@ -1,3 +1,4 @@
+import contextlib
 import os
 import sys
 from pathlib import Path
@@ -66,3 +67,23 @@ def user_role_factory():
     from factories import UserRoleFactory
 
     return UserRoleFactory
+
+
+@pytest.fixture
+def admin_user(db):
+    from hope_live.models import User
+
+    return User.objects.create_superuser(username="admin", email="admin@test.com", password="password")
+
+
+@pytest.fixture(autouse=True)
+def cleanup_flags(db):
+    from django.db import DatabaseError, transaction
+    from flags.models import FlagState
+
+    yield
+
+    # Try to cleanup, but if it fails (e.g., due to broken transaction), just skip it
+    # The test database will be destroyed after the test run anyway
+    with contextlib.suppress(DatabaseError, transaction.TransactionManagementError):
+        FlagState.objects.all().delete()
