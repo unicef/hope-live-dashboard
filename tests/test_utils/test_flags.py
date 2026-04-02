@@ -36,13 +36,13 @@ def test_debug(settings, value):
 
 @pytest.mark.parametrize("value", ["myserver.com", "myserver.com:888", "myserver.com:443"])
 def test_hostname(value, rf):
-    request: HttpRequest = rf.get("/", SERVER_NAME=value)
+    request: HttpRequest = rf.get("/")
     with mock.patch.object(request, "get_host", return_value=value):
         assert hostname("myserver.com", request)
 
 
 def test_hostname_mismatch(rf):
-    request: HttpRequest = rf.get("/", SERVER_NAME="production.com")
+    request: HttpRequest = rf.get("/")
     with mock.patch.object(request, "get_host", return_value="production.com"):
         assert not hostname("localhost", request)
 
@@ -53,7 +53,8 @@ def test_show_ddt_excluded_paths(rf, settings, path):
 
     settings.DEBUG = True
     request = rf.get(path)
-    assert show_ddt(request) is False
+    with mock.patch.object(request, "get_host", return_value="localhost:8000"):
+        assert show_ddt(request) is False
 
 
 def test_show_ddt_allowed_path(rf, settings):
@@ -62,17 +63,16 @@ def test_show_ddt_allowed_path(rf, settings):
     from hope_live.config.fragments.debug_toolbar import show_ddt
 
     settings.DEBUG = True
-    request = rf.get("/dashboard/")
-    request.META["SERVER_NAME"] = "localhost"
-
-    # Create flag state for DEVELOP_DEBUG_TOOLBAR
     FlagState.objects.create(
         name="DEVELOP_DEBUG_TOOLBAR",
         condition="hostname",
         value="localhost,127.0.0.1",
     )
 
-    assert show_ddt(request) is True
+    request = rf.get("/dashboard/")
+    with mock.patch.object(request, "get_host", return_value="localhost:8000"):
+        assert request.path == "/dashboard/"
+        assert show_ddt(request) is True
 
 
 def test_show_ddt_production_hostname(rf, settings):
@@ -81,14 +81,12 @@ def test_show_ddt_production_hostname(rf, settings):
     from hope_live.config.fragments.debug_toolbar import show_ddt
 
     settings.DEBUG = True
-    request = rf.get("/dashboard/")
-    request.META["SERVER_NAME"] = "dashboard-hope-dev.unitst.org"
-
-    # Create flag state for DEVELOP_DEBUG_TOOLBAR
     FlagState.objects.create(
         name="DEVELOP_DEBUG_TOOLBAR",
         condition="hostname",
         value="localhost,127.0.0.1",
     )
 
-    assert show_ddt(request) is False
+    request = rf.get("/dashboard/")
+    with mock.patch.object(request, "get_host", return_value="dashboard-hope-dev.unitst.org:443"):
+        assert show_ddt(request) is False

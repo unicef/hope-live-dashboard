@@ -1,3 +1,4 @@
+import contextlib
 import os
 import sys
 from pathlib import Path
@@ -77,7 +78,12 @@ def admin_user(db):
 
 @pytest.fixture(autouse=True)
 def cleanup_flags(db):
+    from django.db import transaction
     from flags.models import FlagState
 
     yield
+
+    with contextlib.suppress(transaction.TransactionManagementError):
+        transaction.rollback()
+
     FlagState.objects.all().delete()
