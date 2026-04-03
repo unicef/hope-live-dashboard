@@ -6,11 +6,25 @@
     <div class="mb-8 flex justify-between items-center">
         <div>
             <h1 class="text-3xl font-bold text-gray-900">Financial Dashboard</h1>
-            <p class="text-gray-600">Overview of Financial and Demographic Metrics</p>
+            <p class="text-gray-600">Overview of Financial info</p>
         </div>
         <div>
             <!-- Date Filter could go here -->
             <span class="bg-unicef-blue text-white text-xs font-medium mr-2 px-2.5 py-0.5 rounded">Live Data</span>
+        </div>
+    </div>
+
+    <!-- Year Tabs -->
+    <div id="year-tabs" class="mb-6">
+        <div id="tabs-container" class="flex space-x-2 overflow-x-auto bg-gray-100 p-2 rounded-lg">
+            {% for year in available_years %}
+                <button
+                    class="year-tab px-6 py-2 rounded-md font-medium transition-all duration-200
+                           {% if forloop.first %}bg-white shadow text-blue-600 active-tab{% else %}text-gray-500 hover:bg-gray-200{% endif %}"
+                    data-year="{{ year }}">
+                    {{ year }}
+                </button>
+            {% endfor %}
         </div>
     </div>
 
@@ -25,23 +39,14 @@
 
 
     <!-- Stats Cards -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-        <!-- Financial -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
         <div class="bg-white rounded-lg shadow p-6 border-l-4 border-unicef-blue">
             <h3 class="text-gray-500 text-sm font-medium uppercase">Total Disbursed</h3>
-            <p id="total-disbursed" class="text-3xl font-bold text-gray-900 mt-2">${{ financial.total_usd|floatformat:2
-                }}</p>
+            <p id="total-disbursed" class="text-3xl font-bold text-gray-900 mt-2">$0.00</p>
         </div>
         <div class="bg-white rounded-lg shadow p-6 border-l-4 border-unicef-primary">
             <h3 class="text-gray-500 text-sm font-medium uppercase">Transactions</h3>
-            <p id="total-payments" class="text-3xl font-bold text-gray-900 mt-2">{{ financial.total_payments }}</p>
-        </div>
-
-        <!-- Demographic -->
-        <div class="bg-white rounded-lg shadow p-6 border-l-4 border-unicef-blue">
-            <h3 class="text-gray-500 text-sm font-medium uppercase">Individuals Reached</h3>
-            <p id="total-individuals" class="text-3xl font-bold text-gray-900 mt-2">{{ demographic.total_individuals }}
-            </p>
+            <p id="total-payments" class="text-3xl font-bold text-gray-900 mt-2">0</p>
         </div>
     </div>
 
@@ -97,8 +102,11 @@
 </div>
 </div>
 
-<script id="dashboard-data" type="application/json">
-    {{ dashboard_data_json|safe }}
+<script>
+    window.DASHBOARD_CONFIG = {
+        endpoint: "{% url 'analysis_api:daily-aggregates-list' %}",
+        type: "financial"
+    };
 </script>
 {% endblock content %}
 

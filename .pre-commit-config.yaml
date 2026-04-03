@@ -34,6 +34,17 @@ repos:
         args:
           - --check
 
+  - repo: local
+    hooks:
+      - id: minify-javascript
+        name: Minify JavaScript files
+        entry: python -c "import sys, jsmin; [open(f.replace('.js', '.min.js'), 'w').write(jsmin.jsmin(open(f).read())) for f in sys.argv[1:] if not f.endswith('.min.js')]"
+        language: python
+        additional_dependencies: [jsmin]
+        files: \.js$
+        exclude: \.min\.js$
+        pass_filenames: true
+
   - repo: https://github.com/saxix/pch
     rev: '0.5'
     hooks:

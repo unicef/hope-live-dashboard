@@ -30,6 +30,13 @@ DEFAULTS = {
     "DATABASE_URL": (str, "sqlite://", "", "", f"{DJ_ENVIRON_DOC}types.html#environ-env-db-url"),
     "DATABASE_HOPE_URL": (str, "sqlite://", "", "", f"{DJ_ENVIRON_DOC}types.html#environ-env-db-url"),
     "DEBUG": (bool, False, "", "", ""),
+    "DJANGO_ADMIN_URL": (
+        str,
+        "admin/",
+        "admin/",
+        False,
+        "URL path for Django admin interface (without trailing slash)",
+    ),
     "ENVIRONMENT": (str, "production", "develop", False, "Environment"),
     "EXTRA_APPS": (list, "", "", False, ""),  # nosec
     "EXTRA_AUTHENTICATION_BACKENDS": (list, [], [], False, "Extra authentications backends enabled to add."),
