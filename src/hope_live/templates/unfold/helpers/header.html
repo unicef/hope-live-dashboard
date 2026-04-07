@@ -9,11 +9,9 @@
                         {% block usertools %}
                             {% if has_permission %}
                                 {% block welcome-msg %}
-                                    {% include 'unfold/helpers/welcomemsg.html' %}
                                 {% endblock welcome-msg %}
 
                                 {% block userlinks %}
-                                    {% include 'unfold/helpers/userlinks.html' %}
                                 {% endblock userlinks %}
                             {% endif %}
                         {% endblock usertools %}
