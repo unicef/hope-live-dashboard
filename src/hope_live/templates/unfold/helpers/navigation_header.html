@@ -8,9 +8,7 @@
          {% endif %}
     >
         {% if site_logo %}
-            {% include "unfold/helpers/site_logo.html" %}
         {% elif branding %}
-            {% include "unfold/helpers/site_icon.html" %}
         {% endif %}
 
         {% if site_dropdown %}
@@ -23,6 +21,4 @@
     <span class="material-symbols-outlined block cursor-pointer h-[18px] xl:hidden! hover:text-base-700 dark:hover:text-base-200" x-on:click="sidebarMobileOpen = !sidebarMobileOpen">
         close
     </span>
-
-    {% include "unfold/helpers/site_dropdown.html" %}
 </div>
