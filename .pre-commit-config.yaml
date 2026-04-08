@@ -34,17 +34,6 @@ repos:
         args:
           - --check
 
-#  - repo: local
-#    hooks:
-#      - id: minify-javascript
-#        name: Minify JavaScript files
-#        entry: python -c "import sys, jsmin; [open(f.replace('.js', '.min.js'), 'w').write(jsmin.jsmin(open(f).read()) + '\n') for f in sys.argv[1:] if not f.endswith('.min.js')]"
-#        language: python
-#        additional_dependencies: [jsmin]
-#        files: \.js$
-#        exclude: \.min\.js$
-#        pass_filenames: true
-
   - repo: https://github.com/saxix/pch
     rev: '0.5'
     hooks:
@@ -76,17 +65,17 @@ repos:
           - -d
           - src/hope_live/theme/static/css/
 
-      - id: check-minimized
-        name: check missing minimized javascript
-        files: (\.js)$
-        exclude: (\.min\.js)$
-        args:
-          - -i
-          - "src/hope_live/theme/static_src/*.js"
-          - -i
-          - "src/hope_live/theme/static/unfold/*"
-          - -i
-          - "docs/*"
+#      - id: check-minimized
+#        name: check missing minimized javascript
+#        files: (\.js)$
+#        exclude: (\.min\.js)$
+#        args:
+#          - -i
+#          - "src/hope_live/theme/static_src/*.js"
+#          - -i
+#          - "src/hope_live/theme/static/unfold/*"
+#          - -i
+#          - "docs/*"
 
       - id: check-forbidden
         name: check pyproject to avoid editable sources/deps

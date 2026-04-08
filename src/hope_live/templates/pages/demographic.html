@@ -18,8 +18,8 @@
         <div id="tabs-container" class="flex space-x-2 overflow-x-auto bg-gray-100 p-2 rounded-lg">
             {% for year in available_years %}
                 <button
-                    class="year-tab px-6 py-2 rounded-md font-medium transition-all duration-200
-                           {% if forloop.first %}bg-white shadow text-blue-600 active-tab{% else %}text-gray-500 hover:bg-gray-200{% endif %}"
+                    class="year-tab px-6 py-2 rounded-md font-bold transition-all duration-200
+                        {% if forloop.first %}bg-white shadow text-blue-800 active-tab{% else %}text-gray-700 hover:bg-gray-200{% endif %}"
                     data-year="{{ year }}">
                     {{ year }}
                 </button>

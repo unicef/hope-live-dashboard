@@ -53,7 +53,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // Chart configurations (keep your existing setup)
     focusChart
         .width(null).height(300)
-        .margins({ top: 10, right: 50, bottom: 30, left: 60 })
+        .margins({ top: 10, right: 50, bottom: 30, left: 90 })
         .dimension(dateDimension)
         .group(volumeByMonthGroup)
         .transitionDuration(500)
@@ -65,7 +65,14 @@ document.addEventListener('DOMContentLoaded', function () {
         .rangeChart(rangeChart)
         .brushOn(false)
         .renderArea(true)
+        .title(function(d) {
+            const formatTime = d3.timeFormat("%B %Y");
+            const formatValue = d3.format(",.2f");
+            return `${formatTime(d.key)}: $${formatValue(d.value)}`;
+        })
         .on('filtered', updateTotals);
+
+    focusChart.yAxis().tickFormat(d => d3.format(".2s")(d).replace('G', 'B'));
 
     rangeChart
         .width(null).height(80)

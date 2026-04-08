@@ -27,12 +27,19 @@ document.addEventListener('DOMContentLoaded', function () {
     const initialYear = new Date().getFullYear();
     const initialDomain = [new Date(initialYear, 0, 1), new Date(initialYear, 11, 31)];
 
-    focusChart.width(null).height(200).margins({ top: 10, right: 50, bottom: 30, left: 60 })
+    focusChart.width(null).height(200).margins({ top: 10, right: 50, bottom: 30, left: 90 })
         .dimension(dateDimension).group(paymentsByMonthGroup).transitionDuration(500)
         .x(d3.scaleTime().domain(initialDomain))  // Set initial scale
         .round(d3.timeMonth.round).xUnits(d3.timeMonths).elasticY(true)
         .renderHorizontalGridLines(true).rangeChart(rangeChart).brushOn(false).renderArea(true)
+        .title(function(d) {
+            const formatTime = d3.timeFormat("%B %Y");
+            const formatValue = d3.format(",");
+            return `${formatTime(d.key)}: ${formatValue(d.value)}`;
+        })
         .on('filtered', updateTotals);
+
+    focusChart.yAxis().tickFormat(d => d3.format(".2s")(d).replace('G', 'B'));
 
     rangeChart.width(null).height(60).margins({ top: 0, right: 50, bottom: 20, left: 60 })
         .dimension(dateDimension).group(paymentsByMonthGroup).centerBar(true).gap(1)

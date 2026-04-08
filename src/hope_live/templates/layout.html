@@ -12,6 +12,43 @@
     <script src="{% static 'js/ws.js' %}"></script>
     {% tailwind_css %}
     {% issues_tags %}
+
+    <style>
+        /* 1. Fix Chart Labels (X/Y axis) which are often too light */
+        .dc-chart .axis text {
+            fill: #1f2937 !important; /* Dark Gray (Gray-800) */
+            font-weight: 600 !important;
+            font-size: 13px !important;
+        }
+
+        /* 2. Make the Sidebar text more bold and distinct */
+        aside span {
+            color: #111827 !important; /* Gray-900 */
+            font-weight: 600 !important;
+        }
+
+        /* 3. Increase contrast for the Year Tabs */
+        .year-tab {
+            color: #374151 !important; /* Gray-700 */
+            font-weight: 700 !important;
+        }
+
+        .year-tab.active-tab {
+            color: #1e40af !important; /* Deep Blue (Blue-800) */
+            border-bottom: 3px solid #1e40af;
+        }
+
+        /* Customizing the dc.js/SVG tooltips */
+        .dc-chart g.dot title {
+            display: none; /* Hide default browser tooltip if using custom libs */
+        }
+
+        /* If you want the axis lines to be even more visible */
+        .dc-chart .axis path, .dc-chart .axis line {
+            stroke: #4b5563 !important; /* Tailwind gray-600 */
+            stroke-width: 1.2px;
+        }
+    </style>
 </head>
 
 <body class="bg-gray-50 flex flex-col min-h-screen" data-timeout="{{ LOGOUT_TIMEOUT_MS|default:300000 }}"
