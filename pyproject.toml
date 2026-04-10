@@ -9,10 +9,9 @@ requires = [
 name = "hope-live-dashboard"
 description = "Add your description here"
 readme = "README.md"
-requires-python = ">=3.13"
+requires-python = "==3.14.*"
 classifiers = [
   "Programming Language :: Python :: 3 :: Only",
-  "Programming Language :: Python :: 3.13",
   "Programming Language :: Python :: 3.14",
 ]
 dynamic = [
@@ -38,7 +37,7 @@ dependencies = [
   "django-redis",
   "django-regex",
   "django-smart-env",
-  "django-streaming[rabbitmq]",
+  "django-streaming",
   "django-stubs",
   "django-stubs-ext",
   "django-tailwind",
