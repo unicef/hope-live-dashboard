@@ -16,27 +16,27 @@ echo "Startup command is: '$1'"
 
 case "$1" in
     "run")
-        django-admin upgrade
+        gosu hope:unicef django-admin upgrade
 
-        exec uwsgi --ini /conf/uwsgi.ini
+        exec gosu hope:unicef uwsgi --ini /conf/uwsgi.ini
 
     ;;
     "dev")
-        django-admin collectstatic --no-input
-        django-admin migrate
-        django-admin runserver 0.0.0.0:8000
+        gosu hope:unicef django-admin collectstatic --no-input
+        gosu hope:unicef django-admin migrate
+        gosu hope:unicef django-admin runserver 0.0.0.0:8000
     ;;
     "setup")
-        django-admin upgrade
+        gosu hope:unicef django-admin upgrade
     ;;
     "worker")
-        exec tini -- gosu hope:unicef celery -A hope_live.config worker --concurrency=4 -E -l "${CELERY_LOGLEVEL:-INFO}"
+        exec gosu hope:unicef celery -A hope_live.config worker --concurrency=4 -E -l "${CELERY_LOGLEVEL:-INFO}"
     ;;
     "beat")
-        exec tini -- gosu hope:unicef celery -A hope_live.config beat --scheduler django_celery_beat.schedulers:DatabaseScheduler -l "${CELERY_LOGLEVEL:-INFO}"
+        exec gosu hope:unicef celery -A hope_live.config beat --scheduler django_celery_beat.schedulers:DatabaseScheduler -l "${CELERY_LOGLEVEL:-INFO}"
     ;;
     "flower")
-        exec tini -- gosu hope:unicef celery -A hope_live.config flower
+        exec gosu hope:unicef celery -A hope_live.config flower
     ;;
 *)
 exec "$@"
