@@ -5,13 +5,13 @@ from . import env
 SETTINGS_DIR = Path(__file__).parent
 PACKAGE_DIR = SETTINGS_DIR.parent
 DEVELOPMENT_DIR = PACKAGE_DIR.parent.parent
-
+APPEND_SLASH = True
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = env("SECRET_KEY")
-
+DJANGO_ADMIN_URL = env("DJANGO_ADMIN_URL")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env("DEBUG")
 
@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "csp",
     "debug_toolbar",
+    "django_extensions",
     "social_django",
     "admin_extra_buttons",
     "django_celery_boost",
@@ -51,6 +52,8 @@ INSTALLED_APPS = [
     "hope_live.analysis",
     "widget_tweaks",
     "django_celery_beat",
+    "rest_framework",
+    "drf_spectacular",
     *env("EXTRA_APPS"),
 ]
 
@@ -83,6 +86,7 @@ TEMPLATES = [
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
                 "hope_live.web.context_processors.app",
+                "hope_live.analysis.context_processors.available_years",
             ],
         },
     },
@@ -141,6 +145,7 @@ AUTHENTICATION_BACKENDS = (
     "django.contrib.auth.backends.ModelBackend",
     *env("EXTRA_AUTHENTICATION_BACKENDS"),
 )
+
 # Internationalization
 # https://docs.djangoproject.com/en/5.2/topics/i18n/
 
@@ -187,6 +192,7 @@ from .fragments.celery import *  # noqa: E402 F403
 from .fragments.constance import *  # noqa: E402 F403
 from .fragments.csp import *  # noqa: E402 F403
 from .fragments.debug_toolbar import *  # noqa: E402 F403
+from .fragments.drf import *  # noqa: E402 F403
 from .fragments.flags import *  # noqa: E402 F403
 from .fragments.issues import *  # noqa: E402 F403
 from .fragments.sentry import *  # noqa: E402 F403

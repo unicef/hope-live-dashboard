@@ -13,6 +13,20 @@
         </div>
     </div>
 
+    <!-- Year Tabs -->
+    <div id="year-tabs" class="mb-6">
+        <div id="tabs-container" class="flex space-x-2 overflow-x-auto bg-gray-100 p-2 rounded-lg">
+            {% for year in available_years %}
+                <button
+                    class="year-tab px-6 py-2 rounded-md font-bold transition-all duration-200
+                        {% if forloop.first %}bg-white shadow text-blue-800 active-tab{% else %}text-gray-700 hover:bg-gray-200{% endif %}"
+                    data-year="{{ year }}">
+                    {{ year }}
+                </button>
+            {% endfor %}
+        </div>
+    </div>
+
     <!-- Timeline Filter -->
     <div class="bg-white rounded-lg shadow p-6 mb-8">
         <h3 class="text-lg font-semibold text-gray-900 mb-2">Reach Timeline</h3>
@@ -27,16 +41,15 @@
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
         <div class="bg-white rounded-lg shadow p-6 border-l-4 border-unicef-blue">
             <h3 class="text-gray-500 text-sm font-medium uppercase">Individuals Reached</h3>
-            <p id="total-individuals" class="text-3xl font-bold text-gray-900 mt-2">{{ demographic.total_individuals }}
-            </p>
+            <p id="total-individuals" class="text-3xl font-bold text-gray-900 mt-2">0</p>
         </div>
         <div class="bg-white rounded-lg shadow p-6 border-l-4 border-unicef-primary">
             <h3 class="text-gray-500 text-sm font-medium uppercase">Children</h3>
-            <p id="total-children" class="text-3xl font-bold text-gray-900 mt-2">{{ demographic.total_children }}</p>
+            <p id="total-children" class="text-3xl font-bold text-gray-900 mt-2">0</p>
         </div>
         <div class="bg-white rounded-lg shadow p-6 border-l-4 border-purple-500">
             <h3 class="text-gray-500 text-sm font-medium uppercase">PWD Reached</h3>
-            <p id="total-pwd" class="text-3xl font-bold text-gray-900 mt-2">{{ demographic.total_pwd }}</p>
+            <p id="total-pwd" class="text-3xl font-bold text-gray-900 mt-2">0</p>
         </div>
     </div>
 
@@ -65,8 +78,11 @@
     </div>
 </div>
 
-<script id="dashboard-data" type="application/json">
-    {{ dashboard_data_json|safe }}
+<script>
+    window.DASHBOARD_CONFIG = {
+        endpoint: "{% url 'analysis_api:daily-aggregates-list' %}",
+        type: "demographic"
+    };
 </script>
 {% endblock content %}
 

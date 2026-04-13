@@ -1,115 +1,74 @@
 document.addEventListener('DOMContentLoaded', function () {
-    const dataElement = document.getElementById('dashboard-data');
-    if (!dataElement) return;
+    const tabsContainer = document.getElementById('tabs-container');
+    if (!tabsContainer) return;
 
-    const rawData = JSON.parse(dataElement.textContent);
+    let ndx = crossfilter([]);
 
-    // Format the data
-    const dateFormatSpecifier = '%Y-%m-%d';
-    const dateFormat = d3.timeParse(dateFormatSpecifier);
-
-    rawData.forEach(function (d) {
-        d.date = dateFormat(d.date);
-        d.total_usd = +d.total_usd;
-        d.payment_count = +d.payment_count;
-    });
-
-    // Create the Crossfilter instance
-    const ndx = crossfilter(rawData);
-
-    // Dimensions
     const dateDimension = ndx.dimension(d => d.date);
     const sectorDimension = ndx.dimension(d => d.dimension_type === 'sector' ? d.dimension_value : 'N/A');
     const statusDimension = ndx.dimension(d => d.dimension_type === 'status' ? d.dimension_value : null);
     const countryDimension = ndx.dimension(d => d.country_slug);
 
-    // Filter helper
     const primaryDimFilter = d => d.dimension_type === 'status';
 
-    // Groups
-    // Timeline: Total payments over time
+    const moveDays = dateDimension.group(d3.timeDay);
     const moveMonths = dateDimension.group(d3.timeMonth);
+    const paymentsByDayGroup = moveDays.reduceSum(d => primaryDimFilter(d) ? d.payment_count : 0);
     const paymentsByMonthGroup = moveMonths.reduceSum(d => primaryDimFilter(d) ? d.payment_count : 0);
-
-    // Status Pie Group
     const statusGroup = statusDimension.group().reduceSum(d => d.dimension_type === 'status' ? d.payment_count : 0);
-
-    // Sector-Status Stacked Group (using helper to simplify)
-    // For simplicity, we'll just show status distribution in row charts
     const sectorStatusGroup = sectorDimension.group().reduceSum(d => d.dimension_type === 'status' ? d.payment_count : 0);
     const countryStatusGroup = countryDimension.group().reduceSum(d => primaryDimFilter(d) ? d.payment_count : 0);
 
-    // Charts
     const focusChart = dc.lineChart('#time-focus-chart');
     const rangeChart = dc.barChart('#time-range-chart');
     const statusPieChart = dc.pieChart('#reconciliation-pie-chart');
     const sectorChart = dc.rowChart('#status-sector-chart');
     const countryChart = dc.rowChart('#status-country-chart');
 
-    const fullDomain = d3.extent(rawData, d => d.date);
+    // Set initial domain to prevent grid line errors
+    const initialYear = new Date().getFullYear();
+    const initialDomain = [new Date(initialYear, 0, 1), new Date(initialYear, 11, 31)];
 
-    // Timeline Configuration (Focus)
-    focusChart
-        .width(null)
-        .height(200)
-        .margins({ top: 10, right: 50, bottom: 30, left: 60 })
-        .dimension(dateDimension)
-        .group(paymentsByMonthGroup)
-        .transitionDuration(500)
-        .x(d3.scaleTime().domain(fullDomain))
-        .round(d3.timeMonth.round)
-        .xUnits(d3.timeMonths)
-        .elasticY(true)
-        .renderHorizontalGridLines(true)
-        .rangeChart(rangeChart)
-        .brushOn(false)
-        .renderArea(true)
+    focusChart.width(null).height(200).margins({ top: 10, right: 50, bottom: 30, left: 90 })
+        .dimension(dateDimension).group(paymentsByMonthGroup)
+        .curve(d3.curveMonotoneX).transitionDuration(500)
+        .x(d3.scaleTime().domain(initialDomain))  // Set initial scale
+        .round(d3.timeMonth.round).xUnits(d3.timeMonths).elasticY(true)
+        .renderHorizontalGridLines(true).rangeChart(rangeChart).brushOn(false).renderArea(true)
+        .title(function(d) {
+            const formatTime = d3.timeFormat("%B %Y");
+            const formatValue = d3.format(",");
+            return `${formatTime(d.key)}: ${formatValue(d.value)}`;
+        })
         .on('filtered', updateTotals);
 
-    // Timeline Configuration (Range)
-    rangeChart
-        .width(null)
-        .height(60)
-        .margins({ top: 0, right: 50, bottom: 20, left: 60 })
-        .dimension(dateDimension)
-        .group(paymentsByMonthGroup)
-        .centerBar(true)
-        .gap(1)
-        .x(d3.scaleTime().domain(fullDomain))
-        .round(d3.timeMonth.round)
-        .xUnits(d3.timeMonths)
+    focusChart.yAxis().tickFormat(d => d3.format(".2s")(d).replace('G', 'B'));
+
+    rangeChart.width(null).height(60).margins({ top: 0, right: 50, bottom: 20, left: 90 })
+        .dimension(dateDimension).group(paymentsByDayGroup).centerBar(true).gap(2)
+        .x(d3.scaleTime().domain(initialDomain))  // Set initial scale
+        .round(d3.timeDay.round).xUnits(d3.timeDays)
+        .filterPrinter(function (filters) {
+            const dateFmt = d3.timeFormat("%b %d, %Y");
+            return `[${dateFmt(filters[0][0])} to ${dateFmt(filters[0][1])}]`;
+        })
         .yAxis().ticks(0);
 
+    statusPieChart.width(300).height(300).radius(100).innerRadius(40)
+        .dimension(statusDimension).group(statusGroup)
+        .label(d => `${d.key}: ${d.value}`).on('filtered', updateTotals);
 
-    // Status Pie
-    statusPieChart
-        .width(300).height(300)
-        .radius(100)
-        .innerRadius(40)
-        .dimension(statusDimension)
-        .group(statusGroup)
-        .label(d => `${d.key}: ${d.value}`)
-        .on('filtered', updateTotals);
-
-    // Status by Sector
-    sectorChart
-        .width(null).height(400)
-        .margins({ top: 10, right: 10, bottom: 30, left: 10 })
-        .dimension(sectorDimension)
-        .group(sectorStatusGroup)
-        .elasticX(true)
+    sectorChart.width(null).height(450).margins({ top: 10, right: 30, bottom: 30, left: 180 })
+        .dimension(sectorDimension).group(sectorStatusGroup).elasticX(true).gap(10)
         .data(group => group.all().filter(d => d.key !== 'N/A' && d.value > 0))
         .on('filtered', updateTotals);
+    sectorChart.xAxis().ticks(4).tickFormat(d3.format(".2s"));
 
-    // Status by Country
-    countryChart
-        .width(null).height(400)
-        .margins({ top: 10, right: 10, bottom: 30, left: 10 })
-        .dimension(countryDimension)
-        .group(countryStatusGroup)
-        .elasticX(true)
+    countryChart.width(null).height(450).margins({ top: 10, right: 30, bottom: 30, left: 180 })
+        .dimension(countryDimension).group(countryStatusGroup).elasticX(true).gap(10)
         .data(group => group.top(15))
         .on('filtered', updateTotals);
+    countryChart.xAxis().ticks(4).tickFormat(d3.format(".2s"));
 
     function updateTotals() {
         const reconciliationData = statusGroup.all();
@@ -130,13 +89,74 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('total-opened').textContent = d3.format(',')(opened);
     }
 
-    dc.renderAll();
-    updateTotals();
+    async function loadData(year, isInitial = false) {
+        try {
+            const url = `${window.DASHBOARD_CONFIG.endpoint}?year=${year}&dashboard=${window.DASHBOARD_CONFIG.type}`;
+            const response = await fetch(url, {
+                credentials: 'same-origin',
+                headers: {
+                    'Accept': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            });
+
+            if (!response.ok) {
+                if (response.status === 403) {
+                    console.error('Authentication required. Please log in.');
+                    return;
+                }
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const data = await response.json();
+
+            const dateFormat = d3.timeParse('%Y-%m-%d');
+            data.forEach(d => {
+                d.date = dateFormat(d.date);
+                d.total_usd = +d.total_usd;
+                d.payment_count = +d.payment_count;
+            });
+
+            const now = new Date();
+            now.setHours(23, 59, 59, 999);
+            const currentData = data.filter(d => d.date <= now);
+
+            ndx.remove();
+            ndx.add(currentData);
+
+            const yearDomain = [new Date(year, 0, 1), new Date(year, 11, 31)];
+            focusChart.x(d3.scaleTime().domain(yearDomain));
+            rangeChart.x(d3.scaleTime().domain(yearDomain));
+
+            // Use renderAll on initial load, redrawAll for updates
+            if (isInitial) {
+                dc.renderAll();
+            } else {
+                dc.redrawAll();
+            }
+            updateTotals();
+        } catch (error) {
+            console.error('Error loading completion data:', error);
+        }
+    }
+
+    tabsContainer.querySelectorAll('.year-tab').forEach(btn => {
+        btn.addEventListener('click', function() {
+            tabsContainer.querySelectorAll('.year-tab').forEach(b =>
+                b.classList.remove('bg-white', 'shadow', 'text-blue-600', 'active-tab'));
+            this.classList.add('bg-white', 'shadow', 'text-blue-600', 'active-tab');
+            loadData(this.dataset.year);
+        });
+    });
+
+    const firstYear = tabsContainer.querySelector('.active-tab')?.dataset.year;
+    if (firstYear) {
+        loadData(firstYear, true);  // Pass true for initial load
+    }
 
     window.addEventListener('resize', function () {
         focusChart.rescale();
         rangeChart.rescale();
         dc.renderAll();
     });
-
 });

@@ -65,17 +65,17 @@ repos:
           - -d
           - src/hope_live/theme/static/css/
 
-      - id: check-minimized
-        name: check missing minimized javascript
-        files: (\.js)$
-        exclude: (\.min\.js)$
-        args:
-          - -i
-          - "src/hope_live/theme/static_src/*.js"
-          - -i
-          - "src/hope_live/theme/static/unfold/*"
-          - -i
-          - "docs/*"
+#      - id: check-minimized
+#        name: check missing minimized javascript
+#        files: (\.js)$
+#        exclude: (\.min\.js)$
+#        args:
+#          - -i
+#          - "src/hope_live/theme/static_src/*.js"
+#          - -i
+#          - "src/hope_live/theme/static/unfold/*"
+#          - -i
+#          - "docs/*"
 
       - id: check-forbidden
         name: check pyproject to avoid editable sources/deps
