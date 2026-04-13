@@ -16,7 +16,7 @@ DEFAULTS = {
     "ADMIN_PASSWORD": (str, "", "", True, "Password for initial user created at first deploy"),
     "AZURE_CLIENT_ID": (str, "", "", "", ""),
     "AZURE_CLIENT_SECRET": (str, "", "", "", ""),
-    "AZURE_TENANT_KEY": (str, "", "", "", ""),
+    "AZURE_TENANT_ID": (str, "", "", "", ""),
     "ALLOWED_HOSTS": (list, [], ["*"], False, ""),
     "CACHE_URL": (str, "", "", True, setting("cache-url")),
     "CELERY_TASK_DEFAULT_QUEUE": (str, "celery", "celery", False, "Default Celery queue"),
