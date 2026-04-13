@@ -10,7 +10,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const primaryDimFilter = d => d.dimension_type === 'sector';
 
+    const moveDays = dateDimension.group(d3.timeDay);
     const moveMonths = dateDimension.group(d3.timeMonth);
+    const individualsByDayGroup = moveDays.reduceSum(d => primaryDimFilter(d) ? d.total_beneficiaries : 0);
     const individualsByMonthGroup = moveMonths.reduceSum(d => primaryDimFilter(d) ? d.total_beneficiaries : 0);
     const sectorIndividualsGroup = sectorDimension.group().reduceSum(d => d.dimension_type === 'sector' ? d.total_beneficiaries : 0);
     const sectorChildrenGroup = sectorDimension.group().reduceSum(d => d.dimension_type === 'sector' ? d.total_children : 0);
@@ -29,7 +31,8 @@ document.addEventListener('DOMContentLoaded', function () {
     const initialDomain = [new Date(initialYear, 0, 1), new Date(initialYear, 11, 31)];
 
     focusChart.width(null).height(200).margins({ top: 10, right: 50, bottom: 30, left: 90 })
-        .dimension(dateDimension).group(individualsByMonthGroup).transitionDuration(500)
+        .dimension(dateDimension).group(individualsByMonthGroup)
+        .curve(d3.curveMonotoneX).transitionDuration(500)
         .x(d3.scaleTime().domain(initialDomain))  // Set initial scale
         .round(d3.timeMonth.round).xUnits(d3.timeMonths).elasticY(true)
         .renderHorizontalGridLines(true).rangeChart(rangeChart).brushOn(false).renderArea(true)
@@ -42,29 +45,27 @@ document.addEventListener('DOMContentLoaded', function () {
 
     focusChart.yAxis().tickFormat(d => d3.format(".2s")(d).replace('G', 'B'));
 
-    rangeChart.width(null).height(60).margins({ top: 0, right: 50, bottom: 20, left: 60 })
-        .dimension(dateDimension).group(individualsByMonthGroup).centerBar(true).gap(1)
+    rangeChart.width(null).height(60).margins({ top: 0, right: 50, bottom: 20, left: 90 })
+        .dimension(dateDimension).group(individualsByDayGroup).centerBar(true).gap(2)
         .x(d3.scaleTime().domain(initialDomain))  // Set initial scale
-        .round(d3.timeMonth.round).xUnits(d3.timeMonths).yAxis().ticks(0);
+        .round(d3.timeDay.round).xUnits(d3.timeDays)
+        .filterPrinter(function (filters) {
+            const dateFmt = d3.timeFormat("%b %d, %Y");
+            return `[${dateFmt(filters[0][0])} to ${dateFmt(filters[0][1])}]`;
+        })
+        .yAxis().ticks(0);
 
-    sectorIndividualsChart.width(null).height(300).margins({ top: 10, right: 10, bottom: 30, left: 10 })
-        .dimension(sectorDimension).group(sectorIndividualsGroup).elasticX(true)
-        .data(group => group.all().filter(d => d.key !== null && d.value > 0))
-        .on('filtered', updateTotals);
+    const demoMargins = { top: 10, right: 30, bottom: 30, left: 180 };
 
-    sectorChildrenChart.width(null).height(300).margins({ top: 10, right: 10, bottom: 30, left: 10 })
-        .dimension(sectorDimension).group(sectorChildrenGroup).elasticX(true)
-        .data(group => group.all().filter(d => d.key !== null && d.value > 0)).colors(['#2C96D2'])
-        .on('filtered', updateTotals);
+    [sectorIndividualsChart, sectorChildrenChart, countryIndividualsChart, countryPwdChart].forEach(chart => {
+        chart.width(null).height(350).margins(demoMargins).elasticX(true).gap(10).on('filtered', updateTotals);
+        chart.xAxis().ticks(4).tickFormat(d3.format(".2s"));
+    });
 
-    countryIndividualsChart.width(null).height(300).margins({ top: 10, right: 10, bottom: 30, left: 10 })
-        .dimension(countryDimension).group(countryIndividualsGroup).elasticX(true)
-        .data(group => group.top(10)).on('filtered', updateTotals);
-
-    countryPwdChart.width(null).height(300).margins({ top: 10, right: 10, bottom: 30, left: 10 })
-        .dimension(countryDimension).group(countryPwdGroup).elasticX(true)
-        .data(group => group.top(10)).colors(['#9333ea'])
-        .on('filtered', updateTotals);
+    sectorIndividualsChart.dimension(sectorDimension).group(sectorIndividualsGroup).data(group => group.all().filter(d => d.key !== null && d.value > 0));
+    sectorChildrenChart.dimension(sectorDimension).group(sectorChildrenGroup).colors(['#2C96D2']).data(group => group.all().filter(d => d.key !== null && d.value > 0));
+    countryIndividualsChart.dimension(countryDimension).group(countryIndividualsGroup).data(group => group.top(10));
+    countryPwdChart.dimension(countryDimension).group(countryPwdGroup).colors(['#9333ea']).data(group => group.top(10));
 
     function updateTotals() {
         const totalIndividuals = ndx.groupAll().reduceSum(d => primaryDimFilter(d) ? d.total_beneficiaries : 0).value();
@@ -105,8 +106,12 @@ document.addEventListener('DOMContentLoaded', function () {
                 d.total_pwd = +d.total_pwd;
             });
 
+            const now = new Date();
+            now.setHours(23, 59, 59, 999);
+            const currentData = data.filter(d => d.date <= now);
+
             ndx.remove();
-            ndx.add(data);
+            ndx.add(currentData);
 
             const yearDomain = [new Date(year, 0, 1), new Date(year, 11, 31)];
             focusChart.x(d3.scaleTime().domain(yearDomain));

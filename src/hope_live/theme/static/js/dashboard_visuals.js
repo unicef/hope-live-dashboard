@@ -21,7 +21,9 @@ document.addEventListener('DOMContentLoaded', function () {
     const primaryDimFilter = d => d.dimension_type === 'sector';
 
     // Groups
+    const moveDays = dateDimension.group(d3.timeDay);
     const moveMonths = dateDimension.group(d3.timeMonth);
+    const volumeByDayGroup = moveDays.reduceSum(d => primaryDimFilter(d) ? d.total_usd : 0);
     const volumeByMonthGroup = moveMonths.reduceSum(d => primaryDimFilter(d) ? d.total_usd : 0);
     const sectorGroup = sectorDimension.group().reduceSum(d => d.dimension_type === 'sector' ? d.total_usd : 0);
     const programGroup = programDimension.group().reduceSum(d => d.dimension_type === 'program' ? d.total_usd : 0);
@@ -56,6 +58,7 @@ document.addEventListener('DOMContentLoaded', function () {
         .margins({ top: 10, right: 50, bottom: 30, left: 90 })
         .dimension(dateDimension)
         .group(volumeByMonthGroup)
+        .curve(d3.curveMonotoneX)
         .transitionDuration(500)
         .x(d3.scaleTime().domain(initialDomain))  // Set initial scale
         .round(d3.timeMonth.round)
@@ -72,37 +75,45 @@ document.addEventListener('DOMContentLoaded', function () {
         })
         .on('filtered', updateTotals);
 
-    focusChart.yAxis().tickFormat(d => d3.format(".2s")(d).replace('G', 'B'));
+    focusChart.yAxis().tickFormat(d => '$' + d3.format(".2s")(d).replace('G', 'B'));
 
     rangeChart
         .width(null).height(80)
-        .margins({ top: 0, right: 50, bottom: 20, left: 60 })
+        .margins({ top: 0, right: 50, bottom: 20, left: 90 })
         .dimension(dateDimension)
-        .group(volumeByMonthGroup)
+        .group(volumeByDayGroup)
         .centerBar(true)
-        .gap(1)
+        .gap(2)
         .x(d3.scaleTime().domain(initialDomain))  // Set initial scale
-        .round(d3.timeMonth.round)
-        .xUnits(d3.timeMonths)
+        .round(d3.timeDay.round)
+        .xUnits(d3.timeDays)
+        .filterPrinter(function (filters) {
+            const dateFmt = d3.timeFormat("%b %d, %Y");
+            return `[${dateFmt(filters[0][0])} to ${dateFmt(filters[0][1])}]`;
+        })
         .yAxis().ticks(0);
 
-    sectorChart.width(null).height(300).margins({ top: 10, right: 10, bottom: 30, left: 10 }).dimension(sectorDimension).group(sectorGroup).elasticX(true).data(group => group.all().filter(d => d.key !== null && d.value > 0)).on('filtered', updateTotals);
+    const rowChartMargins = { top: 10, right: 30, bottom: 30, left: 180 };
 
-    countryChart.width(null).height(300).margins({ top: 10, right: 10, bottom: 30, left: 10 }).dimension(countryDimension).group(countryGroup).elasticX(true).data(group => group.top(10)).on('filtered', updateTotals);
+    [adminChart, programChart, fspChart].forEach(chart => {
+        chart.width(null).height(750).margins(rowChartMargins).elasticX(true).gap(5).data(group => group.top(30)).on('filtered', updateTotals);
+        chart.xAxis().ticks(4).tickFormat(d => '$' + d3.format(".2s")(d).replace('G', 'B'));
+    });
 
-    adminChart.width(null).height(300).margins({ top: 10, right: 10, bottom: 30, left: 10 }).dimension(adminDimension).group(adminGroup).elasticX(true).data(group => group.all().filter(d => d.key !== null && d.value > 0).slice(0, 10)).on('filtered', updateTotals);
+    [sectorChart, deliveryChart, statusChart, currencyChart, countryChart, regionChart].forEach(chart => {
+        chart.width(null).height(400).margins(rowChartMargins).elasticX(true).gap(10).on('filtered', updateTotals);
+        chart.xAxis().ticks(4).tickFormat(d => '$' + d3.format(".2s")(d).replace('G', 'B'));
+    });
 
-    programChart.width(null).height(300).margins({ top: 10, right: 10, bottom: 30, left: 10 }).dimension(programDimension).group(programGroup).elasticX(true).data(group => group.all().filter(d => d.key !== null && d.value > 0)).on('filtered', updateTotals);
-
-    deliveryChart.width(null).height(300).margins({ top: 10, right: 10, bottom: 30, left: 10 }).dimension(deliveryDimension).group(deliveryGroup).elasticX(true).data(group => group.all().filter(d => d.key !== null && d.value > 0)).on('filtered', updateTotals);
-
-    fspChart.width(null).height(300).margins({ top: 10, right: 10, bottom: 30, left: 10 }).dimension(fspDimension).group(fspGroup).elasticX(true).data(group => group.all().filter(d => d.key !== null && d.value > 0)).on('filtered', updateTotals);
-
-    statusChart.width(null).height(300).margins({ top: 10, right: 10, bottom: 30, left: 10 }).dimension(statusDimension).group(statusGroup).elasticX(true).data(group => group.all().filter(d => d.key !== null && d.value > 0)).on('filtered', updateTotals);
-
-    currencyChart.width(null).height(300).margins({ top: 10, right: 10, bottom: 30, left: 10 }).dimension(currencyDimension).group(currencyGroup).elasticX(true).data(group => group.all().filter(d => d.key !== null && d.value > 0)).on('filtered', updateTotals);
-
-    regionChart.width(null).height(300).margins({ top: 10, right: 10, bottom: 30, left: 10 }).dimension(regionDimension).group(regionGroup).elasticX(true).data(group => group.all().filter(d => d.key !== null && d.value > 0).slice(0, 10)).on('filtered', updateTotals);
+    sectorChart.dimension(sectorDimension).group(sectorGroup).data(group => group.all().filter(d => d.key !== null && d.value > 0));
+    countryChart.dimension(countryDimension).group(countryGroup).data(group => group.top(10));
+    adminChart.dimension(adminDimension).group(adminGroup);
+    programChart.dimension(programDimension).group(programGroup);
+    deliveryChart.dimension(deliveryDimension).group(deliveryGroup).data(group => group.all().filter(d => d.key !== null && d.value > 0));
+    fspChart.dimension(fspDimension).group(fspGroup);
+    statusChart.dimension(statusDimension).group(statusGroup).data(group => group.all().filter(d => d.key !== null && d.value > 0));
+    currencyChart.dimension(currencyDimension).group(currencyGroup).data(group => group.all().filter(d => d.key !== null && d.value > 0));
+    regionChart.dimension(regionDimension).group(regionGroup).data(group => group.all().filter(d => d.key !== null && d.value > 0).slice(0, 10));
 
     function updateTotals() {
         const totalUsd = ndx.groupAll().reduceSum(d => primaryDimFilter(d) ? d.total_usd : 0).value();
@@ -141,8 +152,12 @@ document.addEventListener('DOMContentLoaded', function () {
                 d.payment_count = +d.payment_count;
             });
 
+            const now = new Date();
+            now.setHours(23, 59, 59, 999);
+            const currentData = data.filter(d => d.date <= now);
+
             ndx.remove();
-            ndx.add(data);
+            ndx.add(currentData);
 
             const yearDomain = [new Date(year, 0, 1), new Date(year, 11, 31)];
             focusChart.x(d3.scaleTime().domain(yearDomain));
