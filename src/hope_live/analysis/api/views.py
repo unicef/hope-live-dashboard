@@ -15,7 +15,7 @@ from ..serializers import (
 )
 
 
-@method_decorator(cache_page(60 * 60 * 24), name="dispatch")
+@method_decorator(cache_page(60 * 60 * 6), name="dispatch")
 class DailyAggregateListView(generics.ListAPIView):
     """API endpoint for listing DailyAggregate records with filtering."""
 

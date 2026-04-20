@@ -2,7 +2,11 @@ document.addEventListener('DOMContentLoaded', function () {
     const tabsContainer = document.getElementById('tabs-container');
     if (!tabsContainer) return;
 
+    // Set modern D3 color scheme to avoid d3.schemeCategory20c deprecation warning
+    dc.config.defaultColors(d3.schemeCategory10);
+
     let ndx = crossfilter([]);
+    const dataCache = {};
 
     const dateDimension = ndx.dimension(d => d.date);
     const sectorDimension = ndx.dimension(d => d.dimension_type === 'sector' ? d.dimension_value : 'N/A');
@@ -47,7 +51,7 @@ document.addEventListener('DOMContentLoaded', function () {
     rangeChart.width(null).height(60).margins({ top: 0, right: 50, bottom: 20, left: 90 })
         .dimension(dateDimension).group(paymentsByDayGroup).centerBar(true).gap(2)
         .x(d3.scaleTime().domain(initialDomain))  // Set initial scale
-        .round(d3.timeDay.round).xUnits(d3.timeDays)
+        .round(d3.timeDay.round).alwaysUseRounding(true).xUnits(d3.timeDays).elasticY(true)
         .filterPrinter(function (filters) {
             const dateFmt = d3.timeFormat("%b %d, %Y");
             return `[${dateFmt(filters[0][0])} to ${dateFmt(filters[0][1])}]`;
@@ -91,31 +95,39 @@ document.addEventListener('DOMContentLoaded', function () {
 
     async function loadData(year, isInitial = false) {
         try {
-            const url = `${window.DASHBOARD_CONFIG.endpoint}?year=${year}&dashboard=${window.DASHBOARD_CONFIG.type}`;
-            const response = await fetch(url, {
-                credentials: 'same-origin',
-                headers: {
-                    'Accept': 'application/json',
-                    'X-Requested-With': 'XMLHttpRequest'
-                }
-            });
+            let data;
 
-            if (!response.ok) {
-                if (response.status === 403) {
-                    console.error('Authentication required. Please log in.');
-                    return;
+            if (dataCache[year]) {
+                data = dataCache[year];
+            } else {
+                const url = `${window.DASHBOARD_CONFIG.endpoint}?year=${year}&dashboard=${window.DASHBOARD_CONFIG.type}`;
+                const response = await fetch(url, {
+                    credentials: 'same-origin',
+                    headers: {
+                        'Accept': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                });
+
+                if (!response.ok) {
+                    if (response.status === 403) {
+                        console.error('Authentication required. Please log in.');
+                        return;
+                    }
+                    throw new Error(`HTTP error! status: ${response.status}`);
                 }
-                throw new Error(`HTTP error! status: ${response.status}`);
+
+                data = await response.json();
+
+                const dateFormat = d3.timeParse('%Y-%m-%d');
+                data.forEach(d => {
+                    d.date = dateFormat(d.date);
+                    d.total_usd = +d.total_usd;
+                    d.payment_count = +d.payment_count;
+                });
+
+                dataCache[year] = data;
             }
-
-            const data = await response.json();
-
-            const dateFormat = d3.timeParse('%Y-%m-%d');
-            data.forEach(d => {
-                d.date = dateFormat(d.date);
-                d.total_usd = +d.total_usd;
-                d.payment_count = +d.payment_count;
-            });
 
             const now = new Date();
             now.setHours(23, 59, 59, 999);

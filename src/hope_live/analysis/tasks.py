@@ -1,9 +1,11 @@
+import datetime
 import logging
 from typing import Any
 
 import requests
 from celery import shared_task  # type: ignore[import-untyped]
 from constance import config
+from django.contrib.auth import get_user_model
 from django.db import transaction
 from tenacity import retry, stop_after_attempt, wait_exponential
 
@@ -29,6 +31,8 @@ def _determine_target_years(datasets: list[dict[str, Any]], requested_years: lis
         y = d.get("arguments", {}).get("year")
         if y:
             years.append(int(y))
+    if not years:
+        years.append(datetime.date.today().year)
     return sorted(set(years))
 
 
@@ -151,7 +155,7 @@ def _find_dataset_id_for_year(datasets: list[dict[str, Any]], year: int) -> int 
 def _fetch_all_pages(data_endpoint: str, headers: dict[str, str], job_id: str) -> list[dict[str, Any]]:
     """Fetch all rows from the endpoint handling pagination."""
     all_rows: list[dict[str, Any]] = []
-    current_url: str | None = f"{data_endpoint}?page_size=500"
+    current_url: str | None = f"{data_endpoint}?page_size={BATCH_SIZE}"
     page_count = 0
 
     while current_url:
@@ -183,16 +187,26 @@ def _fetch_all_pages(data_endpoint: str, headers: dict[str, str], job_id: str) -
 
 @shared_task(name="hope_live.analysis.tasks.save_aggregates")  # type: ignore[untyped-decorator]
 def save_aggregates(rows: list[dict[str, Any]], year: int) -> None:
+    # Deduplicate rows by unique fields to prevent "ON CONFLICT DO UPDATE command cannot affect row a second time"
+    unique_rows = {}
+    for item in rows:
+        item_date = item.get("date")
+        if not item_date:
+            continue
+        key = (
+            item_date,
+            item.get("country_slug", "unknown"),
+            item.get("dimension_type", "unknown"),
+            item.get("dimension_value", "unknown"),
+        )
+        unique_rows[key] = item
+
     with transaction.atomic():
         batch = []
-        for item in rows:
-            item_date = item.get("date")
-            if not item_date:
-                continue
-
+        for item in unique_rows.values():
             batch.append(
                 DailyAggregate(
-                    date=item_date,
+                    date=item.get("date"),
                     country_slug=item.get("country_slug", "unknown"),
                     dimension_type=item.get("dimension_type", "unknown"),
                     dimension_value=item.get("dimension_value", "unknown"),
@@ -236,11 +250,33 @@ def save_aggregates(rows: list[dict[str, Any]], year: int) -> None:
                 ],
             )
 
-        logger.info(f"Saved {len(rows)} records for {year}")
+        logger.info(f"Saved {len(unique_rows)} unique records for {year} (out of {len(rows)} total rows)")
 
 
 @shared_task(name="hope_live.analysis.tasks.schedule_sync_daily_aggregates")  # type: ignore[untyped-decorator]
-def schedule_sync_daily_aggregates() -> None:
+def schedule_sync_daily_aggregates(target_years: list[int] | None = None) -> None:
     """Periodic task to create and queue a SyncDailyAggregatesJob."""
     job = SyncDailyAggregatesJob.objects.create(description="Scheduled Daily Aggregate Sync")
-    job.queue()
+
+    # Bypass job.queue() to pass custom kwargs, then manually set the queued state
+    res = sync_daily_aggregates.delay(job.pk, job.version, target_years=target_years)
+    job.set_queued(res)
+
+
+@shared_task(name="hope_live.analysis.tasks.clear_daily_aggregates")  # type: ignore[untyped-decorator]
+def clear_daily_aggregates(user_id: int) -> str:
+    """Delete all DailyAggregate records from the database. Restricted to superusers."""
+    user_model = get_user_model()
+    try:
+        user = user_model.objects.get(pk=user_id)
+    except user_model.DoesNotExist as err:
+        logger.warning(f"clear_daily_aggregates attempted with invalid user_id: {user_id}")
+        raise ValueError("Error: User not found.") from err
+
+    if not user.is_superuser:
+        logger.warning(f"clear_daily_aggregates attempted by non-superuser: {user.username}")
+        raise PermissionError("Permission denied: Only superusers can clear daily aggregates.")
+
+    count, _ = DailyAggregate.objects.all().delete()
+    logger.info(f"Deleted {count} DailyAggregate records by superuser {user.username}.")
+    return f"Successfully deleted {count} DailyAggregate records."
