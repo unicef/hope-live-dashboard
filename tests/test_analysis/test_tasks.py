@@ -5,7 +5,12 @@ import responses
 from constance import config
 
 from hope_live.analysis.models import DailyAggregate
-from hope_live.analysis.tasks import _find_dataset_id_for_year, save_aggregates, sync_daily_aggregates
+from hope_live.analysis.tasks import (
+    _find_dataset_id_for_year,
+    clear_daily_aggregates,
+    save_aggregates,
+    sync_daily_aggregates,
+)
 
 
 @pytest.mark.django_db
@@ -62,7 +67,7 @@ def test_sync_daily_aggregates_e2e_success(mocked_responses):
     # 2. Mock the paginated data endpoint (Page 1)
     mocked_responses.add(
         responses.GET,
-        f"{api_url}queries/{query_id}/dataset/1/data/?page_size=500",
+        f"{api_url}queries/{query_id}/dataset/1/data/?page_size=1000",
         json={
             "results": [{"date": "2023-01-01", "country_slug": "test", "total_usd": 100}],
             "next": f"{api_url}queries/{query_id}/dataset/1/data/?page=2",
@@ -104,7 +109,7 @@ def test_sync_daily_aggregates_extracts_years(mocked_responses):
     )
     mocked_responses.add(
         responses.GET,
-        f"{api_url}queries/{query_id}/dataset/1/data/?page_size=500",
+        f"{api_url}queries/{query_id}/dataset/1/data/?page_size=1000",
         json={"data": [{"date": "2024-01-01", "country_slug": "test"}]},
         status=200,
     )
@@ -146,7 +151,7 @@ def test_sync_daily_aggregates_no_data_for_year(mocked_responses):
         status=200,
     )
     mocked_responses.add(
-        responses.GET, f"{api_url}queries/{query_id}/dataset/1/data/?page_size=500", json={"results": []}, status=200
+        responses.GET, f"{api_url}queries/{query_id}/dataset/1/data/?page_size=1000", json={"results": []}, status=200
     )
 
     with patch.object(sync_daily_aggregates, "update_state"):
@@ -154,3 +159,36 @@ def test_sync_daily_aggregates_no_data_for_year(mocked_responses):
 
     assert DailyAggregate.objects.count() == 0
     assert "Successfully synced 0 rows" in result
+
+
+@pytest.mark.django_db
+def test_clear_daily_aggregates_success(user_factory):
+    user = user_factory(is_superuser=True)
+    DailyAggregate.objects.create(
+        date="2023-01-01", country_slug="test", dimension_type="sector", dimension_value="health"
+    )
+    assert DailyAggregate.objects.count() == 1
+
+    result = clear_daily_aggregates(user.id)
+
+    assert DailyAggregate.objects.count() == 0
+    assert "Successfully deleted 1" in result
+
+
+@pytest.mark.django_db
+def test_clear_daily_aggregates_non_superuser(user_factory):
+    user = user_factory(is_superuser=False)
+    DailyAggregate.objects.create(
+        date="2023-01-01", country_slug="test", dimension_type="sector", dimension_value="health"
+    )
+
+    with pytest.raises(PermissionError, match="Permission denied"):
+        clear_daily_aggregates(user.id)
+
+    assert DailyAggregate.objects.count() == 1
+
+
+@pytest.mark.django_db
+def test_clear_daily_aggregates_invalid_user():
+    with pytest.raises(ValueError, match="Error: User not found."):
+        clear_daily_aggregates(9999)

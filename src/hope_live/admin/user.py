@@ -14,5 +14,5 @@ class UserAdmin(BaseUserAdmin):  # type: ignore[type-arg]
 
 
 @admin.register(Group)
-class GroupAdmin(BaseGroupAdmin):  # type: ignore[type-arg]
+class GroupAdmin(BaseGroupAdmin):
     pass

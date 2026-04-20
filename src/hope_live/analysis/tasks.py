@@ -206,7 +206,7 @@ def save_aggregates(rows: list[dict[str, Any]], year: int) -> None:
         for item in unique_rows.values():
             batch.append(
                 DailyAggregate(
-                    date=item.get("date"),
+                    date=str(item.get("date")),
                     country_slug=item.get("country_slug", "unknown"),
                     dimension_type=item.get("dimension_type", "unknown"),
                     dimension_value=item.get("dimension_value", "unknown"),

@@ -1,9 +1,9 @@
-from rest_framework import serializers
+from rest_framework import serializers  # type: ignore[import-untyped]
 
 from .models import DailyAggregate
 
 
-class DailyAggregateSerializer(serializers.ModelSerializer):
+class DailyAggregateSerializer(serializers.ModelSerializer):  # type: ignore[misc]
     class Meta:
         model = DailyAggregate
         fields = [
@@ -20,7 +20,7 @@ class DailyAggregateSerializer(serializers.ModelSerializer):
         ]
 
 
-class FinancialAggregateSerializer(serializers.ModelSerializer):
+class FinancialAggregateSerializer(serializers.ModelSerializer):  # type: ignore[misc]
     class Meta:
         model = DailyAggregate
         fields = [
@@ -34,7 +34,7 @@ class FinancialAggregateSerializer(serializers.ModelSerializer):
         ]
 
 
-class DemographicAggregateSerializer(serializers.ModelSerializer):
+class DemographicAggregateSerializer(serializers.ModelSerializer):  # type: ignore[misc]
     class Meta:
         model = DailyAggregate
         fields = [
@@ -48,7 +48,7 @@ class DemographicAggregateSerializer(serializers.ModelSerializer):
         ]
 
 
-class CompletionAggregateSerializer(serializers.ModelSerializer):
+class CompletionAggregateSerializer(serializers.ModelSerializer):  # type: ignore[misc]
     class Meta:
         model = DailyAggregate
         fields = [

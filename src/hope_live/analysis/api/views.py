@@ -2,9 +2,9 @@ from django.db import models
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
 from drf_spectacular.utils import OpenApiExample, OpenApiParameter, extend_schema
-from rest_framework import generics, serializers
-from rest_framework.request import Request
-from rest_framework.response import Response
+from rest_framework import generics, serializers  # type: ignore[import-untyped]
+from rest_framework.request import Request  # type: ignore[import-untyped]
+from rest_framework.response import Response  # type: ignore[import-untyped]
 
 from ..models import DailyAggregate
 from ..serializers import (
@@ -16,7 +16,7 @@ from ..serializers import (
 
 
 @method_decorator(cache_page(60 * 60 * 6), name="dispatch")
-class DailyAggregateListView(generics.ListAPIView):
+class DailyAggregateListView(generics.ListAPIView):  # type: ignore[misc]
     """API endpoint for listing DailyAggregate records with filtering."""
 
     queryset = DailyAggregate.objects.all()
@@ -108,4 +108,4 @@ class DailyAggregateListView(generics.ListAPIView):
         if date_to:
             queryset = queryset.filter(date__lte=date_to)
 
-        return queryset
+        return queryset  # type: ignore[no-any-return]
