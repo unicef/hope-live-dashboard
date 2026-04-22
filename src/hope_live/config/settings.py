@@ -85,8 +85,12 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+<<<<<<< Updated upstream
                 "hope_live.web.context_processors.app",
                 "hope_live.analysis.context_processors.available_years",
+=======
+                "unicef_security.context_processors.current_state",
+>>>>>>> Stashed changes
             ],
         },
     },
