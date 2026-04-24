@@ -1,30 +1,19 @@
 from rest_framework import serializers  # type: ignore[import-untyped]
 
-from .models import DailyAggregate
-
-
-class DailyAggregateSerializer(serializers.ModelSerializer):  # type: ignore[misc]
-    class Meta:
-        model = DailyAggregate
-        fields = [
-            "date",
-            "country_slug",
-            "dimension_type",
-            "dimension_value",
-            "total_usd",
-            "total_qty",
-            "payment_count",
-            "total_beneficiaries",
-            "total_children",
-            "total_pwd",
-        ]
+from .models import (
+    CompletionAggregate,
+    DemographicAggregate,
+    FinancialAggregate,
+    GrievanceAggregate,
+)
 
 
 class FinancialAggregateSerializer(serializers.ModelSerializer):  # type: ignore[misc]
     class Meta:
-        model = DailyAggregate
+        model = FinancialAggregate
         fields = [
             "date",
+            "time_grain",  # <-- add this line
             "country_slug",
             "dimension_type",
             "dimension_value",
@@ -36,7 +25,7 @@ class FinancialAggregateSerializer(serializers.ModelSerializer):  # type: ignore
 
 class DemographicAggregateSerializer(serializers.ModelSerializer):  # type: ignore[misc]
     class Meta:
-        model = DailyAggregate
+        model = DemographicAggregate
         fields = [
             "date",
             "country_slug",
@@ -50,7 +39,7 @@ class DemographicAggregateSerializer(serializers.ModelSerializer):  # type: igno
 
 class CompletionAggregateSerializer(serializers.ModelSerializer):  # type: ignore[misc]
     class Meta:
-        model = DailyAggregate
+        model = CompletionAggregate
         fields = [
             "date",
             "country_slug",
@@ -58,4 +47,16 @@ class CompletionAggregateSerializer(serializers.ModelSerializer):  # type: ignor
             "dimension_value",
             "payment_count",
             "total_usd",
+        ]
+
+
+class GrievanceAggregateSerializer(serializers.ModelSerializer):  # type: ignore[misc]
+    class Meta:
+        model = GrievanceAggregate
+        fields = [
+            "date",
+            "country_slug",
+            "dimension_type",
+            "dimension_value",
+            "ticket_count",
         ]

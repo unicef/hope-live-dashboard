@@ -1,0 +1,99 @@
+{% extends "layout.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <div class="mb-8 flex justify-between items-center">
+        <div>
+            <h1 class="text-3xl font-bold text-gray-900">Grievance Dashboard</h1>
+            <p class="text-gray-600">Overview of Feedback and Grievance Tickets</p>
+        </div>
+        <div>
+            <span class="bg-unicef-blue text-white text-xs font-medium mr-2 px-2.5 py-0.5 rounded">Live Data</span>
+        </div>
+    </div>
+
+    <!-- Year Tabs -->
+    <div id="year-tabs" class="mb-6">
+        <div id="tabs-container" class="flex space-x-2 overflow-x-auto bg-gray-100 p-2 rounded-lg">
+            {% for year in available_years %}
+                <button
+                    class="year-tab px-6 py-2 rounded-md font-bold transition-all duration-200
+                        {% if forloop.first %}bg-white shadow text-blue-800 active-tab{% else %}text-gray-700 hover:bg-gray-200{% endif %}"
+                    data-year="{{ year }}">
+                    {{ year }}
+                </button>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Timeline Filter -->
+    <div class="bg-white rounded-lg shadow p-6 mb-8">
+        <h3 class="text-lg font-semibold text-gray-900 mb-2">Tickets Timeline</h3>
+        <div id="time-focus-chart" class="w-full"></div>
+        <div id="time-range-chart" class="w-full mt-4"></div>
+        <p class="text-xs text-gray-500 mt-2 italic">* Select a range on the smaller chart at the bottom to zoom in on the focus chart</p>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="grid grid-cols-1 mb-8">
+        <div class="bg-white rounded-lg shadow p-6 border-l-4 border-unicef-blue">
+            <h3 class="text-gray-500 text-sm font-medium uppercase">Total Tickets</h3>
+            <p id="total-tickets" class="text-3xl font-bold text-gray-900 mt-2">0</p>
+        </div>
+    </div>
+
+    <!-- Main Charts -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+        <div class="bg-white rounded-lg shadow p-6">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">Status</h3>
+            <div id="grievance-status-chart" class="w-full flex justify-center"></div>
+        </div>
+        <div class="bg-white rounded-lg shadow p-6">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">Priority</h3>
+            <div id="grievance-priority-chart" class="w-full flex justify-center"></div>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+        <div class="bg-white rounded-lg shadow p-6">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">Category</h3>
+            <div id="grievance-category-chart" class="w-full"></div>
+        </div>
+        <div class="bg-white rounded-lg shadow p-6">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">Issue Type</h3>
+            <div id="grievance-issue-type-chart" class="w-full"></div>
+        </div>
+    </div>
+
+    <!-- Geographic Breakdown -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div class="bg-white rounded-lg shadow p-6">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">Country</h3>
+            <div id="grievance-country-chart" class="w-full"></div>
+        </div>
+        <div class="bg-white rounded-lg shadow p-6">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">Region</h3>
+            <div id="grievance-region-chart" class="w-full"></div>
+        </div>
+        <div class="bg-white rounded-lg shadow p-6">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">Admin Level 1</h3>
+            <div id="grievance-admin-chart" class="w-full"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+    window.DASHBOARD_CONFIG = {
+        endpoint: "{% url 'analysis_api:daily-aggregates-list' %}",
+        type: "grievance"
+    };
+</script>
+{% endblock content %}
+
+{% block extra_js %}
+<script src="{% static 'js/crossfilter.min.js' %}"></script>
+<script src="{% static 'js/dc.min.js' %}"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dc/4.2.7/style/dc.min.css" />
+<script src="{% static 'js/grievance_visuals.js' %}"></script>
+{% endblock extra_js %}

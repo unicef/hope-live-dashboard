@@ -1,5 +1,5 @@
 {% extends "layout.html" %}
-{% load static %}
+{% load i18n static %}
 
 {% block content %}
 <div class="container mx-auto px-4 py-8">
@@ -28,78 +28,69 @@
         </div>
     </div>
 
-    <!-- Timeline Filter -->
+    <!-- Timeline Filter (Full Width, Top) -->
     <div class="bg-white rounded-lg shadow p-6 mb-8">
-        <h3 class="text-lg font-semibold text-gray-900 mb-2">Spending Timeline</h3>
+        <h3 class="text-lg font-semibold text-gray-900 mb-2">{% translate "Spending Timeline" %}</h3>
         <div id="time-focus-chart" class="w-full"></div>
         <div id="time-range-chart" class="w-full mt-4"></div>
-        <p class="text-xs text-gray-500 mt-2 italic">* Select a range on the smaller chart at the bottom to zoom in on
-            the focus chart</p>
+        <p class="text-xs text-gray-500 mt-2 italic">{% translate "* Select a range on the smaller chart at the bottom to zoom in on the focus chart" %}</p>
     </div>
 
+    <!-- Main Metrics, Delivery, Regions, and Sector Chart Layout -->
+    <div class="grid grid-cols-1 lg:grid-cols-4 gap-6 mb-8">
 
-    <!-- Stats Cards -->
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-        <div class="bg-white rounded-lg shadow p-6 border-l-4 border-unicef-blue">
-            <h3 class="text-gray-500 text-sm font-medium uppercase">Total Disbursed</h3>
-            <p id="total-disbursed" class="text-3xl font-bold text-gray-900 mt-2">$0.00</p>
+        <div class="lg:col-span-3 flex flex-col gap-6">
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="bg-white rounded-lg shadow p-4 border-l-4 border-green-500 flex flex-col justify-center min-h-[120px]">
+                    <h3 class="text-gray-500 text-xs font-medium uppercase">{% translate "Total Amount Paid" %}</h3>
+                    <p id="total-amount-paid" class="text-xl lg:text-2xl font-bold text-gray-900 mt-1">$0.00</p>
+                </div>
+                <div class="bg-white rounded-lg shadow p-4 border-l-4 border-blue-500 flex flex-col justify-center min-h-[120px]">
+                    <h3 class="text-gray-500 text-xs font-medium uppercase">{% translate "Number of Payments" %}</h3>
+                    <p id="total-payments" class="text-xl lg:text-2xl font-bold text-gray-900 mt-1">0</p>
+                </div>
+                <div class="bg-white rounded-lg shadow p-4 border-l-4 border-yellow-500 flex flex-col justify-center min-h-[120px]">
+                    <h3 class="text-gray-500 text-xs font-medium uppercase">{% translate "Outstanding Payment" %}</h3>
+                    <p id="outstanding-payments" class="text-xl lg:text-2xl font-bold text-gray-900 mt-1">$0.00</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-white rounded-lg shadow p-6">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4">{% translate "Delivery Types" %}</h3>
+                    <div id="delivery-chart" class="w-full"></div>
+                </div>
+                <div class="bg-white rounded-lg shadow p-6">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4">{% translate "Regions" %}</h3>
+                    <div id="region-chart" class="w-full"></div>
+                </div>
+            </div>
         </div>
-        <div class="bg-white rounded-lg shadow p-6 border-l-4 border-unicef-primary">
-            <h3 class="text-gray-500 text-sm font-medium uppercase">Transactions</h3>
-            <p id="total-payments" class="text-3xl font-bold text-gray-900 mt-2">0</p>
+
+        <div class="lg:col-span-1 bg-white rounded-lg shadow p-6 flex flex-col">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">{% translate "Distribution by Sector" %}</h3>
+            <div id="sector-chart" class="w-full flex-grow"></div>
         </div>
     </div>
 
-    <!-- Charts Section -->
+    <!-- Countries (Full Width) -->
+    <div class="bg-white rounded-lg shadow p-6 mb-8">
+        <h3 class="text-lg font-semibold text-gray-900 mb-4">{% translate "Countries" %}</h3>
+        <div id="country-chart" class="w-full"></div>
+    </div>
+
+    <!-- Additional Segments (Program, FSP) -->
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-        <!-- By Sector -->
         <div class="bg-white rounded-lg shadow p-6">
-            <h3 class="text-lg font-semibold text-gray-900 mb-4">Distribution by Sector</h3>
-            <div id="sector-chart" class="w-full"></div>
-        </div>
-    </div>
-
-    <!-- Geographic Breakdown -->
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-        <div class="bg-white rounded-lg shadow p-6">
-            <h3 class="text-lg font-semibold text-gray-900 mb-4">Top Countries</h3>
-            <div id="country-chart" class="w-full"></div>
-        </div>
-        <div class="bg-white rounded-lg shadow p-6">
-            <h3 class="text-lg font-semibold text-gray-900 mb-4">Administrative Areas</h3>
-            <div id="admin-chart" class="w-full"></div>
-        </div>
-    </div>
-
-    <!-- Additional Segments (Program, Delivery Type, FSP) -->
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-        <div class="bg-white rounded-lg shadow p-6">
-            <h3 class="text-lg font-semibold text-gray-900 mb-4">Distribution by Program</h3>
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">{% translate "Distribution by Program" %}</h3>
             <div id="program-chart" class="w-full"></div>
         </div>
         <div class="bg-white rounded-lg shadow p-6">
-            <h3 class="text-lg font-semibold text-gray-900 mb-4">Delivery Types</h3>
-            <div id="delivery-chart" class="w-full"></div>
-        </div>
-    </div>
-
-    <!-- FSP and Status -->
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        <div class="bg-white rounded-lg shadow p-6">
-            <h3 class="text-lg font-semibold text-gray-900 mb-4">Financial Service Providers (FSP)</h3>
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">{% translate "Financial Service Providers (FSP)" %}</h3>
             <div id="fsp-chart" class="w-full"></div>
         </div>
-        <div class="bg-white rounded-lg shadow p-6">
-            <h3 class="text-lg font-semibold text-gray-900 mb-4">Transaction Status</h3>
-            <div id="status-chart" class="w-full"></div>
-        </div>
     </div>
-    <!-- By Region -->
-    <div class="bg-white rounded-lg shadow p-6">
-        <h3 class="text-lg font-semibold text-gray-900 mb-4">Regions</h3>
-        <div id="region-chart" class="w-full"></div>
-    </div>
-</div>
 </div>
 
 <script>

@@ -40,6 +40,6 @@ class SyncDailyAggregatesJobAdmin(CeleryTaskModelAdmin):  # type: ignore[misc]
             self,
             request,
             _action,
-            message="Are you sure you want to delete ALL DailyAggregate records? This action cannot be undone.",
+            message="Are you sure you want to delete ALL Aggregate records? This action cannot be undone.",
             success_message="Clear task has been queued successfully.",
         )

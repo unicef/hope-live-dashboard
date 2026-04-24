@@ -59,7 +59,7 @@ document.addEventListener('DOMContentLoaded', function () {
         })
         .yAxis().ticks(0);
 
-    const demoMargins = { top: 10, right: 30, bottom: 30, left: 180 };
+    const demoMargins = { top: 10, right: 30, bottom: 30, left: 20 };
 
     [sectorIndividualsChart, sectorChildrenChart, countryIndividualsChart, countryPwdChart].forEach(chart => {
         chart.width(null).height(350).margins(demoMargins).elasticX(true).gap(10).on('filtered', updateTotals);

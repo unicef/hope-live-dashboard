@@ -43,8 +43,11 @@ class CompletionView(LoginRequiredMixin, TemplateView):
         # No server-side metrics or embedded JSON needed
 
 
-class LiveView(LoginRequiredMixin, TemplateView):
-    template_name = "pages/live.html"
+class GrievanceView(LoginRequiredMixin, TemplateView):
+    template_name = "pages/grievance.html"
+
+    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+        return super().get_context_data(**kwargs)
 
 
 class TransfersView(LoginRequiredMixin, TemplateView):

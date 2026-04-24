@@ -5,11 +5,18 @@ from typing import Any
 import requests
 from celery import shared_task  # type: ignore[import-untyped]
 from constance import config
+from django.apps import apps
 from django.contrib.auth import get_user_model
 from django.db import transaction
 from tenacity import retry, stop_after_attempt, wait_exponential
 
-from hope_live.analysis.models import DailyAggregate, SyncDailyAggregatesJob
+from hope_live.analysis.models import (
+    CompletionAggregate,
+    DemographicAggregate,
+    FinancialAggregate,
+    GrievanceAggregate,
+    SyncDailyAggregatesJob,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -36,8 +43,14 @@ def _determine_target_years(datasets: list[dict[str, Any]], requested_years: lis
     return sorted(set(years))
 
 
-def _process_year_data(
-    target_year: int, datasets: list[dict[str, Any]], base_url: str, headers: dict[str, str], job_id: str
+def _process_year_data(  # noqa: PLR0913
+    target_year: int,
+    datasets: list[dict[str, Any]],
+    base_url: str,
+    headers: dict[str, str],
+    job_id: str,
+    model_name: str,
+    update_fields: list[str],
 ) -> int:
     dataset_id = _find_dataset_id_for_year(datasets, target_year)
     if not dataset_id:
@@ -53,7 +66,7 @@ def _process_year_data(
         return 0
 
     logger.info(f"[Job {job_id}] Total rows fetched for year {target_year}: {len(all_rows)}")
-    save_aggregates(all_rows, target_year)
+    save_aggregates(all_rows, target_year, model_name, update_fields)
     return len(all_rows)
 
 
@@ -61,53 +74,64 @@ def _process_year_data(
 def sync_daily_aggregates(
     self: Any, pk: int | None = None, version: int | None = None, target_years: list[int] | None = None
 ) -> str:
-    """Fetch DailyAggregate data from Country Report API and update local DB."""
+    """Fetch Aggregate data from Country Report API and update local DB."""
     job = SyncDailyAggregatesJob.objects.filter(pk=pk).first() if pk else None
     job_id = str(job.pk) if job else "N/A"
 
     if job:
-        job.error_message = None
+        job.error_message = ""
         job.save(update_fields=["error_message"])
 
     try:
         api_url = config.HOPE_COUNTRY_REPORT_API_URL
         token = config.HOPE_COUNTRY_REPORT_API_TOKEN
-        query_id = config.HOPE_COUNTRY_REPORT_QUERY_ID
         headers = {"Authorization": f"Token {token}"}
 
-        context = _prepare_sync_context(api_url, query_id, headers, job_id)
-        if not context:
-            msg = f"[Job {job_id}] Failed to prepare sync context."
-            if job:
-                job.error_message = msg
-                job.save(update_fields=["error_message"])
-            return msg
-
-        office_slug, datasets = context
-        years_to_sync = _determine_target_years(datasets, target_years)
-
-        if not years_to_sync:
-            logger.warning(f"[Job {job_id}] No target years found in datasets.")
-            return "No target years found."
+        configs = [
+            (config.HOPE_FINANCIAL_REPORT_QUERY_ID, "FinancialAggregate", ["total_usd", "total_qty", "payment_count"]),
+            (
+                config.HOPE_DEMOGRAPHIC_REPORT_QUERY_ID,
+                "DemographicAggregate",
+                ["total_beneficiaries", "total_children", "total_pwd"],
+            ),
+            (config.HOPE_COMPLETION_REPORT_QUERY_ID, "CompletionAggregate", ["payment_count", "total_usd"]),
+            (config.HOPE_GRIEVANCE_REPORT_QUERY_ID, "GrievanceAggregate", ["ticket_count"]),
+        ]
 
         total_rows = 0
         errors = []
-        base_url = f"{api_url}queries/{query_id}/dataset/"
-        for idx, target_year in enumerate(years_to_sync, 1):
-            self.update_state(
-                state="PROGRESS", meta={"current_year": target_year, "progress": f"{idx}/{len(years_to_sync)}"}
-            )
-            try:
-                total_rows += _process_year_data(target_year, datasets, base_url, headers, job_id)
-            except Exception as e:
-                logger.exception(f"[Job {job_id}] Error syncing aggregates for year {target_year}: {e}")
-                errors.append(f"Year {target_year}: {e}")
+
+        for query_id, model_name, update_fields in configs:
+            if not query_id:
+                continue
+
+            context = _prepare_sync_context(api_url, str(query_id), headers, job_id)
+            if not context:
+                errors.append(f"Failed to prepare sync context for query {query_id}")
+                continue
+
+            office_slug, datasets = context
+            years_to_sync = _determine_target_years(datasets, target_years)
+
+            base_url = f"{api_url}queries/{query_id}/dataset/"
+            for idx, target_year in enumerate(years_to_sync, 1):
+                self.update_state(
+                    state="PROGRESS",
+                    meta={"current_year": target_year, "model": model_name, "progress": f"{idx}/{len(years_to_sync)}"},
+                )
+                try:
+                    total_rows += _process_year_data(
+                        target_year, datasets, base_url, headers, job_id, model_name, update_fields
+                    )
+                except Exception as e:
+                    logger.exception(f"[Job {job_id}] Error syncing {model_name} for year {target_year}: {e}")
+                    errors.append(f"{model_name} Year {target_year}: {e}")
 
         if errors and job:
             job.error_message = "\n".join(errors)
             job.save(update_fields=["error_message"])
 
-        return f"Successfully synced {total_rows} rows for years: {years_to_sync}"
+        return f"Successfully synced {total_rows} rows."
 
     except Exception as e:
         if job:
@@ -186,7 +210,8 @@ def _fetch_all_pages(data_endpoint: str, headers: dict[str, str], job_id: str) -
 
 
 @shared_task(name="hope_live.analysis.tasks.save_aggregates")  # type: ignore[untyped-decorator]
-def save_aggregates(rows: list[dict[str, Any]], year: int) -> None:
+def save_aggregates(rows: list[dict[str, Any]], year: int, model_name: str, update_fields: list[str]) -> None:
+    ModelClass = apps.get_model("analysis", model_name)
     # Deduplicate rows by unique fields to prevent "ON CONFLICT DO UPDATE command cannot affect row a second time"
     unique_rows = {}
     for item in rows:
@@ -195,6 +220,7 @@ def save_aggregates(rows: list[dict[str, Any]], year: int) -> None:
             continue
         key = (
             item_date,
+            item.get("time_grain", "daily"),
             item.get("country_slug", "unknown"),
             item.get("dimension_type", "unknown"),
             item.get("dimension_value", "unknown"),
@@ -204,53 +230,38 @@ def save_aggregates(rows: list[dict[str, Any]], year: int) -> None:
     with transaction.atomic():
         batch = []
         for item in unique_rows.values():
-            batch.append(
-                DailyAggregate(
-                    date=str(item.get("date")),
-                    country_slug=item.get("country_slug", "unknown"),
-                    dimension_type=item.get("dimension_type", "unknown"),
-                    dimension_value=item.get("dimension_value", "unknown"),
-                    total_usd=item.get("total_usd", 0) or 0,
-                    total_qty=item.get("total_qty", 0) or 0,
-                    payment_count=item.get("payment_count", 0) or 0,
-                    total_beneficiaries=item.get("total_beneficiaries", 0) or 0,
-                    total_children=item.get("total_children", 0) or 0,
-                    total_pwd=item.get("total_pwd", 0) or 0,
-                )
-            )
+            kwargs = {
+                "date": str(item.get("date")),
+                "time_grain": item.get("time_grain", "daily"),
+                "country_slug": item.get("country_slug", "unknown"),
+                "dimension_type": item.get("dimension_type", "unknown"),
+                "dimension_value": str(item.get("dimension_value", "unknown")).strip().upper(),
+            }
+            for field in update_fields:
+                kwargs[field] = item.get(field, 0) or 0
+
+            batch.append(ModelClass(**kwargs))
 
             if len(batch) >= BATCH_SIZE:
-                DailyAggregate.objects.bulk_create(
+                ModelClass.objects.bulk_create(
                     batch,
                     update_conflicts=True,
-                    unique_fields=["date", "country_slug", "dimension_type", "dimension_value"],
-                    update_fields=[
-                        "total_usd",
-                        "total_qty",
-                        "payment_count",
-                        "total_beneficiaries",
-                        "total_children",
-                        "total_pwd",
-                    ],
+                    unique_fields=["date", "time_grain", "country_slug", "dimension_type", "dimension_value"],
+                    update_fields=update_fields,
                 )
                 batch = []
 
         if batch:
-            DailyAggregate.objects.bulk_create(
+            ModelClass.objects.bulk_create(
                 batch,
                 update_conflicts=True,
-                unique_fields=["date", "country_slug", "dimension_type", "dimension_value"],
-                update_fields=[
-                    "total_usd",
-                    "total_qty",
-                    "payment_count",
-                    "total_beneficiaries",
-                    "total_children",
-                    "total_pwd",
-                ],
+                unique_fields=["date", "time_grain", "country_slug", "dimension_type", "dimension_value"],
+                update_fields=update_fields,
             )
 
-        logger.info(f"Saved {len(unique_rows)} unique records for {year} (out of {len(rows)} total rows)")
+        logger.info(
+            f"Saved {len(unique_rows)} unique records for {year} into {model_name} (out of {len(rows)} total rows)"
+        )
 
 
 @shared_task(name="hope_live.analysis.tasks.schedule_sync_daily_aggregates")  # type: ignore[untyped-decorator]
@@ -265,7 +276,7 @@ def schedule_sync_daily_aggregates(target_years: list[int] | None = None) -> Non
 
 @shared_task(name="hope_live.analysis.tasks.clear_daily_aggregates")  # type: ignore[untyped-decorator]
 def clear_daily_aggregates(user_id: int) -> str:
-    """Delete all DailyAggregate records from the database. Restricted to superusers."""
+    """Delete all aggregate records from the database. Restricted to superusers."""
     user_model = get_user_model()
     try:
         user = user_model.objects.get(pk=user_id)
@@ -277,6 +288,10 @@ def clear_daily_aggregates(user_id: int) -> str:
         logger.warning(f"clear_daily_aggregates attempted by non-superuser: {user.username}")
         raise PermissionError("Permission denied: Only superusers can clear daily aggregates.")
 
-    count, _ = DailyAggregate.objects.all().delete()
-    logger.info(f"Deleted {count} DailyAggregate records by superuser {user.username}.")
-    return f"Successfully deleted {count} DailyAggregate records."
+    count = 0
+    for model_class in [FinancialAggregate, DemographicAggregate, CompletionAggregate, GrievanceAggregate]:
+        c, _ = model_class.objects.all().delete()
+        count += c
+
+    logger.info(f"Deleted {count} aggregate records by superuser {user.username}.")
+    return f"Successfully deleted {count} aggregate records."
