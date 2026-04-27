@@ -11,6 +11,7 @@ from ..models import (
     DemographicAggregate,
     FinancialAggregate,
     GrievanceAggregate,
+    TimeGrain,
 )
 from ..serializers import (
     CompletionAggregateSerializer,
@@ -91,14 +92,22 @@ class AggregateListView(generics.ListAPIView):  # type: ignore[misc]
 
     def get_queryset(self) -> models.QuerySet:  # type: ignore[type-arg]
         dash_type = self.request.query_params.get("dashboard")
+
         if dash_type == "demographic":
             queryset = DemographicAggregate.objects.all()
-        elif dash_type == "completion":
-            queryset = CompletionAggregate.objects.all()
-        elif dash_type == "grievance":
-            queryset = GrievanceAggregate.objects.all()
         else:
             queryset = FinancialAggregate.objects.exclude(dimension_type="currency")
+            if dash_type == "completion":
+                queryset = CompletionAggregate.objects.all()
+            elif dash_type == "grievance":
+                queryset = GrievanceAggregate.objects.all()
+
+        # Filter by the correct time grain for this dashboard type
+        if dash_type == "demographic":
+            grain = TimeGrain.MONTHLY
+        else:
+            grain = TimeGrain.DAILY
+        queryset = queryset.filter(time_grain=grain)
 
         year = self.request.query_params.get("year")
         if year:

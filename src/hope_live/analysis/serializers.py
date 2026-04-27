@@ -28,6 +28,7 @@ class DemographicAggregateSerializer(serializers.ModelSerializer):  # type: igno
         model = DemographicAggregate
         fields = [
             "date",
+            "time_grain",
             "country_slug",
             "dimension_type",
             "dimension_value",
@@ -42,6 +43,7 @@ class CompletionAggregateSerializer(serializers.ModelSerializer):  # type: ignor
         model = CompletionAggregate
         fields = [
             "date",
+            "time_grain",
             "country_slug",
             "dimension_type",
             "dimension_value",
@@ -55,6 +57,7 @@ class GrievanceAggregateSerializer(serializers.ModelSerializer):  # type: ignore
         model = GrievanceAggregate
         fields = [
             "date",
+            "time_grain",
             "country_slug",
             "dimension_type",
             "dimension_value",
