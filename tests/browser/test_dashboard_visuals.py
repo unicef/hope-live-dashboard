@@ -2,16 +2,21 @@ import datetime
 
 import pytest
 
+from tests.extras.testutils.factories.analysis import (
+    CompletionAggregateFactory,
+    DemographicAggregateFactory,
+    FinancialAggregateFactory,
+    GrievanceAggregateFactory,
+)
+
 pytestmark = [pytest.mark.selenium, pytest.mark.django_db]
 
 
 @pytest.fixture
 def financial_aggregates(db):
-    from testutils.factories.analysis import DailyAggregateFactory
-
     year = datetime.datetime.now().year
     for i in range(5):
-        DailyAggregateFactory(
+        FinancialAggregateFactory(
             date=datetime.date(year, 1, i + 1),
             country_slug=f"country-{i}",
             dimension_type="sector",
@@ -23,11 +28,9 @@ def financial_aggregates(db):
 
 @pytest.fixture
 def demographic_aggregates(db):
-    from testutils.factories.analysis import DailyAggregateFactory
-
     year = datetime.datetime.now().year
     for i in range(5):
-        DailyAggregateFactory(
+        DemographicAggregateFactory(
             date=datetime.date(year, 6, i + 1),
             country_slug=f"country-{i}",
             dimension_type="sector",
@@ -40,16 +43,15 @@ def demographic_aggregates(db):
 
 @pytest.fixture
 def completion_aggregates(db):
-    from testutils.factories.analysis import DailyAggregateFactory
-
     year = datetime.datetime.now().year
     for i in range(5):
-        DailyAggregateFactory(
+        CompletionAggregateFactory(
             date=datetime.date(year, 9, i + 1),
             country_slug=f"country-{i}",
             dimension_type="status",
             dimension_value=f"RECONCILED-{i}",
             payment_count=3,
+            total_usd=5000,
         )
 
 
@@ -75,8 +77,21 @@ def test_completion_dashboard_loads(browser, completion_aggregates):
     browser.wait_for_element_visible("#status-country-chart")
 
 
-def test_live_overview_dashboard_loads(browser):
+@pytest.fixture
+def grievance_aggregates(db):
+    year = datetime.datetime.now().year
+    for i in range(5):
+        GrievanceAggregateFactory(
+            date=datetime.date(year, 3, i + 1),
+            country_slug=f"country-{i}",
+            dimension_type="category",
+            dimension_value=f"Feedback-{i}",
+            ticket_count=10,
+        )
+
+
+def test_grievance_dashboard_loads(browser, grievance_aggregates):
     browser.login_as_user()
-    browser.open("/dashboard/")
-    browser.click('a[href*="/live/"]')
-    browser.assert_url_contains("/live/")
+    browser.open("/grievance/")
+    browser.wait_for_element_visible("#total-tickets", timeout=10)
+    browser.wait_for_element_visible("#grievance-category-chart", timeout=10)
