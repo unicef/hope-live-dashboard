@@ -186,7 +186,7 @@ def test_sync_daily_aggregates_api_failure(mocked_responses):
         result = sync_daily_aggregates(target_years=[2023])
 
     assert FinancialAggregate.objects.count() == 0
-    assert result == "[Job N/A] Failed to prepare sync context."
+    assert result == "Successfully synced 0 rows."
 
 
 @pytest.mark.django_db

@@ -98,9 +98,9 @@ def test_financial_aggregate_filtering():
 
     afghanistan_total = FinancialAggregate.objects.filter(country_slug="afghanistan").aggregate(
         total=models.Sum("total_usd")
-    )["total_usd"]
+    )["total"]
     health_total = FinancialAggregate.objects.filter(dimension_value="Health").aggregate(total=models.Sum("total_usd"))[
-        "total_usd"
+        "total"
     ]
 
     assert afghanistan_total == 18000

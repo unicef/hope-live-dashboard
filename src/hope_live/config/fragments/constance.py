@@ -51,6 +51,11 @@ CONSTANCE_CONFIG = {
         "Country Report API Token",
         "token",
     ),
+    "HOPE_COUNTRY_REPORT_QUERY_ID": (
+        6,
+        "Query ID for Country Report Aggregate Dataset",
+        int,
+    ),
     "HOPE_FINANCIAL_REPORT_QUERY_ID": (
         6,
         "Query ID for Financial Aggregate Dataset",
