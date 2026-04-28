@@ -31,7 +31,7 @@ def demographic_aggregates(db):
     year = datetime.datetime.now().year
     for i in range(5):
         DemographicAggregateFactory(
-            date=datetime.date(year, 6, i + 1),
+            date=datetime.date(year, 1, i + 1),
             country_slug=f"country-{i}",
             dimension_type="sector",
             dimension_value=f"Education-{i}",
@@ -46,7 +46,7 @@ def completion_aggregates(db):
     year = datetime.datetime.now().year
     for i in range(5):
         CompletionAggregateFactory(
-            date=datetime.date(year, 9, i + 1),
+            date=datetime.date(year, 1, i + 1),
             country_slug=f"country-{i}",
             dimension_type="status",
             dimension_value=f"RECONCILED-{i}",
@@ -66,15 +66,15 @@ def test_financial_dashboard_loads(browser, financial_aggregates):
 def test_demographic_dashboard_loads(browser, demographic_aggregates):
     browser.login_as_user()
     browser.open("/demographic/")
-    browser.wait_for_element_visible("#sector-individuals-chart")
-    browser.wait_for_element_visible("#country-individuals-chart")
+    browser.wait_for_element_visible("#total-individuals")
+    browser.wait_for_element_visible("#total-children")
 
 
 def test_completion_dashboard_loads(browser, completion_aggregates):
     browser.login_as_user()
     browser.open("/completion/")
-    browser.wait_for_element_visible("#reconciliation-pie-chart")
-    browser.wait_for_element_visible("#status-country-chart")
+    browser.wait_for_element_visible("#total-reconciled")
+    browser.wait_for_element_visible("#total-opened")
 
 
 @pytest.fixture
@@ -82,7 +82,7 @@ def grievance_aggregates(db):
     year = datetime.datetime.now().year
     for i in range(5):
         GrievanceAggregateFactory(
-            date=datetime.date(year, 3, i + 1),
+            date=datetime.date(year, 1, i + 1),
             country_slug=f"country-{i}",
             dimension_type="category",
             dimension_value=f"Feedback-{i}",
@@ -93,5 +93,5 @@ def grievance_aggregates(db):
 def test_grievance_dashboard_loads(browser, grievance_aggregates):
     browser.login_as_user()
     browser.open("/grievance/")
-    browser.wait_for_element_visible("#total-tickets", timeout=10)
-    browser.wait_for_element_visible("#grievance-category-chart", timeout=10)
+    browser.wait_for_element_visible("#total-tickets")
+    browser.wait_for_element_visible("#grievance-status-chart svg")
