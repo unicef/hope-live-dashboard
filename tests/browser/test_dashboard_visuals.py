@@ -83,15 +83,36 @@ def grievance_aggregates(db):
     for i in range(5):
         GrievanceAggregateFactory(
             date=datetime.date(year, 1, i + 1),
-            country_slug=f"country-{i}",
+            country_slug="country-test",
             dimension_type="category",
             dimension_value=f"Feedback-{i}",
             ticket_count=10,
         )
 
 
-def test_grievance_dashboard_loads(browser, grievance_aggregates):
+@pytest.fixture
+def grievance_status_aggregates(db):
+    year = datetime.datetime.now().year
+    statuses = ["OPEN", "CLOSED", "PENDING", "RESOLVED"]
+    for idx, status in enumerate(statuses):
+        GrievanceAggregateFactory(
+            date=datetime.date(year, 1, idx + 1),
+            country_slug="country-test",
+            dimension_type="status",
+            dimension_value=status,
+            ticket_count=5,
+        )
+
+
+def test_grievance_dashboard_loads(browser, grievance_aggregates, grievance_status_aggregates):
     browser.login_as_user()
     browser.open("/grievance/")
     browser.wait_for_element_visible("#total-tickets")
-    browser.wait_for_element_visible("#grievance-status-chart svg")
+    browser.wait_for_element_visible("#year-tabs")
+    browser.wait_for_text_visible("Status")
+    browser.wait_for_text_visible("Priority")
+    browser.wait_for_text_visible("Category")
+    browser.wait_for_text_visible("Issue Type")
+    browser.wait_for_text_visible("Country")
+    browser.wait_for_text_visible("Region")
+    browser.wait_for_text_visible("Admin Level 1")
