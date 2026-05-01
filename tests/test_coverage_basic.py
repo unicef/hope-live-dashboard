@@ -25,9 +25,9 @@ def test_import_models():
 
 def test_import_analysis():
     """Test that we can import analysis module."""
-    from hope_live.analysis.models import DailyAggregate
+    from hope_live.analysis.models import FinancialAggregate
 
-    assert DailyAggregate is not None
+    assert FinancialAggregate is not None
 
 
 @pytest.mark.django_db

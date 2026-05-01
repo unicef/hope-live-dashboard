@@ -81,8 +81,11 @@ jobs:
       - name: Setup test suite
         run: tox run -vv --notest --skip-missing-interpreters false -e tests
 
-      - name: Run test suite tests
+      - name: Run test unit tests
         run: tox -e tests
+
+      - name: Run test selenium tests
+        run: tox -e selenium
 
       - name: Archive selenium results
         uses: actions/upload-artifact@v7

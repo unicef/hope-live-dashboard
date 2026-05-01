@@ -23,19 +23,19 @@ def validate_bool(value: str) -> None:
         raise ValidationError("Enter a valid bool")
 
 
-@conditions.register("superuser", validator=validate_bool)
+@conditions.register("superuser", validator=validate_bool)  # type: ignore[untyped-decorator]
 def superuser(value: str, request: "HttpRequest | None" = None, **kwargs: Any) -> bool:
     if request is None:
         return False
     return request.user.is_superuser == parse_bool(value)
 
 
-@conditions.register("debug", validator=validate_bool)
+@conditions.register("debug", validator=validate_bool)  # type: ignore[untyped-decorator]
 def debug(value: str, **kwargs: Any) -> bool:
-    return parse_bool(value) == settings.DEBUG
+    return bool(parse_bool(value) == settings.DEBUG)
 
 
-@conditions.register("hostname")
+@conditions.register("hostname")  # type: ignore[untyped-decorator]
 def hostname(value: str, request: "HttpRequest | None" = None, **kwargs: Any) -> bool:
     if request is None:
         return False

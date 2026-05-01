@@ -2,41 +2,57 @@ document.addEventListener('DOMContentLoaded', function () {
     const tabsContainer = document.getElementById('tabs-container');
     if (!tabsContainer) return;
 
-    // Set modern D3 color scheme to avoid d3.schemeCategory20c deprecation warning
+    // Set modern D3 color scheme
     dc.config.defaultColors(d3.schemeCategory10);
 
     let ndx = crossfilter([]);
     const dataCache = {};
 
+    // Dimensions from user spec
     const dateDimension = ndx.dimension(d => d.date);
-    const sectorDimension = ndx.dimension(d => d.dimension_type === 'sector' ? d.dimension_value : 'N/A');
     const statusDimension = ndx.dimension(d => d.dimension_type === 'status' ? d.dimension_value : null);
+    const categoryDimension = ndx.dimension(d => d.dimension_type === 'category' ? d.dimension_value : null);
+    const issueTypeDimension = ndx.dimension(d => d.dimension_type === 'issue_type' ? d.dimension_value : null);
+    const priorityDimension = ndx.dimension(d => d.dimension_type === 'priority' ? d.dimension_value : null);
+    const adminDimension = ndx.dimension(d => d.dimension_type === 'admin1' ? d.dimension_value : null);
+    const regionDimension = ndx.dimension(d => d.dimension_type === 'region' ? d.dimension_value : null);
     const countryDimension = ndx.dimension(d => d.country_slug);
 
-    const primaryDimFilter = d => d.dimension_type === 'status';
+    const primaryDimFilter = d => d.dimension_type === 'category'; // Arbitrarily chosen for total counts
 
+    // Groups
     const moveDays = dateDimension.group(d3.timeDay);
     const moveMonths = dateDimension.group(d3.timeMonth);
-    const paymentsByDayGroup = moveDays.reduceSum(d => primaryDimFilter(d) ? d.payment_count : 0);
-    const paymentsByMonthGroup = moveMonths.reduceSum(d => primaryDimFilter(d) ? d.payment_count : 0);
-    const statusGroup = statusDimension.group().reduceSum(d => d.dimension_type === 'status' ? d.payment_count : 0);
-    const sectorStatusGroup = sectorDimension.group().reduceSum(d => d.dimension_type === 'status' ? d.payment_count : 0);
-    const countryStatusGroup = countryDimension.group().reduceSum(d => primaryDimFilter(d) ? d.payment_count : 0);
+    const ticketsByDayGroup = moveDays.reduceSum(d => primaryDimFilter(d) ? d.ticket_count : 0);
+    const ticketsByMonthGroup = moveMonths.reduceSum(d => primaryDimFilter(d) ? d.ticket_count : 0);
 
+    const statusGroup = statusDimension.group().reduceSum(d => d.dimension_type === 'status' ? d.ticket_count : 0);
+    const categoryGroup = categoryDimension.group().reduceSum(d => d.dimension_type === 'category' ? d.ticket_count : 0);
+    const issueTypeGroup = issueTypeDimension.group().reduceSum(d => d.dimension_type === 'issue_type' ? d.ticket_count : 0);
+    const priorityGroup = priorityDimension.group().reduceSum(d => d.dimension_type === 'priority' ? d.ticket_count : 0);
+    const adminGroup = adminDimension.group().reduceSum(d => d.dimension_type === 'admin1' ? d.ticket_count : 0);
+    const regionGroup = regionDimension.group().reduceSum(d => d.dimension_type === 'region' ? d.ticket_count : 0);
+    const countryGroup = countryDimension.group().reduceSum(d => primaryDimFilter(d) ? d.ticket_count : 0);
+
+    // Charts
     const focusChart = dc.lineChart('#time-focus-chart');
     const rangeChart = dc.barChart('#time-range-chart');
-    const statusPieChart = dc.pieChart('#reconciliation-pie-chart');
-    const sectorChart = dc.rowChart('#status-sector-chart');
-    const countryChart = dc.rowChart('#status-country-chart');
+    const statusChart = dc.pieChart('#grievance-status-chart');
+    const categoryChart = dc.rowChart('#grievance-category-chart');
+    const issueTypeChart = dc.rowChart('#grievance-issue-type-chart');
+    const priorityChart = dc.pieChart('#grievance-priority-chart');
+    const adminChart = dc.rowChart('#grievance-admin-chart');
+    const regionChart = dc.rowChart('#grievance-region-chart');
+    const countryChart = dc.rowChart('#grievance-country-chart');
 
-    // Set initial domain to prevent grid line errors
+    // Set initial domain
     const initialYear = new Date().getFullYear();
     const initialDomain = [new Date(initialYear, 0, 1), new Date(initialYear, 11, 31)];
 
     focusChart.width(null).height(200).margins({ top: 10, right: 50, bottom: 30, left: 90 })
-        .dimension(dateDimension).group(paymentsByMonthGroup)
+        .dimension(dateDimension).group(ticketsByMonthGroup)
         .curve(d3.curveMonotoneX).transitionDuration(500)
-        .x(d3.scaleTime().domain(initialDomain))  // Set initial scale
+        .x(d3.scaleTime().domain(initialDomain))
         .round(d3.timeMonth.round).xUnits(d3.timeMonths).elasticY(true)
         .renderHorizontalGridLines(true).rangeChart(rangeChart).brushOn(false).renderArea(true)
         .title(function(d) {
@@ -49,8 +65,8 @@ document.addEventListener('DOMContentLoaded', function () {
     focusChart.yAxis().tickFormat(d => d3.format(".2s")(d).replace('G', 'B'));
 
     rangeChart.width(null).height(60).margins({ top: 0, right: 50, bottom: 20, left: 90 })
-        .dimension(dateDimension).group(paymentsByDayGroup).centerBar(true).gap(2)
-        .x(d3.scaleTime().domain(initialDomain))  // Set initial scale
+        .dimension(dateDimension).group(ticketsByDayGroup).centerBar(true).gap(2)
+        .x(d3.scaleTime().domain(initialDomain))
         .round(d3.timeDay.round).alwaysUseRounding(true).xUnits(d3.timeDays).elasticY(true)
         .filterPrinter(function (filters) {
             const dateFmt = d3.timeFormat("%b %d, %Y");
@@ -58,39 +74,35 @@ document.addEventListener('DOMContentLoaded', function () {
         })
         .yAxis().ticks(0);
 
-    statusPieChart.width(300).height(300).radius(100).innerRadius(40)
+    statusChart.width(300).height(300).radius(100).innerRadius(40)
         .dimension(statusDimension).group(statusGroup)
         .label(d => `${d.key}: ${d.value}`).on('filtered', updateTotals);
 
-    sectorChart.width(null).height(450).margins({ top: 10, right: 30, bottom: 30, left: 20 })
-        .dimension(sectorDimension).group(sectorStatusGroup).elasticX(true).gap(10)
-        .data(group => group.all().filter(d => d.key !== 'N/A' && d.value > 0))
-        .on('filtered', updateTotals);
-    sectorChart.xAxis().ticks(4).tickFormat(d3.format(".2s"));
+    priorityChart.width(300).height(300).radius(100).innerRadius(40)
+        .dimension(priorityDimension).group(priorityGroup)
+        .label(d => `${d.key}: ${d.value}`).on('filtered', updateTotals);
 
-    countryChart.width(null).height(450).margins({ top: 10, right: 30, bottom: 30, left: 20 })
-        .dimension(countryDimension).group(countryStatusGroup).elasticX(true).gap(10)
-        .data(group => group.top(15))
-        .on('filtered', updateTotals);
-    countryChart.xAxis().ticks(4).tickFormat(d3.format(".2s"));
+    const rowChartMargins = { top: 10, right: 30, bottom: 30, left: 20 };
+
+    [categoryChart, issueTypeChart, adminChart, regionChart, countryChart].forEach(chart => {
+        chart.width(null).height(450).margins(rowChartMargins)
+            .elasticX(true).gap(10)
+            .on('filtered', updateTotals);
+        chart.xAxis().ticks(4).tickFormat(d3.format(".2s"));
+    });
+
+    categoryChart.dimension(categoryDimension).group(categoryGroup).data(group => group.all().filter(d => d.key !== null && d.value > 0));
+    issueTypeChart.dimension(issueTypeDimension).group(issueTypeGroup).data(group => group.all().filter(d => d.key !== null && d.value > 0));
+    adminChart.dimension(adminDimension).group(adminGroup).data(group => group.all().filter(d => d.key !== null && d.value > 0));
+    regionChart.dimension(regionDimension).group(regionGroup).data(group => group.all().filter(d => d.key !== null && d.value > 0));
+    countryChart.dimension(countryDimension).group(countryGroup).data(group => group.top(15));
 
     function updateTotals() {
-        const reconciliationData = statusGroup.all();
-        let reconciled = 0;
-        let opened = 0;
-
-        reconciliationData.forEach(d => {
-            if (d.key === null) return;
-            const key = d.key.toUpperCase();
-            if (key.includes('RECONCILED') || key.includes('PAID')) {
-                reconciled += d.value;
-            } else if (key.includes('OPEN') || key.includes('PENDING')) {
-                opened += d.value;
-            }
-        });
-
-        document.getElementById('total-reconciled').textContent = d3.format(',')(reconciled);
-        document.getElementById('total-opened').textContent = d3.format(',')(opened);
+        const totalTickets = ndx.groupAll().reduceSum(d => primaryDimFilter(d) ? d.ticket_count : 0).value();
+        const totalTicketsElement = document.getElementById('total-tickets');
+        if (totalTicketsElement) {
+            totalTicketsElement.textContent = d3.format(',')(totalTickets);
+        }
     }
 
     async function loadData(year, isInitial = false) {
@@ -100,7 +112,7 @@ document.addEventListener('DOMContentLoaded', function () {
             if (dataCache[year]) {
                 data = dataCache[year];
             } else {
-                const url = `${window.DASHBOARD_CONFIG.endpoint}?year=${year}&dashboard=${window.DASHBOARD_CONFIG.type}`;
+                const url = `${window.DASHBOARD_CONFIG.endpoint}?year=${year}&dashboard=grievance`;
                 const response = await fetch(url, {
                     credentials: 'same-origin',
                     headers: {
@@ -122,8 +134,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 const dateFormat = d3.timeParse('%Y-%m-%d');
                 data.forEach(d => {
                     d.date = dateFormat(d.date);
-                    d.total_usd = +d.total_usd;
-                    d.payment_count = +d.payment_count;
+                    d.ticket_count = +d.ticket_count;
                 });
 
                 dataCache[year] = data;
@@ -140,7 +151,6 @@ document.addEventListener('DOMContentLoaded', function () {
             focusChart.x(d3.scaleTime().domain(yearDomain));
             rangeChart.x(d3.scaleTime().domain(yearDomain));
 
-            // Use renderAll on initial load, redrawAll for updates
             if (isInitial) {
                 dc.renderAll();
             } else {
@@ -148,7 +158,7 @@ document.addEventListener('DOMContentLoaded', function () {
             }
             updateTotals();
         } catch (error) {
-            console.error('Error loading completion data:', error);
+            console.error('Error loading grievance data:', error);
         }
     }
 
@@ -163,7 +173,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const firstYear = tabsContainer.querySelector('.active-tab')?.dataset.year;
     if (firstYear) {
-        loadData(firstYear, true);  // Pass true for initial load
+        loadData(firstYear, true);
     }
 
     window.addEventListener('resize', function () {

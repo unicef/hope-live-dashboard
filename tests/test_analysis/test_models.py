@@ -1,24 +1,30 @@
 from datetime import date, timedelta
 
 import pytest
+from django.db import models
 from django.db.utils import IntegrityError
 
-from hope_live.analysis.models import DailyAggregate
+from hope_live.analysis.models import (
+    CompletionAggregate,
+    DemographicAggregate,
+    FinancialAggregate,
+    GrievanceAggregate,
+    TimeGrain,
+)
 
 
+# --------------------- FinancialAggregate ---------------------
 @pytest.mark.django_db
-def test_daily_aggregate_data_integrity():
-    aggregate = DailyAggregate.objects.create(
+def test_financial_aggregate_data_integrity():
+    aggregate = FinancialAggregate.objects.create(
         date=date(2024, 1, 15),
+        time_grain=TimeGrain.DAILY,
         country_slug="afghanistan",
         dimension_type="sector",
         dimension_value="Health",
         total_usd=12500.75,
         total_qty=250.5,
         payment_count=45,
-        total_beneficiaries=500,
-        total_children=200,
-        total_pwd=25,
     )
 
     assert aggregate.date == date(2024, 1, 15)
@@ -26,67 +32,125 @@ def test_daily_aggregate_data_integrity():
     assert aggregate.dimension_type == "sector"
     assert aggregate.dimension_value == "Health"
     assert aggregate.total_usd == 12500.75
-    assert aggregate.total_beneficiaries == 500
+    assert aggregate.total_qty == 250.5
+    assert aggregate.payment_count == 45
 
 
 @pytest.mark.django_db
-def test_daily_aggregate_composite_unique_constraint():
-    DailyAggregate.objects.create(
-        date=date(2024, 1, 1), country_slug="afghanistan", dimension_type="sector", dimension_value="Health"
+def test_financial_aggregate_composite_unique():
+    FinancialAggregate.objects.create(
+        date=date(2024, 1, 1),
+        time_grain=TimeGrain.DAILY,
+        country_slug="afghanistan",
+        dimension_type="sector",
+        dimension_value="Health",
     )
 
     with pytest.raises(IntegrityError):
-        DailyAggregate.objects.create(
-            date=date(2024, 1, 1), country_slug="afghanistan", dimension_type="sector", dimension_value="Health"
+        FinancialAggregate.objects.create(
+            date=date(2024, 1, 1),
+            time_grain=TimeGrain.DAILY,
+            country_slug="afghanistan",
+            dimension_type="sector",
+            dimension_value="Health",
         )
 
 
 @pytest.mark.django_db
-def test_bulk_daily_aggregate_operations():
+def test_financial_aggregate_bulk_create():
     aggregates = [
-        DailyAggregate(
+        FinancialAggregate(
             date=date(2024, 1, 1) + timedelta(days=i),
+            time_grain=TimeGrain.DAILY,
             country_slug="afghanistan",
             dimension_type="sector",
             dimension_value=f"Sector{i % 3}",
             total_usd=i * 1000.0,
-            total_beneficiaries=i * 50,
         )
         for i in range(10)
     ]
 
-    DailyAggregate.objects.bulk_create(aggregates)
+    FinancialAggregate.objects.bulk_create(aggregates)
 
-    total_usd = sum(agg.total_usd for agg in DailyAggregate.objects.all())
-    total_beneficiaries = sum(agg.total_beneficiaries for agg in DailyAggregate.objects.all())
-
-    assert DailyAggregate.objects.count() == 10
+    total_usd = sum(agg.total_usd for agg in FinancialAggregate.objects.all())
+    assert FinancialAggregate.objects.count() == 10
     assert total_usd == 45000.0
-    assert total_beneficiaries == 2250
 
 
 @pytest.mark.django_db
-def test_daily_aggregate_filtering_and_aggregation():
+def test_financial_aggregate_filtering():
     test_data = [
-        ("afghanistan", "Health", 10000, 200),
-        ("afghanistan", "Education", 8000, 150),
-        ("syria", "Health", 12000, 250),
-        ("syria", "Education", 9000, 180),
+        ("afghanistan", "Health", 10000),
+        ("afghanistan", "Education", 8000),
+        ("syria", "Health", 12000),
+        ("syria", "Education", 9000),
     ]
 
-    for i, (country, sector, usd, beneficiaries) in enumerate(test_data):
-        DailyAggregate.objects.create(
+    for i, (country, sector, usd) in enumerate(test_data):
+        FinancialAggregate.objects.create(
             date=date(2024, 1, 1) + timedelta(days=i),
+            time_grain=TimeGrain.DAILY,
             country_slug=country,
             dimension_type="sector",
             dimension_value=sector,
             total_usd=usd,
-            total_beneficiaries=beneficiaries,
         )
 
-    afghanistan_total = sum(agg.total_usd for agg in DailyAggregate.objects.filter(country_slug="afghanistan"))
-    health_sector_total = sum(agg.total_usd for agg in DailyAggregate.objects.filter(dimension_value="Health"))
+    afghanistan_total = FinancialAggregate.objects.filter(country_slug="afghanistan").aggregate(
+        total=models.Sum("total_usd")
+    )["total"]
+    health_total = FinancialAggregate.objects.filter(dimension_value="Health").aggregate(total=models.Sum("total_usd"))[
+        "total"
+    ]
 
     assert afghanistan_total == 18000
-    assert health_sector_total == 22000
-    assert DailyAggregate.objects.filter(country_slug="syria").count() == 2
+    assert health_total == 22000
+    assert FinancialAggregate.objects.filter(country_slug="syria").count() == 2
+
+
+# --------------------- DemographicAggregate ---------------------
+@pytest.mark.django_db
+def test_demographic_aggregate_create():
+    agg = DemographicAggregate.objects.create(
+        date=date(2024, 1, 15),
+        time_grain=TimeGrain.DAILY,
+        country_slug="afghanistan",
+        dimension_type="sector",
+        dimension_value="Education",
+        total_beneficiaries=500,
+        total_children=200,
+        total_pwd=25,
+    )
+    assert agg.total_beneficiaries == 500
+    assert agg.total_children == 200
+    assert agg.total_pwd == 25
+
+
+# --------------------- CompletionAggregate ---------------------
+@pytest.mark.django_db
+def test_completion_aggregate_create():
+    agg = CompletionAggregate.objects.create(
+        date=date(2024, 1, 15),
+        time_grain=TimeGrain.DAILY,
+        country_slug="afghanistan",
+        dimension_type="sector",
+        dimension_value="Health",
+        payment_count=10,
+        total_usd=50000.00,
+    )
+    assert agg.payment_count == 10
+    assert agg.total_usd == 50000.00
+
+
+# --------------------- GrievanceAggregate ---------------------
+@pytest.mark.django_db
+def test_grievance_aggregate_create():
+    agg = GrievanceAggregate.objects.create(
+        date=date(2024, 1, 15),
+        time_grain=TimeGrain.DAILY,
+        country_slug="afghanistan",
+        dimension_type="sector",
+        dimension_value="Health",
+        ticket_count=25,
+    )
+    assert agg.ticket_count == 25

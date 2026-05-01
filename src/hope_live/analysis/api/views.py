@@ -2,34 +2,38 @@ from django.db import models
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
 from drf_spectacular.utils import OpenApiExample, OpenApiParameter, extend_schema
-from rest_framework import generics, serializers
-from rest_framework.request import Request
-from rest_framework.response import Response
+from rest_framework import generics, serializers  # type: ignore[import-untyped]
+from rest_framework.request import Request  # type: ignore[import-untyped]
+from rest_framework.response import Response  # type: ignore[import-untyped]
 
-from ..models import DailyAggregate
+from ..models import (
+    CompletionAggregate,
+    DemographicAggregate,
+    FinancialAggregate,
+    GrievanceAggregate,
+    TimeGrain,
+)
 from ..serializers import (
     CompletionAggregateSerializer,
-    DailyAggregateSerializer,
     DemographicAggregateSerializer,
     FinancialAggregateSerializer,
+    GrievanceAggregateSerializer,
 )
 
 
-@method_decorator(cache_page(60 * 60 * 24), name="dispatch")
-class DailyAggregateListView(generics.ListAPIView):
-    """API endpoint for listing DailyAggregate records with filtering."""
-
-    queryset = DailyAggregate.objects.all()
+@method_decorator(cache_page(60 * 60 * 6), name="dispatch")
+class AggregateListView(generics.ListAPIView):  # type: ignore[misc]
+    """API endpoint for listing Aggregate records with filtering."""
 
     def get_serializer_class(self) -> type[serializers.ModelSerializer]:
         dash_type = self.request.query_params.get("dashboard")
-        if dash_type == "financial":
-            return FinancialAggregateSerializer
         if dash_type == "demographic":
             return DemographicAggregateSerializer
         if dash_type == "completion":
             return CompletionAggregateSerializer
-        return DailyAggregateSerializer
+        if dash_type == "grievance":
+            return GrievanceAggregateSerializer
+        return FinancialAggregateSerializer
 
     @extend_schema(
         parameters=[
@@ -81,13 +85,29 @@ class DailyAggregateListView(generics.ListAPIView):
                 ],
             ),
         ],
-        description="List DailyAggregate records with optional filtering",
+        description="List Aggregate records with optional filtering",
     )
     def get(self, request: Request, *args: object, **kwargs: object) -> Response:
         return super().get(request, *args, **kwargs)
 
-    def get_queryset(self) -> models.QuerySet[DailyAggregate]:
-        queryset = super().get_queryset()
+    def get_queryset(self) -> models.QuerySet:  # type: ignore[type-arg]
+        dash_type = self.request.query_params.get("dashboard")
+
+        if dash_type == "demographic":
+            queryset = DemographicAggregate.objects.all()
+        else:
+            queryset = FinancialAggregate.objects.exclude(dimension_type="currency")
+            if dash_type == "completion":
+                queryset = CompletionAggregate.objects.all()
+            elif dash_type == "grievance":
+                queryset = GrievanceAggregate.objects.all()
+
+        # Filter by the correct time grain for this dashboard type
+        if dash_type == "demographic":
+            grain = TimeGrain.MONTHLY
+        else:
+            grain = TimeGrain.DAILY
+        queryset = queryset.filter(time_grain=grain)
 
         year = self.request.query_params.get("year")
         if year:
@@ -108,4 +128,4 @@ class DailyAggregateListView(generics.ListAPIView):
         if date_to:
             queryset = queryset.filter(date__lte=date_to)
 
-        return queryset
+        return queryset  # type: ignore[no-any-return]

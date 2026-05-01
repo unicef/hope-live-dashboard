@@ -57,6 +57,7 @@ def test_show_ddt_excluded_paths(rf, settings, path):
         assert show_ddt(request) is False
 
 
+@pytest.mark.django_db
 def test_show_ddt_allowed_path(rf, settings):
     from flags.models import FlagState
 
@@ -75,6 +76,7 @@ def test_show_ddt_allowed_path(rf, settings):
         assert show_ddt(request) is True
 
 
+@pytest.mark.django_db
 def test_show_ddt_production_hostname(rf, settings):
     from flags.models import FlagState
 

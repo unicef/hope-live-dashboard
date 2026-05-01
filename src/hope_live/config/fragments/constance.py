@@ -53,7 +53,27 @@ CONSTANCE_CONFIG = {
     ),
     "HOPE_COUNTRY_REPORT_QUERY_ID": (
         6,
-        "Query ID for Daily Aggregate Dataset",
+        "Query ID for Country Report Aggregate Dataset",
+        int,
+    ),
+    "HOPE_FINANCIAL_REPORT_QUERY_ID": (
+        6,
+        "Query ID for Financial Aggregate Dataset",
+        int,
+    ),
+    "HOPE_DEMOGRAPHIC_REPORT_QUERY_ID": (
+        7,
+        "Query ID for Demographic Aggregate Dataset",
+        int,
+    ),
+    "HOPE_COMPLETION_REPORT_QUERY_ID": (
+        8,
+        "Query ID for Completion Aggregate Dataset",
+        int,
+    ),
+    "HOPE_GRIEVANCE_REPORT_QUERY_ID": (
+        9,
+        "Query ID for Grievance Aggregate Dataset",
         int,
     ),
 }

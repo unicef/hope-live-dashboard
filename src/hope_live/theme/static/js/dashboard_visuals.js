@@ -1,22 +1,37 @@
+function remove_empty_bins(source_group) {
+    return {
+        all: function () {
+            return source_group.all().filter(d => d.key !== '' && d.key !== null && d.value > 0);
+        }
+    };
+}
+
 document.addEventListener('DOMContentLoaded', function () {
     const tabsContainer = document.getElementById('tabs-container');
     if (!tabsContainer) return;
 
+    // Set modern D3 color scheme to avoid d3.schemeCategory20c deprecation warning
+    dc.config.defaultColors(d3.schemeCategory10);
+
+    const usdFormat = d => {
+        if (Math.abs(d) < 1) return '$0';
+        return '$' + d3.format(".2s")(d).replace('G', 'B');
+    };
+
     // Initialize empty Crossfilter
     let ndx = crossfilter([]);
+    const dataCache = {};
     let all = ndx.groupAll();
 
-    // Dimensions
+    // Separate Dimensions for each chart to allow cross-filtering
     const dateDimension = ndx.dimension(d => d.date);
-    const sectorDimension = ndx.dimension(d => d.dimension_type === 'sector' ? d.dimension_value : null);
-    const programDimension = ndx.dimension(d => d.dimension_type === 'program' ? d.dimension_value : null);
-    const deliveryDimension = ndx.dimension(d => d.dimension_type === 'delivery_type' ? d.dimension_value : null);
-    const fspDimension = ndx.dimension(d => d.dimension_type === 'financial_service_provider' ? d.dimension_value : null);
-    const statusDimension = ndx.dimension(d => d.dimension_type === 'status' ? d.dimension_value : null);
-    const currencyDimension = ndx.dimension(d => d.dimension_type === 'currency' ? d.dimension_value : null);
+    const sectorDimension = ndx.dimension(d => d.dimension_type === 'sector' ? d.dimension_value : '');
+    const programDimension = ndx.dimension(d => d.dimension_type === 'program' ? d.dimension_value : '');
+    const deliveryDimension = ndx.dimension(d => d.dimension_type === 'delivery_type' ? d.dimension_value : '');
+    const fspDimension = ndx.dimension(d => d.dimension_type === 'financial_service_provider' ? d.dimension_value : '');
+    const regionDimension = ndx.dimension(d => d.dimension_type === 'region' ? d.dimension_value : '');
+    const statusDimension = ndx.dimension(d => d.dimension_type === 'status' ? d.dimension_value : '');
     const countryDimension = ndx.dimension(d => d.country_slug);
-    const adminDimension = ndx.dimension(d => d.dimension_type === 'admin_area' ? d.dimension_value : null);
-    const regionDimension = ndx.dimension(d => d.dimension_type === 'region' ? d.dimension_value : null);
 
     const primaryDimFilter = d => d.dimension_type === 'sector';
 
@@ -29,24 +44,31 @@ document.addEventListener('DOMContentLoaded', function () {
     const programGroup = programDimension.group().reduceSum(d => d.dimension_type === 'program' ? d.total_usd : 0);
     const deliveryGroup = deliveryDimension.group().reduceSum(d => d.dimension_type === 'delivery_type' ? d.total_usd : 0);
     const fspGroup = fspDimension.group().reduceSum(d => d.dimension_type === 'financial_service_provider' ? d.total_usd : 0);
-    const statusGroup = statusDimension.group().reduceSum(d => d.dimension_type === 'status' ? d.total_usd : 0);
-    const currencyGroup = currencyDimension.group().reduceSum(d => d.dimension_type === 'currency' ? d.total_usd : 0);
-    const countryGroup = countryDimension.group().reduceSum(d => primaryDimFilter(d) ? d.total_usd : 0);
-    const adminGroup = adminDimension.group().reduceSum(d => d.dimension_type === 'admin_area' ? d.total_usd : 0);
+    const countryGroup = countryDimension.group().reduceSum(d => d.dimension_type === 'sector' ? d.total_usd : 0);
     const regionGroup = regionDimension.group().reduceSum(d => d.dimension_type === 'region' ? d.total_usd : 0);
+    const statusGroup = statusDimension.group().reduceSum(d => d.dimension_type === 'status' ? d.total_usd : 0);
 
     // Charts
     const focusChart = dc.lineChart('#time-focus-chart');
     const rangeChart = dc.barChart('#time-range-chart');
-    const sectorChart = dc.rowChart('#sector-chart');
-    const programChart = dc.rowChart('#program-chart');
-    const deliveryChart = dc.rowChart('#delivery-chart');
-    const fspChart = dc.rowChart('#fsp-chart');
-    const statusChart = dc.rowChart('#status-chart');
-    const currencyChart = dc.rowChart('#currency-chart');
-    const countryChart = dc.rowChart('#country-chart');
-    const adminChart = dc.rowChart('#admin-chart');
-    const regionChart = dc.rowChart('#region-chart');
+    const sectorChart = dc.rowChart('#sector-chart').dimension(sectorDimension).group(remove_empty_bins(sectorGroup));
+    const programChart = dc.rowChart('#program-chart').dimension(programDimension).group(remove_empty_bins(programGroup));
+    const deliveryChart = dc.rowChart('#delivery-chart').dimension(deliveryDimension).group(remove_empty_bins(deliveryGroup));
+    const fspChart = dc.rowChart('#fsp-chart').dimension(fspDimension).group(remove_empty_bins(fspGroup));
+    const countryChart = dc.barChart('#country-chart')
+        .dimension(countryDimension)
+        .group(remove_empty_bins(countryGroup))
+        .width(null)
+        .height(400)
+        .margins({ top: 20, right: 20, bottom: 80, left: 80 })
+        .x(d3.scaleBand())
+        .xUnits(dc.units.ordinal)
+        .elasticY(true)
+        .renderHorizontalGridLines(true)
+        .brushOn(false)
+        .barPadding(0.4)
+        .on('filtered', updateTotals);
+    const regionChart = dc.rowChart('#region-chart').dimension(regionDimension).group(remove_empty_bins(regionGroup));
 
     // Set initial domain to prevent grid line errors
     const initialYear = new Date().getFullYear();
@@ -75,7 +97,8 @@ document.addEventListener('DOMContentLoaded', function () {
         })
         .on('filtered', updateTotals);
 
-    focusChart.yAxis().tickFormat(d => '$' + d3.format(".2s")(d).replace('G', 'B'));
+    focusChart.yAxis().tickFormat(usdFormat);
+    focusChart.xAxis().ticks(d3.timeMonth.every(1));  // Show one label per month
 
     rangeChart
         .width(null).height(80)
@@ -86,71 +109,115 @@ document.addEventListener('DOMContentLoaded', function () {
         .gap(2)
         .x(d3.scaleTime().domain(initialDomain))  // Set initial scale
         .round(d3.timeDay.round)
+        .alwaysUseRounding(true)
         .xUnits(d3.timeDays)
+        .elasticY(true)
         .filterPrinter(function (filters) {
             const dateFmt = d3.timeFormat("%b %d, %Y");
             return `[${dateFmt(filters[0][0])} to ${dateFmt(filters[0][1])}]`;
         })
         .yAxis().ticks(0);
 
-    const rowChartMargins = { top: 10, right: 30, bottom: 30, left: 180 };
+    const rowChartMargins = { top: 10, right: 30, bottom: 30, left: 20 };
 
-    [adminChart, programChart, fspChart].forEach(chart => {
-        chart.width(null).height(750).margins(rowChartMargins).elasticX(true).gap(5).data(group => group.top(30)).on('filtered', updateTotals);
-        chart.xAxis().ticks(4).tickFormat(d => '$' + d3.format(".2s")(d).replace('G', 'B'));
+
+    // 2. Apply common configurations
+    [programChart, fspChart].forEach(chart => {
+        chart.width(null).height(850).margins(rowChartMargins).elasticX(true).gap(2).on('filtered', updateTotals);
+        chart.xAxis().ticks(4).tickFormat(usdFormat);
     });
 
-    [sectorChart, deliveryChart, statusChart, currencyChart, countryChart, regionChart].forEach(chart => {
-        chart.width(null).height(400).margins(rowChartMargins).elasticX(true).gap(10).on('filtered', updateTotals);
-        chart.xAxis().ticks(4).tickFormat(d => '$' + d3.format(".2s")(d).replace('G', 'B'));
+    [deliveryChart, regionChart].forEach(chart => {
+        chart.width(null).height(400).margins(rowChartMargins).elasticX(true).gap(2).on('filtered', updateTotals);
+        chart.xAxis().ticks(4).tickFormat(usdFormat);
     });
 
-    sectorChart.dimension(sectorDimension).group(sectorGroup).data(group => group.all().filter(d => d.key !== null && d.value > 0));
-    countryChart.dimension(countryDimension).group(countryGroup).data(group => group.top(10));
-    adminChart.dimension(adminDimension).group(adminGroup);
-    programChart.dimension(programDimension).group(programGroup);
-    deliveryChart.dimension(deliveryDimension).group(deliveryGroup).data(group => group.all().filter(d => d.key !== null && d.value > 0));
-    fspChart.dimension(fspDimension).group(fspGroup);
-    statusChart.dimension(statusDimension).group(statusGroup).data(group => group.all().filter(d => d.key !== null && d.value > 0));
-    currencyChart.dimension(currencyDimension).group(currencyGroup).data(group => group.all().filter(d => d.key !== null && d.value > 0));
-    regionChart.dimension(regionDimension).group(regionGroup).data(group => group.all().filter(d => d.key !== null && d.value > 0).slice(0, 10));
+    sectorChart.width(null).height(400).margins(rowChartMargins).elasticX(true).gap(4).on('filtered', updateTotals);
+    sectorChart.xAxis().ticks(3).tickFormat(usdFormat);
+
+    countryChart.yAxis().tickFormat(usdFormat);
+
+    // Rotate labels so they don't overlap
+    countryChart.on('renderlet', function(chart) {
+        chart.selectAll('g.x text')
+            .attr('transform', 'rotate(-45)')
+            .style('text-anchor', 'end');
+    });
+
+    // 3. (No longer needed – remove_empty_bins handles filtering)
+
+    const pendingList = ["Sent to Payment Gateway", "Sent to FSP", "Pending"];
+    const successfulList = [
+        "Distribution Successful",
+        "Partially Distributed",
+        "Transaction Successful",
+    ];
 
     function updateTotals() {
-        const totalUsd = ndx.groupAll().reduceSum(d => primaryDimFilter(d) ? d.total_usd : 0).value();
-        const totalPayments = ndx.groupAll().reduceSum(d => primaryDimFilter(d) ? d.payment_count : 0).value();
+        // Total Payments: Count from Sector rows (the most reliable source)
+        const totalPayments = ndx.groupAll().reduceSum(d =>
+            d.dimension_type === 'sector' ? d.payment_count : 0
+        ).value();
 
-        document.getElementById('total-disbursed').textContent = '$' + d3.format(',.2f')(totalUsd);
-        document.getElementById('total-payments').textContent = d3.format(',')(totalPayments);
-        // Removed total-individuals as per your requirement
+        // Total Amount Paid: Sum from Sector rows
+        const totalPaid = ndx.groupAll().reduceSum(d =>
+            d.dimension_type === 'sector' ? d.total_usd : 0
+        ).value();
+
+        // Outstanding: Sum only the Status rows matching "Pending"
+        // Note: This will only update if "Status" rows exist in your data for that year
+        const totalOutstanding = ndx.groupAll().reduceSum(d =>
+            (d.dimension_type === 'status' && pendingList.includes(d.dimension_value)) ? d.total_usd : 0
+        ).value();
+
+        const paymentsEl = document.getElementById('total-payments');
+        if (paymentsEl) paymentsEl.textContent = d3.format(',')(totalPayments);
+
+        const paidEl = document.getElementById('total-amount-paid');
+        if (paidEl) paidEl.textContent = '$' + d3.format(',.2f')(totalPaid);
+
+        const outEl = document.getElementById('outstanding-payments');
+        if (outEl) outEl.textContent = '$' + d3.format(',.2f')(totalOutstanding);
     }
 
     async function loadData(year, isInitial = false) {
         try {
-            const url = `${window.DASHBOARD_CONFIG.endpoint}?year=${year}&dashboard=${window.DASHBOARD_CONFIG.type}`;
-            const response = await fetch(url, {
-                credentials: 'same-origin',
-                headers: {
-                    'Accept': 'application/json',
-                    'X-Requested-With': 'XMLHttpRequest'
-                }
-            });
+            let data;
 
-            if (!response.ok) {
-                if (response.status === 403) {
-                    console.error('Authentication required. Please log in.');
-                    return;
+            // Check cache first
+            if (dataCache[year]) {
+                data = dataCache[year];
+            } else {
+                const url = `${window.DASHBOARD_CONFIG.endpoint}?year=${year}&dashboard=${window.DASHBOARD_CONFIG.type}`;
+                const response = await fetch(url, {
+                    credentials: 'same-origin',
+                    headers: {
+                        'Accept': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                });
+
+                if (!response.ok) {
+                    if (response.status === 403) {
+                        console.error('Authentication required. Please log in.');
+                        return;
+                    }
+                    throw new Error(`HTTP error! status: ${response.status}`);
                 }
-                throw new Error(`HTTP error! status: ${response.status}`);
+
+                data = await response.json();
+
+                // (No need to filter by time_grain – the API now does this)
+
+                const dateFormat = d3.timeParse('%Y-%m-%d');
+                data.forEach(d => {
+                    d.date = dateFormat(d.date);
+                    d.total_usd = +d.total_usd;
+                    d.payment_count = +d.payment_count;
+                });
+
+                dataCache[year] = data;  // Store in cache
             }
-
-            const data = await response.json();
-
-            const dateFormat = d3.timeParse('%Y-%m-%d');
-            data.forEach(d => {
-                d.date = dateFormat(d.date);
-                d.total_usd = +d.total_usd;
-                d.payment_count = +d.payment_count;
-            });
 
             const now = new Date();
             now.setHours(23, 59, 59, 999);
@@ -163,7 +230,6 @@ document.addEventListener('DOMContentLoaded', function () {
             focusChart.x(d3.scaleTime().domain(yearDomain));
             rangeChart.x(d3.scaleTime().domain(yearDomain));
 
-            // Use renderAll on initial load, redrawAll for updates
             if (isInitial) {
                 dc.renderAll();
             } else {

@@ -2,7 +2,7 @@ import pytest
 from django.test import RequestFactory
 from django.urls import reverse
 
-from hope_live.web.views import AboutView, ContactView, DetailsView, IndexView, LiveView, TransfersView
+from hope_live.web.views import AboutView, ContactView, DetailsView, IndexView, TransfersView
 
 
 @pytest.mark.django_db
@@ -14,7 +14,6 @@ def test_simple_template_views(user_factory):
     views_to_test = [
         ContactView,
         AboutView,
-        LiveView,
         TransfersView,
         DetailsView,
     ]

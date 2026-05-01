@@ -15,7 +15,7 @@ urlpatterns = [
     path("completion/", views.CompletionView.as_view(), name="completion"),
     path("details/", views.DetailsView.as_view(), name="details"),
     path("transfers/", views.TransfersView.as_view(), name="transfers"),
-    path("live/", views.LiveView.as_view(), name="live"),
+    path("grievance/", views.GrievanceView.as_view(), name="grievance"),
     path("about/", views.AboutView.as_view(), name="about"),
     path("contacts/", TemplateView.as_view(template_name="pages/contacts.html"), name="contacts"),
 ]
