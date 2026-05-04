@@ -1,8 +1,9 @@
+{% load i18n %}
 <footer class="footer footer-horizontal footer-center bg-white border-t border-gray-200 text-base-content rounded p-10">
   <nav class="grid grid-flow-col gap-4">
     <!-- Links removed as per user request -->
   </nav>
   <aside>
-    <p>Copyright © {{ year }} - All right reserved by UNICEF - {{ app.version }}</p>
+    <p>{% blocktranslate with year=year version=app.version %}Copyright © {{ year }} - All right reserved by UNICEF - {{ version }}{% endblocktranslate %}</p>
   </aside>
 </footer>

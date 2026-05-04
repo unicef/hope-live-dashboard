@@ -146,12 +146,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // 3. (No longer needed – remove_empty_bins handles filtering)
 
-    const pendingList = ["Sent to Payment Gateway", "Sent to FSP", "Pending"];
+    const pendingList = ["Sent to Payment Gateway", "Sent to FSP", "Pending"].map(s => s.toUpperCase());
     const successfulList = [
         "Distribution Successful",
         "Partially Distributed",
         "Transaction Successful",
-    ];
+    ].map(s => s.toUpperCase());
 
     function updateTotals() {
         // Total Payments: Count from Sector rows (the most reliable source)
@@ -159,15 +159,14 @@ document.addEventListener('DOMContentLoaded', function () {
             d.dimension_type === 'sector' ? d.payment_count : 0
         ).value();
 
-        // Total Amount Paid: Sum from Sector rows
+        // Total Amount Paid: Sum only the Status rows matching successful statuses
         const totalPaid = ndx.groupAll().reduceSum(d =>
-            d.dimension_type === 'sector' ? d.total_usd : 0
+            (d.dimension_type === 'status' && successfulList.includes(String(d.dimension_value).toUpperCase())) ? d.total_usd : 0
         ).value();
 
-        // Outstanding: Sum only the Status rows matching "Pending"
-        // Note: This will only update if "Status" rows exist in your data for that year
+        // Outstanding: Sum only the Status rows matching pending statuses
         const totalOutstanding = ndx.groupAll().reduceSum(d =>
-            (d.dimension_type === 'status' && pendingList.includes(d.dimension_value)) ? d.total_usd : 0
+            (d.dimension_type === 'status' && pendingList.includes(String(d.dimension_value).toUpperCase())) ? d.total_usd : 0
         ).value();
 
         const paymentsEl = document.getElementById('total-payments');

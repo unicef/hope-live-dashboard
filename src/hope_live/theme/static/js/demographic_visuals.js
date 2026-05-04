@@ -9,17 +9,16 @@ document.addEventListener('DOMContentLoaded', function () {
     const dataCache = {};
 
     const dateDimension = ndx.dimension(d => d.date);
-    const sectorDimension = ndx.dimension(d => d.dimension_type === 'sector' ? d.dimension_value : null);
+    const primaryDimFilter = d => String(d.dimension_type).toLowerCase() === 'sector';
+    const sectorDimension = ndx.dimension(d => primaryDimFilter(d) ? d.dimension_value : null);
     const countryDimension = ndx.dimension(d => d.country_slug);
-
-    const primaryDimFilter = d => d.dimension_type === 'sector';
 
     const moveDays = dateDimension.group(d3.timeDay);
     const moveMonths = dateDimension.group(d3.timeMonth);
     const individualsByDayGroup = moveDays.reduceSum(d => primaryDimFilter(d) ? d.total_beneficiaries : 0);
     const individualsByMonthGroup = moveMonths.reduceSum(d => primaryDimFilter(d) ? d.total_beneficiaries : 0);
-    const sectorIndividualsGroup = sectorDimension.group().reduceSum(d => d.dimension_type === 'sector' ? d.total_beneficiaries : 0);
-    const sectorChildrenGroup = sectorDimension.group().reduceSum(d => d.dimension_type === 'sector' ? d.total_children : 0);
+    const sectorIndividualsGroup = sectorDimension.group().reduceSum(d => primaryDimFilter(d) ? d.total_beneficiaries : 0);
+    const sectorChildrenGroup = sectorDimension.group().reduceSum(d => primaryDimFilter(d) ? d.total_children : 0);
     const countryIndividualsGroup = countryDimension.group().reduceSum(d => primaryDimFilter(d) ? d.total_beneficiaries : 0);
     const countryPwdGroup = countryDimension.group().reduceSum(d => primaryDimFilter(d) ? d.total_pwd : 0);
 
