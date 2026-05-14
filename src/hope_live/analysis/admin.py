@@ -6,7 +6,13 @@ from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django_celery_boost.admin import CeleryTaskModelAdmin
 from kombu.exceptions import OperationalError
 
-from .models import SyncDailyAggregatesJob
+from .models import (
+    CompletionAggregate,
+    DemographicAggregate,
+    FinancialAggregate,
+    GrievanceAggregate,
+    SyncDailyAggregatesJob,
+)
 from .tasks import clear_daily_aggregates
 
 
@@ -43,3 +49,74 @@ class SyncDailyAggregatesJobAdmin(CeleryTaskModelAdmin):  # type: ignore[misc]
             message="Are you sure you want to delete ALL Aggregate records? This action cannot be undone.",
             success_message="Clear task has been queued successfully.",
         )
+
+
+class ReadOnlyDeletableAdmin(admin.ModelAdmin):  # type: ignore[type-arg]
+    date_hierarchy = "date"
+
+    def has_add_permission(self, request: HttpRequest) -> bool:
+        return False
+
+    def has_change_permission(self, request: HttpRequest, obj: object | None = None) -> bool:
+        return False
+
+
+@admin.register(FinancialAggregate)
+class FinancialAggregateAdmin(ReadOnlyDeletableAdmin):
+    list_display = (
+        "date",
+        "time_grain",
+        "country_slug",
+        "dimension_type",
+        "dimension_value",
+        "total_usd",
+        "total_qty",
+        "payment_count",
+    )
+    list_filter = ("time_grain", "country_slug", "dimension_type", "date")
+    search_fields = ("country_slug", "dimension_type", "dimension_value")
+
+
+@admin.register(DemographicAggregate)
+class DemographicAggregateAdmin(ReadOnlyDeletableAdmin):
+    list_display = (
+        "date",
+        "time_grain",
+        "country_slug",
+        "dimension_type",
+        "dimension_value",
+        "total_beneficiaries",
+        "total_children",
+        "total_pwd",
+    )
+    list_filter = ("time_grain", "country_slug", "dimension_type", "date")
+    search_fields = ("country_slug", "dimension_type", "dimension_value")
+
+
+@admin.register(CompletionAggregate)
+class CompletionAggregateAdmin(ReadOnlyDeletableAdmin):
+    list_display = (
+        "date",
+        "time_grain",
+        "country_slug",
+        "dimension_type",
+        "dimension_value",
+        "payment_count",
+        "total_usd",
+    )
+    list_filter = ("time_grain", "country_slug", "dimension_type", "date")
+    search_fields = ("country_slug", "dimension_type", "dimension_value")
+
+
+@admin.register(GrievanceAggregate)
+class GrievanceAggregateAdmin(ReadOnlyDeletableAdmin):
+    list_display = (
+        "date",
+        "time_grain",
+        "country_slug",
+        "dimension_type",
+        "dimension_value",
+        "ticket_count",
+    )
+    list_filter = ("time_grain", "country_slug", "dimension_type", "date")
+    search_fields = ("country_slug", "dimension_type", "dimension_value")

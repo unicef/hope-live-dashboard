@@ -44,7 +44,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const programGroup = programDimension.group().reduceSum(d => d.dimension_type === 'program' ? d.total_usd : 0);
     const deliveryGroup = deliveryDimension.group().reduceSum(d => d.dimension_type === 'delivery_type' ? d.total_usd : 0);
     const fspGroup = fspDimension.group().reduceSum(d => d.dimension_type === 'financial_service_provider' ? d.total_usd : 0);
-    const countryGroup = countryDimension.group().reduceSum(d => d.dimension_type === 'sector' ? d.total_usd : 0);
+    const countryGroup = countryDimension.group().reduceSum(d => primaryDimFilter(d) ? d.total_usd : 0);
     const regionGroup = regionDimension.group().reduceSum(d => d.dimension_type === 'region' ? d.total_usd : 0);
     const statusGroup = statusDimension.group().reduceSum(d => d.dimension_type === 'status' ? d.total_usd : 0);
 
@@ -57,16 +57,24 @@ document.addEventListener('DOMContentLoaded', function () {
     const fspChart = dc.rowChart('#fsp-chart').dimension(fspDimension).group(remove_empty_bins(fspGroup));
     const countryChart = dc.barChart('#country-chart')
         .dimension(countryDimension)
-        .group(remove_empty_bins(countryGroup))
+        .group(countryGroup)
         .width(null)
-        .height(400)
-        .margins({ top: 20, right: 20, bottom: 80, left: 80 })
+        .height(500)
         .x(d3.scaleBand())
         .xUnits(dc.units.ordinal)
+        .brushOn(false)
         .elasticY(true)
         .renderHorizontalGridLines(true)
-        .brushOn(false)
-        .barPadding(0.4)
+        .yAxisLabel("Amount Paid (USD)", 18)
+        .barPadding(0.5)
+        .margins({ top: 30, right: 25, bottom: 95, left: 90 })
+        .outerPadding(0.5)
+        .ordering(d => -d.value)
+        .title(d => `${d.key}: ${usdFormat(d.value)}`)
+        .colors(d3.scaleOrdinal().range(d3.schemePaired))
+        .colorAccessor(d => d.key)
+        .yAxisPadding(90)
+        .useViewBoxResizing(true)
         .on('filtered', updateTotals);
     const regionChart = dc.rowChart('#region-chart').dimension(regionDimension).group(remove_empty_bins(regionGroup));
 
@@ -135,23 +143,20 @@ document.addEventListener('DOMContentLoaded', function () {
     sectorChart.width(null).height(400).margins(rowChartMargins).elasticX(true).gap(4).on('filtered', updateTotals);
     sectorChart.xAxis().ticks(3).tickFormat(usdFormat);
 
-    countryChart.yAxis().tickFormat(usdFormat);
-
-    // Rotate labels so they don't overlap
+    countryChart.yAxis().ticks(4).tickFormat(usdFormat);
     countryChart.on('renderlet', function(chart) {
         chart.selectAll('g.x text')
-            .attr('transform', 'rotate(-45)')
-            .style('text-anchor', 'end');
+            .attr("transform", "rotate(30)")
+            .style("text-anchor", "start")
+            .attr("dx", "2");
     });
 
-    // 3. (No longer needed – remove_empty_bins handles filtering)
-
-    const pendingList = ["Sent to Payment Gateway", "Sent to FSP", "Pending"];
+    const pendingList = ["SENT TO PAYMENT GATEWAY", "SENT TO FSP", "PENDING"];
     const successfulList = [
         "Distribution Successful",
         "Partially Distributed",
         "Transaction Successful",
-    ];
+    ].map(s => s.toUpperCase());
 
     function updateTotals() {
         // Total Payments: Count from Sector rows (the most reliable source)
@@ -159,15 +164,14 @@ document.addEventListener('DOMContentLoaded', function () {
             d.dimension_type === 'sector' ? d.payment_count : 0
         ).value();
 
-        // Total Amount Paid: Sum from Sector rows
+        // Total Amount Paid: Sum only the Status rows matching successful statuses
         const totalPaid = ndx.groupAll().reduceSum(d =>
-            d.dimension_type === 'sector' ? d.total_usd : 0
+            (d.dimension_type === 'status' && successfulList.includes(String(d.dimension_value).toUpperCase())) ? d.total_usd : 0
         ).value();
 
-        // Outstanding: Sum only the Status rows matching "Pending"
-        // Note: This will only update if "Status" rows exist in your data for that year
+        // Outstanding: Sum only the Status rows matching pending statuses
         const totalOutstanding = ndx.groupAll().reduceSum(d =>
-            (d.dimension_type === 'status' && pendingList.includes(d.dimension_value)) ? d.total_usd : 0
+            (d.dimension_type === 'status' && pendingList.includes(String(d.dimension_value).toUpperCase())) ? d.total_usd : 0
         ).value();
 
         const paymentsEl = document.getElementById('total-payments');

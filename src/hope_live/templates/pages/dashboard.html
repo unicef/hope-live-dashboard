@@ -5,12 +5,12 @@
 <div class="container mx-auto px-4 py-8">
     <div class="mb-8 flex justify-between items-center">
         <div>
-            <h1 class="text-3xl font-bold text-gray-900">Financial Dashboard</h1>
-            <p class="text-gray-600">Overview of Financial info</p>
+            <h1 class="text-3xl font-bold text-gray-900">{% translate "Financial Dashboard" %}</h1>
+            <p class="text-gray-600">{% translate "Overview of Financial info" %}</p>
         </div>
         <div>
             <!-- Date Filter could go here -->
-            <span class="bg-unicef-blue text-white text-xs font-medium mr-2 px-2.5 py-0.5 rounded">Live Data</span>
+            <span class="bg-unicef-blue text-white text-xs font-medium mr-2 px-2.5 py-0.5 rounded">{% translate "Live Data" %}</span>
         </div>
     </div>
 
@@ -77,7 +77,7 @@
     <!-- Countries (Full Width) -->
     <div class="bg-white rounded-lg shadow p-6 mb-8">
         <h3 class="text-lg font-semibold text-gray-900 mb-4">{% translate "Countries" %}</h3>
-        <div id="country-chart" class="w-full"></div>
+        <div id="country-chart" class="w-full" style="min-height: 500px;"></div>
     </div>
 
     <!-- Additional Segments (Program, FSP) -->

@@ -49,6 +49,7 @@ class DemographicAggregate(BaseAggregate):
     total_beneficiaries = models.IntegerField(default=0)
     total_children = models.IntegerField(default=0)
     total_pwd = models.IntegerField(default=0)
+    total_households = models.IntegerField(default=0)
 
 
 class CompletionAggregate(BaseAggregate):

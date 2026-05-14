@@ -92,7 +92,7 @@ def sync_daily_aggregates(
             (
                 config.HOPE_DEMOGRAPHIC_REPORT_QUERY_ID,
                 "DemographicAggregate",
-                ["total_beneficiaries", "total_children", "total_pwd"],
+                ["total_beneficiaries", "total_children", "total_pwd", "total_households"],
             ),
             (config.HOPE_COMPLETION_REPORT_QUERY_ID, "CompletionAggregate", ["payment_count", "total_usd"]),
             (config.HOPE_GRIEVANCE_REPORT_QUERY_ID, "GrievanceAggregate", ["ticket_count"]),
@@ -218,24 +218,27 @@ def save_aggregates(rows: list[dict[str, Any]], year: int, model_name: str, upda
         item_date = item.get("date")
         if not item_date:
             continue
+        raw_dim_val = item.get("dimension_value")
+        dim_val = "unknown" if raw_dim_val is None else str(raw_dim_val)
+
         key = (
-            item_date,
+            str(item_date),
             item.get("time_grain", "daily"),
             item.get("country_slug", "unknown"),
             item.get("dimension_type", "unknown"),
-            item.get("dimension_value", "unknown"),
+            dim_val.strip().upper(),
         )
         unique_rows[key] = item
 
     with transaction.atomic():
         batch = []
-        for item in unique_rows.values():
+        for key, item in unique_rows.items():
             kwargs = {
-                "date": str(item.get("date")),
-                "time_grain": item.get("time_grain", "daily"),
-                "country_slug": item.get("country_slug", "unknown"),
-                "dimension_type": item.get("dimension_type", "unknown"),
-                "dimension_value": str(item.get("dimension_value", "unknown")).strip().upper(),
+                "date": key[0],
+                "time_grain": key[1],
+                "country_slug": key[2],
+                "dimension_type": key[3],
+                "dimension_value": key[4],
             }
             for field in update_fields:
                 kwargs[field] = item.get(field, 0) or 0

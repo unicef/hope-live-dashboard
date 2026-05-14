@@ -35,6 +35,7 @@ class DemographicAggregateSerializer(serializers.ModelSerializer):  # type: igno
             "total_beneficiaries",
             "total_children",
             "total_pwd",
+            "total_households",
         ]
 
 

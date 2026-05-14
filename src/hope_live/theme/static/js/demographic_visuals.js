@@ -9,17 +9,13 @@ document.addEventListener('DOMContentLoaded', function () {
     const dataCache = {};
 
     const dateDimension = ndx.dimension(d => d.date);
-    const sectorDimension = ndx.dimension(d => d.dimension_type === 'sector' ? d.dimension_value : null);
+    const sectorDimension = ndx.dimension(d => primaryDimFilter(d) ? d.dimension_value : null);
     const countryDimension = ndx.dimension(d => d.country_slug);
-
     const primaryDimFilter = d => d.dimension_type === 'sector';
-
-    const moveDays = dateDimension.group(d3.timeDay);
     const moveMonths = dateDimension.group(d3.timeMonth);
-    const individualsByDayGroup = moveDays.reduceSum(d => primaryDimFilter(d) ? d.total_beneficiaries : 0);
     const individualsByMonthGroup = moveMonths.reduceSum(d => primaryDimFilter(d) ? d.total_beneficiaries : 0);
-    const sectorIndividualsGroup = sectorDimension.group().reduceSum(d => d.dimension_type === 'sector' ? d.total_beneficiaries : 0);
-    const sectorChildrenGroup = sectorDimension.group().reduceSum(d => d.dimension_type === 'sector' ? d.total_children : 0);
+    const sectorIndividualsGroup = sectorDimension.group().reduceSum(d => primaryDimFilter(d) ? d.total_beneficiaries : 0);
+    const sectorChildrenGroup = sectorDimension.group().reduceSum(d => primaryDimFilter(d) ? d.total_children : 0);
     const countryIndividualsGroup = countryDimension.group().reduceSum(d => primaryDimFilter(d) ? d.total_beneficiaries : 0);
     const countryPwdGroup = countryDimension.group().reduceSum(d => primaryDimFilter(d) ? d.total_pwd : 0);
 
@@ -50,9 +46,9 @@ document.addEventListener('DOMContentLoaded', function () {
     focusChart.yAxis().tickFormat(d => d3.format(".2s")(d).replace('G', 'B'));
 
     rangeChart.width(null).height(60).margins({ top: 0, right: 50, bottom: 20, left: 90 })
-        .dimension(dateDimension).group(individualsByDayGroup).centerBar(true).gap(2)
+        .dimension(dateDimension).group(individualsByMonthGroup).centerBar(true).gap(2)
         .x(d3.scaleTime().domain(initialDomain))  // Set initial scale
-        .round(d3.timeDay.round).alwaysUseRounding(true).xUnits(d3.timeDays).elasticY(true)
+        .round(d3.timeMonth.round).alwaysUseRounding(true).xUnits(d3.timeMonths).elasticY(true)
         .filterPrinter(function (filters) {
             const dateFmt = d3.timeFormat("%b %d, %Y");
             return `[${dateFmt(filters[0][0])} to ${dateFmt(filters[0][1])}]`;
@@ -75,10 +71,12 @@ document.addEventListener('DOMContentLoaded', function () {
         const totalIndividuals = ndx.groupAll().reduceSum(d => primaryDimFilter(d) ? d.total_beneficiaries : 0).value();
         const totalChildren = ndx.groupAll().reduceSum(d => primaryDimFilter(d) ? d.total_children : 0).value();
         const totalPwd = ndx.groupAll().reduceSum(d => primaryDimFilter(d) ? d.total_pwd : 0).value();
+        const totalHouseholds = ndx.groupAll().reduceSum(d => primaryDimFilter(d) ? d.total_households : 0).value();
 
         document.getElementById('total-individuals').textContent = d3.format(',')(totalIndividuals);
         document.getElementById('total-children').textContent = d3.format(',')(totalChildren);
         document.getElementById('total-pwd').textContent = d3.format(',')(totalPwd);
+        document.getElementById('total-households').textContent = d3.format(',')(totalHouseholds);
     }
 
     async function loadData(year, isInitial = false) {
@@ -113,6 +111,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     d.total_beneficiaries = +d.total_beneficiaries;
                     d.total_children = +d.total_children;
                     d.total_pwd = +d.total_pwd;
+                    d.total_households = +d.total_households || 0;
                 });
 
                 dataCache[year] = data;
