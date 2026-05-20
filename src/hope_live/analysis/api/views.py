@@ -103,8 +103,10 @@ class AggregateListView(generics.ListAPIView):  # type: ignore[misc]
                 queryset = GrievanceAggregate.objects.all()
 
         # Filter by the correct time grain for this dashboard type
-        # Currently, all dashboard data is synced and expected as daily
-        queryset = queryset.filter(time_grain=TimeGrain.DAILY)
+        if dash_type == "demographic":
+            queryset = queryset.filter(time_grain=TimeGrain.MONTHLY)
+        else:
+            queryset = queryset.filter(time_grain=TimeGrain.DAILY)
 
         year = self.request.query_params.get("year")
         if year:

@@ -52,9 +52,9 @@ document.addEventListener('DOMContentLoaded', function () {
     const focusChart = dc.lineChart('#time-focus-chart');
     const rangeChart = dc.barChart('#time-range-chart');
     const sectorChart = dc.rowChart('#sector-chart').dimension(sectorDimension).group(remove_empty_bins(sectorGroup));
-    const programChart = dc.rowChart('#program-chart').dimension(programDimension).group(remove_empty_bins(programGroup));
+    const programChart = dc.rowChart('#program-chart').dimension(programDimension).group(remove_empty_bins(programGroup)).cap(10).othersLabel('Other');
     const deliveryChart = dc.rowChart('#delivery-chart').dimension(deliveryDimension).group(remove_empty_bins(deliveryGroup));
-    const fspChart = dc.rowChart('#fsp-chart').dimension(fspDimension).group(remove_empty_bins(fspGroup));
+    const fspChart = dc.rowChart('#fsp-chart').dimension(fspDimension).group(remove_empty_bins(fspGroup)).cap(10).othersLabel('Other');
     const countryChart = dc.barChart('#country-chart')
         .dimension(countryDimension)
         .group(countryGroup)
@@ -66,13 +66,10 @@ document.addEventListener('DOMContentLoaded', function () {
         .elasticY(true)
         .renderHorizontalGridLines(true)
         .yAxisLabel("Amount Paid (USD)", 18)
-        .barPadding(0.5)
+        .gap(10) // Use gap instead of barPadding for proper spacing in dc.js
         .margins({ top: 30, right: 25, bottom: 95, left: 90 })
-        .outerPadding(0.5)
         .ordering(d => -d.value)
         .title(d => `${d.key}: ${usdFormat(d.value)}`)
-        .colors(d3.scaleOrdinal().range(d3.schemePaired))
-        .colorAccessor(d => d.key)
         .yAxisPadding(90)
         .useViewBoxResizing(true)
         .on('filtered', updateTotals);
@@ -88,25 +85,27 @@ document.addEventListener('DOMContentLoaded', function () {
         .margins({ top: 10, right: 50, bottom: 30, left: 90 })
         .dimension(dateDimension)
         .group(volumeByMonthGroup)
-        .curve(d3.curveMonotoneX)
         .transitionDuration(500)
-        .x(d3.scaleTime().domain(initialDomain))  // Set initial scale
+        .x(d3.scaleTime().domain(initialDomain))
         .round(d3.timeMonth.round)
         .xUnits(d3.timeMonths)
+        .renderArea(true)
+        .curve(d3.curveMonotoneX)
+        .mouseZoomable(true)
         .elasticY(true)
         .renderHorizontalGridLines(true)
         .rangeChart(rangeChart)
         .brushOn(false)
-        .renderArea(true)
         .title(function(d) {
             const formatTime = d3.timeFormat("%B %Y");
-            const formatValue = d3.format(",.2f");
+            const formatValue = d3.format(",.0f");
             return `${formatTime(d.key)}: $${formatValue(d.value)}`;
         })
         .on('filtered', updateTotals);
 
     focusChart.yAxis().tickFormat(usdFormat);
-    focusChart.xAxis().ticks(d3.timeMonth.every(1));  // Show one label per month
+    focusChart.xAxis().ticks(d3.timeMonth.every(1));
+
 
     rangeChart
         .width(null).height(80)
@@ -133,6 +132,9 @@ document.addEventListener('DOMContentLoaded', function () {
     [programChart, fspChart].forEach(chart => {
         chart.width(null).height(850).margins(rowChartMargins).elasticX(true).gap(2).on('filtered', updateTotals);
         chart.xAxis().ticks(4).tickFormat(usdFormat);
+        chart.on('pretransition', function(c) {
+            c.selectAll('g.row text').style('fill', 'black');
+        });
     });
 
     [deliveryChart, regionChart].forEach(chart => {
@@ -178,10 +180,10 @@ document.addEventListener('DOMContentLoaded', function () {
         if (paymentsEl) paymentsEl.textContent = d3.format(',')(totalPayments);
 
         const paidEl = document.getElementById('total-amount-paid');
-        if (paidEl) paidEl.textContent = '$' + d3.format(',.2f')(totalPaid);
+        if (paidEl) paidEl.textContent = '$' + d3.format(',.0f')(totalPaid);
 
         const outEl = document.getElementById('outstanding-payments');
-        if (outEl) outEl.textContent = '$' + d3.format(',.2f')(totalOutstanding);
+        if (outEl) outEl.textContent = '$' + d3.format(',.0f')(totalOutstanding);
     }
 
     async function loadData(year, isInitial = false) {

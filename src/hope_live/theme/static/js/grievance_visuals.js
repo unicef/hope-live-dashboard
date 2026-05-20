@@ -14,8 +14,6 @@ document.addEventListener('DOMContentLoaded', function () {
     const categoryDimension = ndx.dimension(d => d.dimension_type === 'category' ? d.dimension_value : null);
     const issueTypeDimension = ndx.dimension(d => d.dimension_type === 'issue_type' ? d.dimension_value : null);
     const priorityDimension = ndx.dimension(d => d.dimension_type === 'priority' ? d.dimension_value : null);
-    const adminDimension = ndx.dimension(d => d.dimension_type === 'admin1' ? d.dimension_value : null);
-    const regionDimension = ndx.dimension(d => d.dimension_type === 'region' ? d.dimension_value : null);
     const countryDimension = ndx.dimension(d => d.country_slug);
 
     const primaryDimFilter = d => d.dimension_type === 'category'; // Arbitrarily chosen for total counts
@@ -30,8 +28,6 @@ document.addEventListener('DOMContentLoaded', function () {
     const categoryGroup = categoryDimension.group().reduceSum(d => d.dimension_type === 'category' ? d.ticket_count : 0);
     const issueTypeGroup = issueTypeDimension.group().reduceSum(d => d.dimension_type === 'issue_type' ? d.ticket_count : 0);
     const priorityGroup = priorityDimension.group().reduceSum(d => d.dimension_type === 'priority' ? d.ticket_count : 0);
-    const adminGroup = adminDimension.group().reduceSum(d => d.dimension_type === 'admin1' ? d.ticket_count : 0);
-    const regionGroup = regionDimension.group().reduceSum(d => d.dimension_type === 'region' ? d.ticket_count : 0);
     const countryGroup = countryDimension.group().reduceSum(d => primaryDimFilter(d) ? d.ticket_count : 0);
 
     // Charts
@@ -41,8 +37,6 @@ document.addEventListener('DOMContentLoaded', function () {
     const categoryChart = dc.rowChart('#grievance-category-chart');
     const issueTypeChart = dc.rowChart('#grievance-issue-type-chart');
     const priorityChart = dc.pieChart('#grievance-priority-chart');
-    const adminChart = dc.rowChart('#grievance-admin-chart');
-    const regionChart = dc.rowChart('#grievance-region-chart');
     const countryChart = dc.rowChart('#grievance-country-chart');
 
     // Set initial domain
@@ -51,10 +45,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
     focusChart.width(null).height(200).margins({ top: 10, right: 50, bottom: 30, left: 90 })
         .dimension(dateDimension).group(ticketsByMonthGroup)
-        .curve(d3.curveMonotoneX).transitionDuration(500)
+        .transitionDuration(500)
         .x(d3.scaleTime().domain(initialDomain))
         .round(d3.timeMonth.round).xUnits(d3.timeMonths).elasticY(true)
-        .renderHorizontalGridLines(true).rangeChart(rangeChart).brushOn(false).renderArea(true)
+        .renderArea(true)
+        .curve(d3.curveMonotoneX)
+        .mouseZoomable(true)
+        .renderHorizontalGridLines(true).rangeChart(rangeChart).brushOn(false)
         .title(function(d) {
             const formatTime = d3.timeFormat("%B %Y");
             const formatValue = d3.format(",");
@@ -63,6 +60,7 @@ document.addEventListener('DOMContentLoaded', function () {
         .on('filtered', updateTotals);
 
     focusChart.yAxis().tickFormat(d => d3.format(".2s")(d).replace('G', 'B'));
+
 
     rangeChart.width(null).height(60).margins({ top: 0, right: 50, bottom: 20, left: 90 })
         .dimension(dateDimension).group(ticketsByDayGroup).centerBar(true).gap(2)
@@ -82,19 +80,15 @@ document.addEventListener('DOMContentLoaded', function () {
         .dimension(priorityDimension).group(priorityGroup)
         .label(d => `${d.key}: ${d.value}`).on('filtered', updateTotals);
 
-    const rowChartMargins = { top: 10, right: 30, bottom: 30, left: 20 };
+    const rowChartMargins = { top: 10, right: 30, bottom: 30, left: 180 };
 
-    [categoryChart, issueTypeChart, adminChart, regionChart, countryChart].forEach(chart => {
-        chart.width(null).height(450).margins(rowChartMargins)
-            .elasticX(true).gap(10)
-            .on('filtered', updateTotals);
+    [categoryChart, issueTypeChart, countryChart].forEach(chart => {
+        chart.width(null).height(450).margins(rowChartMargins).elasticX(true).gap(10).on('filtered', updateTotals);
         chart.xAxis().ticks(4).tickFormat(d3.format(".2s"));
     });
 
     categoryChart.dimension(categoryDimension).group(categoryGroup).data(group => group.all().filter(d => d.key !== null && d.value > 0));
     issueTypeChart.dimension(issueTypeDimension).group(issueTypeGroup).data(group => group.all().filter(d => d.key !== null && d.value > 0));
-    adminChart.dimension(adminDimension).group(adminGroup).data(group => group.all().filter(d => d.key !== null && d.value > 0));
-    regionChart.dimension(regionDimension).group(regionGroup).data(group => group.all().filter(d => d.key !== null && d.value > 0));
     countryChart.dimension(countryDimension).group(countryGroup).data(group => group.top(15));
 
     function updateTotals() {

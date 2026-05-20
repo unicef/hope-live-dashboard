@@ -214,6 +214,7 @@ def save_aggregates(rows: list[dict[str, Any]], year: int, model_name: str, upda
     ModelClass = apps.get_model("analysis", model_name)
     # Deduplicate rows by unique fields to prevent "ON CONFLICT DO UPDATE command cannot affect row a second time"
     unique_rows = {}
+    default_grain = "monthly" if model_name == "DemographicAggregate" else "daily"
     for item in rows:
         item_date = item.get("date")
         if not item_date:
@@ -221,9 +222,11 @@ def save_aggregates(rows: list[dict[str, Any]], year: int, model_name: str, upda
         raw_dim_val = item.get("dimension_value")
         dim_val = "unknown" if raw_dim_val is None else str(raw_dim_val)
 
+        time_grain = item.get("time_grain") or default_grain
+
         key = (
             str(item_date),
-            item.get("time_grain", "daily"),
+            time_grain,
             item.get("country_slug", "unknown"),
             item.get("dimension_type", "unknown"),
             dim_val.strip().upper(),
