@@ -61,6 +61,12 @@ def test_financial_dashboard_loads(browser, financial_aggregates):
     browser.wait_for_element_visible("#time-focus-chart")
     browser.wait_for_element_visible("#sector-chart")
     browser.wait_for_element_visible("#country-chart")
+    browser.wait_for_element_visible("#total-amount-paid")
+    browser.wait_for_element_visible("#total-payments")
+    browser.wait_for_element_visible("#delivery-chart")
+    browser.wait_for_element_visible("#region-chart")
+    browser.wait_for_element_visible("#program-chart")
+    browser.wait_for_element_visible("#fsp-chart")
 
 
 def test_demographic_dashboard_loads(browser, demographic_aggregates):
@@ -68,6 +74,10 @@ def test_demographic_dashboard_loads(browser, demographic_aggregates):
     browser.open("/demographic/")
     browser.wait_for_element_visible("#total-individuals")
     browser.wait_for_element_visible("#total-children")
+    browser.wait_for_element_visible("#total-households")
+    browser.wait_for_element_visible("#total-pwd")
+    browser.wait_for_element_visible("#sector-individuals-chart")
+    browser.wait_for_element_visible("#country-individuals-chart")
 
 
 def test_completion_dashboard_loads(browser, completion_aggregates):
@@ -75,6 +85,8 @@ def test_completion_dashboard_loads(browser, completion_aggregates):
     browser.open("/completion/")
     browser.wait_for_element_visible("#total-reconciled")
     browser.wait_for_element_visible("#total-opened")
+    browser.wait_for_element_visible("#time-focus-chart")
+    browser.wait_for_element_visible("#status-country-chart")
 
 
 @pytest.fixture
@@ -113,6 +125,9 @@ def test_grievance_dashboard_loads(browser, grievance_aggregates, grievance_stat
     browser.wait_for_text_visible("Priority")
     browser.wait_for_text_visible("Category")
     browser.wait_for_text_visible("Issue Type")
-    browser.wait_for_text_visible("Country")
-    browser.wait_for_text_visible("Region")
-    browser.wait_for_text_visible("Admin Level 1")
+    browser.wait_for_text_visible("Tickets by Country")
+    browser.wait_for_element_visible("#grievance-status-chart")
+    browser.wait_for_element_visible("#grievance-priority-chart")
+    browser.wait_for_element_visible("#grievance-category-chart")
+    browser.wait_for_element_visible("#grievance-issue-type-chart")
+    browser.wait_for_element_visible("#grievance-country-chart")
