@@ -8,12 +8,14 @@ document.addEventListener('DOMContentLoaded', function () {
     let ndx = crossfilter([]);
     const dataCache = {};
 
+    const primaryDimFilter = d => d.dimension_type === 'sector';
     const dateDimension = ndx.dimension(d => d.date);
     const sectorDimension = ndx.dimension(d => primaryDimFilter(d) ? d.dimension_value : null);
     const countryDimension = ndx.dimension(d => d.country_slug);
-    const primaryDimFilter = d => d.dimension_type === 'sector';
     const moveMonths = dateDimension.group(d3.timeMonth);
     const individualsByMonthGroup = moveMonths.reduceSum(d => primaryDimFilter(d) ? d.total_beneficiaries : 0);
+    const moveDays = dateDimension.group(d3.timeDay);
+    const individualsByDayGroup = moveDays.reduceSum(d => primaryDimFilter(d) ? d.total_beneficiaries : 0);
     const sectorIndividualsGroup = sectorDimension.group().reduceSum(d => primaryDimFilter(d) ? d.total_beneficiaries : 0);
     const sectorChildrenGroup = sectorDimension.group().reduceSum(d => primaryDimFilter(d) ? d.total_children : 0);
     const countryIndividualsGroup = countryDimension.group().reduceSum(d => primaryDimFilter(d) ? d.total_beneficiaries : 0);
@@ -32,10 +34,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
     focusChart.width(null).height(200).margins({ top: 10, right: 50, bottom: 30, left: 90 })
         .dimension(dateDimension).group(individualsByMonthGroup)
-        .curve(d3.curveMonotoneX).transitionDuration(500)
+        .transitionDuration(500)
         .x(d3.scaleTime().domain(initialDomain))  // Set initial scale
         .round(d3.timeMonth.round).xUnits(d3.timeMonths).elasticY(true)
-        .renderHorizontalGridLines(true).rangeChart(rangeChart).brushOn(false).renderArea(true)
+        .renderArea(true)
+        .curve(d3.curveMonotoneX)
+        .mouseZoomable(true)
+        .renderHorizontalGridLines(true).rangeChart(rangeChart).brushOn(false)
         .title(function(d) {
             const formatTime = d3.timeFormat("%B %Y");
             const formatValue = d3.format(",");
@@ -46,9 +51,9 @@ document.addEventListener('DOMContentLoaded', function () {
     focusChart.yAxis().tickFormat(d => d3.format(".2s")(d).replace('G', 'B'));
 
     rangeChart.width(null).height(60).margins({ top: 0, right: 50, bottom: 20, left: 90 })
-        .dimension(dateDimension).group(individualsByMonthGroup).centerBar(true).gap(2)
+        .dimension(dateDimension).group(individualsByDayGroup).centerBar(true).gap(1)
         .x(d3.scaleTime().domain(initialDomain))  // Set initial scale
-        .round(d3.timeMonth.round).alwaysUseRounding(true).xUnits(d3.timeMonths).elasticY(true)
+        .round(d3.timeDay.round).alwaysUseRounding(true).xUnits(d3.timeDays).elasticY(true)
         .filterPrinter(function (filters) {
             const dateFmt = d3.timeFormat("%b %d, %Y");
             return `[${dateFmt(filters[0][0])} to ${dateFmt(filters[0][1])}]`;

@@ -4,15 +4,14 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('analysis', '0005_completionaggregate_demographicaggregate_and_more'),
+        ("analysis", "0005_completionaggregate_demographicaggregate_and_more"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='demographicaggregate',
-            name='total_households',
+            model_name="demographicaggregate",
+            name="total_households",
             field=models.IntegerField(default=0),
         ),
     ]

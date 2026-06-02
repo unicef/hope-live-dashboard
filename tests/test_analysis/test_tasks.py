@@ -4,12 +4,7 @@ import pytest
 import responses
 from constance import config
 
-from hope_live.analysis.models import (
-    CompletionAggregate,
-    DemographicAggregate,
-    FinancialAggregate,
-    GrievanceAggregate,
-)
+from hope_live.analysis.models import CompletionAggregate, DemographicAggregate, FinancialAggregate, GrievanceAggregate
 from hope_live.analysis.tasks import (
     _find_dataset_id_for_year,
     clear_daily_aggregates,

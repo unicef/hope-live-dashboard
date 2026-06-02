@@ -18,15 +18,30 @@ document.addEventListener('DOMContentLoaded', function () {
     const moveDays = dateDimension.group(d3.timeDay);
     const moveMonths = dateDimension.group(d3.timeMonth);
     const paymentsByDayGroup = moveDays.reduceSum(d => primaryDimFilter(d) ? d.payment_count : 0);
-    const paymentsByMonthGroup = moveMonths.reduceSum(d => primaryDimFilter(d) ? d.payment_count : 0);
-    const statusGroup = statusDimension.group().reduceSum(d => d.dimension_type === 'status' ? d.payment_count : 0);
-    const sectorStatusGroup = sectorDimension.group().reduceSum(d => d.dimension_type === 'status' ? d.payment_count : 0);
+    const reconciledGroup = moveDays.reduceSum(d => {
+        if (!primaryDimFilter(d) || !d.dimension_value) return 0;
+        const key = String(d.dimension_value).toUpperCase();
+        return (key.includes('RECONCILED') || key.includes('PAID')) ? d.payment_count : 0;
+    });
+    const openedGroup = moveDays.reduceSum(d => {
+        if (!primaryDimFilter(d) || !d.dimension_value) return 0;
+        const key = String(d.dimension_value).toUpperCase();
+        return (key.includes('OPEN') || key.includes('PENDING')) ? d.payment_count : 0;
+    });
+    const reconciledMonthGroup = moveMonths.reduceSum(d => {
+        if (!primaryDimFilter(d) || !d.dimension_value) return 0;
+        const key = String(d.dimension_value).toUpperCase();
+        return (key.includes('RECONCILED') || key.includes('PAID')) ? d.payment_count : 0;
+    });
+    const openedMonthGroup = moveMonths.reduceSum(d => {
+        if (!primaryDimFilter(d) || !d.dimension_value) return 0;
+        const key = String(d.dimension_value).toUpperCase();
+        return (key.includes('OPEN') || key.includes('PENDING')) ? d.payment_count : 0;
+    });
     const countryStatusGroup = countryDimension.group().reduceSum(d => primaryDimFilter(d) ? d.payment_count : 0);
 
     const focusChart = dc.lineChart('#time-focus-chart');
     const rangeChart = dc.barChart('#time-range-chart');
-    const statusPieChart = dc.pieChart('#reconciliation-pie-chart');
-    const sectorChart = dc.rowChart('#status-sector-chart');
     const countryChart = dc.rowChart('#status-country-chart');
 
     // Set initial domain to prevent grid line errors
@@ -34,19 +49,27 @@ document.addEventListener('DOMContentLoaded', function () {
     const initialDomain = [new Date(initialYear, 0, 1), new Date(initialYear, 11, 31)];
 
     focusChart.width(null).height(200).margins({ top: 10, right: 50, bottom: 30, left: 90 })
-        .dimension(dateDimension).group(paymentsByMonthGroup)
-        .curve(d3.curveMonotoneX).transitionDuration(500)
+        .dimension(dateDimension)
+        .group(reconciledMonthGroup, "Reconciled")
+        .stack(openedMonthGroup, "Still Opened")
+        .transitionDuration(500)
         .x(d3.scaleTime().domain(initialDomain))  // Set initial scale
         .round(d3.timeMonth.round).xUnits(d3.timeMonths).elasticY(true)
-        .renderHorizontalGridLines(true).rangeChart(rangeChart).brushOn(false).renderArea(true)
+        .renderArea(true)
+        .curve(d3.curveMonotoneX)
+        .mouseZoomable(true)
+        .renderHorizontalGridLines(true).rangeChart(rangeChart).brushOn(false)
+        .colors(d3.scaleOrdinal().domain(["Reconciled", "Still Opened"]).range(["#10b981", "#3b82f6"]))
+        .legend(new dc.Legend().x(120).y(10).itemHeight(13).gap(5))
         .title(function(d) {
             const formatTime = d3.timeFormat("%B %Y");
             const formatValue = d3.format(",");
-            return `${formatTime(d.key)}: ${formatValue(d.value)}`;
+            return `${d.layer} - ${formatTime(d.key)}: ${formatValue(d.value)}`;
         })
         .on('filtered', updateTotals);
 
     focusChart.yAxis().tickFormat(d => d3.format(".2s")(d).replace('G', 'B'));
+
 
     rangeChart.width(null).height(60).margins({ top: 0, right: 50, bottom: 20, left: 90 })
         .dimension(dateDimension).group(paymentsByDayGroup).centerBar(true).gap(2)
@@ -58,15 +81,7 @@ document.addEventListener('DOMContentLoaded', function () {
         })
         .yAxis().ticks(0);
 
-    statusPieChart.width(300).height(300).radius(100).innerRadius(40)
-        .dimension(statusDimension).group(statusGroup)
-        .label(d => `${d.key}: ${d.value}`).on('filtered', updateTotals);
-
-    sectorChart.width(null).height(450).margins({ top: 10, right: 30, bottom: 30, left: 20 })
-        .dimension(sectorDimension).group(sectorStatusGroup).elasticX(true).gap(10)
-        .data(group => group.all().filter(d => d.key !== 'N/A' && d.value > 0))
-        .on('filtered', updateTotals);
-    sectorChart.xAxis().ticks(4).tickFormat(d3.format(".2s"));
+    // Removed sectorChart and statusPieChart configurations
 
     countryChart.width(null).height(450).margins({ top: 10, right: 30, bottom: 30, left: 20 })
         .dimension(countryDimension).group(countryStatusGroup).elasticX(true).gap(10)
@@ -75,22 +90,24 @@ document.addEventListener('DOMContentLoaded', function () {
     countryChart.xAxis().ticks(4).tickFormat(d3.format(".2s"));
 
     function updateTotals() {
-        const reconciliationData = statusGroup.all();
-        let reconciled = 0;
-        let opened = 0;
+        const totalReconciled = ndx.groupAll().reduceSum(d => {
+            if (!primaryDimFilter(d) || !d.dimension_value) return 0;
+            const key = String(d.dimension_value).toUpperCase();
+            return (key.includes('RECONCILED') || key.includes('PAID')) ? d.payment_count : 0;
+        }).value();
 
-        reconciliationData.forEach(d => {
-            if (d.key === null) return;
-            const key = d.key.toUpperCase();
-            if (key.includes('RECONCILED') || key.includes('PAID')) {
-                reconciled += d.value;
-            } else if (key.includes('OPEN') || key.includes('PENDING')) {
-                opened += d.value;
-            }
-        });
+        const totalOpened = ndx.groupAll().reduceSum(d => {
+            if (!primaryDimFilter(d) || !d.dimension_value) return 0;
+            const key = String(d.dimension_value).toUpperCase();
+            return (key.includes('OPEN') || key.includes('PENDING')) ? d.payment_count : 0;
+        }).value();
 
-        document.getElementById('total-reconciled').textContent = d3.format(',')(reconciled);
-        document.getElementById('total-opened').textContent = d3.format(',')(opened);
+        const total = totalReconciled + totalOpened;
+        const reconciledPct = total > 0 ? (totalReconciled / total * 100).toFixed(1) : 0;
+        const openedPct = total > 0 ? (totalOpened / total * 100).toFixed(1) : 0;
+
+        document.getElementById('total-reconciled').textContent = `${d3.format(',')(totalReconciled)} (${reconciledPct}%)`;
+        document.getElementById('total-opened').textContent = `${d3.format(',')(totalOpened)} (${openedPct}%)`;
     }
 
     async function loadData(year, isInitial = false) {
