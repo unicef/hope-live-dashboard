@@ -1,11 +1,6 @@
 from rest_framework import serializers  # type: ignore[import-untyped]
 
-from .models import (
-    CompletionAggregate,
-    DemographicAggregate,
-    FinancialAggregate,
-    GrievanceAggregate,
-)
+from .models import CompletionAggregate, DemographicAggregate, FinancialAggregate, GrievanceAggregate
 
 
 class FinancialAggregateSerializer(serializers.ModelSerializer):  # type: ignore[misc]

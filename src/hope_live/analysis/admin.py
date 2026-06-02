@@ -22,7 +22,7 @@ class SyncDailyAggregatesJobAdmin(CeleryTaskModelAdmin):  # type: ignore[misc]
     list_filter = ("local_status",)
     readonly_fields = ("error_message",)
 
-    @button(permission=lambda r, o, handler: handler.model_admin.has_queue_permission("inspect", r, o))  # type: ignore[arg-type]
+    @button(permission=lambda r, o, handler: handler.model_admin.has_queue_permission("inspect", r, o))
     def celery_inspect(self, request: HttpRequest, pk: str) -> HttpResponse:
         try:
             return CeleryTaskModelAdmin.celery_inspect(self, request, pk)  # type: ignore[no-any-return]
@@ -30,7 +30,7 @@ class SyncDailyAggregatesJobAdmin(CeleryTaskModelAdmin):  # type: ignore[misc]
             self.message_user(request, "Celery broker not available.", level=messages.WARNING)
             return HttpResponseRedirect("..")
 
-    @button(  # type: ignore[arg-type]
+    @button(
         permission=lambda request, obj, **kw: request.user.is_superuser,
         html_attrs={"style": "background-color:#DC6C6C;color:white"},
         label="Clear Daily Aggregates",

@@ -1,18 +1,17 @@
+from typing import Any
+
 from django.db import models
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
 from drf_spectacular.utils import OpenApiExample, OpenApiParameter, extend_schema
-from rest_framework import generics, serializers  # type: ignore[import-untyped]
+from rest_framework import (
+    generics,  # type: ignore[import-untyped]
+    serializers,
+)
 from rest_framework.request import Request  # type: ignore[import-untyped]
 from rest_framework.response import Response  # type: ignore[import-untyped]
 
-from ..models import (
-    CompletionAggregate,
-    DemographicAggregate,
-    FinancialAggregate,
-    GrievanceAggregate,
-    TimeGrain,
-)
+from ..models import CompletionAggregate, DemographicAggregate, FinancialAggregate, GrievanceAggregate, TimeGrain
 from ..serializers import (
     CompletionAggregateSerializer,
     DemographicAggregateSerializer,
@@ -93,6 +92,7 @@ class AggregateListView(generics.ListAPIView):  # type: ignore[misc]
     def get_queryset(self) -> models.QuerySet:  # type: ignore[type-arg]
         dash_type = self.request.query_params.get("dashboard")
 
+        queryset: models.QuerySet[Any]
         if dash_type == "demographic":
             queryset = DemographicAggregate.objects.all()
         else:
@@ -127,4 +127,4 @@ class AggregateListView(generics.ListAPIView):  # type: ignore[misc]
         if date_to:
             queryset = queryset.filter(date__lte=date_to)
 
-        return queryset  # type: ignore[no-any-return]
+        return queryset

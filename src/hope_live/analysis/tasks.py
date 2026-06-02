@@ -296,7 +296,7 @@ def clear_daily_aggregates(user_id: int) -> str:
 
     count = 0
     for model_class in [FinancialAggregate, DemographicAggregate, CompletionAggregate, GrievanceAggregate]:
-        c, _ = model_class.objects.all().delete()
+        c, _ = model_class.objects.all().delete()  # type: ignore[attr-defined]
         count += c
 
     logger.info(f"Deleted {count} aggregate records by superuser {user.username}.")
