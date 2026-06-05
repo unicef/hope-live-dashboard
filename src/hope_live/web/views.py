@@ -1,7 +1,12 @@
 from typing import Any
 
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic import RedirectView, TemplateView
+from django.db.models import Sum
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
+from django.views.generic import TemplateView
+
+from hope_live.analysis.models import DemographicAggregate, FinancialAggregate
 
 
 class ContactView(TemplateView):
@@ -12,8 +17,31 @@ class AboutView(TemplateView):
     template_name = "pages/about.html"
 
 
-class IndexView(RedirectView):
-    pattern_name = "web:dashboard"
+@method_decorator(cache_page(60 * 60 * 6), name="dispatch")
+class IndexView(TemplateView):
+    template_name = "pages/landing.html"
+
+    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+
+        # Calculate Total Cash Disbursed (filtering by sector to avoid double counting)
+        total_usd = (
+            FinancialAggregate.objects.filter(dimension_type="sector").aggregate(total=Sum("total_usd"))["total"] or 0
+        )
+
+        # Calculate Total Individuals Reached
+        total_beneficiaries = (
+            DemographicAggregate.objects.filter(dimension_type="sector").aggregate(total=Sum("total_beneficiaries"))[
+                "total"
+            ]
+            or 0
+        )
+
+        context["total_cash_disbursed"] = f"{total_usd:,.0f}"
+        context["total_individuals_reached"] = f"{total_beneficiaries:,}"
+        context["verification_success_rate"] = 98.7  # Hardcoded for now as per mockup
+
+        return context
 
 
 class DashboardView(LoginRequiredMixin, TemplateView):

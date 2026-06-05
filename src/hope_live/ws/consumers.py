@@ -1,24 +1,22 @@
-import json
 from typing import Any
 
-from asgiref.sync import async_to_sync
-from channels.generic.websocket import JsonWebsocketConsumer
+from channels.generic.websocket import AsyncJsonWebsocketConsumer
 
 GROUP = "ALL"
 
 
-class HopeConsumer(JsonWebsocketConsumer):
-    def connect(self) -> None:
-        async_to_sync(self.channel_layer.group_add)(GROUP, self.channel_name)
-        self.accept()
-        self.send(text_data=json.dumps({"message": f"Connected via {self.channel_name}"}))
+class HopeConsumer(AsyncJsonWebsocketConsumer):
+    async def connect(self) -> None:
+        await self.channel_layer.group_add(GROUP, self.channel_name)
+        await self.accept()
+        await self.send_json({"message": f"Connected via {self.channel_name}"})
 
-    def disconnect(self, close_code: int) -> None:
-        async_to_sync(self.channel_layer.group_discard)(GROUP, self.channel_name)
+    async def disconnect(self, close_code: int) -> None:
+        await self.channel_layer.group_discard(GROUP, self.channel_name)
 
-    def receive(self, text_data: str | None = None, bytes_data: bytes | None = None, **kwargs: Any) -> None:
-        if text_data:
-            text_data_json = json.loads(text_data)
-            message = text_data_json["message"]
+    async def receive_json(self, content: dict[str, Any], **kwargs: Any) -> None:
+        message = content.get("message", "")
+        await self.send_json({"message": message})
 
-            self.send(text_data=json.dumps({"message": message}))
+    async def ui_message(self, event: dict[str, Any]) -> None:
+        await self.send_json(event["payload"])

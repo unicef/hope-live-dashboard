@@ -37,6 +37,7 @@ DEFAULTS = {
         False,
         "URL path for Django admin interface (without trailing slash)",
     ),
+    "ENABLE_WEBSOCKETS": (bool, False, False, False, "Whether to enable WebSockets support."),
     "ENVIRONMENT": (str, "production", "develop", False, "Environment"),
     "EXTRA_APPS": (list, "", "", False, ""),  # nosec
     "EXTRA_AUTHENTICATION_BACKENDS": (list, [], [], False, "Extra authentications backends enabled to add."),

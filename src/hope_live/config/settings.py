@@ -16,6 +16,7 @@ DJANGO_ADMIN_URL = env("DJANGO_ADMIN_URL")
 DEBUG = env("DEBUG")
 
 ALLOWED_HOSTS = env("ALLOWED_HOSTS")
+ENABLE_WEBSOCKETS = env("ENABLE_WEBSOCKETS")
 
 
 # Application definition
@@ -87,6 +88,7 @@ TEMPLATES = [
                 "django.contrib.messages.context_processors.messages",
                 "hope_live.analysis.context_processors.available_years",
                 "unicef_security.context_processors.current_state",
+                "hope_live.apps.settings_context",
             ],
         },
     },
@@ -99,12 +101,7 @@ CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
         "CONFIG": {
-            "hosts": [
-                {
-                    "address": env("CHANNEL_BROKER") or env("REDIS_URL"),
-                    "health_check_interval": 5,
-                }
-            ],
+            "hosts": [(env("CHANNEL_BROKER") or env("REDIS_URL")).replace("localhost", "127.0.0.1") + "?protocol=2"],
         },
     },
 }

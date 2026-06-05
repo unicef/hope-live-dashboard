@@ -1,0 +1,231 @@
+{% extends "layout.html" %}
+{% load i18n static %}
+
+{% block content %}
+<section class="relative bg-white border-b border-gray-200">
+    <div class="grid lg:grid-cols-4 min-h-[520px]">
+        <!-- Content -->
+        <div class="lg:col-span-2 flex flex-col justify-center px-8 md:px-16 py-12">
+            <h1 class="text-[100px] md:text-[140px] font-black leading-none text-[#00adef] tracking-tight mb-4">HOPE</h1>
+            <h2 class="text-2xl md:text-3xl text-[#00adef] font-light mb-6 leading-tight">
+                {% translate "Humanitarian Outcomes & Programme Evidence" %}
+            </h2>
+            <p class="text-lg text-gray-600 mb-8 max-w-lg">
+                {% translate "Data and evidence to improve the lives of children in humanitarian settings." %}
+            </p>
+            <div class="flex flex-wrap gap-4">
+                <a href="https://reporting.hope.unicef.org/" target="_blank" class="bg-[#00adef] text-white px-6 py-3 rounded-lg font-bold shadow hover:bg-sky-600 transition-colors">
+                    {% translate "Open Data Portal" %} →
+                </a>
+                <a href="https://www.unicef.org/hope-hct/about" target="_blank" class="text-[#00adef] px-6 py-3 font-bold hover:underline flex items-center gap-2">
+                    {% translate "About HOPE" %}
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                </a>
+            </div>
+        </div>
+
+        <!-- Image -->
+        <div class="lg:col-span-1 relative overflow-hidden hidden lg:block">
+            <img src="{% static 'images/background.png' %}" alt="Child portrait" class="absolute inset-0 w-full h-full object-cover">
+        </div>
+
+        <!-- Stats -->
+        <div class="lg:col-span-1 bg-gray-50 border-l border-gray-200 p-8 md:p-10 flex flex-col justify-center">
+            <h3 class="text-lg font-bold text-gray-900 mb-8">{% translate "HOPE at a glance" %}</h3>
+
+            <div class="space-y-6">
+                <div class="flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-full bg-sky-100 text-[#00adef] flex items-center justify-center shrink-0">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    </div>
+                    <div>
+                        <div class="text-xl font-bold text-gray-900">32+</div>
+                        <div class="text-sm text-gray-500">{% translate "Countries & territories" %}</div>
+                    </div>
+                </div>
+
+                <div class="flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-full bg-sky-100 text-[#00adef] flex items-center justify-center shrink-0">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+                    </div>
+                    <div>
+                        <div class="text-xl font-bold text-gray-900">120+</div>
+                        <div class="text-sm text-gray-500">{% translate "Indicators" %}</div>
+                    </div>
+                </div>
+
+                <div class="flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-full bg-sky-100 text-[#00adef] flex items-center justify-center shrink-0">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4"></path></svg>
+                    </div>
+                    <div>
+                        <div class="text-xl font-bold text-gray-900">560+</div>
+                        <div class="text-sm text-gray-500">{% translate "Data sources" %}</div>
+                    </div>
+                </div>
+
+                <div class="flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-full bg-sky-100 text-[#00adef] flex items-center justify-center shrink-0">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                    </div>
+                    <div>
+                        <div class="text-sm font-bold text-gray-900">{% translate "Updated regularly" %}</div>
+                        <div class="text-sm text-gray-500">{% translate "Latest data: June 2026" %}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="bg-gray-50 py-12 border-t border-gray-200">
+    <div class="max-w-7xl mx-auto px-6">
+
+        <!-- Global KPI Strip -->
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-12">
+            <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm">
+                <div class="text-xs text-gray-500 uppercase tracking-wider font-semibold mb-1">{% translate "Children Reached" %}</div>
+                <div class="text-2xl font-bold text-[#00adef]">{{ total_individuals_reached|default:"47M" }}</div>
+            </div>
+            <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm">
+                <div class="text-xs text-gray-500 uppercase tracking-wider font-semibold mb-1">{% translate "Households" %}</div>
+                <div class="text-2xl font-bold text-[#00adef]">15M</div>
+            </div>
+            <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm">
+                <div class="text-xs text-gray-500 uppercase tracking-wider font-semibold mb-1">{% translate "Countries" %}</div>
+                <div class="text-2xl font-bold text-[#00adef]">32</div>
+            </div>
+            <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm">
+                <div class="text-xs text-gray-500 uppercase tracking-wider font-semibold mb-1">{% translate "Assistance Delivered" %}</div>
+                <div class="text-2xl font-bold text-[#00adef]">${{ total_cash_disbursed|default:"520M" }}</div>
+            </div>
+            <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm">
+                <div class="text-xs text-gray-500 uppercase tracking-wider font-semibold mb-1">{% translate "Verified" %}</div>
+                <div class="text-2xl font-bold text-[#00adef]">{{ verification_success_rate|default:"98.7" }}%</div>
+            </div>
+            <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm">
+                <div class="text-xs text-gray-500 uppercase tracking-wider font-semibold mb-1">{% translate "Indicators" %}</div>
+                <div class="text-2xl font-bold text-[#00adef]">120</div>
+            </div>
+        </div>
+
+        <!-- Main Content Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
+
+            <!-- Interactive World Map (Spans 2 columns) -->
+            <div class="lg:col-span-2 bg-white rounded-xl border border-gray-200 shadow-sm p-6 flex flex-col">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-lg font-bold text-gray-900">{% translate "Where HOPE is active" %}</h3>
+                    <button class="text-sm text-[#00adef] font-semibold hover:underline">{% translate "Explore map" %} →</button>
+                </div>
+                <div class="flex-grow bg-sky-50 rounded-lg border border-sky-100 flex items-center justify-center min-h-[400px] text-sky-300">
+                    [ {% translate "Interactive World Map Placeholder" %} ]
+                </div>
+            </div>
+
+            <!-- Quick Links Sidebar Panel -->
+            <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 flex flex-col">
+                <h3 class="text-base font-bold text-slate-900 mb-6">{% translate "Resources & Quick Links" %}</h3>
+                <div class="space-y-2 flex-grow">
+                    <a href="https://reporting.hope.unicef.org/" target="_blank" class="flex gap-3 text-sm hover:bg-slate-50 p-2 rounded-lg transition-colors">
+                        <span class="w-2 h-2 rounded-full bg-sky-500 mt-1.5 shrink-0"></span>
+                        <div>
+                            <p class="text-slate-700 font-medium">{% translate "Reporting Portal" %}</p>
+                            <span class="text-[11px] text-slate-400">{% translate "Explore data and dashboards" %}</span>
+                        </div>
+                    </a>
+                    <a href="https://unicef.github.io/hope-documentation/" target="_blank" class="flex gap-3 text-sm hover:bg-slate-50 p-2 rounded-lg transition-colors">
+                        <span class="w-2 h-2 rounded-full bg-emerald-500 mt-1.5 shrink-0"></span>
+                        <div>
+                            <p class="text-slate-700 font-medium">{% translate "Documentation" %}</p>
+                            <span class="text-[11px] text-slate-400">{% translate "Technical guides and API docs" %}</span>
+                        </div>
+                    </a>
+                    <a href="https://www.unicef.org/hope-hct/10-introduction" target="_blank" class="flex gap-3 text-sm hover:bg-slate-50 p-2 rounded-lg transition-colors">
+                        <span class="w-2 h-2 rounded-full bg-amber-500 mt-1.5 shrink-0"></span>
+                        <div>
+                            <p class="text-slate-700 font-medium">{% translate "User Guide" %}</p>
+                            <span class="text-[11px] text-slate-400">{% translate "Learn how to use HOPE" %}</span>
+                        </div>
+                    </a>
+                    <a href="https://www.unicef.org/hope-hct/about" target="_blank" class="flex gap-3 text-sm hover:bg-slate-50 p-2 rounded-lg transition-colors">
+                        <span class="w-2 h-2 rounded-full bg-indigo-500 mt-1.5 shrink-0"></span>
+                        <div>
+                            <p class="text-slate-700 font-medium">{% translate "HOPE Public Website" %}</p>
+                            <span class="text-[11px] text-slate-400">{% translate "About the HOPE initiative" %}</span>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Featured Dashboards & Trends -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
+
+            <!-- Dashboards Grid -->
+            <div>
+                <h3 class="text-lg font-bold text-gray-900 mb-4">{% translate "Explore Dashboards" %}</h3>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <a href="{% url 'web:dashboard' %}" class="bg-white p-4 rounded-xl border border-gray-200 shadow-sm hover:border-[#00adef] hover:shadow-md transition-all group">
+                        <h4 class="font-bold text-gray-800 group-hover:text-[#00adef]">{% translate "Financial Dashboard" %}</h4>
+                        <p class="text-xs text-gray-500 mt-1">{% translate "Transfer values & logistics" %}</p>
+                    </a>
+                    <a href="{% url 'web:demographic' %}" class="bg-white p-4 rounded-xl border border-gray-200 shadow-sm hover:border-[#00adef] hover:shadow-md transition-all group">
+                        <h4 class="font-bold text-gray-800 group-hover:text-[#00adef]">{% translate "Demographics" %}</h4>
+                        <p class="text-xs text-gray-500 mt-1">{% translate "Population & households" %}</p>
+                    </a>
+                    <a href="{% url 'web:grievance' %}" class="bg-white p-4 rounded-xl border border-gray-200 shadow-sm hover:border-[#00adef] hover:shadow-md transition-all group">
+                        <h4 class="font-bold text-gray-800 group-hover:text-[#00adef]">{% translate "Accountability" %}</h4>
+                        <p class="text-xs text-gray-500 mt-1">{% translate "Feedback & grievances" %}</p>
+                    </a>
+                    <a href="{% url 'web:completion' %}" class="bg-white p-4 rounded-xl border border-gray-200 shadow-sm hover:border-[#00adef] hover:shadow-md transition-all group">
+                        <h4 class="font-bold text-gray-800 group-hover:text-[#00adef]">{% translate "Programme Quality" %}</h4>
+                        <p class="text-xs text-gray-500 mt-1">{% translate "Completion rates & metrics" %}</p>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Global Trends -->
+            <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6 flex flex-col">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-lg font-bold text-gray-900">{% translate "Global Trends" %}</h3>
+                    <select class="text-sm border-gray-300 rounded-md text-gray-600 py-1 pl-2 pr-8 focus:ring-[#00adef] focus:border-[#00adef]">
+                        <option>5 years</option>
+                        <option>1 year</option>
+                    </select>
+                </div>
+                <div class="flex-grow bg-gray-50 rounded-lg border border-gray-100 flex items-center justify-center min-h-[200px] text-gray-400">
+                    [ {% translate "Trends Chart Placeholder" %} ]
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Data Catalogue -->
+        <div>
+            <h3 class="text-lg font-bold text-gray-900 mb-4">{% translate "Browse Data" %}</h3>
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+                <a href="https://reporting.hope.unicef.org/" target="_blank" class="bg-white py-4 text-center rounded-xl border border-slate-200 shadow-sm hover:bg-sky-50/50 hover:border-sky-300 transition-colors font-semibold text-slate-700 text-xs">{% translate "Indicators" %}</a>
+                <a href="https://reporting.hope.unicef.org/" target="_blank" class="bg-white py-4 text-center rounded-xl border border-slate-200 shadow-sm hover:bg-sky-50/50 hover:border-sky-300 transition-colors font-semibold text-slate-700 text-xs">{% translate "Datasets" %}</a>
+                <a href="https://www.unicef.org/hope-hct/about" target="_blank" class="bg-white py-4 text-center rounded-xl border border-slate-200 shadow-sm hover:bg-sky-50/50 hover:border-sky-300 transition-colors font-semibold text-slate-700 text-xs">{% translate "Methodology" %}</a>
+                <a href="https://reporting.hope.unicef.org/" target="_blank" class="bg-white py-4 text-center rounded-xl border border-slate-200 shadow-sm hover:bg-sky-50/50 hover:border-sky-300 transition-colors font-semibold text-slate-700 text-xs">{% translate "Downloads" %}</a>
+                <a href="https://reporting.hope.unicef.org/" target="_blank" class="bg-white py-4 text-center rounded-xl border border-slate-200 shadow-sm hover:bg-sky-50/50 hover:border-sky-300 transition-colors font-semibold text-slate-700 text-xs">{% translate "Data & API" %}</a>
+                <a href="https://unicef.github.io/hope-documentation/" target="_blank" class="bg-white py-4 text-center rounded-xl border border-slate-200 shadow-sm hover:bg-sky-50/50 hover:border-sky-300 transition-colors font-semibold text-slate-700 text-xs">{% translate "Documentation" %}</a>
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock content %}
+
+{% block footer %}
+<footer class="bg-white border-t border-gray-200 text-gray-500 py-8 px-8">
+    <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center text-sm font-medium">
+        <p>UNICEF © {% now "Y" %}</p>
+        <div class="space-x-8 mt-4 md:mt-0">
+            <a href="{% url 'web:about' %}" class="hover:text-[#00adef] transition-colors">{% translate "About HOPE" %}</a>
+            <a href="{% url 'web:contacts' %}" class="hover:text-[#00adef] transition-colors">{% translate "Contact Us" %}</a>
+        </div>
+    </div>
+</footer>
+{% endblock footer %}

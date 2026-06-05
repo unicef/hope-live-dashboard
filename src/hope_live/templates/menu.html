@@ -1,55 +1,67 @@
-{% load i18n %}
-<input id="nav-toggle" type="checkbox" checked class="peer hidden" />
+{% load i18n static %}
+<input id="nav-toggle" type="checkbox" class="peer hidden" />
+
+<!-- CHANGED: w-16 to w-14 -->
 <aside
-    class="z-50 bg-white shadow-lg h-full transition-all duration-300 ease-in-out w-0 overflow-hidden peer-checked:w-64 shrink-0"
+    class="z-50 bg-primary shadow-lg h-full transition-all duration-300 ease-in-out w-14 overflow-hidden peer-checked:w-64 shrink-0"
     aria-label="Sidebar">
-    <div class="px-3 w-64 py-4 flex flex-col justify-between bg-white h-full">
-        <ul class="space-y-2 flex-grow">
-            <!-- Dashboards -->
-            <li>
-                <a href='{% url "web:dashboard" %}' class="flex items-center p-2 text-base font-semibold text-gray-900 rounded-lg hover:bg-gray-100 group">
-                    <svg class="w-6 h-6 text-gray-500 transition duration-75 group-hover:text-gray-900" fill="currentColor" viewBox="0 0 20 20">
-                        <path d="M2 10a8 8 0 018-8v8h8a8 8 0 11-16 0z"></path>
-                        <path d="M12 2.252A8.014 8.014 0 0117.748 8H12V2.252z"></path>
-                    </svg>
-                    <span class="ml-3">{% translate "Financial Dashboard" %}</span>
-                </a>
-            </li>
-            <li>
-                <a href='{% url "web:demographic" %}' class="flex items-center p-2 text-base font-semibold text-gray-900 rounded-lg hover:bg-gray-100 group">
-                    <svg class="w-6 h-6 text-gray-500 transition duration-75 group-hover:text-gray-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
-                    </svg>
-                    <span class="ml-3">{% translate "Demographic" %}</span>
-                </a>
-            </li>
-            <li>
-                <a href='{% url "web:completion" %}' class="flex items-center p-2 text-base font-semibold text-gray-900 rounded-lg hover:bg-gray-100 group">
-                    <svg class="w-6 h-6 text-gray-500 transition duration-75 group-hover:text-gray-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                    </svg>
-                    <span class="ml-3">{% translate "Completion Rate" %}</span>
-                </a>
-            </li>
-            <li>
-                <a href='{% url "web:grievance" %}' class="flex items-center p-2 text-base font-semibold text-gray-900 rounded-lg hover:bg-gray-100 group">
-                    <svg class="w-6 h-6 text-gray-500 transition duration-75 group-hover:text-gray-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path>
-                    </svg>
-                    <span class="ml-3">{% translate "Grievance" %}</span>
-                </a>
-            </li>
-        </ul>
+
+    <!-- CHANGED: w-64 to w-full so it respects the parent's width -->
+    <div class="px-3 w-full py-4 flex flex-col justify-between bg-primary h-full overflow-hidden">
+        <div>
+            <div class="flex items-center justify-center p-2 text-white shrink-0">
+                {# Assumes white-variant logos are available #}
+                <img src="{% static 'images/logo-white.png' %}" alt="UNICEF Logo" class="h-12 hidden peer-checked:block">
+                <img src="{% static 'images/img.svg' %}" alt="HOPE Logo" class="h-10 peer-checked:hidden">
+            </div>
+            <ul class="space-y-2 flex-grow mt-8">
+                <li>
+                    <a href='{% url "web:index" %}' class="flex items-center p-2 text-base font-semibold text-white rounded-lg bg-sky-600 group whitespace-nowrap overflow-hidden">
+                        <svg class="w-5 h-5 shrink-0 text-white transition duration-75" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
+                        <span class="ml-3 shrink-0">{% translate "Home" %}</span>
+                    </a>
+                </li>
+                <li>
+                    <a href='https://reporting.hope.unicef.org/' target="_blank" class="flex items-center p-2 text-base font-semibold text-white rounded-lg hover:bg-sky-600 group whitespace-nowrap overflow-hidden">
+                        <svg class="w-5 h-5 shrink-0 text-white transition duration-75" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
+                        <span class="ml-3 shrink-0">{% translate "Dashboards" %}</span>
+                    </a>
+                </li>
+                <li>
+                    <a href='#' class="flex items-center p-2 text-base font-semibold text-white rounded-lg hover:bg-sky-600 group whitespace-nowrap overflow-hidden">
+                        <svg class="w-5 h-5 shrink-0 text-white transition duration-75" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="ml-3 shrink-0">{% translate "Countries" %}</span>
+                    </a>
+                </li>
+                <li>
+                    <a href='https://reporting.hope.unicef.org/' target="_blank" class="flex items-center p-2 text-base font-semibold text-white rounded-lg hover:bg-sky-600 group whitespace-nowrap overflow-hidden">
+                        <svg class="w-5 h-5 shrink-0 text-white transition duration-75" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                        <span class="ml-3 shrink-0">{% translate "Data & API" %}</span>
+                    </a>
+                </li>
+                <li>
+                    <a href='https://unicef.github.io/hope-documentation/' target="_blank" class="flex items-center p-2 text-base font-semibold text-white rounded-lg hover:bg-sky-600 group whitespace-nowrap overflow-hidden">
+                        <svg class="w-5 h-5 shrink-0 text-white transition duration-75" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
+                        <span class="ml-3 shrink-0">{% translate "Documentation" %}</span>
+                    </a>
+                </li>
+                <li>
+                    <a href='https://www.unicef.org/hope-hct/about' target="_blank" class="flex items-center p-2 text-base font-semibold text-white rounded-lg hover:bg-sky-600 group whitespace-nowrap overflow-hidden">
+                        <svg class="w-5 h-5 shrink-0 text-white transition duration-75" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="ml-3 shrink-0">{% translate "About HOPE" %}</span>
+                    </a>
+                </li>
+        </div>
 
         <!-- Bottom Menu: Admin & Sign Out -->
-        <ul class="space-y-2 mt-auto pt-4 border-t border-gray-200">
+        <ul class="space-y-2 mt-auto pt-4 border-t border-sky-500">
             {% if request.user.is_staff %}
             <li>
-                <a href='{% url "admin:index" %}' target="_blank" class="flex items-center p-2 text-base font-semibold text-gray-900 rounded-lg hover:bg-gray-100 group">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-gray-500 transition duration-75 group-hover:text-gray-900" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <a href='{% url "admin:index" %}' target="_blank" class="flex items-center p-2 text-base font-semibold text-white rounded-lg hover:bg-sky-600 group whitespace-nowrap overflow-hidden">
+                    <svg class="w-5 h-5 shrink-0 text-white transition duration-75" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12.75 11.25 15 15 9.75m-3-7.036A11.959 11.959 0 0 1 3.598 6 11.99 11.99 0 0 0 3 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285Z" />
                     </svg>
-                    <span class="ml-3">{% translate "Admin" %}</span>
+                    <span class="ml-3 shrink-0">{% translate "Admin" %}</span>
                 </a>
             </li>
             {% endif %}
@@ -57,23 +69,22 @@
                 {% if user.is_authenticated %}
                 <form action="{% url 'web:logout' %}" method="post" class="w-full">
                     {% csrf_token %}
-                    <button type="submit" class="flex items-center w-full p-2 text-base font-semibold text-gray-900 rounded-lg hover:bg-gray-100 group">
-                        <svg class="w-6 h-6 text-gray-500 transition duration-75 group-hover:text-gray-900" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <button type="submit" class="flex items-center w-full p-2 text-base font-semibold text-white rounded-lg hover:bg-sky-600 group whitespace-nowrap overflow-hidden">
+                        <svg class="w-5 h-5 shrink-0 text-white transition duration-75" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-6a2.25 2.25 0 0 0-2.25 2.25v13.5A2.25 2.25 0 0 0 7.5 21h6a2.25 2.25 0 0 0 2.25-2.25V15m3 0 2.062-5M12 12h9.75" />
                         </svg>
-                        <span class="ml-3 whitespace-nowrap">{% translate "Sign Out" %}</span>
+                        <span class="ml-3 shrink-0">{% translate "Sign Out" %}</span>
                     </button>
                 </form>
                 {% else %}
-                <a href='{% url "web:login" %}' class="flex items-center p-2 text-base font-semibold text-gray-900 rounded-lg hover:bg-gray-100 group">
-                    <svg class="w-6 h-6 text-gray-500 transition duration-75 group-hover:text-gray-900" fill="currentColor" viewBox="0 0 20 20">
+                <a href='{% url "web:login" %}' class="flex items-center p-2 text-base font-semibold text-white rounded-lg hover:bg-sky-600 group whitespace-nowrap overflow-hidden">
+                    <svg class="w-5 h-5 shrink-0 text-white transition duration-75" fill="currentColor" viewBox="0 0 20 20">
                         <path fill-rule="evenodd" d="M3 3a1 1 0 00-1 1v12a1 1 0 102 0V4a1 1 0 00-1-1zm10.293 9.293a1 1 0 001.414 1.414l3-3a1 1 0 000-1.414l-3-3a1 1 0 10-1.414 1.414L14.586 9H7a1 1 0 100 2h7.586l-1.293 1.293z" clip-rule="evenodd"></path>
                     </svg>
-                    <span class="ml-3 whitespace-nowrap">{% translate "Sign In" %}</span>
+                    <span class="ml-3 shrink-0">{% translate "Sign In" %}</span>
                 </a>
                 {% endif %}
             </li>
         </ul>
     </div>
-
 </aside>

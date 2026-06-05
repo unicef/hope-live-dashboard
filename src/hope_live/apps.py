@@ -14,6 +14,10 @@ class Config(AppConfig):
     verbose_name = "Security"
 
 
+def settings_context(request: Any) -> dict[str, Any]:
+    return {"ENABLE_WEBSOCKETS": settings.ENABLE_WEBSOCKETS}
+
+
 def on_login(sender: type[Model], user: "User", **kwargs: Any) -> None:
     if user.email in settings.SUPERUSERS or user.username in settings.SUPERUSERS:
         user.is_superuser = True

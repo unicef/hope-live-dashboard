@@ -1,6 +1,5 @@
 import pytest
 from django.test import RequestFactory
-from django.urls import reverse
 
 from hope_live.web.views import AboutView, ContactView, DetailsView, IndexView, TransfersView
 
@@ -25,7 +24,7 @@ def test_simple_template_views(user_factory):
 
 
 @pytest.mark.django_db
-def test_index_redirect_view(user_factory):
+def test_index_view(user_factory):
     user = user_factory()
     request = RequestFactory().get("/")
     request.user = user
@@ -33,5 +32,4 @@ def test_index_redirect_view(user_factory):
     view = IndexView.as_view()
     response = view(request)
 
-    assert response.status_code == 302
-    assert response.url == reverse("web:dashboard")
+    assert response.status_code == 200
