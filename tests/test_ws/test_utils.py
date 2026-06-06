@@ -22,7 +22,7 @@ async def test_notify_ui(message):
 
     with patch("channels.layers.get_channel_layer", return_value=mock_channel_layer):
         await notify_ui(message)
-        mock_channel_layer.group_send.assert_called_once_with("ALL", {"type": "send.json", "payload": message})
+        mock_channel_layer.group_send.assert_called_once_with("ALL", {"type": "ui.message", "payload": message})
 
 
 @pytest.mark.asyncio
@@ -33,7 +33,7 @@ async def test_notify_ui_with_args_kwargs():
     with patch("channels.layers.get_channel_layer", return_value=mock_channel_layer):
         test_message = {"type": "test.message", "data": {"key": "value"}}
         await notify_ui(test_message, "arg1", "arg2", extra="value")
-        mock_channel_layer.group_send.assert_called_once_with("ALL", {"type": "send.json", "payload": test_message})
+        mock_channel_layer.group_send.assert_called_once_with("ALL", {"type": "ui.message", "payload": test_message})
 
 
 @pytest.mark.asyncio

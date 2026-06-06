@@ -9,16 +9,15 @@ from hope_live.ws.consumers import HopeConsumer
 @pytest.mark.asyncio
 async def test_hope_consumer_connect_disconnect_receive():
     consumer = HopeConsumer()
+    consumer.base_send = AsyncMock()
     consumer.channel_layer = MagicMock()
     consumer.channel_layer.group_add = AsyncMock()
     consumer.channel_layer.group_discard = AsyncMock()
     consumer.channel_name = "test_channel"
-    consumer.accept = AsyncMock()
-    consumer.send = AsyncMock()
 
     await consumer.connect()
     consumer.channel_layer.group_add.assert_called_once_with(ANY, "test_channel")
-    consumer.accept.assert_called_once()
+    consumer.base_send.assert_any_call({"type": "websocket.accept", "subprotocol": None})
 
     if hasattr(consumer, "receive"):
         await consumer.receive(text_data=json.dumps({"message": "hello"}))

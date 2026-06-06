@@ -23,10 +23,52 @@
             font-size: 13px !important;
         }
 
-        /* 2. Make the Sidebar text more bold and distinct */
+        /* 2. Sidebar styling overrides to match image1.png */
+        aside {
+            background-color: #00adef !important;
+            color: #ffffff !important;
+        }
+
         aside span {
-            color: #111827 !important; /* Gray-900 */
-            font-weight: 600 !important;
+            color: inherit !important;
+            font-weight: inherit !important;
+        }
+
+        aside nav a,
+        aside ul li a,
+        aside ul li button {
+            background-color: transparent !important;
+            color: rgba(255, 255, 255, 0.8) !important;
+            padding: 10px 16px !important;
+            border-radius: 8px !important;
+            font-weight: 500 !important;
+        }
+
+        aside nav a:hover,
+        aside ul li a:hover,
+        aside ul li button:hover {
+            background-color: rgba(255, 255, 255, 0.1) !important;
+            color: #ffffff !important;
+        }
+
+        aside nav a.bg-white\/20 {
+            background-color: rgba(255, 255, 255, 0.2) !important;
+            color: #ffffff !important;
+            font-weight: 700 !important;
+        }
+
+        /* Sidebar collapse display controls */
+        #nav-toggle:not(:checked) ~ aside span,
+        #nav-toggle:not(:checked) ~ aside .peer-checked\:block {
+            display: none !important;
+        }
+
+        #nav-toggle:checked ~ aside .peer-checked\:hidden {
+            display: none !important;
+        }
+
+        #nav-toggle:checked ~ aside .peer-checked\:block {
+            display: flex !important;
         }
 
         /* 3. Increase contrast for the Year Tabs */

@@ -2,86 +2,99 @@
 {% load i18n static %}
 
 {% block content %}
-<section class="relative bg-white border-b border-gray-200">
-    <div class="grid lg:grid-cols-4 min-h-[520px]">
-        <!-- Content -->
-        <div class="lg:col-span-2 flex flex-col justify-center px-8 md:px-16 py-12">
-            <h1 class="text-[100px] md:text-[140px] font-black leading-none text-[#00adef] tracking-tight mb-4">HOPE</h1>
-            <h2 class="text-2xl md:text-3xl text-[#00adef] font-light mb-6 leading-tight">
-                {% translate "Humanitarian Outcomes & Programme Evidence" %}
-            </h2>
-            <p class="text-lg text-gray-600 mb-8 max-w-lg">
+<!-- 1. Hero Section -->
+<div class="grid grid-cols-12 bg-white border-b">
+    
+    <!-- Left: Title, Description, and CTAs -->
+    <div class="col-span-12 lg:col-span-8 p-10 bg-sky-50 flex flex-col justify-center min-h-[400px]">
+        <div class="max-w-xl">
+            <div class="flex items-center gap-6 mb-6">
+                <h1 class="text-7xl lg:text-8xl font-black text-[#00adef] tracking-tight">HOPE</h1>
+                <h2 class="text-xl lg:text-2xl font-medium text-[#00adef] leading-snug border-l-2 border-[#00adef] pl-6">
+                    {% translate "Humanitarian" %}<br>
+                    {% translate "Outcomes for" %}<br>
+                    {% translate "Children" %}
+                </h2>
+            </div>
+            
+            <p class="text-lg text-gray-750 mb-8 max-w-md">
                 {% translate "Data and evidence to improve the lives of children in humanitarian settings." %}
             </p>
-            <div class="flex flex-wrap gap-4">
-                <a href="https://reporting.hope.unicef.org/" target="_blank" class="bg-[#00adef] text-white px-6 py-3 rounded-lg font-bold shadow hover:bg-sky-600 transition-colors">
-                    {% translate "Open Data Portal" %} →
+            
+            <div class="flex items-center gap-4">
+                <a href="{% url 'web:dashboard' %}" class="bg-[#00adef] text-white px-6 py-3 rounded-lg font-bold text-sm shadow hover:bg-sky-600 transition-colors flex items-center gap-2">
+                    {% translate "Explore the data" %} 
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
                 </a>
-                <a href="https://www.unicef.org/hope-hct/about" target="_blank" class="text-[#00adef] px-6 py-3 font-bold hover:underline flex items-center gap-2">
-                    {% translate "About HOPE" %}
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                <a href="#" class="text-[#00adef] font-semibold text-sm hover:underline flex items-center gap-1">
+                    {% translate "About HOPE" %} 
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                 </a>
-            </div>
-        </div>
-
-        <!-- Image -->
-        <div class="lg:col-span-1 relative overflow-hidden hidden lg:block">
-            <img src="{% static 'images/background.png' %}" alt="Child portrait" class="absolute inset-0 w-full h-full object-cover">
-        </div>
-
-        <!-- Stats -->
-        <div class="lg:col-span-1 bg-gray-50 border-l border-gray-200 p-8 md:p-10 flex flex-col justify-center">
-            <h3 class="text-lg font-bold text-gray-900 mb-8">{% translate "HOPE at a glance" %}</h3>
-
-            <div class="space-y-6">
-                <div class="flex items-start gap-4">
-                    <div class="w-10 h-10 rounded-full bg-sky-100 text-[#00adef] flex items-center justify-center shrink-0">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                    </div>
-                    <div>
-                        <div class="text-xl font-bold text-gray-900">32+</div>
-                        <div class="text-sm text-gray-500">{% translate "Countries & territories" %}</div>
-                    </div>
-                </div>
-
-                <div class="flex items-start gap-4">
-                    <div class="w-10 h-10 rounded-full bg-sky-100 text-[#00adef] flex items-center justify-center shrink-0">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
-                    </div>
-                    <div>
-                        <div class="text-xl font-bold text-gray-900">120+</div>
-                        <div class="text-sm text-gray-500">{% translate "Indicators" %}</div>
-                    </div>
-                </div>
-
-                <div class="flex items-start gap-4">
-                    <div class="w-10 h-10 rounded-full bg-sky-100 text-[#00adef] flex items-center justify-center shrink-0">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4"></path></svg>
-                    </div>
-                    <div>
-                        <div class="text-xl font-bold text-gray-900">560+</div>
-                        <div class="text-sm text-gray-500">{% translate "Data sources" %}</div>
-                    </div>
-                </div>
-
-                <div class="flex items-start gap-4">
-                    <div class="w-10 h-10 rounded-full bg-sky-100 text-[#00adef] flex items-center justify-center shrink-0">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                    </div>
-                    <div>
-                        <div class="text-sm font-bold text-gray-900">{% translate "Updated regularly" %}</div>
-                        <div class="text-sm text-gray-500">{% translate "Latest data: June 2026" %}</div>
-                    </div>
-                </div>
             </div>
         </div>
     </div>
-</section>
+
+    <!-- Middle: Child Portrait Image -->
+    <div class="col-span-12 md:col-span-6 lg:col-span-2 relative min-h-[300px] lg:min-h-0">
+        <img
+            src="{% static 'images/background.png' %}"
+            class="absolute inset-0 w-full h-full object-cover"
+            alt="Child"
+        >
+    </div>
+
+    <!-- Right: Stats / HOPE at a Glance -->
+    <div class="col-span-12 md:col-span-6 lg:col-span-2 bg-white p-8 border-l flex flex-col justify-center min-h-[300px] lg:min-h-0">
+        <h3 class="font-bold text-gray-900 mb-6 text-lg">{% translate "HOPE at a glance" %}</h3>
+        
+        <ul class="space-y-6">
+            <li class="flex items-start gap-4">
+                <div class="w-10 h-10 rounded-full bg-sky-100 flex items-center justify-center shrink-0 text-[#00adef]">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                </div>
+                <div>
+                    <div class="font-bold text-gray-900 text-lg leading-none mb-1">170+</div>
+                    <div class="text-xs text-gray-500">{% translate "Countries & territories" %}</div>
+                </div>
+            </li>
+            
+            <li class="flex items-start gap-4">
+                <div class="w-10 h-10 rounded-full bg-sky-100 flex items-center justify-center shrink-0 text-[#00adef]">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16 8v8m-4-5v5m-4-2v2m-2 4h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                </div>
+                <div>
+                    <div class="font-bold text-gray-900 text-lg leading-none mb-1">450+</div>
+                    <div class="text-xs text-gray-500">{% translate "Indicators" %}</div>
+                </div>
+            </li>
+            
+            <li class="flex items-start gap-4">
+                <div class="w-10 h-10 rounded-full bg-sky-100 flex items-center justify-center shrink-0 text-[#00adef]">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4"/></svg>
+                </div>
+                <div>
+                    <div class="font-bold text-gray-900 text-lg leading-none mb-1">30+</div>
+                    <div class="text-xs text-gray-500">{% translate "Data sources" %}</div>
+                </div>
+            </li>
+            
+            <li class="flex items-start gap-4 pt-4 border-t border-gray-200">
+                <div class="w-10 h-10 rounded-full bg-sky-100 flex items-center justify-center shrink-0 text-[#00adef]">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                </div>
+                <div>
+                    <div class="font-bold text-gray-900 text-sm leading-none mb-1">{% translate "Updated regularly" %}</div>
+                    <div class="text-xs text-gray-500">{% translate "Latest data: May 2026" %}</div>
+                </div>
+            </li>
+        </ul>
+    </div>
+</div>
 
 <div class="bg-gray-50 py-12 border-t border-gray-200">
     <div class="max-w-7xl mx-auto px-6">
 
-        <!-- Global KPI Strip -->
+        <!-- 2. Global KPI Strip -->
         <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-12">
             <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm">
                 <div class="text-xs text-gray-500 uppercase tracking-wider font-semibold mb-1">{% translate "Children Reached" %}</div>
@@ -109,9 +122,9 @@
             </div>
         </div>
 
-        <!-- Main Content Grid -->
+        <!-- 3. Map + Updates -->
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
-
+            
             <!-- Interactive World Map (Spans 2 columns) -->
             <div class="lg:col-span-2 bg-white rounded-xl border border-gray-200 shadow-sm p-6 flex flex-col">
                 <div class="flex justify-between items-center mb-4">
@@ -123,62 +136,81 @@
                 </div>
             </div>
 
-            <!-- Quick Links Sidebar Panel -->
+            <!-- Latest Updates & Alerts (1 column) -->
             <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 flex flex-col">
-                <h3 class="text-base font-bold text-slate-900 mb-6">{% translate "Resources & Quick Links" %}</h3>
-                <div class="space-y-2 flex-grow">
-                    <a href="https://reporting.hope.unicef.org/" target="_blank" class="flex gap-3 text-sm hover:bg-slate-50 p-2 rounded-lg transition-colors">
-                        <span class="w-2 h-2 rounded-full bg-sky-500 mt-1.5 shrink-0"></span>
-                        <div>
-                            <p class="text-slate-700 font-medium">{% translate "Reporting Portal" %}</p>
-                            <span class="text-[11px] text-slate-400">{% translate "Explore data and dashboards" %}</span>
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-base font-bold text-slate-900">{% translate "Latest updates & alerts" %}</h3>
+                    <a href="#" class="text-xs text-[#00adef] font-semibold hover:underline">{% translate "View all" %} →</a>
+                </div>
+                <div class="space-y-6 flex-grow">
+                    <!-- Update 1: Alert -->
+                    <div class="flex gap-4">
+                        <div class="w-10 h-10 rounded-full bg-red-50 flex items-center justify-center shrink-0 text-red-500">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
                         </div>
-                    </a>
-                    <a href="https://unicef.github.io/hope-documentation/" target="_blank" class="flex gap-3 text-sm hover:bg-slate-50 p-2 rounded-lg transition-colors">
-                        <span class="w-2 h-2 rounded-full bg-emerald-500 mt-1.5 shrink-0"></span>
                         <div>
-                            <p class="text-slate-700 font-medium">{% translate "Documentation" %}</p>
-                            <span class="text-[11px] text-slate-400">{% translate "Technical guides and API docs" %}</span>
+                            <div class="flex items-center gap-2 mb-1">
+                                <span class="bg-red-100 text-red-700 text-[10px] font-bold px-2 py-0.5 rounded">{% translate "Alert" %}</span>
+                                <span class="text-xs text-gray-400">3 days ago</span>
+                            </div>
+                            <p class="text-sm text-slate-700 font-medium leading-tight">{% translate "Severe flooding in Southern Sudan affects more than 700,000 people, including 250,000 children." %}</p>
+                            <a href="#" class="text-xs text-[#00adef] hover:underline font-semibold mt-1 inline-block">{% translate "View details" %} →</a>
                         </div>
-                    </a>
-                    <a href="https://www.unicef.org/hope-hct/10-introduction" target="_blank" class="flex gap-3 text-sm hover:bg-slate-50 p-2 rounded-lg transition-colors">
-                        <span class="w-2 h-2 rounded-full bg-amber-500 mt-1.5 shrink-0"></span>
+                    </div>
+
+                    <!-- Update 2: Report -->
+                    <div class="flex gap-4">
+                        <div class="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center shrink-0 text-[#00adef]">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                        </div>
                         <div>
-                            <p class="text-slate-700 font-medium">{% translate "User Guide" %}</p>
-                            <span class="text-[11px] text-slate-400">{% translate "Learn how to use HOPE" %}</span>
+                            <div class="flex items-center gap-2 mb-1">
+                                <span class="bg-blue-100 text-blue-700 text-[10px] font-bold px-2 py-0.5 rounded">{% translate "Report" %}</span>
+                                <span class="text-xs text-gray-400">1 week ago</span>
+                                <p class="text-sm text-slate-700 font-medium leading-tight">{% translate "HOPE Data Update - May 2026" %}</p>
+                            </div>
+                            <a href="#" class="text-xs text-[#00adef] hover:underline font-semibold mt-1 inline-block">{% translate "View details" %} →</a>
                         </div>
-                    </a>
-                    <a href="https://www.unicef.org/hope-hct/about" target="_blank" class="flex gap-3 text-sm hover:bg-slate-50 p-2 rounded-lg transition-colors">
-                        <span class="w-2 h-2 rounded-full bg-indigo-500 mt-1.5 shrink-0"></span>
+                    </div>
+
+                    <!-- Update 3: Data update -->
+                    <div class="flex gap-4">
+                        <div class="w-10 h-10 rounded-full bg-emerald-50 flex items-center justify-center shrink-0 text-emerald-500">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 00-2 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+                        </div>
                         <div>
-                            <p class="text-slate-700 font-medium">{% translate "HOPE Public Website" %}</p>
-                            <span class="text-[11px] text-slate-400">{% translate "About the HOPE initiative" %}</span>
+                            <div class="flex items-center gap-2 mb-1">
+                                <span class="bg-emerald-100 text-emerald-700 text-[10px] font-bold px-2 py-0.5 rounded">{% translate "Data update" %}</span>
+                                <span class="text-xs text-gray-400">2 weeks ago</span>
+                            </div>
+                            <p class="text-sm text-slate-700 font-medium leading-tight">{% translate "New WASH indicators now available for 15 countries." %}</p>
+                            <a href="#" class="text-xs text-[#00adef] hover:underline font-semibold mt-1 inline-block">{% translate "View details" %} →</a>
                         </div>
-                    </a>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <!-- Featured Dashboards & Trends -->
+        <!-- 4. Dashboards + Trends -->
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
-
+            
             <!-- Dashboards Grid -->
             <div>
                 <h3 class="text-lg font-bold text-gray-900 mb-4">{% translate "Explore Dashboards" %}</h3>
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <a href="{% url 'web:dashboard' %}" class="bg-white p-4 rounded-xl border border-gray-200 shadow-sm hover:border-[#00adef] hover:shadow-md transition-all group">
+                <div class="grid grid-cols-2 gap-6">
+                    <a href="{% url 'web:dashboard' %}" class="bg-white p-6 h-24 flex flex-col justify-center rounded-xl border border-gray-200 shadow-sm hover:border-[#00adef] hover:shadow-md transition-all group">
                         <h4 class="font-bold text-gray-800 group-hover:text-[#00adef]">{% translate "Financial Dashboard" %}</h4>
                         <p class="text-xs text-gray-500 mt-1">{% translate "Transfer values & logistics" %}</p>
                     </a>
-                    <a href="{% url 'web:demographic' %}" class="bg-white p-4 rounded-xl border border-gray-200 shadow-sm hover:border-[#00adef] hover:shadow-md transition-all group">
+                    <a href="{% url 'web:demographic' %}" class="bg-white p-6 h-24 flex flex-col justify-center rounded-xl border border-gray-200 shadow-sm hover:border-[#00adef] hover:shadow-md transition-all group">
                         <h4 class="font-bold text-gray-800 group-hover:text-[#00adef]">{% translate "Demographics" %}</h4>
                         <p class="text-xs text-gray-500 mt-1">{% translate "Population & households" %}</p>
                     </a>
-                    <a href="{% url 'web:grievance' %}" class="bg-white p-4 rounded-xl border border-gray-200 shadow-sm hover:border-[#00adef] hover:shadow-md transition-all group">
+                    <a href="{% url 'web:grievance' %}" class="bg-white p-6 h-24 flex flex-col justify-center rounded-xl border border-gray-200 shadow-sm hover:border-[#00adef] hover:shadow-md transition-all group">
                         <h4 class="font-bold text-gray-800 group-hover:text-[#00adef]">{% translate "Accountability" %}</h4>
                         <p class="text-xs text-gray-500 mt-1">{% translate "Feedback & grievances" %}</p>
                     </a>
-                    <a href="{% url 'web:completion' %}" class="bg-white p-4 rounded-xl border border-gray-200 shadow-sm hover:border-[#00adef] hover:shadow-md transition-all group">
+                    <a href="{% url 'web:completion' %}" class="bg-white p-6 h-24 flex flex-col justify-center rounded-xl border border-gray-200 shadow-sm hover:border-[#00adef] hover:shadow-md transition-all group">
                         <h4 class="font-bold text-gray-800 group-hover:text-[#00adef]">{% translate "Programme Quality" %}</h4>
                         <p class="text-xs text-gray-500 mt-1">{% translate "Completion rates & metrics" %}</p>
                     </a>
@@ -198,19 +230,44 @@
                     [ {% translate "Trends Chart Placeholder" %} ]
                 </div>
             </div>
-
         </div>
 
-        <!-- Data Catalogue -->
-        <div>
-            <h3 class="text-lg font-bold text-gray-900 mb-4">{% translate "Browse Data" %}</h3>
-            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-                <a href="https://reporting.hope.unicef.org/" target="_blank" class="bg-white py-4 text-center rounded-xl border border-slate-200 shadow-sm hover:bg-sky-50/50 hover:border-sky-300 transition-colors font-semibold text-slate-700 text-xs">{% translate "Indicators" %}</a>
-                <a href="https://reporting.hope.unicef.org/" target="_blank" class="bg-white py-4 text-center rounded-xl border border-slate-200 shadow-sm hover:bg-sky-50/50 hover:border-sky-300 transition-colors font-semibold text-slate-700 text-xs">{% translate "Datasets" %}</a>
-                <a href="https://www.unicef.org/hope-hct/about" target="_blank" class="bg-white py-4 text-center rounded-xl border border-slate-200 shadow-sm hover:bg-sky-50/50 hover:border-sky-300 transition-colors font-semibold text-slate-700 text-xs">{% translate "Methodology" %}</a>
-                <a href="https://reporting.hope.unicef.org/" target="_blank" class="bg-white py-4 text-center rounded-xl border border-slate-200 shadow-sm hover:bg-sky-50/50 hover:border-sky-300 transition-colors font-semibold text-slate-700 text-xs">{% translate "Downloads" %}</a>
-                <a href="https://reporting.hope.unicef.org/" target="_blank" class="bg-white py-4 text-center rounded-xl border border-slate-200 shadow-sm hover:bg-sky-50/50 hover:border-sky-300 transition-colors font-semibold text-slate-700 text-xs">{% translate "Data & API" %}</a>
-                <a href="https://unicef.github.io/hope-documentation/" target="_blank" class="bg-white py-4 text-center rounded-xl border border-slate-200 shadow-sm hover:bg-sky-50/50 hover:border-sky-300 transition-colors font-semibold text-slate-700 text-xs">{% translate "Documentation" %}</a>
+        <!-- 5. Bottom 4-Card Information Strip -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
+            <!-- Card 1 -->
+            <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm flex flex-col items-start">
+                <div class="w-10 h-10 bg-sky-50 text-[#00adef] rounded-full flex items-center justify-center mb-4">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+                </div>
+                <h4 class="font-bold text-gray-800 text-sm mb-2">{% translate "Data responsibly" %}</h4>
+                <p class="text-xs text-gray-500 leading-relaxed">{% translate "We are committed to data protection, privacy and ethical use." %}</p>
+            </div>
+            
+            <!-- Card 2 -->
+            <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm flex flex-col items-start">
+                <div class="w-10 h-10 bg-sky-50 text-[#00adef] rounded-full flex items-center justify-center mb-4">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+                </div>
+                <h4 class="font-bold text-gray-800 text-sm mb-2">{% translate "Methodology" %}</h4>
+                <p class="text-xs text-gray-500 leading-relaxed">{% translate "Learn how HOPE data is produced and standards applied." %}</p>
+            </div>
+
+            <!-- Card 3 -->
+            <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm flex flex-col items-start">
+                <div class="w-10 h-10 bg-sky-50 text-[#00adef] rounded-full flex items-center justify-center mb-4">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"/></svg>
+                </div>
+                <h4 class="font-bold text-gray-800 text-sm mb-2">{% translate "Give feedback" %}</h4>
+                <p class="text-xs text-gray-500 leading-relaxed">{% translate "Help us improve HOPE by sharing your feedback." %}</p>
+            </div>
+
+            <!-- Card 4 -->
+            <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm flex flex-col items-start">
+                <div class="w-10 h-10 bg-sky-50 text-[#00adef] rounded-full flex items-center justify-center mb-4">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+                </div>
+                <h4 class="font-bold text-gray-800 text-sm mb-2">{% translate "Stay connected" %}</h4>
+                <p class="text-xs text-gray-500 leading-relaxed">{% translate "Subscribe to updates and new data releases." %}</p>
             </div>
         </div>
 

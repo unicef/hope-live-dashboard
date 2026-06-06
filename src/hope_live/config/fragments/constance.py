@@ -27,7 +27,7 @@ CONSTANCE_ADDITIONAL_FIELDS = {
 
 CONSTANCE_DBS = ("default",)
 
-addr = settings.ALLOWED_HOSTS[0] if settings.ALLOWED_HOSTS else None  # type: ignore[has-type]
+addr = settings.ALLOWED_HOSTS[0] if settings.ALLOWED_HOSTS else ""  # type: ignore[has-type]
 
 CONSTANCE_CONFIG = {
     "NEW_USER_DEFAULT_GROUP": (
