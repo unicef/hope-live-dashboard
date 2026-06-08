@@ -10,9 +10,8 @@
     <div class="px-3 w-full py-4 flex flex-col justify-between bg-primary h-full overflow-hidden">
         <div>
             <div class="flex items-center justify-center p-2 text-white shrink-0">
-                {# Assumes white-variant logos are available #}
-                <img src="{% static 'images/logo-white.png' %}" alt="UNICEF Logo" class="h-12 hidden peer-checked:block">
-                <img src="{% static 'images/img.svg' %}" alt="HOPE Logo" class="h-10 peer-checked:hidden">
+                <a href='{% url "web:index" %}'><img src="{% static 'images/logo-white.png' %}" alt="UNICEF Logo" class="h-12 hidden peer-checked:block"></a>
+                <a href='{% url "web:index" %}'><img src="{% static 'images/img.svg' %}" alt="HOPE Logo" class="h-10 peer-checked:hidden"></a>
             </div>
             <ul class="space-y-2 flex-grow mt-8">
                 <li>
