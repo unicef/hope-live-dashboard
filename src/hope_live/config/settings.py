@@ -62,6 +62,7 @@ MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
+    "django.middleware.locale.LocaleMiddleware",
     "django.middleware.common.CommonMiddleware",
     "csp.middleware.CSPMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -153,6 +154,8 @@ LANGUAGES = (
     ("fr", ugettext("French")),  # type: ignore[no-untyped-call]
     ("en", ugettext("English")),  # type: ignore[no-untyped-call]
     ("ar", ugettext("Arabic")),  # type: ignore[no-untyped-call]
+    ("ru", ugettext("Russian")),  # type: ignore[no-untyped-call]
+    ("zh-hans", ugettext("Chinese")),  # type: ignore[no-untyped-call]
 )
 
 TIME_ZONE = "UTC"

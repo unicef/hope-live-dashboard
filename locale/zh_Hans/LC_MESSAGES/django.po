@@ -1,0 +1,423 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-06-08 12:52+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+#: src/hope_live/config/settings.py:153
+msgid "Spanish"
+msgstr ""
+
+#: src/hope_live/config/settings.py:154
+msgid "French"
+msgstr ""
+
+#: src/hope_live/config/settings.py:155
+msgid "English"
+msgstr ""
+
+#: src/hope_live/config/settings.py:156
+msgid "Arabic"
+msgstr ""
+
+#: src/hope_live/config/settings.py:157
+msgid "Russian"
+msgstr ""
+
+#: src/hope_live/config/settings.py:158
+msgid "Chinese"
+msgstr ""
+
+#: src/hope_live/templates/footer.html:7
+#, python-format
+msgid "Copyright © %(year)s - All right reserved by UNICEF - %(version)s"
+msgstr ""
+
+#: src/hope_live/templates/header.html:8
+msgid "Search for a country, indicator, dataset..."
+msgstr ""
+
+#: src/hope_live/templates/header.html:26 src/hope_live/templates/menu.html:75
+msgid "Sign Out"
+msgstr ""
+
+#: src/hope_live/templates/header.html:37
+msgid "Open Issue"
+msgstr ""
+
+#: src/hope_live/templates/layout.html:8
+msgid "HOPE Dashboard"
+msgstr ""
+
+#: src/hope_live/templates/menu.html:20
+#: src/hope_live/templates/unfold/helpers/site_icon.html:7
+#: src/hope_live/templates/unfold/helpers/site_icon.html:9
+#: src/hope_live/templates/unfold/helpers/site_icon.html:11
+#: src/hope_live/templates/unfold/helpers/site_logo.html:5
+#: src/hope_live/templates/unfold/helpers/site_logo.html:7
+#: src/hope_live/templates/unfold/helpers/site_logo.html:9
+msgid "Home"
+msgstr ""
+
+#: src/hope_live/templates/menu.html:26
+msgid "Dashboards"
+msgstr ""
+
+#: src/hope_live/templates/menu.html:32
+#: src/hope_live/templates/pages/dashboard.html:79
+#: src/hope_live/templates/pages/landing.html:108
+msgid "Countries"
+msgstr ""
+
+#: src/hope_live/templates/menu.html:38
+msgid "Data & API"
+msgstr ""
+
+#: src/hope_live/templates/menu.html:44
+msgid "Documentation"
+msgstr ""
+
+#: src/hope_live/templates/menu.html:50
+#: src/hope_live/templates/pages/landing.html:30
+#: src/hope_live/templates/pages/landing.html:283
+msgid "About HOPE"
+msgstr ""
+
+#: src/hope_live/templates/menu.html:63
+msgid "Admin"
+msgstr ""
+
+#: src/hope_live/templates/menu.html:83
+msgid "Sign In"
+msgstr ""
+
+#: src/hope_live/templates/pages/completion.html:8
+msgid "Completion Rate Dashboard"
+msgstr ""
+
+#: src/hope_live/templates/pages/completion.html:9
+msgid "Payment Reconciliation and Completion Status Tracking"
+msgstr ""
+
+#: src/hope_live/templates/pages/completion.html:12
+#: src/hope_live/templates/pages/dashboard.html:13
+#: src/hope_live/templates/pages/grievance.html:12
+msgid "Live Data"
+msgstr ""
+
+#: src/hope_live/templates/pages/completion.html:32
+msgid "Reconciliation Timeline"
+msgstr ""
+
+#: src/hope_live/templates/pages/completion.html:35
+#: src/hope_live/templates/pages/dashboard.html:36
+#: src/hope_live/templates/pages/grievance.html:35
+msgid ""
+"* Select a range on the smaller chart at the bottom to zoom in on the focus "
+"chart"
+msgstr ""
+
+#: src/hope_live/templates/pages/completion.html:41
+msgid "Reconciled Payments"
+msgstr ""
+
+#: src/hope_live/templates/pages/completion.html:45
+msgid "Still Opened"
+msgstr ""
+
+#: src/hope_live/templates/pages/completion.html:55
+msgid "Number of Payments by Country"
+msgstr ""
+
+#: src/hope_live/templates/pages/dashboard.html:8
+#: src/hope_live/templates/pages/landing.html:202
+msgid "Financial Dashboard"
+msgstr ""
+
+#: src/hope_live/templates/pages/dashboard.html:9
+msgid "Overview of Financial info"
+msgstr ""
+
+#: src/hope_live/templates/pages/dashboard.html:33
+msgid "Spending Timeline"
+msgstr ""
+
+#: src/hope_live/templates/pages/dashboard.html:46
+msgid "Total Amount Paid"
+msgstr ""
+
+#: src/hope_live/templates/pages/dashboard.html:50
+msgid "Number of Payments"
+msgstr ""
+
+#: src/hope_live/templates/pages/dashboard.html:54
+msgid "Outstanding Payment"
+msgstr ""
+
+#: src/hope_live/templates/pages/dashboard.html:61
+msgid "Delivery Types"
+msgstr ""
+
+#: src/hope_live/templates/pages/dashboard.html:65
+msgid "Regions"
+msgstr ""
+
+#: src/hope_live/templates/pages/dashboard.html:72
+msgid "Distribution by Sector"
+msgstr ""
+
+#: src/hope_live/templates/pages/dashboard.html:86
+msgid "Distribution by Program"
+msgstr ""
+
+#: src/hope_live/templates/pages/dashboard.html:90
+msgid "Financial Service Providers (FSP)"
+msgstr ""
+
+#: src/hope_live/templates/pages/grievance.html:8
+msgid "Grievance Dashboard"
+msgstr ""
+
+#: src/hope_live/templates/pages/grievance.html:9
+msgid "Overview of Feedback and Grievance Tickets"
+msgstr ""
+
+#: src/hope_live/templates/pages/grievance.html:32
+msgid "Tickets Timeline"
+msgstr ""
+
+#: src/hope_live/templates/pages/grievance.html:41
+msgid "Total Tickets"
+msgstr ""
+
+#: src/hope_live/templates/pages/grievance.html:49
+msgid "Status"
+msgstr ""
+
+#: src/hope_live/templates/pages/grievance.html:53
+msgid "Priority"
+msgstr ""
+
+#: src/hope_live/templates/pages/grievance.html:60
+msgid "Category"
+msgstr ""
+
+#: src/hope_live/templates/pages/grievance.html:64
+msgid "Issue Type"
+msgstr ""
+
+#: src/hope_live/templates/pages/grievance.html:72
+msgid "Tickets by Country"
+msgstr ""
+
+#: src/hope_live/templates/pages/landing.html:14
+msgid "Humanitarian cash"
+msgstr ""
+
+#: src/hope_live/templates/pages/landing.html:15
+msgid "Operations and Programme"
+msgstr ""
+
+#: src/hope_live/templates/pages/landing.html:16
+msgid "Ecosystem"
+msgstr ""
+
+#: src/hope_live/templates/pages/landing.html:21
+msgid "Data and evidence to deliver humanitarian cash transfers safely."
+msgstr ""
+
+#: src/hope_live/templates/pages/landing.html:26
+msgid "Explore the data"
+msgstr ""
+
+#: src/hope_live/templates/pages/landing.html:48
+msgid "HOPE at a glance"
+msgstr ""
+
+#: src/hope_live/templates/pages/landing.html:57
+msgid "Countries & territories"
+msgstr ""
+
+#: src/hope_live/templates/pages/landing.html:67
+#: src/hope_live/templates/pages/landing.html:120
+msgid "Indicators"
+msgstr ""
+
+#: src/hope_live/templates/pages/landing.html:77
+msgid "Data sources"
+msgstr ""
+
+#: src/hope_live/templates/pages/landing.html:86
+msgid "Updated regularly"
+msgstr ""
+
+#: src/hope_live/templates/pages/landing.html:87
+msgid "Latest data: May 2026"
+msgstr ""
+
+#: src/hope_live/templates/pages/landing.html:100
+msgid "Children Reached"
+msgstr ""
+
+#: src/hope_live/templates/pages/landing.html:104
+msgid "Households"
+msgstr ""
+
+#: src/hope_live/templates/pages/landing.html:112
+msgid "Assistance Delivered"
+msgstr ""
+
+#: src/hope_live/templates/pages/landing.html:116
+msgid "Verified"
+msgstr ""
+
+#: src/hope_live/templates/pages/landing.html:131
+msgid "Where HOPE is active"
+msgstr ""
+
+#: src/hope_live/templates/pages/landing.html:132
+msgid "Explore map"
+msgstr ""
+
+#: src/hope_live/templates/pages/landing.html:135
+msgid "Interactive World Map Placeholder"
+msgstr ""
+
+#: src/hope_live/templates/pages/landing.html:142
+msgid "Latest updates & alerts"
+msgstr ""
+
+#: src/hope_live/templates/pages/landing.html:143
+msgid "View all"
+msgstr ""
+
+#: src/hope_live/templates/pages/landing.html:153
+msgid "Alert"
+msgstr ""
+
+#: src/hope_live/templates/pages/landing.html:156
+msgid ""
+"Severe flooding in Southern Sudan affects more than 700,000 people, "
+"including 250,000 children."
+msgstr ""
+
+#: src/hope_live/templates/pages/landing.html:157
+#: src/hope_live/templates/pages/landing.html:172
+#: src/hope_live/templates/pages/landing.html:187
+msgid "View details"
+msgstr ""
+
+#: src/hope_live/templates/pages/landing.html:168
+msgid "Report"
+msgstr ""
+
+#: src/hope_live/templates/pages/landing.html:170
+msgid "HOPE Data Update - May 2026"
+msgstr ""
+
+#: src/hope_live/templates/pages/landing.html:183
+msgid "Data update"
+msgstr ""
+
+#: src/hope_live/templates/pages/landing.html:186
+msgid "New WASH indicators now available for 15 countries."
+msgstr ""
+
+#: src/hope_live/templates/pages/landing.html:199
+msgid "Explore Dashboards"
+msgstr ""
+
+#: src/hope_live/templates/pages/landing.html:203
+msgid "Transfer values & logistics"
+msgstr ""
+
+#: src/hope_live/templates/pages/landing.html:206
+msgid "Demographics"
+msgstr ""
+
+#: src/hope_live/templates/pages/landing.html:207
+msgid "Population & households"
+msgstr ""
+
+#: src/hope_live/templates/pages/landing.html:210
+msgid "Accountability"
+msgstr ""
+
+#: src/hope_live/templates/pages/landing.html:211
+msgid "Feedback & grievances"
+msgstr ""
+
+#: src/hope_live/templates/pages/landing.html:214
+msgid "Programme Quality"
+msgstr ""
+
+#: src/hope_live/templates/pages/landing.html:215
+msgid "Completion rates & metrics"
+msgstr ""
+
+#: src/hope_live/templates/pages/landing.html:223
+msgid "Global Trends"
+msgstr ""
+
+#: src/hope_live/templates/pages/landing.html:230
+msgid "Trends Chart Placeholder"
+msgstr ""
+
+#: src/hope_live/templates/pages/landing.html:242
+msgid "Data responsibly"
+msgstr ""
+
+#: src/hope_live/templates/pages/landing.html:243
+msgid "We are committed to data protection, privacy and ethical use."
+msgstr ""
+
+#: src/hope_live/templates/pages/landing.html:251
+msgid "Methodology"
+msgstr ""
+
+#: src/hope_live/templates/pages/landing.html:252
+msgid "Learn how HOPE data is produced and standards applied."
+msgstr ""
+
+#: src/hope_live/templates/pages/landing.html:260
+msgid "Give feedback"
+msgstr ""
+
+#: src/hope_live/templates/pages/landing.html:261
+msgid "Help us improve HOPE by sharing your feedback."
+msgstr ""
+
+#: src/hope_live/templates/pages/landing.html:269
+msgid "Stay connected"
+msgstr ""
+
+#: src/hope_live/templates/pages/landing.html:270
+msgid "Subscribe to updates and new data releases."
+msgstr ""
+
+#: src/hope_live/templates/pages/landing.html:284
+msgid "Contact Us"
+msgstr ""
+
+#: src/hope_live/templates/unfold/helpers/header_back_button.html:7
+#: src/hope_live/templates/unfold/helpers/header_back_button.html:15
+msgid " Go back"
+msgstr ""
+
+#: src/hope_live/templates/unfold/helpers/site_branding.html:3
+#: src/hope_live/templates/unfold/helpers/site_branding.html:6
+msgid "Django administration"
+msgstr ""

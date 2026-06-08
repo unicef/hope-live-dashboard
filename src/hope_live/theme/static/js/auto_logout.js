@@ -11,11 +11,42 @@
 
     let timer;
 
+    function getCookie(name) {
+      let cookieValue = null;
+      if (document.cookie && document.cookie !== "") {
+        const cookies = document.cookie.split(";");
+        for (let i = 0; i < cookies.length; i++) {
+          const cookie = cookies[i].trim();
+          if (cookie.substring(0, name.length + 1) === (name + "=")) {
+            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+            break;
+          }
+        }
+      }
+      return cookieValue;
+    }
+
+    function doLogout() {
+      const form = document.createElement("form");
+      form.method = "POST";
+      form.action = logoutUrl;
+
+      const csrfToken = document.querySelector("[name=csrfmiddlewaretoken]")?.value || getCookie("csrftoken");
+      if (csrfToken) {
+        const input = document.createElement("input");
+        input.type = "hidden";
+        input.name = "csrfmiddlewaretoken";
+        input.value = csrfToken;
+        form.appendChild(input);
+      }
+
+      document.body.appendChild(form);
+      form.submit();
+    }
+
     function resetTimer() {
       clearTimeout(timer);
-      timer = setTimeout(() => {
-        window.location.href = logoutUrl;
-      }, timeout);
+      timer = setTimeout(doLogout, timeout);
     }
 
     ["click", "mousemove", "keydown", "scroll", "touchstart"].forEach(evt => {
