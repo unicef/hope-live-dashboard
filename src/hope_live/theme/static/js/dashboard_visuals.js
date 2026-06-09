@@ -2,6 +2,12 @@ function remove_empty_bins(source_group) {
     return {
         all: function () {
             return source_group.all().filter(d => d.key !== '' && d.key !== null && d.value > 0);
+        },
+        top: function (k) {
+            return source_group.all()
+                .filter(d => d.key !== '' && d.key !== null && d.value > 0)
+                .sort((a, b) => b.value - a.value)
+                .slice(0, k);
         }
     };
 }
@@ -49,7 +55,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const statusGroup = statusDimension.group().reduceSum(d => d.dimension_type === 'status' ? d.total_usd : 0);
 
     // Charts
-    const focusChart = dc.lineChart('#time-focus-chart');
+    const focusChart = dc.barChart('#time-focus-chart');
     const rangeChart = dc.barChart('#time-range-chart');
     const sectorChart = dc.rowChart('#sector-chart').dimension(sectorDimension).group(remove_empty_bins(sectorGroup));
     const programChart = dc.rowChart('#program-chart').dimension(programDimension).group(remove_empty_bins(programGroup)).cap(10).othersLabel('Other');
@@ -88,9 +94,10 @@ document.addEventListener('DOMContentLoaded', function () {
         .transitionDuration(500)
         .x(d3.scaleTime().domain(initialDomain))
         .round(d3.timeMonth.round)
+        .alwaysUseRounding(true)
+        .gap(15)
+        .centerBar(true)
         .xUnits(d3.timeMonths)
-        .renderArea(true)
-        .curve(d3.curveMonotoneX)
         .mouseZoomable(true)
         .elasticY(true)
         .renderHorizontalGridLines(true)
@@ -132,6 +139,7 @@ document.addEventListener('DOMContentLoaded', function () {
     [programChart, fspChart].forEach(chart => {
         chart.width(null).height(850).margins(rowChartMargins).elasticX(true).gap(2).on('filtered', updateTotals);
         chart.xAxis().ticks(4).tickFormat(usdFormat);
+        chart.label(d => d.key.length > 25 ? d.key.substring(0, 25) + '...' : d.key);
         chart.on('pretransition', function(c) {
             c.selectAll('g.row text').style('fill', 'black');
         });
@@ -235,6 +243,9 @@ document.addEventListener('DOMContentLoaded', function () {
             const yearDomain = [new Date(year, 0, 1), new Date(year, 11, 31)];
             focusChart.x(d3.scaleTime().domain(yearDomain));
             rangeChart.x(d3.scaleTime().domain(yearDomain));
+
+            const countrySlugs = countryGroup.all().filter(d => d.value > 0).sort((a, b) => b.value - a.value).map(d => d.key);
+            countryChart.x(d3.scaleBand().domain(countrySlugs));
 
             if (isInitial) {
                 dc.renderAll();

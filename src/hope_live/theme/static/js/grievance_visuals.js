@@ -31,13 +31,13 @@ document.addEventListener('DOMContentLoaded', function () {
     const countryGroup = countryDimension.group().reduceSum(d => primaryDimFilter(d) ? d.ticket_count : 0);
 
     // Charts
-    const focusChart = dc.lineChart('#time-focus-chart');
+    const focusChart = dc.barChart('#time-focus-chart');
     const rangeChart = dc.barChart('#time-range-chart');
     const statusChart = dc.pieChart('#grievance-status-chart');
     const categoryChart = dc.rowChart('#grievance-category-chart');
     const issueTypeChart = dc.rowChart('#grievance-issue-type-chart');
     const priorityChart = dc.pieChart('#grievance-priority-chart');
-    const countryChart = dc.rowChart('#grievance-country-chart');
+    const countryChart = dc.barChart('#grievance-country-chart');
 
     // Set initial domain
     const initialYear = new Date().getFullYear();
@@ -48,8 +48,9 @@ document.addEventListener('DOMContentLoaded', function () {
         .transitionDuration(500)
         .x(d3.scaleTime().domain(initialDomain))
         .round(d3.timeMonth.round).xUnits(d3.timeMonths).elasticY(true)
-        .renderArea(true)
-        .curve(d3.curveMonotoneX)
+        .alwaysUseRounding(true)
+        .gap(15)
+        .centerBar(true)
         .mouseZoomable(true)
         .renderHorizontalGridLines(true).rangeChart(rangeChart).brushOn(false)
         .title(function(d) {
@@ -82,14 +83,31 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const rowChartMargins = { top: 10, right: 30, bottom: 30, left: 180 };
 
-    [categoryChart, issueTypeChart, countryChart].forEach(chart => {
+    [categoryChart, issueTypeChart].forEach(chart => {
         chart.width(null).height(450).margins(rowChartMargins).elasticX(true).gap(10).on('filtered', updateTotals);
         chart.xAxis().ticks(4).tickFormat(d3.format(".2s"));
     });
 
     categoryChart.dimension(categoryDimension).group(categoryGroup).data(group => group.all().filter(d => d.key !== null && d.value > 0));
     issueTypeChart.dimension(issueTypeDimension).group(issueTypeGroup).data(group => group.all().filter(d => d.key !== null && d.value > 0));
-    countryChart.dimension(countryDimension).group(countryGroup).data(group => group.top(15));
+
+    countryChart.width(null).height(500).margins({ top: 30, right: 25, bottom: 95, left: 90 })
+        .dimension(countryDimension).group(countryGroup)
+        .x(d3.scaleBand())
+        .xUnits(dc.units.ordinal)
+        .brushOn(false)
+        .elasticY(true)
+        .renderHorizontalGridLines(true)
+        .gap(10)
+        .title(d => `${d.key}: ${d3.format(",")(d.value)}`)
+        .on('filtered', updateTotals);
+
+    countryChart.on('renderlet', function(chart) {
+        chart.selectAll('g.x text')
+            .attr("transform", "rotate(30)")
+            .style("text-anchor", "start")
+            .attr("dx", "2");
+    });
 
     function updateTotals() {
         const totalTickets = ndx.groupAll().reduceSum(d => primaryDimFilter(d) ? d.ticket_count : 0).value();
@@ -144,6 +162,9 @@ document.addEventListener('DOMContentLoaded', function () {
             const yearDomain = [new Date(year, 0, 1), new Date(year, 11, 31)];
             focusChart.x(d3.scaleTime().domain(yearDomain));
             rangeChart.x(d3.scaleTime().domain(yearDomain));
+
+            const countrySlugs = countryGroup.all().filter(d => d.value > 0).sort((a, b) => b.value - a.value).map(d => d.key);
+            countryChart.x(d3.scaleBand().domain(countrySlugs));
 
             if (isInitial) {
                 dc.renderAll();

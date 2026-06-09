@@ -21,12 +21,12 @@ document.addEventListener('DOMContentLoaded', function () {
     const countryIndividualsGroup = countryDimension.group().reduceSum(d => primaryDimFilter(d) ? d.total_beneficiaries : 0);
     const countryPwdGroup = countryDimension.group().reduceSum(d => primaryDimFilter(d) ? d.total_pwd : 0);
 
-    const focusChart = dc.lineChart('#time-focus-chart');
+    const focusChart = dc.barChart('#time-focus-chart');
     const rangeChart = dc.barChart('#time-range-chart');
     const sectorIndividualsChart = dc.rowChart('#sector-individuals-chart');
     const sectorChildrenChart = dc.rowChart('#sector-children-chart');
-    const countryIndividualsChart = dc.rowChart('#country-individuals-chart');
-    const countryPwdChart = dc.rowChart('#country-pwd-chart');
+    const countryIndividualsChart = dc.barChart('#country-individuals-chart');
+    const countryPwdChart = dc.barChart('#country-pwd-chart');
 
     // Set initial domain to prevent grid line errors
     const initialYear = new Date().getFullYear();
@@ -37,8 +37,9 @@ document.addEventListener('DOMContentLoaded', function () {
         .transitionDuration(500)
         .x(d3.scaleTime().domain(initialDomain))  // Set initial scale
         .round(d3.timeMonth.round).xUnits(d3.timeMonths).elasticY(true)
-        .renderArea(true)
-        .curve(d3.curveMonotoneX)
+        .alwaysUseRounding(true)
+        .gap(15)
+        .centerBar(true)
         .mouseZoomable(true)
         .renderHorizontalGridLines(true).rangeChart(rangeChart).brushOn(false)
         .title(function(d) {
@@ -62,15 +63,53 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const demoMargins = { top: 10, right: 30, bottom: 30, left: 20 };
 
-    [sectorIndividualsChart, sectorChildrenChart, countryIndividualsChart, countryPwdChart].forEach(chart => {
+    [sectorIndividualsChart, sectorChildrenChart].forEach(chart => {
         chart.width(null).height(350).margins(demoMargins).elasticX(true).gap(10).on('filtered', updateTotals);
         chart.xAxis().ticks(4).tickFormat(d3.format(".2s"));
     });
 
     sectorIndividualsChart.dimension(sectorDimension).group(sectorIndividualsGroup).data(group => group.all().filter(d => d.key !== null && d.value > 0));
     sectorChildrenChart.dimension(sectorDimension).group(sectorChildrenGroup).colors(['#2C96D2']).data(group => group.all().filter(d => d.key !== null && d.value > 0));
-    countryIndividualsChart.dimension(countryDimension).group(countryIndividualsGroup).data(group => group.top(10));
-    countryPwdChart.dimension(countryDimension).group(countryPwdGroup).colors(['#9333ea']).data(group => group.top(10));
+
+    countryIndividualsChart
+        .dimension(countryDimension)
+        .group(countryIndividualsGroup)
+        .width(null)
+        .height(500)
+        .x(d3.scaleBand())
+        .xUnits(dc.units.ordinal)
+        .brushOn(false)
+        .elasticY(true)
+        .renderHorizontalGridLines(true)
+        .gap(10)
+        .margins({ top: 30, right: 25, bottom: 95, left: 90 })
+        .title(d => `${d.key}: ${d3.format(",")(d.value)}`)
+        .on('filtered', updateTotals);
+
+    countryPwdChart
+        .dimension(countryDimension)
+        .group(countryPwdGroup)
+        .width(null)
+        .height(500)
+        .x(d3.scaleBand())
+        .xUnits(dc.units.ordinal)
+        .brushOn(false)
+        .elasticY(true)
+        .renderHorizontalGridLines(true)
+        .gap(10)
+        .margins({ top: 30, right: 25, bottom: 95, left: 90 })
+        .colors(['#9333ea'])
+        .title(d => `${d.key}: ${d3.format(",")(d.value)}`)
+        .on('filtered', updateTotals);
+
+    [countryIndividualsChart, countryPwdChart].forEach(chart => {
+        chart.on('renderlet', function(chart) {
+            chart.selectAll('g.x text')
+                .attr("transform", "rotate(30)")
+                .style("text-anchor", "start")
+                .attr("dx", "2");
+        });
+    });
 
     function updateTotals() {
         const totalIndividuals = ndx.groupAll().reduceSum(d => primaryDimFilter(d) ? d.total_beneficiaries : 0).value();
@@ -132,6 +171,12 @@ document.addEventListener('DOMContentLoaded', function () {
             const yearDomain = [new Date(year, 0, 1), new Date(year, 11, 31)];
             focusChart.x(d3.scaleTime().domain(yearDomain));
             rangeChart.x(d3.scaleTime().domain(yearDomain));
+
+            const countrySlugsInd = countryIndividualsGroup.all().filter(d => d.value > 0).sort((a, b) => b.value - a.value).map(d => d.key);
+            countryIndividualsChart.x(d3.scaleBand().domain(countrySlugsInd));
+
+            const countrySlugsPwd = countryPwdGroup.all().filter(d => d.value > 0).sort((a, b) => b.value - a.value).map(d => d.key);
+            countryPwdChart.x(d3.scaleBand().domain(countrySlugsPwd));
 
             if (isInitial) {
                 dc.renderAll();

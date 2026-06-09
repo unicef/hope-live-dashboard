@@ -40,9 +40,9 @@ document.addEventListener('DOMContentLoaded', function () {
     });
     const countryStatusGroup = countryDimension.group().reduceSum(d => primaryDimFilter(d) ? d.payment_count : 0);
 
-    const focusChart = dc.lineChart('#time-focus-chart');
+    const focusChart = dc.barChart('#time-focus-chart');
     const rangeChart = dc.barChart('#time-range-chart');
-    const countryChart = dc.rowChart('#status-country-chart');
+    const countryChart = dc.barChart('#status-country-chart');
 
     // Set initial domain to prevent grid line errors
     const initialYear = new Date().getFullYear();
@@ -55,8 +55,9 @@ document.addEventListener('DOMContentLoaded', function () {
         .transitionDuration(500)
         .x(d3.scaleTime().domain(initialDomain))  // Set initial scale
         .round(d3.timeMonth.round).xUnits(d3.timeMonths).elasticY(true)
-        .renderArea(true)
-        .curve(d3.curveMonotoneX)
+        .alwaysUseRounding(true)
+        .gap(15)
+        .centerBar(true)
         .mouseZoomable(true)
         .renderHorizontalGridLines(true).rangeChart(rangeChart).brushOn(false)
         .colors(d3.scaleOrdinal().domain(["Reconciled", "Still Opened"]).range(["#10b981", "#3b82f6"]))
@@ -83,11 +84,22 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Removed sectorChart and statusPieChart configurations
 
-    countryChart.width(null).height(450).margins({ top: 10, right: 30, bottom: 30, left: 20 })
-        .dimension(countryDimension).group(countryStatusGroup).elasticX(true).gap(10)
-        .data(group => group.top(15))
+    countryChart.width(null).height(500).margins({ top: 30, right: 25, bottom: 95, left: 90 })
+        .dimension(countryDimension).group(countryStatusGroup)
+        .x(d3.scaleBand())
+        .xUnits(dc.units.ordinal)
+        .brushOn(false)
+        .elasticY(true)
+        .renderHorizontalGridLines(true)
+        .gap(10)
+        .title(d => `${d.key}: ${d3.format(",")(d.value)}`)
         .on('filtered', updateTotals);
-    countryChart.xAxis().ticks(4).tickFormat(d3.format(".2s"));
+    countryChart.on('renderlet', function(chart) {
+        chart.selectAll('g.x text')
+            .attr("transform", "rotate(30)")
+            .style("text-anchor", "start")
+            .attr("dx", "2");
+    });
 
     function updateTotals() {
         const totalReconciled = ndx.groupAll().reduceSum(d => {
@@ -106,8 +118,8 @@ document.addEventListener('DOMContentLoaded', function () {
         const reconciledPct = total > 0 ? (totalReconciled / total * 100).toFixed(1) : 0;
         const openedPct = total > 0 ? (totalOpened / total * 100).toFixed(1) : 0;
 
-        document.getElementById('total-reconciled').textContent = `${d3.format(',')(totalReconciled)} (${reconciledPct}%)`;
-        document.getElementById('total-opened').textContent = `${d3.format(',')(totalOpened)} (${openedPct}%)`;
+        document.getElementById('total-reconciled').textContent = `${d3.format(',')(totalReconciled)} (${reconciledPct}% out of ${d3.format(',')(total)} total payments)`;
+        document.getElementById('total-opened').textContent = `${d3.format(',')(totalOpened)} (${openedPct}% out of ${d3.format(',')(total)} total payments)`;
     }
 
     async function loadData(year, isInitial = false) {
@@ -156,6 +168,9 @@ document.addEventListener('DOMContentLoaded', function () {
             const yearDomain = [new Date(year, 0, 1), new Date(year, 11, 31)];
             focusChart.x(d3.scaleTime().domain(yearDomain));
             rangeChart.x(d3.scaleTime().domain(yearDomain));
+
+            const countrySlugs = countryStatusGroup.all().filter(d => d.value > 0).sort((a, b) => b.value - a.value).map(d => d.key);
+            countryChart.x(d3.scaleBand().domain(countrySlugs));
 
             // Use renderAll on initial load, redrawAll for updates
             if (isInitial) {

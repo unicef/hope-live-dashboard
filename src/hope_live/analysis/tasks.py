@@ -1,5 +1,8 @@
 import datetime
+import io
+import json
 import logging
+from pathlib import Path
 from typing import Any
 
 import requests
@@ -7,6 +10,7 @@ from celery import shared_task  # type: ignore[import-untyped]
 from constance import config
 from django.apps import apps
 from django.contrib.auth import get_user_model
+from django.core.management import call_command
 from django.db import transaction
 from tenacity import retry, stop_after_attempt, wait_exponential
 
@@ -17,6 +21,34 @@ from hope_live.analysis.models import (
     GrievanceAggregate,
     SyncDailyAggregatesJob,
 )
+
+ISO3_TO_SLUG = {
+    "AFG": "afghanistan",
+    "AGO": "angola",
+    "ARM": "armenia",
+    "BGD": "bangladesh",
+    "BWA": "botswana",
+    "CAF": "african-republic",
+    "TCD": "chad",
+    "COD": "public-of-congo",
+    "HTI": "haiti",
+    "KEN": "kenya",
+    "MDG": "madagascar",
+    "MMR": "myanmar",
+    "NGA": "nigeria",
+    "PSE": "palestine-state-of",
+    "CMR": "lic-of-cameroon",
+    "MOZ": "of-mozambique",
+    "SEN": "senegal",
+    "SLE": "sierra-leone",
+    "SOM": "somalia",
+    "SSD": "south-sudan",
+    "SDN": "sudan",
+    "SYR": "syria",
+    "UKR": "ukraine",
+    "VNM": "vietnam",
+    "YEM": "yemen",
+}
 
 logger = logging.getLogger(__name__)
 
@@ -209,10 +241,84 @@ def _fetch_all_pages(data_endpoint: str, headers: dict[str, str], job_id: str) -
     return all_rows
 
 
+def get_fertility_rate(country_slug: str, year: int) -> float:
+    file_path = Path(__file__).parent / "rates" / "fertility_rates.json"
+    if not file_path.exists():
+        return 3.0
+
+    try:
+        with open(file_path) as f:
+            rates_data = json.load(f)
+    except (OSError, ValueError):
+        return 3.0
+
+    slug_to_iso3 = {v: k for k, v in ISO3_TO_SLUG.items()}
+    target_iso3 = slug_to_iso3.get(country_slug.lower())
+    if not target_iso3:
+        return 3.0
+
+    for entry in rates_data:
+        if entry.get("Country Code") == target_iso3:
+            if str(year) in entry:
+                try:
+                    return float(entry[str(year)] or 3.0)
+                except ValueError:
+                    pass
+
+            # Fallback to the latest available year
+            year_keys = [k for k in entry if k.isdigit()]
+            if year_keys:
+                latest_year = sorted(year_keys, reverse=True)[0]
+                try:
+                    return float(entry[latest_year] or 3.0)
+                except ValueError:
+                    pass
+
+    return 3.0
+
+
+def _calculate_demographic_children(rows: list[dict[str, Any]], default_year: int) -> None:
+    dct_children_map = {}
+    # Calculate estimated children for DCT program rows
+    for item in rows:
+        dim_type = str(item.get("dimension_type", "")).strip().lower()
+        dim_value = str(item.get("dimension_value", "")).strip().upper()
+        if dim_type == "program" and dim_value == "DCT":
+            households = float(item.get("total_households") or 0)
+            country = str(item.get("country_slug", "")).strip().lower()
+
+            # Extract year dynamically from date
+            item_date_str = item.get("date")
+            if isinstance(item_date_str, str):
+                item_year = int(item_date_str.split("-")[0])
+            else:
+                item_year = item_date_str.year if hasattr(item_date_str, "year") else default_year
+
+            rate = get_fertility_rate(country, item_year)
+            est_children = int(households * rate)
+            item["total_children"] = est_children
+            dct_children_map[(str(item_date_str), country)] = est_children
+
+    # Add estimated children to the MULTI_PURPOSE sector row matching country & date
+    for item in rows:
+        dim_type = str(item.get("dimension_type", "")).strip().lower()
+        dim_value = str(item.get("dimension_value", "")).strip().upper()
+        if dim_type == "sector" and dim_value == "MULTI_PURPOSE":
+            country = str(item.get("country_slug", "")).strip().lower()
+            key = (str(item.get("date")), country)
+            if key in dct_children_map:
+                item["total_children"] = int(item.get("total_children") or 0) + dct_children_map[key]
+
+
 @shared_task(name="hope_live.analysis.tasks.save_aggregates")  # type: ignore[untyped-decorator]
 def save_aggregates(rows: list[dict[str, Any]], year: int, model_name: str, update_fields: list[str]) -> None:
     ModelClass = apps.get_model("analysis", model_name)
+
+    if model_name == "DemographicAggregate":
+        _calculate_demographic_children(rows, year)
+
     # Deduplicate rows by unique fields to prevent "ON CONFLICT DO UPDATE command cannot affect row a second time"
+
     unique_rows = {}
     default_grain = "monthly" if model_name == "DemographicAggregate" else "daily"
     for item in rows:
@@ -301,3 +407,11 @@ def clear_daily_aggregates(user_id: int) -> str:
 
     logger.info(f"Deleted {count} aggregate records by superuser {user.username}.")
     return f"Successfully deleted {count} aggregate records."
+
+
+@shared_task(name="hope_live.analysis.tasks.update_fertility_rates")  # type: ignore[untyped-decorator]
+def update_fertility_rates() -> str:
+    """Task to run management command update_fertility_rates to update local rates."""
+    out = io.StringIO()
+    call_command("update_fertility_rates", stdout=out)
+    return out.getvalue()

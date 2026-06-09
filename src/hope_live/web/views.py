@@ -2,8 +2,6 @@ from typing import Any
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Sum
-from django.utils.decorators import method_decorator
-from django.views.decorators.cache import cache_page
 from django.views.generic import TemplateView
 
 from hope_live.analysis.models import DemographicAggregate, FinancialAggregate
@@ -17,7 +15,6 @@ class AboutView(TemplateView):
     template_name = "pages/about.html"
 
 
-@method_decorator(cache_page(60 * 60 * 6), name="dispatch")
 class IndexView(TemplateView):
     template_name = "pages/landing.html"
 
