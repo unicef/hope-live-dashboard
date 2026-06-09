@@ -117,6 +117,9 @@ DATABASES = {
 }
 
 CACHE_URL = env("CACHE_URL")
+CACHES = {
+    "default": env.cache("CACHE_URL", default="locmem://"),
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators

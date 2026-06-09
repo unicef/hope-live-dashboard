@@ -2,103 +2,43 @@ document.addEventListener('DOMContentLoaded', function () {
     const tabsContainer = document.getElementById('tabs-container');
     if (!tabsContainer) return;
 
-    // Set modern D3 color scheme to avoid d3.schemeCategory20c deprecation warning
-    dc.config.defaultColors(d3.schemeCategory10);
-
+    // Initialize empty Crossfilter
     let ndx = crossfilter([]);
-    const dataCache = {};
 
     const dateDimension = ndx.dimension(d => d.date);
-    const sectorDimension = ndx.dimension(d => d.dimension_type === 'sector' ? d.dimension_value : 'N/A');
-    const statusDimension = ndx.dimension(d => d.dimension_type === 'status' ? d.dimension_value : null);
     const countryDimension = ndx.dimension(d => d.country_slug);
 
     const primaryDimFilter = d => d.dimension_type === 'status';
 
     const moveDays = dateDimension.group(d3.timeDay);
     const moveMonths = dateDimension.group(d3.timeMonth);
-    const paymentsByDayGroup = moveDays.reduceSum(d => primaryDimFilter(d) ? d.payment_count : 0);
-    const reconciledGroup = moveDays.reduceSum(d => {
-        if (!primaryDimFilter(d) || !d.dimension_value) return 0;
-        const key = String(d.dimension_value).toUpperCase();
-        return (key.includes('RECONCILED') || key.includes('PAID')) ? d.payment_count : 0;
-    });
-    const openedGroup = moveDays.reduceSum(d => {
-        if (!primaryDimFilter(d) || !d.dimension_value) return 0;
-        const key = String(d.dimension_value).toUpperCase();
-        return (key.includes('OPEN') || key.includes('PENDING')) ? d.payment_count : 0;
-    });
+
+    // Groups
     const reconciledMonthGroup = moveMonths.reduceSum(d => {
         if (!primaryDimFilter(d) || !d.dimension_value) return 0;
         const key = String(d.dimension_value).toUpperCase();
         return (key.includes('RECONCILED') || key.includes('PAID')) ? d.payment_count : 0;
     });
+
     const openedMonthGroup = moveMonths.reduceSum(d => {
         if (!primaryDimFilter(d) || !d.dimension_value) return 0;
         const key = String(d.dimension_value).toUpperCase();
         return (key.includes('OPEN') || key.includes('PENDING')) ? d.payment_count : 0;
     });
+
     const countryStatusGroup = countryDimension.group().reduceSum(d => primaryDimFilter(d) ? d.payment_count : 0);
 
-    const focusChart = dc.barChart('#time-focus-chart');
-    const rangeChart = dc.barChart('#time-range-chart');
-    const countryChart = dc.barChart('#status-country-chart');
+    // Active filters
+    const selectedCountries = new Set();
 
-    // Set initial domain to prevent grid line errors
-    const initialYear = new Date().getFullYear();
-    const initialDomain = [new Date(initialYear, 0, 1), new Date(initialYear, 11, 31)];
+    // Initialize ECharts instances with macarons theme
+    const timelineChart = echarts.init(document.getElementById('time-focus-chart'), 'macarons');
+    const countryChart = echarts.init(document.getElementById('status-country-chart'), 'macarons');
 
-    focusChart.width(null).height(200).margins({ top: 10, right: 50, bottom: 30, left: 90 })
-        .dimension(dateDimension)
-        .group(reconciledMonthGroup, "Reconciled")
-        .stack(openedMonthGroup, "Still Opened")
-        .transitionDuration(500)
-        .x(d3.scaleTime().domain(initialDomain))  // Set initial scale
-        .round(d3.timeMonth.round).xUnits(d3.timeMonths).elasticY(true)
-        .alwaysUseRounding(true)
-        .gap(15)
-        .centerBar(true)
-        .mouseZoomable(true)
-        .renderHorizontalGridLines(true).rangeChart(rangeChart).brushOn(false)
-        .colors(d3.scaleOrdinal().domain(["Reconciled", "Still Opened"]).range(["#10b981", "#3b82f6"]))
-        .legend(new dc.Legend().x(120).y(10).itemHeight(13).gap(5))
-        .title(function(d) {
-            const formatTime = d3.timeFormat("%B %Y");
-            const formatValue = d3.format(",");
-            return `${d.layer} - ${formatTime(d.key)}: ${formatValue(d.value)}`;
-        })
-        .on('filtered', updateTotals);
-
-    focusChart.yAxis().tickFormat(d => d3.format(".2s")(d).replace('G', 'B'));
-
-
-    rangeChart.width(null).height(60).margins({ top: 0, right: 50, bottom: 20, left: 90 })
-        .dimension(dateDimension).group(paymentsByDayGroup).centerBar(true).gap(2)
-        .x(d3.scaleTime().domain(initialDomain))  // Set initial scale
-        .round(d3.timeDay.round).alwaysUseRounding(true).xUnits(d3.timeDays).elasticY(true)
-        .filterPrinter(function (filters) {
-            const dateFmt = d3.timeFormat("%b %d, %Y");
-            return `[${dateFmt(filters[0][0])} to ${dateFmt(filters[0][1])}]`;
-        })
-        .yAxis().ticks(0);
-
-    // Removed sectorChart and statusPieChart configurations
-
-    countryChart.width(null).height(500).margins({ top: 30, right: 25, bottom: 95, left: 90 })
-        .dimension(countryDimension).group(countryStatusGroup)
-        .x(d3.scaleBand())
-        .xUnits(dc.units.ordinal)
-        .brushOn(false)
-        .elasticY(true)
-        .renderHorizontalGridLines(true)
-        .gap(10)
-        .title(d => `${d.key}: ${d3.format(",")(d.value)}`)
-        .on('filtered', updateTotals);
-    countryChart.on('renderlet', function(chart) {
-        chart.selectAll('g.x text')
-            .attr("transform", "rotate(30)")
-            .style("text-anchor", "start")
-            .attr("dx", "2");
+    // Resize Handler
+    window.addEventListener('resize', function () {
+        timelineChart.resize();
+        countryChart.resize();
     });
 
     function updateTotals() {
@@ -122,63 +62,219 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('total-opened').textContent = `${d3.format(',')(totalOpened)} (${openedPct}% out of ${d3.format(',')(total)} total payments)`;
     }
 
-    async function loadData(year, isInitial = false) {
-        try {
-            let data;
+    function updateAll(filterSource = null) {
+        updateTotals();
 
-            if (dataCache[year]) {
-                data = dataCache[year];
-            } else {
-                const url = `${window.DASHBOARD_CONFIG.endpoint}?year=${year}&dashboard=${window.DASHBOARD_CONFIG.type}`;
-                const response = await fetch(url, {
-                    credentials: 'same-origin',
-                    headers: {
-                        'Accept': 'application/json',
-                        'X-Requested-With': 'XMLHttpRequest'
-                    }
-                });
+        // 1. Stacked Monthly Timeline Chart
+        const reconciledData = reconciledMonthGroup.all()
+            .filter(d => d.key !== null)
+            .map(d => [d.key.getTime(), d.value]);
 
-                if (!response.ok) {
-                    if (response.status === 403) {
-                        console.error('Authentication required. Please log in.');
-                        return;
-                    }
-                    throw new Error(`HTTP error! status: ${response.status}`);
+        const openedData = openedMonthGroup.all()
+            .filter(d => d.key !== null)
+            .map(d => [d.key.getTime(), d.value]);
+
+        const timelineOption = {
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: { type: 'shadow' },
+                formatter: function (params) {
+                    const date = new Date(params[0].value[0]);
+                    const formattedDate = d3.timeFormat("%B %Y")(date);
+                    let tooltipHtml = `${formattedDate}<br/>`;
+                    params.forEach(p => {
+                        tooltipHtml += `${p.marker} ${p.seriesName}: <b>${d3.format(",")(p.value[1])}</b> payments<br/>`;
+                    });
+                    return tooltipHtml;
                 }
+            },
+            legend: {
+                data: ['Reconciled', 'Still Opened'],
+                bottom: 0,
+                icon: 'roundRect'
+            },
+            grid: {
+                top: 20,
+                bottom: 80,
+                left: 60,
+                right: 30
+            },
+            xAxis: {
+                type: 'time',
+                axisLabel: { color: '#64748b' }
+            },
+            yAxis: {
+                type: 'value',
+                axisLabel: {
+                    formatter: val => d3.format(".2s")(val).replace('G', 'B'),
+                    color: '#64748b'
+                },
+                splitLine: { lineStyle: { type: 'dashed', color: '#f1f5f9' } }
+            },
+            series: [
+                {
+                    name: 'Reconciled',
+                    type: 'bar',
+                    stack: 'total',
+                    color: '#97b552',
+                    barMaxWidth: 35,
+                    data: reconciledData
+                },
+                {
+                    name: 'Still Opened',
+                    type: 'bar',
+                    stack: 'total',
+                    color: '#5ab1ef',
+                    barMaxWidth: 35,
+                    data: openedData
+                }
+            ]
+        };
 
-                data = await response.json();
+        if (filterSource !== 'timeline') {
+            timelineOption.dataZoom = [
+                {
+                    type: 'inside',
+                    start: 0,
+                    end: 100
+                },
+                {
+                    show: true,
+                    type: 'slider',
+                    start: 0,
+                    end: 100,
+                    bottom: 30,
+                    textStyle: { color: '#64748b' }
+                }
+            ];
+            timelineChart.setOption(timelineOption, { notMerge: true });
+        } else {
+            timelineChart.setOption(timelineOption);
+        }
 
-                const dateFormat = d3.timeParse('%Y-%m-%d');
-                data.forEach(d => {
-                    d.date = dateFormat(d.date);
-                    d.total_usd = +d.total_usd;
-                    d.payment_count = +d.payment_count;
-                });
+        // 2. Country Chart
+        const countryData = countryStatusGroup.all()
+            .filter(d => d.key !== null && d.value > 0)
+            .sort((a, b) => b.value - a.value)
+            .slice(0, 15);
 
-                dataCache[year] = data;
+        const hasAnyCountrySelection = selectedCountries.size > 0;
+        const countrySeriesData = countryData.map(d => ({
+            name: d.key,
+            value: d.value,
+            itemStyle: {
+                color: selectedCountries.has(d.key)
+                    ? '#5ab1ef'
+                    : (hasAnyCountrySelection ? '#cbd5e1' : '#5ab1ef')
             }
+        }));
+
+        countryChart.setOption({
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: { type: 'shadow' },
+                formatter: params => `${params[0].name}: <b>${d3.format(",")(params[0].value)}</b> payments`
+            },
+            grid: { top: 30, bottom: 95, left: 70, right: 20 },
+            xAxis: {
+                type: 'category',
+                data: countryData.map(d => d.key),
+                axisLabel: {
+                    rotate: 30,
+                    interval: 0,
+                    color: '#1f2937',
+                    fontWeight: 500
+                }
+            },
+            yAxis: {
+                type: 'value',
+                axisLabel: {
+                    formatter: val => d3.format(".2s")(val).replace('G', 'B'),
+                    color: '#64748b'
+                },
+                splitLine: { lineStyle: { color: '#f1f5f9' } }
+            },
+            series: [{
+                type: 'bar',
+                data: countrySeriesData,
+                barMaxWidth: 30,
+                itemStyle: { borderRadius: [4, 4, 0, 0] }
+            }]
+        });
+    }
+
+    // --- Interaction Bindings ---
+    timelineChart.on('datazoom', function (params) {
+        const option = timelineChart.getOption();
+        const startVal = option.dataZoom[0].startValue;
+        const endVal = option.dataZoom[0].endValue;
+
+        if (startVal !== undefined && endVal !== undefined) {
+            const startDate = new Date(startVal);
+            const endDate = new Date(endVal);
+            dateDimension.filterRange([startDate, endDate]);
+            updateAll('timeline');
+        }
+    });
+
+    countryChart.on('click', function (params) {
+        const countryName = params.name;
+        if (selectedCountries.has(countryName)) {
+            selectedCountries.delete(countryName);
+        } else {
+            selectedCountries.add(countryName);
+        }
+
+        if (selectedCountries.size === 0) {
+            countryDimension.filterAll();
+        } else {
+            countryDimension.filterFunction(d => selectedCountries.has(d));
+        }
+        updateAll();
+    });
+
+    // --- Load Data ---
+    async function loadData(year) {
+        try {
+            const url = `${window.DASHBOARD_CONFIG.endpoint}?year=${year}&dashboard=${window.DASHBOARD_CONFIG.type}`;
+            const response = await fetch(url, {
+                credentials: 'same-origin',
+                headers: {
+                    'Accept': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            });
+
+            if (!response.ok) {
+                if (response.status === 403) {
+                    console.error('Authentication required. Please log in.');
+                    return;
+                }
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const data = await response.json();
+
+            const dateFormat = d3.timeParse('%Y-%m-%d');
+            data.forEach(d => {
+                d.date = dateFormat(d.date);
+                d.total_usd = +d.total_usd;
+                d.payment_count = +d.payment_count;
+            });
 
             const now = new Date();
             now.setHours(23, 59, 59, 999);
             const currentData = data.filter(d => d.date <= now);
 
+            // Clean state (clear filters FIRST, then remove old data)
+            selectedCountries.clear();
+            countryDimension.filterAll();
+            dateDimension.filterAll();
+
             ndx.remove();
             ndx.add(currentData);
 
-            const yearDomain = [new Date(year, 0, 1), new Date(year, 11, 31)];
-            focusChart.x(d3.scaleTime().domain(yearDomain));
-            rangeChart.x(d3.scaleTime().domain(yearDomain));
-
-            const countrySlugs = countryStatusGroup.all().filter(d => d.value > 0).sort((a, b) => b.value - a.value).map(d => d.key);
-            countryChart.x(d3.scaleBand().domain(countrySlugs));
-
-            // Use renderAll on initial load, redrawAll for updates
-            if (isInitial) {
-                dc.renderAll();
-            } else {
-                dc.redrawAll();
-            }
-            updateTotals();
+            updateAll();
         } catch (error) {
             console.error('Error loading completion data:', error);
         }
@@ -195,12 +291,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const firstYear = tabsContainer.querySelector('.active-tab')?.dataset.year;
     if (firstYear) {
-        loadData(firstYear, true);  // Pass true for initial load
+        loadData(firstYear);
     }
-
-    window.addEventListener('resize', function () {
-        focusChart.rescale();
-        rangeChart.rescale();
-        dc.renderAll();
-    });
 });

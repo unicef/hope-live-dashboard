@@ -2,18 +2,16 @@ document.addEventListener('DOMContentLoaded', function () {
     const tabsContainer = document.getElementById('tabs-container');
     if (!tabsContainer) return;
 
-    // Set modern D3 color scheme to avoid d3.schemeCategory20c deprecation warning
-    dc.config.defaultColors(d3.schemeCategory10);
-
+    // Initialize empty Crossfilter
     let ndx = crossfilter([]);
-    const dataCache = {};
 
+    // Filter and Dimensions
     const primaryDimFilter = d => d.dimension_type === 'sector';
     const dateDimension = ndx.dimension(d => d.date);
     const sectorDimension = ndx.dimension(d => primaryDimFilter(d) ? d.dimension_value : null);
     const countryDimension = ndx.dimension(d => d.country_slug);
-    const moveMonths = dateDimension.group(d3.timeMonth);
-    const individualsByMonthGroup = moveMonths.reduceSum(d => primaryDimFilter(d) ? d.total_beneficiaries : 0);
+
+    // Groups
     const moveDays = dateDimension.group(d3.timeDay);
     const individualsByDayGroup = moveDays.reduceSum(d => primaryDimFilter(d) ? d.total_beneficiaries : 0);
     const sectorIndividualsGroup = sectorDimension.group().reduceSum(d => primaryDimFilter(d) ? d.total_beneficiaries : 0);
@@ -21,94 +19,24 @@ document.addEventListener('DOMContentLoaded', function () {
     const countryIndividualsGroup = countryDimension.group().reduceSum(d => primaryDimFilter(d) ? d.total_beneficiaries : 0);
     const countryPwdGroup = countryDimension.group().reduceSum(d => primaryDimFilter(d) ? d.total_pwd : 0);
 
-    const focusChart = dc.barChart('#time-focus-chart');
-    const rangeChart = dc.barChart('#time-range-chart');
-    const sectorIndividualsChart = dc.rowChart('#sector-individuals-chart');
-    const sectorChildrenChart = dc.rowChart('#sector-children-chart');
-    const countryIndividualsChart = dc.barChart('#country-individuals-chart');
-    const countryPwdChart = dc.barChart('#country-pwd-chart');
+    // Active Filters Sets
+    const selectedSectors = new Set();
+    const selectedCountries = new Set();
 
-    // Set initial domain to prevent grid line errors
-    const initialYear = new Date().getFullYear();
-    const initialDomain = [new Date(initialYear, 0, 1), new Date(initialYear, 11, 31)];
+    // Initialize ECharts instances with macarons theme
+    const timelineChart = echarts.init(document.getElementById('time-focus-chart'), 'macarons');
+    const sectorIndChart = echarts.init(document.getElementById('sector-individuals-chart'), 'macarons');
+    const sectorChildChart = echarts.init(document.getElementById('sector-children-chart'), 'macarons');
+    const countryIndChart = echarts.init(document.getElementById('country-individuals-chart'), 'macarons');
+    const countryPwdChart = echarts.init(document.getElementById('country-pwd-chart'), 'macarons');
 
-    focusChart.width(null).height(200).margins({ top: 10, right: 50, bottom: 30, left: 90 })
-        .dimension(dateDimension).group(individualsByMonthGroup)
-        .transitionDuration(500)
-        .x(d3.scaleTime().domain(initialDomain))  // Set initial scale
-        .round(d3.timeMonth.round).xUnits(d3.timeMonths).elasticY(true)
-        .alwaysUseRounding(true)
-        .gap(15)
-        .centerBar(true)
-        .mouseZoomable(true)
-        .renderHorizontalGridLines(true).rangeChart(rangeChart).brushOn(false)
-        .title(function(d) {
-            const formatTime = d3.timeFormat("%B %Y");
-            const formatValue = d3.format(",");
-            return `${formatTime(d.key)}: ${formatValue(d.value)}`;
-        })
-        .on('filtered', updateTotals);
-
-    focusChart.yAxis().tickFormat(d => d3.format(".2s")(d).replace('G', 'B'));
-
-    rangeChart.width(null).height(60).margins({ top: 0, right: 50, bottom: 20, left: 90 })
-        .dimension(dateDimension).group(individualsByDayGroup).centerBar(true).gap(1)
-        .x(d3.scaleTime().domain(initialDomain))  // Set initial scale
-        .round(d3.timeDay.round).alwaysUseRounding(true).xUnits(d3.timeDays).elasticY(true)
-        .filterPrinter(function (filters) {
-            const dateFmt = d3.timeFormat("%b %d, %Y");
-            return `[${dateFmt(filters[0][0])} to ${dateFmt(filters[0][1])}]`;
-        })
-        .yAxis().ticks(0);
-
-    const demoMargins = { top: 10, right: 30, bottom: 30, left: 20 };
-
-    [sectorIndividualsChart, sectorChildrenChart].forEach(chart => {
-        chart.width(null).height(350).margins(demoMargins).elasticX(true).gap(10).on('filtered', updateTotals);
-        chart.xAxis().ticks(4).tickFormat(d3.format(".2s"));
-    });
-
-    sectorIndividualsChart.dimension(sectorDimension).group(sectorIndividualsGroup).data(group => group.all().filter(d => d.key !== null && d.value > 0));
-    sectorChildrenChart.dimension(sectorDimension).group(sectorChildrenGroup).colors(['#2C96D2']).data(group => group.all().filter(d => d.key !== null && d.value > 0));
-
-    countryIndividualsChart
-        .dimension(countryDimension)
-        .group(countryIndividualsGroup)
-        .width(null)
-        .height(500)
-        .x(d3.scaleBand())
-        .xUnits(dc.units.ordinal)
-        .brushOn(false)
-        .elasticY(true)
-        .renderHorizontalGridLines(true)
-        .gap(10)
-        .margins({ top: 30, right: 25, bottom: 95, left: 90 })
-        .title(d => `${d.key}: ${d3.format(",")(d.value)}`)
-        .on('filtered', updateTotals);
-
-    countryPwdChart
-        .dimension(countryDimension)
-        .group(countryPwdGroup)
-        .width(null)
-        .height(500)
-        .x(d3.scaleBand())
-        .xUnits(dc.units.ordinal)
-        .brushOn(false)
-        .elasticY(true)
-        .renderHorizontalGridLines(true)
-        .gap(10)
-        .margins({ top: 30, right: 25, bottom: 95, left: 90 })
-        .colors(['#9333ea'])
-        .title(d => `${d.key}: ${d3.format(",")(d.value)}`)
-        .on('filtered', updateTotals);
-
-    [countryIndividualsChart, countryPwdChart].forEach(chart => {
-        chart.on('renderlet', function(chart) {
-            chart.selectAll('g.x text')
-                .attr("transform", "rotate(30)")
-                .style("text-anchor", "start")
-                .attr("dx", "2");
-        });
+    // Resize Handler
+    window.addEventListener('resize', function () {
+        timelineChart.resize();
+        sectorIndChart.resize();
+        sectorChildChart.resize();
+        countryIndChart.resize();
+        countryPwdChart.resize();
     });
 
     function updateTotals() {
@@ -123,67 +51,382 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('total-households').textContent = d3.format(',')(totalHouseholds);
     }
 
-    async function loadData(year, isInitial = false) {
-        try {
-            let data;
+    function updateAll(filterSource = null) {
+        updateTotals();
 
-            if (dataCache[year]) {
-                data = dataCache[year];
-            } else {
-                const url = `${window.DASHBOARD_CONFIG.endpoint}?year=${year}&dashboard=${window.DASHBOARD_CONFIG.type}`;
-                const response = await fetch(url, {
-                    credentials: 'same-origin',
-                    headers: {
-                        'Accept': 'application/json',
-                        'X-Requested-With': 'XMLHttpRequest'
-                    }
-                });
+        // 1. Timeline Chart (Area / Time Axis with linear gradient and smooth curves)
+        const timelineData = individualsByDayGroup.all()
+            .filter(d => d.key !== null)
+            .map(d => [d.key.getTime(), d.value]);
 
-                if (!response.ok) {
-                    if (response.status === 403) {
-                        console.error('Authentication required. Please log in.');
-                        return;
-                    }
-                    throw new Error(`HTTP error! status: ${response.status}`);
+        const timelineOption = {
+            tooltip: {
+                trigger: 'axis',
+                formatter: function (params) {
+                    const date = new Date(params[0].value[0]);
+                    const formattedDate = d3.timeFormat("%B %d, %Y")(date);
+                    const formattedValue = d3.format(",")(params[0].value[1]);
+                    return `${formattedDate}<br/><b>${formattedValue}</b> individuals`;
                 }
+            },
+            grid: {
+                top: 20,
+                bottom: 80,
+                left: 60,
+                right: 30
+            },
+            xAxis: {
+                type: 'time',
+                axisLabel: {
+                    color: '#64748b'
+                }
+            },
+            yAxis: {
+                type: 'value',
+                axisLabel: {
+                    formatter: function (val) {
+                        return d3.format(".2s")(val).replace('G', 'B');
+                    },
+                    color: '#64748b'
+                },
+                splitLine: {
+                    lineStyle: {
+                        type: 'dashed',
+                        color: '#f1f5f9'
+                    }
+                }
+            },
+            series: [{
+                name: 'Individuals Reached',
+                type: 'line',
+                smooth: true,
+                symbol: 'none',
+                lineStyle: {
+                    color: '#2ec7c9',
+                    width: 2.5
+                },
+                areaStyle: {
+                    color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                        { offset: 0, color: 'rgba(46, 199, 201, 0.4)' },
+                        { offset: 1, color: 'rgba(46, 199, 201, 0.02)' }
+                    ])
+                },
+                data: timelineData
+            }]
+        };
 
-                data = await response.json();
+        if (filterSource !== 'timeline') {
+            timelineOption.dataZoom = [
+                {
+                    type: 'inside',
+                    start: 0,
+                    end: 100
+                },
+                {
+                    show: true,
+                    type: 'slider',
+                    start: 0,
+                    end: 100,
+                    bottom: 10,
+                    textStyle: {
+                        color: '#64748b'
+                    }
+                }
+            ];
+            timelineChart.setOption(timelineOption, { notMerge: true });
+        } else {
+            timelineChart.setOption(timelineOption);
+        }
 
-                const dateFormat = d3.timeParse('%Y-%m-%d');
-                data.forEach(d => {
-                    d.date = dateFormat(d.date);
-                    d.total_beneficiaries = +d.total_beneficiaries;
-                    d.total_children = +d.total_children;
-                    d.total_pwd = +d.total_pwd;
-                    d.total_households = +d.total_households || 0;
-                });
+        // 2. Sector Individuals Chart (Horizontal bar)
+        const secIndData = sectorIndividualsGroup.all().filter(d => d.key !== null && d.value > 0);
+        secIndData.sort((a, b) => b.value - a.value);
 
-                dataCache[year] = data;
+        const hasAnySectorSelection = selectedSectors.size > 0;
+        const secIndSeriesData = secIndData.map(d => ({
+            name: d.key,
+            value: d.value,
+            itemStyle: {
+                color: selectedSectors.has(d.key)
+                    ? '#2ec7c9'
+                    : (hasAnySectorSelection ? '#cbd5e1' : '#2ec7c9')
             }
+        }));
+
+        sectorIndChart.setOption({
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: { type: 'shadow' },
+                formatter: params => `${params[0].name}: <b>${d3.format(",")(params[0].value)}</b>`
+            },
+            grid: { top: 20, bottom: 30, left: 140, right: 30 },
+            xAxis: {
+                type: 'value',
+                axisLabel: {
+                    formatter: val => d3.format(".2s")(val).replace('G', 'B'),
+                    color: '#64748b'
+                },
+                splitLine: { lineStyle: { color: '#f1f5f9' } }
+            },
+            yAxis: {
+                type: 'category',
+                data: secIndData.map(d => d.key),
+                inverse: true,
+                axisLabel: { color: '#1f2937', fontWeight: 500 }
+            },
+            series: [{
+                type: 'bar',
+                data: secIndSeriesData,
+                barMaxWidth: 25,
+                itemStyle: { borderRadius: [0, 4, 4, 0] }
+            }]
+        });
+
+        // 3. Sector Children Chart (Horizontal bar)
+        const secChildData = sectorChildrenGroup.all().filter(d => d.key !== null && d.value > 0);
+        secChildData.sort((a, b) => b.value - a.value);
+
+        const secChildSeriesData = secChildData.map(d => ({
+            name: d.key,
+            value: d.value,
+            itemStyle: {
+                color: selectedSectors.has(d.key)
+                    ? '#5ab1ef'
+                    : (hasAnySectorSelection ? '#cbd5e1' : '#5ab1ef')
+            }
+        }));
+
+        sectorChildChart.setOption({
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: { type: 'shadow' },
+                formatter: params => `${params[0].name}: <b>${d3.format(",")(params[0].value)}</b>`
+            },
+            grid: { top: 20, bottom: 30, left: 140, right: 30 },
+            xAxis: {
+                type: 'value',
+                axisLabel: {
+                    formatter: val => d3.format(".2s")(val).replace('G', 'B'),
+                    color: '#64748b'
+                },
+                splitLine: { lineStyle: { color: '#f1f5f9' } }
+            },
+            yAxis: {
+                type: 'category',
+                data: secChildData.map(d => d.key),
+                inverse: true,
+                axisLabel: { color: '#1f2937', fontWeight: 500 }
+            },
+            series: [{
+                type: 'bar',
+                data: secChildSeriesData,
+                barMaxWidth: 25,
+                itemStyle: { borderRadius: [0, 4, 4, 0] }
+            }]
+        });
+
+        // 4. Country Individuals Chart (Vertical bar)
+        const countryIndData = countryIndividualsGroup.all()
+            .filter(d => d.key !== null && d.value > 0)
+            .sort((a, b) => b.value - a.value)
+            .slice(0, 15);
+
+        const hasAnyCountrySelection = selectedCountries.size > 0;
+        const countryIndSeriesData = countryIndData.map(d => ({
+            name: d.key,
+            value: d.value,
+            itemStyle: {
+                color: selectedCountries.has(d.key)
+                    ? '#2ec7c9'
+                    : (hasAnyCountrySelection ? '#cbd5e1' : '#2ec7c9')
+            }
+        }));
+
+        countryIndChart.setOption({
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: { type: 'shadow' },
+                formatter: params => `${params[0].name}: <b>${d3.format(",")(params[0].value)}</b>`
+            },
+            grid: { top: 30, bottom: 95, left: 70, right: 20 },
+            xAxis: {
+                type: 'category',
+                data: countryIndData.map(d => d.key),
+                axisLabel: {
+                    rotate: 30,
+                    interval: 0,
+                    color: '#1f2937',
+                    fontWeight: 500
+                }
+            },
+            yAxis: {
+                type: 'value',
+                axisLabel: {
+                    formatter: val => d3.format(".2s")(val).replace('G', 'B'),
+                    color: '#64748b'
+                },
+                splitLine: { lineStyle: { color: '#f1f5f9' } }
+            },
+            series: [{
+                type: 'bar',
+                data: countryIndSeriesData,
+                barMaxWidth: 30,
+                itemStyle: { borderRadius: [4, 4, 0, 0] }
+            }]
+        });
+
+        // 5. Country PWD Chart (Vertical bar)
+        const countryPwdData = countryPwdGroup.all()
+            .filter(d => d.key !== null && d.value > 0)
+            .sort((a, b) => b.value - a.value)
+            .slice(0, 15);
+
+        const countryPwdSeriesData = countryPwdData.map(d => ({
+            name: d.key,
+            value: d.value,
+            itemStyle: {
+                color: selectedCountries.has(d.key)
+                    ? '#b6a2de'
+                    : (hasAnyCountrySelection ? '#cbd5e1' : '#b6a2de')
+            }
+        }));
+
+        countryPwdChart.setOption({
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: { type: 'shadow' },
+                formatter: params => `${params[0].name}: <b>${d3.format(",")(params[0].value)}</b>`
+            },
+            grid: { top: 30, bottom: 95, left: 70, right: 20 },
+            xAxis: {
+                type: 'category',
+                data: countryPwdData.map(d => d.key),
+                axisLabel: {
+                    rotate: 30,
+                    interval: 0,
+                    color: '#1f2937',
+                    fontWeight: 500
+                }
+            },
+            yAxis: {
+                type: 'value',
+                axisLabel: {
+                    formatter: val => d3.format(".2s")(val).replace('G', 'B'),
+                    color: '#64748b'
+                },
+                splitLine: { lineStyle: { color: '#f1f5f9' } }
+            },
+            series: [{
+                type: 'bar',
+                data: countryPwdSeriesData,
+                barMaxWidth: 30,
+                itemStyle: { borderRadius: [4, 4, 0, 0] }
+            }]
+        });
+    }
+
+    // --- Interactive Filters Bindings ---
+
+    // Timeline Zoom
+    timelineChart.on('datazoom', function (params) {
+        const option = timelineChart.getOption();
+        const startVal = option.dataZoom[0].startValue;
+        const endVal = option.dataZoom[0].endValue;
+
+        if (startVal !== undefined && endVal !== undefined) {
+            const startDate = new Date(startVal);
+            const endDate = new Date(endVal);
+            dateDimension.filterRange([startDate, endDate]);
+            updateAll('timeline');
+        }
+    });
+
+    // Sector Filter Selection Toggle
+    const handleSectorClick = function (params) {
+        const sectorName = params.name;
+        if (selectedSectors.has(sectorName)) {
+            selectedSectors.delete(sectorName);
+        } else {
+            selectedSectors.add(sectorName);
+        }
+
+        if (selectedSectors.size === 0) {
+            sectorDimension.filterAll();
+        } else {
+            sectorDimension.filterFunction(d => selectedSectors.has(d));
+        }
+        updateAll();
+    };
+
+    sectorIndChart.on('click', handleSectorClick);
+    sectorChildChart.on('click', handleSectorClick);
+
+    // Country Filter Selection Toggle
+    const handleCountryClick = function (params) {
+        const countryName = params.name;
+        if (selectedCountries.has(countryName)) {
+            selectedCountries.delete(countryName);
+        } else {
+            selectedCountries.add(countryName);
+        }
+
+        if (selectedCountries.size === 0) {
+            countryDimension.filterAll();
+        } else {
+            countryDimension.filterFunction(d => selectedCountries.has(d));
+        }
+        updateAll();
+    };
+
+    countryIndChart.on('click', handleCountryClick);
+    countryPwdChart.on('click', handleCountryClick);
+
+    // --- Load Data ---
+    async function loadData(year) {
+        try {
+            const url = `${window.DASHBOARD_CONFIG.endpoint}?year=${year}&dashboard=${window.DASHBOARD_CONFIG.type}&time_grain=daily`;
+            const response = await fetch(url, {
+                credentials: 'same-origin',
+                headers: {
+                    'Accept': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            });
+
+            if (!response.ok) {
+                if (response.status === 403) {
+                    console.error('Authentication required. Please log in.');
+                    return;
+                }
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const data = await response.json();
+
+            const dateFormat = d3.timeParse('%Y-%m-%d');
+            data.forEach(d => {
+                d.date = dateFormat(d.date);
+                d.total_beneficiaries = +d.total_beneficiaries;
+                d.total_children = +d.total_children;
+                d.total_pwd = +d.total_pwd;
+                d.total_households = +d.total_households || 0;
+            });
 
             const now = new Date();
             now.setHours(23, 59, 59, 999);
             const currentData = data.filter(d => d.date <= now);
 
+            // Clean existing state and filters (clear filters FIRST, then remove old data)
+            selectedSectors.clear();
+            selectedCountries.clear();
+            sectorDimension.filterAll();
+            countryDimension.filterAll();
+            dateDimension.filterAll();
+
             ndx.remove();
             ndx.add(currentData);
 
-            const yearDomain = [new Date(year, 0, 1), new Date(year, 11, 31)];
-            focusChart.x(d3.scaleTime().domain(yearDomain));
-            rangeChart.x(d3.scaleTime().domain(yearDomain));
-
-            const countrySlugsInd = countryIndividualsGroup.all().filter(d => d.value > 0).sort((a, b) => b.value - a.value).map(d => d.key);
-            countryIndividualsChart.x(d3.scaleBand().domain(countrySlugsInd));
-
-            const countrySlugsPwd = countryPwdGroup.all().filter(d => d.value > 0).sort((a, b) => b.value - a.value).map(d => d.key);
-            countryPwdChart.x(d3.scaleBand().domain(countrySlugsPwd));
-
-            if (isInitial) {
-                dc.renderAll();
-            } else {
-                dc.redrawAll();
-            }
-            updateTotals();
+            updateAll();
         } catch (error) {
             console.error('Error loading demographic data:', error);
         }
@@ -200,12 +443,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const firstYear = tabsContainer.querySelector('.active-tab')?.dataset.year;
     if (firstYear) {
-        loadData(firstYear, true);  // Pass true for initial load
+        loadData(firstYear);
     }
-
-    window.addEventListener('resize', function () {
-        focusChart.rescale();
-        rangeChart.rescale();
-        dc.renderAll();
-    });
 });

@@ -103,7 +103,9 @@ class AggregateListView(generics.ListAPIView):  # type: ignore[misc]
                 queryset = GrievanceAggregate.objects.all()
 
         # Filter by the correct time grain for this dashboard type
-        time_grain = TimeGrain.MONTHLY if dash_type == "demographic" else TimeGrain.DAILY
+        time_grain = self.request.query_params.get("time_grain")
+        if not time_grain or time_grain not in TimeGrain.values:
+            time_grain = TimeGrain.MONTHLY if dash_type == "demographic" else TimeGrain.DAILY
         queryset = queryset.filter(time_grain=time_grain)
 
         year = self.request.query_params.get("year")

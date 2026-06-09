@@ -30,9 +30,9 @@
     <!-- Timeline Filter -->
     <div class="bg-white rounded-lg shadow p-6 mb-8">
         <h3 class="text-lg font-semibold text-gray-900 mb-2">{% translate "Tickets Timeline" %}</h3>
-        <div id="time-focus-chart" class="w-full"></div>
-        <div id="time-range-chart" class="w-full mt-4"></div>
-        <p class="text-xs text-gray-500 mt-2 italic">{% translate "* Select a range on the smaller chart at the bottom to zoom in on the focus chart" %}</p>
+        <div id="time-focus-chart" class="w-full" style="min-height: 350px;"></div>
+        <div id="time-range-chart" style="display: none;"></div>
+        <p class="text-xs text-gray-500 mt-2 italic">{% translate "* Use the slider handles at the bottom of the timeline or click and drag to filter dates." %}</p>
     </div>
 
     <!-- Stats Cards -->
@@ -47,22 +47,22 @@
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
         <div class="bg-white rounded-lg shadow p-6">
             <h3 class="text-lg font-semibold text-gray-900 mb-4">{% translate "Status" %}</h3>
-            <div id="grievance-status-chart" class="w-full flex justify-center"></div>
+            <div id="grievance-status-chart" class="w-full flex justify-center" style="min-height: 300px;"></div>
         </div>
         <div class="bg-white rounded-lg shadow p-6">
             <h3 class="text-lg font-semibold text-gray-900 mb-4">{% translate "Priority" %}</h3>
-            <div id="grievance-priority-chart" class="w-full flex justify-center"></div>
+            <div id="grievance-priority-chart" class="w-full flex justify-center" style="min-height: 300px;"></div>
         </div>
     </div>
 
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
         <div class="bg-white rounded-lg shadow p-6">
             <h3 class="text-lg font-semibold text-gray-900 mb-4">{% translate "Category" %}</h3>
-            <div id="grievance-category-chart" class="w-full"></div>
+            <div id="grievance-category-chart" class="w-full" style="min-height: 450px;"></div>
         </div>
         <div class="bg-white rounded-lg shadow p-6">
             <h3 class="text-lg font-semibold text-gray-900 mb-4">{% translate "Issue Type" %}</h3>
-            <div id="grievance-issue-type-chart" class="w-full"></div>
+            <div id="grievance-issue-type-chart" class="w-full" style="min-height: 450px;"></div>
         </div>
     </div>
 
@@ -85,7 +85,7 @@
 
 {% block extra_js %}
 <script src="{% static 'js/crossfilter.min.js' %}"></script>
-<script src="{% static 'js/dc.min.js' %}"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dc/4.2.7/style/dc.min.css" />
+<script src="{% static 'js/echarts.min.js' %}"></script>
+<script src="{% static 'js/macarons.js' %}"></script>
 <script src="{% static 'js/grievance_visuals.js' %}"></script>
 {% endblock extra_js %}

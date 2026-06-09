@@ -13,6 +13,7 @@ CONTENT_SECURITY_POLICY = {
             "https://cdn.jsdelivr.net",
             "https://unpkg.com/",
             "https://cdn.tailwindcss.com",
+            "https://cdnjs.cloudflare.com",
         ]
         + [],
     }
