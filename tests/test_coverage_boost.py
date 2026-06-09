@@ -42,7 +42,7 @@ def test_urls_debug_true(monkeypatch):
     importlib.reload(hope_live.config.urls)
 
     # Verify the reload URL was added
-    assert any(p.pattern._route == "__reload__/" for p in hope_live.config.urls.urlpatterns)
+    assert any(getattr(p.pattern, "_route", None) == "__reload__/" for p in hope_live.config.urls.urlpatterns)
 
 
 def test_cli_listen_callback():

@@ -2,6 +2,23 @@ document.addEventListener('DOMContentLoaded', function () {
     const tabsContainer = document.getElementById('tabs-container');
     if (!tabsContainer) return;
 
+    const colorPalette = [
+        '#2ec7c9', '#b6a2de', '#5ab1ef', '#ffb980', '#d87a80',
+        '#8d98b3', '#e5cf0d', '#97b552', '#95706d', '#dc69aa',
+        '#07a2a4', '#9a7fd1', '#588dd5', '#f5994e', '#c05050',
+        '#59678c', '#c9ab00', '#76933c', '#bc65a6'
+    ];
+
+    function getStableColor(name) {
+        if (!name) return '#5470c6';
+        let hash = 0;
+        for (let i = 0; i < name.length; i++) {
+            hash = name.charCodeAt(i) + ((hash << 5) - hash);
+        }
+        const index = Math.abs(hash) % colorPalette.length;
+        return colorPalette[index];
+    }
+
     // Initialize empty Crossfilter
     let ndx = crossfilter([]);
 
@@ -150,15 +167,18 @@ document.addEventListener('DOMContentLoaded', function () {
         categoryData.sort((a, b) => b.value - a.value);
 
         const hasAnyCategorySelection = selectedCategories.size > 0;
-        const categorySeriesData = categoryData.map(d => ({
-            name: d.key,
-            value: d.value,
-            itemStyle: {
-                color: selectedCategories.has(d.key)
-                    ? '#2ec7c9'
-                    : (hasAnyCategorySelection ? '#cbd5e1' : '#2ec7c9')
-            }
-        }));
+        const categorySeriesData = categoryData.map(d => {
+            const stableColor = getStableColor(d.key);
+            return {
+                name: d.key,
+                value: d.value,
+                itemStyle: {
+                    color: selectedCategories.has(d.key)
+                        ? stableColor
+                        : (hasAnyCategorySelection ? '#cbd5e1' : stableColor)
+                }
+            };
+        });
 
         categoryChart.setOption({
             tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' }, formatter: params => `${params[0].name}: <b>${d3.format(",")(params[0].value)}</b>` },
@@ -187,15 +207,18 @@ document.addEventListener('DOMContentLoaded', function () {
         issueTypeData.sort((a, b) => b.value - a.value);
 
         const hasAnyIssueTypeSelection = selectedIssueTypes.size > 0;
-        const issueTypeSeriesData = issueTypeData.map(d => ({
-            name: d.key,
-            value: d.value,
-            itemStyle: {
-                color: selectedIssueTypes.has(d.key)
-                    ? '#2ec7c9'
-                    : (hasAnyIssueTypeSelection ? '#cbd5e1' : '#2ec7c9')
-            }
-        }));
+        const issueTypeSeriesData = issueTypeData.map(d => {
+            const stableColor = getStableColor(d.key);
+            return {
+                name: d.key,
+                value: d.value,
+                itemStyle: {
+                    color: selectedIssueTypes.has(d.key)
+                        ? stableColor
+                        : (hasAnyIssueTypeSelection ? '#cbd5e1' : stableColor)
+                }
+            };
+        });
 
         issueTypeChart.setOption({
             tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' }, formatter: params => `${params[0].name}: <b>${d3.format(",")(params[0].value)}</b>` },
@@ -226,15 +249,18 @@ document.addEventListener('DOMContentLoaded', function () {
             .slice(0, 15);
 
         const hasAnyCountrySelection = selectedCountries.size > 0;
-        const countrySeriesData = countryData.map(d => ({
-            name: d.key,
-            value: d.value,
-            itemStyle: {
-                color: selectedCountries.has(d.key)
-                    ? '#2ec7c9'
-                    : (hasAnyCountrySelection ? '#cbd5e1' : '#2ec7c9')
-            }
-        }));
+        const countrySeriesData = countryData.map(d => {
+            const stableColor = getStableColor(d.key);
+            return {
+                name: d.key,
+                value: d.value,
+                itemStyle: {
+                    color: selectedCountries.has(d.key)
+                        ? stableColor
+                        : (hasAnyCountrySelection ? '#cbd5e1' : stableColor)
+                }
+            };
+        });
 
         countryChart.setOption({
             tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' }, formatter: params => `${params[0].name}: <b>${d3.format(",")(params[0].value)}</b>` },

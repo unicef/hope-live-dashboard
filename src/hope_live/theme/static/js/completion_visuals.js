@@ -2,6 +2,23 @@ document.addEventListener('DOMContentLoaded', function () {
     const tabsContainer = document.getElementById('tabs-container');
     if (!tabsContainer) return;
 
+    const colorPalette = [
+        '#2ec7c9', '#b6a2de', '#5ab1ef', '#ffb980', '#d87a80',
+        '#8d98b3', '#e5cf0d', '#97b552', '#95706d', '#dc69aa',
+        '#07a2a4', '#9a7fd1', '#588dd5', '#f5994e', '#c05050',
+        '#59678c', '#c9ab00', '#76933c', '#bc65a6'
+    ];
+
+    function getStableColor(name) {
+        if (!name) return '#5470c6';
+        let hash = 0;
+        for (let i = 0; i < name.length; i++) {
+            hash = name.charCodeAt(i) + ((hash << 5) - hash);
+        }
+        const index = Math.abs(hash) % colorPalette.length;
+        return colorPalette[index];
+    }
+
     // Initialize empty Crossfilter
     let ndx = crossfilter([]);
 
@@ -159,15 +176,18 @@ document.addEventListener('DOMContentLoaded', function () {
             .slice(0, 15);
 
         const hasAnyCountrySelection = selectedCountries.size > 0;
-        const countrySeriesData = countryData.map(d => ({
-            name: d.key,
-            value: d.value,
-            itemStyle: {
-                color: selectedCountries.has(d.key)
-                    ? '#5ab1ef'
-                    : (hasAnyCountrySelection ? '#cbd5e1' : '#5ab1ef')
-            }
-        }));
+        const countrySeriesData = countryData.map(d => {
+            const stableColor = getStableColor(d.key);
+            return {
+                name: d.key,
+                value: d.value,
+                itemStyle: {
+                    color: selectedCountries.has(d.key)
+                        ? stableColor
+                        : (hasAnyCountrySelection ? '#cbd5e1' : stableColor)
+                }
+            };
+        });
 
         countryChart.setOption({
             tooltip: {

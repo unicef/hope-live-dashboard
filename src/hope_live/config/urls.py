@@ -1,12 +1,11 @@
 import debug_toolbar
 from django.conf import settings
+from django.conf.urls.i18n import i18n_patterns
 from django.contrib import admin
 from django.urls import include, path
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 
 urlpatterns = [
-    # 1. Main application URLs
-    path("", include("hope_live.web.urls", namespace="web")),
     # 2. API endpoints (grouped together)
     path("api/analysis/", include("hope_live.analysis.api.urls")),
     path("api/schema/", SpectacularAPIView.as_view(), name="schema"),
@@ -23,6 +22,12 @@ urlpatterns = [
     # 6. Debug/development URLs (always last)
     path(r"__debug__/", include(debug_toolbar.urls)),
 ]
+
+urlpatterns += i18n_patterns(
+    # 1. Main application URLs
+    path("", include("hope_live.web.urls", namespace="web")),
+    prefix_default_language=False,
+)
 
 if settings.DEBUG and "django_browser_reload.middleware.BrowserReloadMiddleware" in settings.MIDDLEWARE:
     urlpatterns += [
