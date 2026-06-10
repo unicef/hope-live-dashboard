@@ -2,7 +2,7 @@ from django.conf import settings
 
 from .. import env
 
-CONSTANCE_REDIS_CONNECTION = env("CONSTANCE_REDIS_URL")
+CONSTANCE_REDIS_CONNECTION = env("CONSTANCE_REDIS_URL") or "redis://127.0.0.1:6379/1"
 CONSTANCE_REDIS_CACHE_TIMEOUT = 1
 CONSTANCE_ADDITIONAL_FIELDS = {
     "group_select": [

@@ -291,8 +291,10 @@ def _calculate_demographic_children(rows: list[dict[str, Any]], default_year: in
             item_date_str = item.get("date")
             if isinstance(item_date_str, str):
                 item_year = int(item_date_str.split("-")[0])
+            elif item_date_str is not None and hasattr(item_date_str, "year"):
+                item_year = item_date_str.year
             else:
-                item_year = item_date_str.year if hasattr(item_date_str, "year") else default_year
+                item_year = default_year
 
             rate = get_fertility_rate(country, item_year)
             est_children = int(households * rate)

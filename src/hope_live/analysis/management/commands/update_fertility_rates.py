@@ -53,7 +53,7 @@ class Command(BaseCommand):
 
     def _parse_records(self, data: list[Any]) -> list[dict[str, Any]]:
         records = data[1]
-        country_data = defaultdict(dict)
+        country_data: dict[str, dict[str, float]] = defaultdict(dict)
 
         for record in records:
             iso3 = record.get("countryiso3code")
@@ -74,7 +74,7 @@ class Command(BaseCommand):
             if not years_dict:
                 continue
 
-            entry = {"Country Code": iso3}
+            entry: dict[str, Any] = {"Country Code": iso3}
             for yr in sorted(years_dict.keys()):
                 entry[yr] = years_dict[yr]
             output_list.append(entry)

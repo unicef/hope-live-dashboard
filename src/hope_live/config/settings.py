@@ -98,11 +98,12 @@ TEMPLATES = [
 WSGI_APPLICATION = "hope_live.config.wsgi.application"
 
 ASGI_APPLICATION = "hope_live.config.asgi.application"
+_redis_url = env("CHANNEL_BROKER") or env("REDIS_URL") or "redis://127.0.0.1:6379/1"
 CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
         "CONFIG": {
-            "hosts": [(env("CHANNEL_BROKER") or env("REDIS_URL")).replace("localhost", "127.0.0.1") + "?protocol=2"],
+            "hosts": [_redis_url.replace("localhost", "127.0.0.1") + "?protocol=2"],
         },
     },
 }
@@ -118,7 +119,7 @@ DATABASES = {
 
 CACHE_URL = env("CACHE_URL")
 CACHES = {
-    "default": env.cache("CACHE_URL", default="locmem://"),
+    "default": env.cache("CACHE_URL", default="locmemcache://"),
 }
 
 # Password validation
