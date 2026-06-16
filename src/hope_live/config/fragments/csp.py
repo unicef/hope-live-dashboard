@@ -16,5 +16,12 @@ CONTENT_SECURITY_POLICY = {
             "https://cdnjs.cloudflare.com",
         ]
         + [],
+        "connect-src": [
+            "'self'",
+            "https://cdn.jsdelivr.net",
+            "https://unpkg.com",
+            "ws:",
+            "wss:",
+        ],
     }
 }

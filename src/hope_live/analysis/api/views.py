@@ -8,6 +8,7 @@ from rest_framework import (  # type: ignore[import-untyped]
     generics,
     serializers,
 )
+from rest_framework.permissions import AllowAny
 from rest_framework.request import Request  # type: ignore[import-untyped]
 from rest_framework.response import Response  # type: ignore[import-untyped]
 
@@ -23,6 +24,8 @@ from ..serializers import (
 @method_decorator(cache_page(60 * 60 * 6), name="dispatch")
 class AggregateListView(generics.ListAPIView):  # type: ignore[misc]
     """API endpoint for listing Aggregate records with filtering."""
+
+    permission_classes = [AllowAny]
 
     def get_serializer_class(self) -> type[serializers.ModelSerializer]:
         dash_type = self.request.query_params.get("dashboard")
