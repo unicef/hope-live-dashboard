@@ -1,13 +1,12 @@
 {% load i18n static %}
-<input id="nav-toggle" type="checkbox" class="peer hidden" />
+<input id="nav-toggle" type="checkbox" class="peer hidden" checked />
 
-<!-- CHANGED: w-16 to w-14 -->
 <aside
-    class="z-50 bg-primary shadow-lg h-full transition-all duration-300 ease-in-out w-14 overflow-hidden peer-checked:w-64 shrink-0"
+    class="z-50 bg-[#00adef] shadow-lg h-screen sticky top-0 transition-all duration-300 ease-in-out w-14 overflow-hidden peer-checked:w-64 shrink-0"
     aria-label="Sidebar">
 
     <!-- CHANGED: w-64 to w-full so it respects the parent's width -->
-    <div class="px-3 w-full py-4 flex flex-col justify-between bg-primary h-full overflow-hidden">
+    <div class="px-3 w-full py-4 flex flex-col justify-between bg-[#00adef] h-full overflow-hidden">
         <div>
             <div class="flex items-center justify-center p-2 text-white shrink-0">
                 <a href='{% url "web:index" %}'><img src="{% static 'images/logo-white.png' %}" alt="UNICEF Logo" class="h-12 hidden peer-checked:block"></a>
@@ -79,8 +78,42 @@
                 </li>
         </div>
 
+        <!-- Bottom: HOPE in Action & Children drawing -->
+        <div class="mt-auto pt-4 border-t border-sky-400 hidden peer-checked:block text-white">
+            <div class="px-2 mb-2">
+                <h4 class="text-xs font-bold uppercase tracking-wider text-sky-100 mb-1">{% translate "HOPE in Action" %}</h4>
+                <p class="text-[11px] text-white/95 leading-relaxed mb-2">
+                    {% translate "HOPE helps countries strengthen evidence for humanitarian action for children." %}
+                </p>
+                <a href="https://www.unicef.org/hope-hct/about" target="_blank" class="text-xs font-semibold hover:underline flex items-center gap-1">
+                    {% translate "Learn more" %} →
+                </a>
+            </div>
+
+            <!-- Children Drawing Outline -->
+            <div class="opacity-40 mt-4 mb-2 flex justify-center">
+                <svg class="w-28 h-20 text-white" viewBox="0 0 120 80" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+                    <!-- Boy (left) -->
+                    <circle cx="45" cy="25" r="7" />
+                    <path d="M45,32 L45,52" />
+                    <path d="M45,38 L30,40" />
+                    <path d="M45,38 L60,42" />
+                    <path d="M45,52 L37,68" />
+                    <path d="M45,52 L53,68" />
+
+                    <!-- Girl (right) -->
+                    <circle cx="75" cy="25" r="7" />
+                    <path d="M75,32 L65,52 L85,52 Z" />
+                    <path d="M70,38 L60,42" />
+                    <path d="M80,38 L95,40" />
+                    <path d="M70,52 L70,68" />
+                    <path d="M80,52 L80,68" />
+                </svg>
+            </div>
+        </div>
+
         <!-- Bottom Menu: Admin & Sign Out -->
-        <ul class="space-y-2 mt-auto pt-4 border-t border-sky-500">
+        <ul class="space-y-2 pt-2 border-t border-sky-400">
             {% if request.user.is_staff %}
             <li>
                 <a href='{% url "admin:index" %}' target="_blank" class="flex items-center p-2 text-base font-semibold text-white rounded-lg hover:bg-sky-600 group whitespace-nowrap overflow-hidden">

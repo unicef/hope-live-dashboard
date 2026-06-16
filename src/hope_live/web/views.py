@@ -110,7 +110,24 @@ class IndexView(TemplateView):
         context["total_children"] = format_large_number(total_children)
         context["total_households"] = format_large_number(total_households)
         context["total_countries"] = total_countries
-        context["verification_success_rate"] = 98.7  # Hardcoded for now as per mockup
+        # Calculate verification success rate from CompletionAggregate status counts
+        reconciled_sum = (
+            CompletionAggregate.objects.filter(dimension_type="status", dimension_value="RECONCILED").aggregate(
+                total=Sum("payment_count")
+            )["total"]
+            or 0
+        )
+        open_sum = (
+            CompletionAggregate.objects.filter(dimension_type="status", dimension_value="OPEN").aggregate(
+                total=Sum("payment_count")
+            )["total"]
+            or 0
+        )
+        total_payments = reconciled_sum + open_sum
+        if total_payments > 0:
+            context["verification_success_rate"] = round((reconciled_sum / total_payments) * 100, 1)
+        else:
+            context["verification_success_rate"] = 98.7
 
         context["total_countries_glance"] = total_countries_glance or 170
         context["total_programs_glance"] = total_programs_glance or 450

@@ -2,6 +2,7 @@ import pytest
 from django.test import RequestFactory
 
 from hope_live.analysis.models import (
+    CompletionAggregate,
     DemographicAggregate,
     FinancialAggregate,
     TimeGrain,
@@ -84,6 +85,23 @@ def test_index_view_dynamic_context(user_factory):
         total_households=10_000,
     )
 
+    CompletionAggregate.objects.create(
+        date="2026-05-20",
+        time_grain=TimeGrain.DAILY,
+        country_slug="kenya",
+        dimension_type="status",
+        dimension_value="RECONCILED",
+        payment_count=80,
+    )
+    CompletionAggregate.objects.create(
+        date="2026-05-20",
+        time_grain=TimeGrain.DAILY,
+        country_slug="kenya",
+        dimension_type="status",
+        dimension_value="OPEN",
+        payment_count=20,
+    )
+
     user = user_factory()
     request = RequestFactory().get("/")
     request.user = user
@@ -102,3 +120,4 @@ def test_index_view_dynamic_context(user_factory):
     assert context["total_programs_glance"] == 1  # DCT-Somalia
     assert context["total_sources_glance"] == "HOPE Database"
     assert context["latest_data_str"] == "June 2026"
+    assert context["verification_success_rate"] == 80.0

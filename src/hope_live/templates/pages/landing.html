@@ -5,9 +5,22 @@
 <!-- 1. Hero Section -->
 <div class="grid grid-cols-12 bg-white border-b">
 
-    <!-- Left: Title, Description, and CTAs -->
-    <div class="col-span-12 lg:col-span-8 p-10 bg-sky-50 flex flex-col justify-center min-h-[400px]">
-        <div class="max-w-xl">
+    <!-- Unified Hero Banner (Spans 10 columns) -->
+    <div class="col-span-12 lg:col-span-10 relative bg-sky-50 min-h-[400px] flex items-center overflow-hidden">
+
+        <!-- Background Portrait Image & Blend Overlay -->
+        <div class="absolute inset-y-0 right-0 w-full lg:w-1/2 z-0 opacity-20 lg:opacity-100 transition-opacity">
+            <img
+                src="{% static 'images/background.png' %}"
+                class="w-full h-full object-cover object-right"
+                alt="Child"
+            >
+            <!-- Feathered fade overlay to blend the image seamlessly into the bg-sky-50 card background -->
+            <div class="absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-sky-50 via-sky-50/70 to-transparent hidden lg:block"></div>
+        </div>
+
+        <!-- Left Content: Title, Description, and CTAs -->
+        <div class="relative z-10 max-w-xl p-10 lg:pl-12 flex flex-col justify-center">
             <div class="flex items-center gap-6 mb-6">
                 <h1 class="text-7xl lg:text-8xl font-black text-[#00adef] tracking-tight">HOPE</h1>
                 <h2 class="text-xl lg:text-2xl font-medium text-[#00adef] leading-snug border-l-2 border-[#00adef] pl-6">
@@ -32,15 +45,6 @@
                 </a>
             </div>
         </div>
-    </div>
-
-    <!-- Middle: Child Portrait Image -->
-    <div class="col-span-12 md:col-span-6 lg:col-span-2 relative min-h-[300px] lg:min-h-0">
-        <img
-            src="{% static 'images/background.png' %}"
-            class="absolute inset-0 w-full h-full object-cover"
-            alt="Child"
-        >
     </div>
 
     <!-- Right: Stats / HOPE at a Glance -->
@@ -189,21 +193,21 @@
             <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 flex flex-col">
                 <div class="flex justify-between items-center mb-6">
                     <h3 class="text-base font-bold text-slate-900">{% translate "Latest updates & alerts" %}</h3>
-                    <a href="#" class="text-xs text-[#00adef] font-semibold hover:underline">{% translate "View all" %} →</a>
+                    <a href="https://www.unicef.org/hope-hct/" target="_blank" class="text-xs text-[#00adef] font-semibold hover:underline">{% translate "View all" %} →</a>
                 </div>
                 <div class="space-y-6 flex-grow">
-                    <!-- Update 1: Alert -->
+                    <!-- Update 1: Story -->
                     <div class="flex gap-4">
                         <div class="w-10 h-10 rounded-full bg-red-50 flex items-center justify-center shrink-0 text-red-500">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
                         </div>
                         <div>
                             <div class="flex items-center gap-2 mb-1">
-                                <span class="bg-red-100 text-red-700 text-[10px] font-bold px-2 py-0.5 rounded">{% translate "Alert" %}</span>
-                                <span class="text-xs text-gray-400">3 days ago</span>
+                                <span class="bg-red-100 text-red-700 text-[10px] font-bold px-2 py-0.5 rounded">{% translate "Story" %}</span>
+                                <span class="text-xs text-gray-400">{% translate "Recent" %}</span>
                             </div>
-                            <p class="text-sm text-slate-700 font-medium leading-tight">{% translate "Severe flooding in Southern Sudan affects more than 700,000 people, including 250,000 children." %}</p>
-                            <a href="#" class="text-xs text-[#00adef] hover:underline font-semibold mt-1 inline-block">{% translate "View details" %} →</a>
+                            <p class="text-sm text-slate-700 font-medium leading-tight">{% translate "Lifeline of hope for families after Typhoon Yagi: UNICEF's first humanitarian cash transfers in Viet Nam." %}</p>
+                            <a href="https://www.unicef.org/hope-hct/stories/lifeline-hope-bay-and-his-family-after-typhoon-yagi" target="_blank" class="text-xs text-[#00adef] hover:underline font-semibold mt-1 inline-block">{% translate "Read story" %} →</a>
                         </div>
                     </div>
 
@@ -215,25 +219,25 @@
                         <div>
                             <div class="flex items-center gap-2 mb-1">
                                 <span class="bg-blue-100 text-blue-700 text-[10px] font-bold px-2 py-0.5 rounded">{% translate "Report" %}</span>
-                                <span class="text-xs text-gray-400">1 week ago</span>
-                                <p class="text-sm text-slate-700 font-medium leading-tight">{% translate "HOPE Data Update - May 2026" %}</p>
+                                <span class="text-xs text-gray-400">{% translate "Featured" %}</span>
                             </div>
-                            <a href="#" class="text-xs text-[#00adef] hover:underline font-semibold mt-1 inline-block">{% translate "View details" %} →</a>
+                            <p class="text-sm text-slate-700 font-medium leading-tight">{% translate "Advancing Sustainable Funding for UNICEF Digital Public Good (HOPE) cash assistance platform." %}</p>
+                            <a href="https://www.unicef.org/hope-hct/stories/advancing-sustainable-funding-unicef-digital-public-goods" target="_blank" class="text-xs text-[#00adef] hover:underline font-semibold mt-1 inline-block">{% translate "View report" %} →</a>
                         </div>
                     </div>
 
-                    <!-- Update 3: Data update -->
+                    <!-- Update 3: Podcast -->
                     <div class="flex gap-4">
                         <div class="w-10 h-10 rounded-full bg-emerald-50 flex items-center justify-center shrink-0 text-emerald-500">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 00-2 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"/></svg>
                         </div>
                         <div>
                             <div class="flex items-center gap-2 mb-1">
-                                <span class="bg-emerald-100 text-emerald-700 text-[10px] font-bold px-2 py-0.5 rounded">{% translate "Data update" %}</span>
-                                <span class="text-xs text-gray-400">2 weeks ago</span>
+                                <span class="bg-emerald-100 text-emerald-700 text-[10px] font-bold px-2 py-0.5 rounded">{% translate "Podcast" %}</span>
+                                <span class="text-xs text-gray-400">{% translate "Featured" %}</span>
                             </div>
-                            <p class="text-sm text-slate-700 font-medium leading-tight">{% translate "New WASH indicators now available for 15 countries." %}</p>
-                            <a href="#" class="text-xs text-[#00adef] hover:underline font-semibold mt-1 inline-block">{% translate "View details" %} →</a>
+                            <p class="text-sm text-slate-700 font-medium leading-tight">{% translate "Bringing HOPE To Whoever Needs It Most: podcast on secure data and risk-informed cash transfers." %}</p>
+                            <a href="https://www.unicef.org/hope-hct/stories/podcast-bringing-hope-whoever-needs-it-most" target="_blank" class="text-xs text-[#00adef] hover:underline font-semibold mt-1 inline-block">{% translate "Listen now" %} →</a>
                         </div>
                     </div>
                 </div>
