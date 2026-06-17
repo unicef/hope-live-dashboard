@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-08 12:52+0000\n"
+"POT-Creation-Date: 2026-06-17 08:23+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,52 +17,58 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-#: src/hope_live/config/settings.py:153
-msgid "Spanish"
-msgstr ""
-
-#: src/hope_live/config/settings.py:154
-msgid "French"
-msgstr ""
-
-#: src/hope_live/config/settings.py:155
-msgid "English"
-msgstr ""
-
-#: src/hope_live/config/settings.py:156
-msgid "Arabic"
-msgstr ""
 
 #: src/hope_live/config/settings.py:157
-msgid "Russian"
-msgstr ""
+msgid "Spanish"
+msgstr "西班牙语"
 
 #: src/hope_live/config/settings.py:158
+msgid "French"
+msgstr "法语"
+
+#: src/hope_live/config/settings.py:159
+msgid "English"
+msgstr "英语"
+
+#: src/hope_live/config/settings.py:160
+msgid "Arabic"
+msgstr "阿拉伯语"
+
+#: src/hope_live/config/settings.py:161
+msgid "Russian"
+msgstr "俄语"
+
+#: src/hope_live/config/settings.py:162
 msgid "Chinese"
-msgstr ""
+msgstr "中文"
 
 #: src/hope_live/templates/footer.html:7
 #, python-format
 msgid "Copyright © %(year)s - All right reserved by UNICEF - %(version)s"
-msgstr ""
+msgstr "版权所有 © %(year)s - 联合国儿童基金会保留所有权利 - %(version)s"
 
 #: src/hope_live/templates/header.html:8
 msgid "Search for a country, indicator, dataset..."
-msgstr ""
+msgstr "搜索国家、指标、数据集..."
 
-#: src/hope_live/templates/header.html:26 src/hope_live/templates/menu.html:75
+#: src/hope_live/templates/header.html:29
+msgid "Select Language"
+msgstr "选择语言"
+
+#: src/hope_live/templates/header.html:58
+#: src/hope_live/templates/menu.html:136
 msgid "Sign Out"
-msgstr ""
+msgstr "登出"
 
-#: src/hope_live/templates/header.html:37
+#: src/hope_live/templates/header.html:69
 msgid "Open Issue"
-msgstr ""
+msgstr "开放问题"
 
-#: src/hope_live/templates/layout.html:8
+#: src/hope_live/templates/layout.html:10
 msgid "HOPE Dashboard"
-msgstr ""
+msgstr "HOPE 仪表板"
 
-#: src/hope_live/templates/menu.html:20
+#: src/hope_live/templates/menu.html:19
 #: src/hope_live/templates/unfold/helpers/site_icon.html:7
 #: src/hope_live/templates/unfold/helpers/site_icon.html:9
 #: src/hope_live/templates/unfold/helpers/site_icon.html:11
@@ -70,354 +76,425 @@ msgstr ""
 #: src/hope_live/templates/unfold/helpers/site_logo.html:7
 #: src/hope_live/templates/unfold/helpers/site_logo.html:9
 msgid "Home"
-msgstr ""
+msgstr "首页"
 
 #: src/hope_live/templates/menu.html:26
-msgid "Dashboards"
-msgstr ""
+#: src/hope_live/templates/pages/dashboard.html:8
+#: src/hope_live/templates/pages/landing.html:270
+msgid "Financial Dashboard"
+msgstr "财务仪表板"
 
 #: src/hope_live/templates/menu.html:32
-#: src/hope_live/templates/pages/dashboard.html:79
-#: src/hope_live/templates/pages/landing.html:108
-msgid "Countries"
-msgstr ""
+#: src/hope_live/templates/pages/landing.html:274
+msgid "Demographics"
+msgstr "人口统计"
 
 #: src/hope_live/templates/menu.html:38
-msgid "Data & API"
-msgstr ""
+#: src/hope_live/templates/pages/landing.html:278
+msgid "Accountability"
+msgstr "问责制"
 
 #: src/hope_live/templates/menu.html:44
+#: src/hope_live/templates/pages/landing.html:282
+msgid "Programme Quality"
+msgstr "节目质量"
+
+#: src/hope_live/templates/menu.html:51
+msgid "Dashboards"
+msgstr "仪表板"
+
+#: src/hope_live/templates/menu.html:58
+#: src/hope_live/templates/pages/dashboard.html:79
+msgid "Countries"
+msgstr "国家"
+
+#: src/hope_live/templates/menu.html:64
+msgid "Data & API"
+msgstr "数据与应用程序接口"
+
+#: src/hope_live/templates/menu.html:70
 msgid "Documentation"
-msgstr ""
+msgstr "文档"
 
-#: src/hope_live/templates/menu.html:50
-#: src/hope_live/templates/pages/landing.html:30
-#: src/hope_live/templates/pages/landing.html:283
+#: src/hope_live/templates/menu.html:76
+#: src/hope_live/templates/pages/landing.html:43
+#: src/hope_live/templates/pages/landing.html:352
 msgid "About HOPE"
-msgstr ""
+msgstr "关于希望"
 
-#: src/hope_live/templates/menu.html:63
+#: src/hope_live/templates/menu.html:84
+msgid "HOPE in Action"
+msgstr "希望在行动"
+
+#: src/hope_live/templates/menu.html:86
+msgid ""
+"HOPE helps countries strengthen evidence for humanitarian action for "
+"children."
+msgstr "HOPE 帮助各国加强针对儿童的人道主义行动的证据。"
+
+#: src/hope_live/templates/menu.html:89
+msgid "Learn more"
+msgstr "了解更多"
+
+#: src/hope_live/templates/menu.html:124
 msgid "Admin"
-msgstr ""
-
-#: src/hope_live/templates/menu.html:83
-msgid "Sign In"
-msgstr ""
+msgstr "行政"
 
 #: src/hope_live/templates/pages/completion.html:8
 msgid "Completion Rate Dashboard"
-msgstr ""
+msgstr "完成率仪表板"
 
 #: src/hope_live/templates/pages/completion.html:9
 msgid "Payment Reconciliation and Completion Status Tracking"
-msgstr ""
+msgstr "付款对账和完成状态跟踪"
 
 #: src/hope_live/templates/pages/completion.html:12
 #: src/hope_live/templates/pages/dashboard.html:13
 #: src/hope_live/templates/pages/grievance.html:12
 msgid "Live Data"
-msgstr ""
+msgstr "实时数据"
 
 #: src/hope_live/templates/pages/completion.html:32
 msgid "Reconciliation Timeline"
-msgstr ""
+msgstr "和解时间表"
 
 #: src/hope_live/templates/pages/completion.html:35
 #: src/hope_live/templates/pages/dashboard.html:36
 #: src/hope_live/templates/pages/grievance.html:35
 msgid ""
-"* Select a range on the smaller chart at the bottom to zoom in on the focus "
-"chart"
-msgstr ""
+"* Use the slider handles at the bottom of the timeline or click and drag to "
+"filter dates."
+msgstr "* 使用时间线底部的滑块手柄或单击并拖动来过滤日期。"
 
 #: src/hope_live/templates/pages/completion.html:41
 msgid "Reconciled Payments"
-msgstr ""
+msgstr "核对付款"
 
 #: src/hope_live/templates/pages/completion.html:45
 msgid "Still Opened"
-msgstr ""
+msgstr "仍在营业"
 
 #: src/hope_live/templates/pages/completion.html:55
 msgid "Number of Payments by Country"
-msgstr ""
-
-#: src/hope_live/templates/pages/dashboard.html:8
-#: src/hope_live/templates/pages/landing.html:202
-msgid "Financial Dashboard"
-msgstr ""
+msgstr "按国家/地区划分的付款数量"
 
 #: src/hope_live/templates/pages/dashboard.html:9
 msgid "Overview of Financial info"
-msgstr ""
+msgstr "财务信息概览"
 
 #: src/hope_live/templates/pages/dashboard.html:33
 msgid "Spending Timeline"
-msgstr ""
+msgstr "支出时间表"
 
 #: src/hope_live/templates/pages/dashboard.html:46
 msgid "Total Amount Paid"
-msgstr ""
+msgstr "支付总额"
 
 #: src/hope_live/templates/pages/dashboard.html:50
 msgid "Number of Payments"
-msgstr ""
+msgstr "付款次数"
 
 #: src/hope_live/templates/pages/dashboard.html:54
 msgid "Outstanding Payment"
-msgstr ""
+msgstr "未付款项"
 
 #: src/hope_live/templates/pages/dashboard.html:61
 msgid "Delivery Types"
-msgstr ""
+msgstr "交付类型"
 
 #: src/hope_live/templates/pages/dashboard.html:65
 msgid "Regions"
-msgstr ""
+msgstr "地区"
 
 #: src/hope_live/templates/pages/dashboard.html:72
 msgid "Distribution by Sector"
-msgstr ""
+msgstr "按行业分布"
 
 #: src/hope_live/templates/pages/dashboard.html:86
 msgid "Distribution by Program"
-msgstr ""
+msgstr "按节目分配"
 
 #: src/hope_live/templates/pages/dashboard.html:90
 msgid "Financial Service Providers (FSP)"
-msgstr ""
+msgstr "金融服务提供商 (FSP)"
 
 #: src/hope_live/templates/pages/grievance.html:8
 msgid "Grievance Dashboard"
-msgstr ""
+msgstr "申诉投诉仪表板"
 
 #: src/hope_live/templates/pages/grievance.html:9
 msgid "Overview of Feedback and Grievance Tickets"
-msgstr ""
+msgstr "反馈和申诉单概述"
 
 #: src/hope_live/templates/pages/grievance.html:32
 msgid "Tickets Timeline"
-msgstr ""
+msgstr "门票时间表"
 
 #: src/hope_live/templates/pages/grievance.html:41
 msgid "Total Tickets"
-msgstr ""
+msgstr "总门票数"
 
 #: src/hope_live/templates/pages/grievance.html:49
 msgid "Status"
-msgstr ""
+msgstr "地位"
 
 #: src/hope_live/templates/pages/grievance.html:53
 msgid "Priority"
-msgstr ""
+msgstr "优先事项"
 
 #: src/hope_live/templates/pages/grievance.html:60
 msgid "Category"
-msgstr ""
+msgstr "类别"
 
 #: src/hope_live/templates/pages/grievance.html:64
 msgid "Issue Type"
-msgstr ""
+msgstr "问题类型"
 
 #: src/hope_live/templates/pages/grievance.html:72
 msgid "Tickets by Country"
-msgstr ""
+msgstr "按国家/地区划分的门票"
 
-#: src/hope_live/templates/pages/landing.html:14
+#: src/hope_live/templates/pages/landing.html:27
 msgid "Humanitarian cash"
-msgstr ""
+msgstr "人道主义现金"
 
-#: src/hope_live/templates/pages/landing.html:15
+#: src/hope_live/templates/pages/landing.html:28
 msgid "Operations and Programme"
-msgstr ""
+msgstr "运营及计划"
 
-#: src/hope_live/templates/pages/landing.html:16
+#: src/hope_live/templates/pages/landing.html:29
 msgid "Ecosystem"
-msgstr ""
+msgstr "生态系统"
 
-#: src/hope_live/templates/pages/landing.html:21
+#: src/hope_live/templates/pages/landing.html:34
 msgid "Data and evidence to deliver humanitarian cash transfers safely."
-msgstr ""
+msgstr "安全提供人道主义现金转移的数据和证据。"
 
-#: src/hope_live/templates/pages/landing.html:26
+#: src/hope_live/templates/pages/landing.html:39
 msgid "Explore the data"
-msgstr ""
+msgstr "探索数据"
 
-#: src/hope_live/templates/pages/landing.html:48
+#: src/hope_live/templates/pages/landing.html:52
 msgid "HOPE at a glance"
-msgstr ""
+msgstr "HOPE 一览"
 
-#: src/hope_live/templates/pages/landing.html:57
+#: src/hope_live/templates/pages/landing.html:61
 msgid "Countries & territories"
-msgstr ""
+msgstr "国家和地区"
 
-#: src/hope_live/templates/pages/landing.html:67
-#: src/hope_live/templates/pages/landing.html:120
-msgid "Indicators"
-msgstr ""
+#: src/hope_live/templates/pages/landing.html:71
+msgid "Programs"
+msgstr "节目"
 
-#: src/hope_live/templates/pages/landing.html:77
-msgid "Data sources"
-msgstr ""
+#: src/hope_live/templates/pages/landing.html:81
+msgid "Data source"
+msgstr "数据来源"
 
-#: src/hope_live/templates/pages/landing.html:86
+#: src/hope_live/templates/pages/landing.html:90
 msgid "Updated regularly"
-msgstr ""
+msgstr "定期更新"
 
-#: src/hope_live/templates/pages/landing.html:87
-msgid "Latest data: May 2026"
-msgstr ""
+#: src/hope_live/templates/pages/landing.html:91
+msgid "Latest data:"
+msgstr "最新数据："
 
-#: src/hope_live/templates/pages/landing.html:100
+#: src/hope_live/templates/pages/landing.html:106
 msgid "Children Reached"
-msgstr ""
+msgstr "儿童到达"
 
-#: src/hope_live/templates/pages/landing.html:104
-msgid "Households"
-msgstr ""
+#: src/hope_live/templates/pages/landing.html:108
+msgid "Across"
+msgstr "穿过"
 
-#: src/hope_live/templates/pages/landing.html:112
-msgid "Assistance Delivered"
-msgstr ""
+#: src/hope_live/templates/pages/landing.html:108
+msgid "countries"
+msgstr "国家"
 
-#: src/hope_live/templates/pages/landing.html:116
-msgid "Verified"
-msgstr ""
+#: src/hope_live/templates/pages/landing.html:118
+msgid "Households Reached"
+msgstr "覆盖家庭"
 
-#: src/hope_live/templates/pages/landing.html:131
-msgid "Where HOPE is active"
-msgstr ""
+#: src/hope_live/templates/pages/landing.html:120
+msgid "Humanitarian assistance"
+msgstr "人道主义援助"
+
+#: src/hope_live/templates/pages/landing.html:130
+msgid "Active Countries"
+msgstr "活跃国家"
 
 #: src/hope_live/templates/pages/landing.html:132
-msgid "Explore map"
-msgstr ""
-
-#: src/hope_live/templates/pages/landing.html:135
-msgid "Interactive World Map Placeholder"
-msgstr ""
+msgid "Global cash operations"
+msgstr "全球现金业务"
 
 #: src/hope_live/templates/pages/landing.html:142
-msgid "Latest updates & alerts"
-msgstr ""
+msgid "Assistance Delivered"
+msgstr "提供的援助"
 
-#: src/hope_live/templates/pages/landing.html:143
-msgid "View all"
-msgstr ""
+#: src/hope_live/templates/pages/landing.html:144
+msgid "Direct cash transfers"
+msgstr "直接现金转移"
 
-#: src/hope_live/templates/pages/landing.html:153
-msgid "Alert"
-msgstr ""
+#: src/hope_live/templates/pages/landing.html:154
+msgid "Verified Transactions"
+msgstr "已验证交易"
 
 #: src/hope_live/templates/pages/landing.html:156
-msgid ""
-"Severe flooding in Southern Sudan affects more than 700,000 people, "
-"including 250,000 children."
-msgstr ""
-
-#: src/hope_live/templates/pages/landing.html:157
-#: src/hope_live/templates/pages/landing.html:172
-#: src/hope_live/templates/pages/landing.html:187
-msgid "View details"
-msgstr ""
-
-#: src/hope_live/templates/pages/landing.html:168
-msgid "Report"
-msgstr ""
+msgid "Verification success rate"
+msgstr "验证成功率"
 
 #: src/hope_live/templates/pages/landing.html:170
-msgid "HOPE Data Update - May 2026"
-msgstr ""
+msgid "Where children need help the most"
+msgstr "孩子们最需要帮助的地方"
 
-#: src/hope_live/templates/pages/landing.html:183
-msgid "Data update"
-msgstr ""
+#: src/hope_live/templates/pages/landing.html:172
+msgid "Explore map"
+msgstr "探索地图"
 
-#: src/hope_live/templates/pages/landing.html:186
-msgid "New WASH indicators now available for 15 countries."
-msgstr ""
+#: src/hope_live/templates/pages/landing.html:176
+msgid "Children in Need of Humanitarian Assistance (2026)"
+msgstr "需要人道主义援助的儿童（2026）"
 
-#: src/hope_live/templates/pages/landing.html:199
-msgid "Explore Dashboards"
-msgstr ""
+#: src/hope_live/templates/pages/landing.html:198
+msgid "Latest updates & alerts"
+msgstr "最新更新和提醒"
 
-#: src/hope_live/templates/pages/landing.html:203
-msgid "Transfer values & logistics"
-msgstr ""
+#: src/hope_live/templates/pages/landing.html:200
+msgid "View all"
+msgstr "查看全部"
 
-#: src/hope_live/templates/pages/landing.html:206
-msgid "Demographics"
-msgstr ""
+#: src/hope_live/templates/pages/landing.html:212
+msgid "Story"
+msgstr "故事"
 
-#: src/hope_live/templates/pages/landing.html:207
-msgid "Population & households"
-msgstr ""
-
-#: src/hope_live/templates/pages/landing.html:210
-msgid "Accountability"
-msgstr ""
-
-#: src/hope_live/templates/pages/landing.html:211
-msgid "Feedback & grievances"
-msgstr ""
-
-#: src/hope_live/templates/pages/landing.html:214
-msgid "Programme Quality"
-msgstr ""
+#: src/hope_live/templates/pages/landing.html:213
+msgid "Recent"
+msgstr "最近的"
 
 #: src/hope_live/templates/pages/landing.html:215
-msgid "Completion rates & metrics"
-msgstr ""
+msgid ""
+"Lifeline of hope for families after Typhoon Yagi: UNICEF's first "
+"humanitarian cash transfers in Viet Nam."
+msgstr "八木台风过后家庭的希望生命线：联合国儿童基金会在越南的首次人道主义现金转移。"
 
-#: src/hope_live/templates/pages/landing.html:223
-msgid "Global Trends"
-msgstr ""
+#: src/hope_live/templates/pages/landing.html:217
+msgid "Read story"
+msgstr "读故事"
 
 #: src/hope_live/templates/pages/landing.html:230
-msgid "Trends Chart Placeholder"
-msgstr ""
+msgid "Report"
+msgstr "报告"
 
-#: src/hope_live/templates/pages/landing.html:242
-msgid "Data responsibly"
-msgstr ""
+#: src/hope_live/templates/pages/landing.html:231
+#: src/hope_live/templates/pages/landing.html:249
+msgid "Featured"
+msgstr "精选"
 
-#: src/hope_live/templates/pages/landing.html:243
-msgid "We are committed to data protection, privacy and ethical use."
-msgstr ""
+#: src/hope_live/templates/pages/landing.html:233
+msgid ""
+"Advancing Sustainable Funding for UNICEF Digital Public Good (HOPE) cash "
+"assistance platform."
+msgstr "推进联合国儿童基金会数字公益 (HOPE) 现金援助平台的可持续融资。"
+
+#: src/hope_live/templates/pages/landing.html:235
+msgid "View report"
+msgstr "查看报告"
+
+#: src/hope_live/templates/pages/landing.html:248
+msgid "Podcast"
+msgstr "播客"
 
 #: src/hope_live/templates/pages/landing.html:251
+msgid ""
+"Bringing HOPE To Whoever Needs It Most: podcast on secure data and risk-"
+"informed cash transfers."
+msgstr "将希望带给最需要的人：有关安全数据和风险提示现金转移的播客。"
+
+#: src/hope_live/templates/pages/landing.html:253
+msgid "Listen now"
+msgstr "现在听"
+
+#: src/hope_live/templates/pages/landing.html:267
+msgid "Explore Dashboards"
+msgstr "探索仪表板"
+
+#: src/hope_live/templates/pages/landing.html:271
+msgid "Transfer values & logistics"
+msgstr "转移价值和物流"
+
+#: src/hope_live/templates/pages/landing.html:275
+msgid "Population & households"
+msgstr "人口和家庭"
+
+#: src/hope_live/templates/pages/landing.html:279
+msgid "Feedback & grievances"
+msgstr "反馈和申诉"
+
+#: src/hope_live/templates/pages/landing.html:283
+msgid "Completion rates & metrics"
+msgstr "完成率和指标"
+
+#: src/hope_live/templates/pages/landing.html:291
+msgid "Trends over time"
+msgstr "随着时间的推移的趋势"
+
+#: src/hope_live/templates/pages/landing.html:293
+msgid "5 years"
+msgstr "5年"
+
+#: src/hope_live/templates/pages/landing.html:294
+msgid "1 year"
+msgstr "1年"
+
+#: src/hope_live/templates/pages/landing.html:297
+msgid "Selected indicators (global)"
+msgstr "选定指标（全球）"
+
+#: src/hope_live/templates/pages/landing.html:311
+msgid "Data responsibly"
+msgstr "负责任地提供数据"
+
+#: src/hope_live/templates/pages/landing.html:312
+msgid "We are committed to data protection, privacy and ethical use."
+msgstr "我们致力于数据保护、隐私和道德使用。"
+
+#: src/hope_live/templates/pages/landing.html:320
 msgid "Methodology"
-msgstr ""
+msgstr "方法论"
 
-#: src/hope_live/templates/pages/landing.html:252
+#: src/hope_live/templates/pages/landing.html:321
 msgid "Learn how HOPE data is produced and standards applied."
-msgstr ""
+msgstr "了解 HOPE 数据的生成方式和标准的应用方式。"
 
-#: src/hope_live/templates/pages/landing.html:260
+#: src/hope_live/templates/pages/landing.html:329
 msgid "Give feedback"
-msgstr ""
+msgstr "提供反馈"
 
-#: src/hope_live/templates/pages/landing.html:261
+#: src/hope_live/templates/pages/landing.html:330
 msgid "Help us improve HOPE by sharing your feedback."
-msgstr ""
+msgstr "分享您的反馈，帮助我们改进 HOPE。"
 
-#: src/hope_live/templates/pages/landing.html:269
+#: src/hope_live/templates/pages/landing.html:338
 msgid "Stay connected"
-msgstr ""
+msgstr "保持联系"
 
-#: src/hope_live/templates/pages/landing.html:270
+#: src/hope_live/templates/pages/landing.html:339
 msgid "Subscribe to updates and new data releases."
-msgstr ""
+msgstr "订阅更新和新数据发布。"
 
-#: src/hope_live/templates/pages/landing.html:284
+#: src/hope_live/templates/pages/landing.html:353
 msgid "Contact Us"
-msgstr ""
+msgstr "联系我们"
+
+#: src/hope_live/templates/pages/landing.html:914
+msgid "Failed to load map visualization. Please refresh."
+msgstr "无法加载地图可视化。请刷新。"
 
 #: src/hope_live/templates/unfold/helpers/header_back_button.html:7
 #: src/hope_live/templates/unfold/helpers/header_back_button.html:15
 msgid " Go back"
-msgstr ""
+msgstr "回去"
 
 #: src/hope_live/templates/unfold/helpers/site_branding.html:3
 #: src/hope_live/templates/unfold/helpers/site_branding.html:6
 msgid "Django administration"
-msgstr ""
+msgstr "Django 管理"

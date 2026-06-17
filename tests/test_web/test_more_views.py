@@ -121,3 +121,26 @@ def test_index_view_dynamic_context(user_factory):
     assert context["total_sources_glance"] == "HOPE Database"
     assert context["latest_data_str"] == "June 2026"
     assert context["verification_success_rate"] == 80.0
+
+
+@pytest.mark.django_db
+def test_language_switch_views(client):
+    response = client.get("/")
+    assert response.status_code == 200
+
+    response_es = client.get("/es/")
+    assert response_es.status_code == 200
+
+    response_fr = client.get("/fr/")
+    assert response_fr.status_code == 200
+    assert "HOPE en bref" in response_fr.content.decode("utf-8")
+
+
+@pytest.mark.django_db
+def test_set_language_post(client):
+    from django.urls import reverse
+
+    url = reverse("set_language")
+    response = client.post(url, data={"language": "es", "next": "/"})
+    assert response.status_code == 302
+    assert response.url == "/es/"

@@ -2,15 +2,15 @@
 <input id="nav-toggle" type="checkbox" class="peer hidden" checked />
 
 <aside
-    class="z-50 bg-[#00adef] shadow-lg h-screen sticky top-0 transition-all duration-300 ease-in-out w-14 overflow-hidden peer-checked:w-64 shrink-0"
+    class="z-80 bg-[#00adef] shadow-lg h-screen sticky top-0 transition-all duration-300 ease-in-out w-14 overflow-hidden peer-checked:w-64 shrink-0"
     aria-label="Sidebar">
 
-    <!-- CHANGED: w-64 to w-full so it respects the parent's width -->
-    <div class="px-3 w-full py-4 flex flex-col justify-between bg-[#00adef] h-full overflow-hidden">
+    <!-- CHANGED: w-64 to w-full so it respects the parent's width, and use responsive padding to center folded icons -->
+    <div class="px-2.5 peer-checked:px-3 w-full py-4 flex flex-col justify-between bg-[#00adef] h-full overflow-hidden">
         <div>
             <div class="flex items-center justify-center p-2 text-white shrink-0">
                 <a href='{% url "web:index" %}'><img src="{% static 'images/logo-white.png' %}" alt="UNICEF Logo" class="h-12 hidden peer-checked:block"></a>
-                <a href='{% url "web:index" %}'><img src="{% static 'images/img.svg' %}" alt="HOPE Logo" class="h-10 peer-checked:hidden"></a>
+                <a href='{% url "web:index" %}'><img src="{% static 'images/img.svg' %}" alt="HOPE Logo" class="h-8 w-8 peer-checked:hidden shrink-0"></a>
             </div>
             <ul class="space-y-2 flex-grow mt-8">
                 <li>
@@ -86,7 +86,8 @@
                     {% translate "HOPE helps countries strengthen evidence for humanitarian action for children." %}
                 </p>
                 <a href="https://www.unicef.org/hope-hct/about" target="_blank" class="text-xs font-semibold hover:underline flex items-center gap-1">
-                    {% translate "Learn more" %} →
+                    <span>{% translate "Learn more" %}</span>
+                    <svg class="w-3 h-3 rtl:rotate-180" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/></svg>
                 </a>
             </div>
 

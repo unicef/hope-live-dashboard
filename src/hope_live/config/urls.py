@@ -19,6 +19,7 @@ urlpatterns = [
     # 5. Other app URLs
     path("ws/", include("hope_live.ws.urls", namespace="ws")),
     path("issues/", include("issues.urls")),
+    path("i18n/", include("django.conf.urls.i18n")),
     # 6. Debug/development URLs (always last)
     path(r"__debug__/", include(debug_toolbar.urls)),
 ]

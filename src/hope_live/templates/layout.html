@@ -1,6 +1,8 @@
 {% load i18n issues static tailwind_tags %}
+{% get_current_language as LANGUAGE_CODE %}
+{% get_current_language_bidi as LANGUAGE_BIDI %}
 <!DOCTYPE html>
-<html lang="en" data-theme="light">
+<html lang="{{ LANGUAGE_CODE }}" {% if LANGUAGE_BIDI %}dir="rtl"{% endif %} data-theme="light">
 
 <head>
     <meta charset="UTF-8">

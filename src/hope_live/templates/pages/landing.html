@@ -37,7 +37,7 @@
             <div class="flex items-center gap-4">
                 <a href="{% url 'web:dashboard' %}" class="bg-[#00adef] text-white px-6 py-3 rounded-lg font-bold text-sm shadow hover:bg-sky-600 transition-colors flex items-center gap-2">
                     {% translate "Explore the data" %}
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+                    <svg class="w-4 h-4 rtl:rotate-180" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
                 </a>
                 <a href="#" class="text-[#00adef] font-semibold text-sm hover:underline flex items-center gap-1">
                     {% translate "About HOPE" %}
@@ -168,7 +168,10 @@
             <div class="lg:col-span-2 bg-white rounded-xl border border-gray-200 shadow-sm p-6 flex flex-col relative">
                 <div class="flex justify-between items-center mb-2">
                     <h3 class="text-lg font-bold text-gray-900">{% translate "Where children need help the most" %}</h3>
-                    <a href="{% url 'web:dashboard' %}" class="text-sm text-[#00adef] font-semibold hover:underline">{% translate "Explore map" %} →</a>
+                    <a href="{% url 'web:dashboard' %}" class="text-sm text-[#00adef] font-semibold hover:underline flex items-center gap-1">
+                        <span>{% translate "Explore map" %}</span>
+                        <svg class="w-3.5 h-3.5 rtl:rotate-180" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/></svg>
+                    </a>
                 </div>
                 <div class="text-xs text-gray-400 mb-4">{% translate "Children in Need of Humanitarian Assistance (2026)" %}</div>
                 <div class="relative flex-grow min-h-[400px]">
@@ -193,7 +196,10 @@
             <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 flex flex-col">
                 <div class="flex justify-between items-center mb-6">
                     <h3 class="text-base font-bold text-slate-900">{% translate "Latest updates & alerts" %}</h3>
-                    <a href="https://www.unicef.org/hope-hct/" target="_blank" class="text-xs text-[#00adef] font-semibold hover:underline">{% translate "View all" %} →</a>
+                    <a href="https://www.unicef.org/hope-hct/" target="_blank" class="text-xs text-[#00adef] font-semibold hover:underline flex items-center gap-1">
+                        <span>{% translate "View all" %}</span>
+                        <svg class="w-3 h-3 rtl:rotate-180" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/></svg>
+                    </a>
                 </div>
                 <div class="space-y-6 flex-grow">
                     <!-- Update 1: Story -->
@@ -207,7 +213,10 @@
                                 <span class="text-xs text-gray-400">{% translate "Recent" %}</span>
                             </div>
                             <p class="text-sm text-slate-700 font-medium leading-tight">{% translate "Lifeline of hope for families after Typhoon Yagi: UNICEF's first humanitarian cash transfers in Viet Nam." %}</p>
-                            <a href="https://www.unicef.org/hope-hct/stories/lifeline-hope-bay-and-his-family-after-typhoon-yagi" target="_blank" class="text-xs text-[#00adef] hover:underline font-semibold mt-1 inline-block">{% translate "Read story" %} →</a>
+                            <a href="https://www.unicef.org/hope-hct/stories/lifeline-hope-bay-and-his-family-after-typhoon-yagi" target="_blank" class="text-xs text-[#00adef] hover:underline font-semibold mt-1 inline-flex items-center gap-1">
+                                <span>{% translate "Read story" %}</span>
+                                <svg class="w-3 h-3 rtl:rotate-180" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/></svg>
+                            </a>
                         </div>
                     </div>
 
@@ -222,7 +231,10 @@
                                 <span class="text-xs text-gray-400">{% translate "Featured" %}</span>
                             </div>
                             <p class="text-sm text-slate-700 font-medium leading-tight">{% translate "Advancing Sustainable Funding for UNICEF Digital Public Good (HOPE) cash assistance platform." %}</p>
-                            <a href="https://www.unicef.org/hope-hct/stories/advancing-sustainable-funding-unicef-digital-public-goods" target="_blank" class="text-xs text-[#00adef] hover:underline font-semibold mt-1 inline-block">{% translate "View report" %} →</a>
+                            <a href="https://www.unicef.org/hope-hct/stories/advancing-sustainable-funding-unicef-digital-public-goods" target="_blank" class="text-xs text-[#00adef] hover:underline font-semibold mt-1 inline-flex items-center gap-1">
+                                <span>{% translate "View report" %}</span>
+                                <svg class="w-3 h-3 rtl:rotate-180" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/></svg>
+                            </a>
                         </div>
                     </div>
 
@@ -237,7 +249,10 @@
                                 <span class="text-xs text-gray-400">{% translate "Featured" %}</span>
                             </div>
                             <p class="text-sm text-slate-700 font-medium leading-tight">{% translate "Bringing HOPE To Whoever Needs It Most: podcast on secure data and risk-informed cash transfers." %}</p>
-                            <a href="https://www.unicef.org/hope-hct/stories/podcast-bringing-hope-whoever-needs-it-most" target="_blank" class="text-xs text-[#00adef] hover:underline font-semibold mt-1 inline-block">{% translate "Listen now" %} →</a>
+                            <a href="https://www.unicef.org/hope-hct/stories/podcast-bringing-hope-whoever-needs-it-most" target="_blank" class="text-xs text-[#00adef] hover:underline font-semibold mt-1 inline-flex items-center gap-1">
+                                <span>{% translate "Listen now" %}</span>
+                                <svg class="w-3 h-3 rtl:rotate-180" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/></svg>
+                            </a>
                         </div>
                     </div>
                 </div>
