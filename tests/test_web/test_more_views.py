@@ -1,4 +1,5 @@
 import pytest
+import responses
 from django.test import RequestFactory
 
 from hope_live.analysis.models import (
@@ -144,3 +145,40 @@ def test_set_language_post(client):
     response = client.post(url, data={"language": "es", "next": "/"})
     assert response.status_code == 302
     assert response.url == "/es/"
+
+
+@pytest.mark.django_db
+@responses.activate
+def test_fetch_hope_news():
+    from django.core.cache import cache
+
+    cache.delete("hope_news_updates_list")  # Ensure cache is empty
+
+    from constance import config
+
+    from hope_live.web.views import fetch_hope_news
+
+    api_url = config.HOPE_COUNTRY_REPORT_API_URL
+    query_id = getattr(config, "HOPE_NEWS_REPORT_QUERY_ID", 159)
+
+    # Mock datasets endpoint
+    responses.add(responses.GET, f"{api_url}queries/{query_id}/dataset", json=[{"id": 42}], status=200)
+    # Mock dataset data endpoint
+    responses.add(
+        responses.GET,
+        f"{api_url}queries/{query_id}/dataset/42/data/?page_size=50",
+        json=[
+            {
+                "description": "**New features**\r\n\r\n1. Added bio details.",
+                "version": "HOPE v2025.4.15.0",
+                "active": True,
+                "date": "2026-05-19",
+            }
+        ],
+        status=200,
+    )
+
+    news = fetch_hope_news()
+    assert len(news) == 1
+    assert news[0]["version"] == "HOPE v2025.4.15.0"
+    assert news[0]["snippet"] == "New features 1. Added bio details."

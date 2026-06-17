@@ -1,6 +1,13 @@
-from typing import Any
+import contextlib
+import datetime
+import logging
+import re
+from typing import Any, cast
 
+import requests
+from constance import config
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.cache import cache
 from django.db.models import Max, Sum
 from django.views.generic import TemplateView
 
@@ -10,6 +17,116 @@ from hope_live.analysis.models import (
     FinancialAggregate,
     GrievanceAggregate,
 )
+
+logger = logging.getLogger(__name__)
+
+
+def _parse_news_item_date(dt: Any) -> datetime.date | None:
+    if isinstance(dt, datetime.date):
+        return dt
+    if isinstance(dt, str):
+        with contextlib.suppress(ValueError):
+            return datetime.datetime.strptime(dt.split("T")[0], "%Y-%m-%d").date()
+    return None
+
+
+SNIPPET_MAX_LEN = 130
+
+
+def _create_news_item_snippet(desc: str) -> str:
+    clean_desc = desc.replace("**", "").replace("\r", "")
+    clean_desc = re.sub(r"\s+", " ", clean_desc).strip()
+
+    if len(clean_desc) > SNIPPET_MAX_LEN:
+        return clean_desc[:SNIPPET_MAX_LEN].strip() + "..."
+    return clean_desc
+
+
+def _fetch_news_dataset_rows(api_url: str, query_id: int, headers: dict[str, str]) -> list[dict[str, Any]]:
+    # 1. Fetch datasets
+    dataset_url = f"{api_url}queries/{query_id}/dataset"
+    resp = requests.get(dataset_url, headers=headers, timeout=10)
+    resp.raise_for_status()
+    datasets = resp.json()
+    if isinstance(datasets, dict) and "results" in datasets:
+        datasets = datasets["results"]
+
+    if not datasets:
+        return []
+
+    # Get the first dataset (newest)
+    dataset_id = datasets[0]["id"]
+
+    # 2. Fetch data from that dataset
+    data_url = f"{api_url}queries/{query_id}/dataset/{dataset_id}/data/"
+    all_rows: list[dict[str, Any]] = []
+    current_url: str | None = f"{data_url}?page_size=50"
+
+    while current_url:
+        r = requests.get(current_url, headers=headers, timeout=10)
+        r.raise_for_status()
+        raw_data = r.json()
+        if isinstance(raw_data, dict):
+            if "results" in raw_data:
+                rows = raw_data.get("results", []) or []
+                current_url = raw_data.get("next")
+            else:
+                rows = raw_data.get("data", []) or []
+                current_url = None
+        elif isinstance(raw_data, list):
+            rows = raw_data
+            current_url = None
+        else:
+            rows = []
+            current_url = None
+
+        if not rows:
+            break
+        all_rows.extend(rows)
+
+    return all_rows
+
+
+def fetch_hope_news() -> list[dict[str, Any]]:
+    cache_key = "hope_news_updates_list"
+    cached_data = cache.get(cache_key)
+    if cached_data is not None:
+        return cast("list[dict[str, Any]]", cached_data)
+
+    try:
+        api_url = config.HOPE_COUNTRY_REPORT_API_URL
+        token = config.HOPE_COUNTRY_REPORT_API_TOKEN
+        query_id = getattr(config, "HOPE_NEWS_REPORT_QUERY_ID", 159)
+
+        headers = {"Authorization": f"Token {token}"}
+        all_rows = _fetch_news_dataset_rows(api_url, query_id, headers)
+
+        processed = []
+        for item in all_rows:
+            if not item.get("active", True):
+                continue
+
+            processed.append(
+                {
+                    "version": item.get("version", "Update"),
+                    "date": _parse_news_item_date(item.get("date")),
+                    "snippet": _create_news_item_snippet(item.get("description", "")),
+                    "description": item.get("description", ""),
+                }
+            )
+
+        # Sort by date descending (newest first)
+        processed.sort(key=lambda x: x["date"] or datetime.date.min, reverse=True)
+
+        # Take the top 3
+        top_updates = processed[:3]
+
+        # Cache for 1 hour
+        cache.set(cache_key, top_updates, 60 * 60)
+        return top_updates
+    except Exception as e:  # noqa: BLE001
+        logger.warning(f"Failed to fetch HOPE news updates: {e}")
+        return []
 
 
 class ContactView(TemplateView):
@@ -133,6 +250,7 @@ class IndexView(TemplateView):
         context["total_programs_glance"] = total_programs_glance or 450
         context["total_sources_glance"] = total_sources_glance
         context["latest_data_str"] = latest_data_str
+        context["hope_updates"] = fetch_hope_news()
 
         return context
 

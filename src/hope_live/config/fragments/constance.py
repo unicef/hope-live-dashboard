@@ -76,4 +76,9 @@ CONSTANCE_CONFIG = {
         "Query ID for Grievance Aggregate Dataset",
         int,
     ),
+    "HOPE_NEWS_REPORT_QUERY_ID": (
+        159,
+        "Query ID for News Updates/Alerts Dataset",
+        int,
+    ),
 }
