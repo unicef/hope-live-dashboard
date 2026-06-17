@@ -8,7 +8,7 @@ from rest_framework import (  # type: ignore[import-untyped]
     generics,
     serializers,
 )
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny  # type: ignore[import-untyped]
 from rest_framework.request import Request  # type: ignore[import-untyped]
 from rest_framework.response import Response  # type: ignore[import-untyped]
 
