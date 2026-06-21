@@ -2,62 +2,65 @@ document.addEventListener('DOMContentLoaded', function () {
     const tabsContainer = document.getElementById('tabs-container');
     if (!tabsContainer) return;
 
+    const isFr = document.documentElement.lang && document.documentElement.lang.startsWith('fr');
+    const t = (en, fr) => isFr ? fr : en;
+
     const statusMap = {
-        "1": "New",
-        "2": "Assigned",
-        "3": "In Progress",
-        "4": "On Hold",
-        "5": "For Approval",
-        "6": "Closed"
+        "1": t("New", "Nouveau"),
+        "2": t("Assigned", "Assigné"),
+        "3": t("In Progress", "En cours"),
+        "4": t("On Hold", "En attente"),
+        "5": t("For Approval", "Pour approbation"),
+        "6": t("Closed", "Clôturé")
     };
 
     const categoryMap = {
-        "1": "Payment Verification",
-        "2": "Data Change",
-        "3": "Sensitive Grievance",
-        "4": "Grievance Complaint",
-        "5": "Negative Feedback",
-        "6": "Referral",
-        "7": "Positive Feedback",
-        "8": "Needs Adjudication",
-        "9": "System Flagging",
-        "10": "Beneficiary"
+        "1": t("Payment Verification", "Vérification des paiements"),
+        "2": t("Data Change", "Modification de données"),
+        "3": t("Sensitive Grievance", "Grief sensible"),
+        "4": t("Grievance Complaint", "Plainte de grief"),
+        "5": t("Negative Feedback", "Commentaire négatif"),
+        "6": t("Referral", "Référence"),
+        "7": t("Positive Feedback", "Commentaire positif"),
+        "8": t("Needs Adjudication", "Nécessite une décision"),
+        "9": t("System Flagging", "Signalement système"),
+        "10": t("Beneficiary", "Bénéficiaire")
     };
 
     const priorityMap = {
-        "0": "Not Set",
-        "1": "High",
-        "2": "Medium",
-        "3": "Low"
+        "0": t("Not Set", "Non défini"),
+        "1": t("High", "Haute"),
+        "2": t("Medium", "Moyenne"),
+        "3": t("Low", "Basse")
     };
 
     const issueTypeMap = {
-        "1": "Data breach",
-        "2": "Bribery, corruption or kickback",
-        "3": "Fraud and forgery",
-        "4": "Fraud involving misuse of programme funds by third party",
-        "5": "Harassment and abuse of authority",
-        "6": "Inappropriate staff conduct",
-        "7": "Unauthorized use, misuse or waste of UNICEF property or funds",
-        "8": "Conflict of interest",
-        "9": "Gross mismanagement",
-        "10": "Personal disputes",
-        "11": "Sexual harassment and sexual exploitation",
-        "12": "Miscellaneous",
-        "13": "Household Data Update",
-        "14": "Individual Data Update",
-        "15": "Withdraw Individual",
-        "16": "Add Individual",
-        "17": "Withdraw Household",
-        "18": "Payment Related Complaint",
-        "19": "FSP Related Complaint",
-        "20": "Registration Related Complaint",
-        "21": "Other Complaint",
-        "22": "Partner Related Complaint",
-        "23": "Unique Identifiers Similarity",
-        "24": "Biographical Data Similarity",
-        "25": "Biometrics Similarity",
-        "26": "Update Delegate"
+        "1": t("Data breach", "Violation de données"),
+        "2": t("Bribery, corruption or kickback", "Pot-de-vin, corruption ou ristourne"),
+        "3": t("Fraud and forgery", "Fraude et falsification"),
+        "4": t("Fraud involving misuse of programme funds by third party", "Fraude impliquant le détournement de fonds du programme par un tiers"),
+        "5": t("Harassment and abuse of authority", "Harcèlement et abus de pouvoir"),
+        "6": t("Inappropriate staff conduct", "Conduite inappropriée du personnel"),
+        "7": t("Unauthorized use, misuse or waste of UNICEF property or funds", "Utilisation non autorisée, détournement ou gaspillage de biens ou de fonds de l'UNICEF"),
+        "8": t("Conflict of interest", "Conflit d'intérêts"),
+        "9": t("Gross mismanagement", "Mauvaise gestion flagrante"),
+        "10": t("Personal disputes", "Différends personnels"),
+        "11": t("Sexual harassment and sexual exploitation", "Harcèlement sexuel et exploitation sexuelle"),
+        "12": t("Miscellaneous", "Divers"),
+        "13": t("Household Data Update", "Mise à jour des données du ménage"),
+        "14": t("Individual Data Update", "Mise à jour des données individuelles"),
+        "15": t("Withdraw Individual", "Retrait individuel"),
+        "16": t("Add Individual", "Ajouter un individu"),
+        "17": t("Withdraw Household", "Retrait de ménage"),
+        "18": t("Payment Related Complaint", "Plainte liée aux paiements"),
+        "19": t("FSP Related Complaint", "Plainte liée au PSF"),
+        "20": t("Registration Related Complaint", "Plainte liée à l'enregistrement"),
+        "21": t("Other Complaint", "Autre plainte"),
+        "22": t("Partner Related Complaint", "Plainte liée au partenaire"),
+        "23": t("Unique Identifiers Similarity", "Similitude des identifiants uniques"),
+        "24": t("Biographical Data Similarity", "Similitude des données biographiques"),
+        "25": t("Biometrics Similarity", "Similitude de la biométrie"),
+        "26": t("Update Delegate", "Mise à jour du délégué")
     };
 
     const colorPalette = [
@@ -205,13 +208,13 @@ document.addEventListener('DOMContentLoaded', function () {
                     const formattedDate = d3.timeFormat("%B %d, %Y")(date);
                     let tooltipHtml = `${formattedDate}<br/>`;
                     params.forEach(p => {
-                        tooltipHtml += `${p.marker} ${p.seriesName}: <b>${d3.format(",")(p.value[1])}</b> tickets<br/>`;
+                        tooltipHtml += `${p.marker} ${p.seriesName}: <b>${d3.format(",")(p.value[1])}</b> ${t('tickets', 'tickets')}<br/>`;
                     });
                     return tooltipHtml;
                 }
             },
             legend: {
-                data: ['Resolved & Closed', 'Open & Active'],
+                data: [t('Resolved & Closed', 'Résolu et Clôturé'), t('Open & Active', 'Ouvert et Actif')],
                 bottom: 0,
                 icon: 'roundRect'
             },
@@ -230,7 +233,7 @@ document.addEventListener('DOMContentLoaded', function () {
             },
             series: [
                 {
-                    name: 'Resolved & Closed',
+                    name: t('Resolved & Closed', 'Résolu et Clôturé'),
                     type: 'line',
                     stack: 'total',
                     smooth: true,
@@ -245,7 +248,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     data: timelineDataResolved
                 },
                 {
-                    name: 'Open & Active',
+                    name: t('Open & Active', 'Ouvert et Actif'),
                     type: 'line',
                     stack: 'total',
                     smooth: true,
@@ -421,13 +424,13 @@ document.addEventListener('DOMContentLoaded', function () {
                 formatter: function (params) {
                     let tooltipHtml = `${params[0].name}<br/>`;
                     params.forEach(p => {
-                        tooltipHtml += `${p.marker} ${p.seriesName}: <b>${d3.format(",")(p.value)}</b> tickets<br/>`;
+                        tooltipHtml += `${p.marker} ${p.seriesName}: <b>${d3.format(",")(p.value)}</b> ${t('tickets', 'tickets')}<br/>`;
                     });
                     return tooltipHtml;
                 }
             },
             legend: {
-                data: ['Resolved & Closed', 'Open & Active'],
+                data: [t('Resolved & Closed', 'Résolu et Clôturé'), t('Open & Active', 'Ouvert et Actif')],
                 top: 0,
                 right: 20
             },
@@ -444,7 +447,7 @@ document.addEventListener('DOMContentLoaded', function () {
             },
             series: [
                 {
-                    name: 'Resolved & Closed',
+                    name: t('Resolved & Closed', 'Résolu et Clôturé'),
                     type: 'bar',
                     stack: 'status',
                     barMaxWidth: 30,
@@ -452,7 +455,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     itemStyle: { borderRadius: [0, 0, 0, 0] }
                 },
                 {
-                    name: 'Open & Active',
+                    name: t('Open & Active', 'Ouvert et Actif'),
                     type: 'bar',
                     stack: 'status',
                     barMaxWidth: 30,

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-17 08:23+0000\n"
+"POT-Creation-Date: 2026-06-21 14:10+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,7 +16,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
+"&& n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
 
 #: src/hope_live/config/settings.py:157
 msgid "Spanish"
@@ -56,8 +57,7 @@ msgstr "ابحث عن بلد، مؤشر، مجموعة بيانات..."
 msgid "Select Language"
 msgstr "اختر اللغة"
 
-#: src/hope_live/templates/header.html:58
-#: src/hope_live/templates/menu.html:136
+#: src/hope_live/templates/header.html:58 src/hope_live/templates/menu.html:136
 msgid "Sign Out"
 msgstr "تسجيل الخروج"
 
@@ -81,22 +81,22 @@ msgstr "الرئيسية"
 
 #: src/hope_live/templates/menu.html:26
 #: src/hope_live/templates/pages/dashboard.html:8
-#: src/hope_live/templates/pages/landing.html:270
+#: src/hope_live/templates/pages/landing.html:293
 msgid "Financial Dashboard"
 msgstr "لوحة المعلومات المالية"
 
 #: src/hope_live/templates/menu.html:32
-#: src/hope_live/templates/pages/landing.html:274
+#: src/hope_live/templates/pages/landing.html:297
 msgid "Demographics"
 msgstr "التركيبة السكانية"
 
 #: src/hope_live/templates/menu.html:38
-#: src/hope_live/templates/pages/landing.html:278
+#: src/hope_live/templates/pages/landing.html:301
 msgid "Accountability"
 msgstr "المساءلة"
 
 #: src/hope_live/templates/menu.html:44
-#: src/hope_live/templates/pages/landing.html:282
+#: src/hope_live/templates/pages/landing.html:305
 msgid "Programme Quality"
 msgstr "جودة البرنامج"
 
@@ -105,7 +105,7 @@ msgid "Dashboards"
 msgstr "لوحات المعلومات"
 
 #: src/hope_live/templates/menu.html:58
-#: src/hope_live/templates/pages/dashboard.html:79
+#: src/hope_live/templates/pages/dashboard.html:99
 msgid "Countries"
 msgstr "بلدان"
 
@@ -119,7 +119,7 @@ msgstr "التوثيق"
 
 #: src/hope_live/templates/menu.html:76
 #: src/hope_live/templates/pages/landing.html:43
-#: src/hope_live/templates/pages/landing.html:352
+#: src/hope_live/templates/pages/landing.html:375
 msgid "About HOPE"
 msgstr "حول الأمل"
 
@@ -158,68 +158,104 @@ msgid "Live Data"
 msgstr "البيانات الحية"
 
 #: src/hope_live/templates/pages/completion.html:32
-msgid "Reconciliation Timeline"
+#, fuzzy
+#| msgid "Reconciliation Timeline"
+msgid "View Reconciliation Metrics by:"
 msgstr "الجدول الزمني للمصالحة"
 
 #: src/hope_live/templates/pages/completion.html:35
+#: src/hope_live/templates/pages/dashboard.html:42
+#, fuzzy
+#| msgid "Number of Payments by Country"
+msgid "Payments Count"
+msgstr "عدد المدفوعات حسب البلد"
+
+#: src/hope_live/templates/pages/completion.html:38
 #: src/hope_live/templates/pages/dashboard.html:36
+msgid "Amount (USD)"
+msgstr ""
+
+#: src/hope_live/templates/pages/completion.html:45
+msgid "Reconciliation Timeline"
+msgstr "الجدول الزمني للمصالحة"
+
+#: src/hope_live/templates/pages/completion.html:48
+#: src/hope_live/templates/pages/dashboard.html:52
 #: src/hope_live/templates/pages/grievance.html:35
 msgid ""
 "* Use the slider handles at the bottom of the timeline or click and drag to "
 "filter dates."
 msgstr ""
-"* استخدم مقابض شريط التمرير الموجودة أسفل المخطط الزمني أو انقر واسحب لتصفية"
-" التواريخ."
+"* استخدم مقابض شريط التمرير الموجودة أسفل المخطط الزمني أو انقر واسحب لتصفية "
+"التواريخ."
 
-#: src/hope_live/templates/pages/completion.html:41
+#: src/hope_live/templates/pages/completion.html:54
 msgid "Reconciled Payments"
 msgstr "المدفوعات التوفيقية"
 
-#: src/hope_live/templates/pages/completion.html:45
+#: src/hope_live/templates/pages/completion.html:58
 msgid "Still Opened"
 msgstr "لا يزال مفتوحا"
 
-#: src/hope_live/templates/pages/completion.html:55
-msgid "Number of Payments by Country"
-msgstr "عدد المدفوعات حسب البلد"
+#: src/hope_live/templates/pages/completion.html:63
+#, fuzzy
+#| msgid "Reconciliation Timeline"
+msgid "Reconciliation Rate"
+msgstr "الجدول الزمني للمصالحة"
+
+#: src/hope_live/templates/pages/completion.html:73
+msgid "Reconciliation Status by Country"
+msgstr ""
 
 #: src/hope_live/templates/pages/dashboard.html:9
 msgid "Overview of Financial info"
 msgstr "نظرة عامة على المعلومات المالية"
 
 #: src/hope_live/templates/pages/dashboard.html:33
+msgid "View Dashboard Metrics by:"
+msgstr ""
+
+#: src/hope_live/templates/pages/dashboard.html:39
+msgid "Quantity (QTY)"
+msgstr ""
+
+#: src/hope_live/templates/pages/dashboard.html:49
 msgid "Spending Timeline"
 msgstr "الجدول الزمني للإنفاق"
 
-#: src/hope_live/templates/pages/dashboard.html:46
+#: src/hope_live/templates/pages/dashboard.html:62
 msgid "Total Amount Paid"
 msgstr "إجمالي المبلغ المدفوع"
 
-#: src/hope_live/templates/pages/dashboard.html:50
+#: src/hope_live/templates/pages/dashboard.html:66
 msgid "Number of Payments"
 msgstr "عدد الدفعات"
 
-#: src/hope_live/templates/pages/dashboard.html:54
+#: src/hope_live/templates/pages/dashboard.html:70
+msgid "Total Quantity Distributed"
+msgstr ""
+
+#: src/hope_live/templates/pages/dashboard.html:74
 msgid "Outstanding Payment"
 msgstr "الدفع المستحق"
 
-#: src/hope_live/templates/pages/dashboard.html:61
+#: src/hope_live/templates/pages/dashboard.html:81
 msgid "Delivery Types"
 msgstr "أنواع التسليم"
 
-#: src/hope_live/templates/pages/dashboard.html:65
+#: src/hope_live/templates/pages/dashboard.html:85
 msgid "Regions"
 msgstr "المناطق"
 
-#: src/hope_live/templates/pages/dashboard.html:72
+#: src/hope_live/templates/pages/dashboard.html:92
 msgid "Distribution by Sector"
 msgstr "التوزيع حسب القطاع"
 
-#: src/hope_live/templates/pages/dashboard.html:86
+#: src/hope_live/templates/pages/dashboard.html:106
 msgid "Distribution by Program"
 msgstr "التوزيع حسب البرنامج"
 
-#: src/hope_live/templates/pages/dashboard.html:90
+#: src/hope_live/templates/pages/dashboard.html:110
 msgid "Financial Service Providers (FSP)"
 msgstr "مقدمو الخدمات المالية (FSP)"
 
@@ -256,7 +292,9 @@ msgid "Issue Type"
 msgstr "نوع المشكلة"
 
 #: src/hope_live/templates/pages/grievance.html:72
-msgid "Tickets by Country"
+#, fuzzy
+#| msgid "Tickets by Country"
+msgid "Ticket Status by Country"
 msgstr "التذاكر حسب البلد"
 
 #: src/hope_live/templates/pages/landing.html:27
@@ -367,136 +405,116 @@ msgstr "آخر التحديثات والتنبيهات"
 msgid "View all"
 msgstr "عرض الكل"
 
-#: src/hope_live/templates/pages/landing.html:212
-msgid "Story"
-msgstr "قصة"
-
-#: src/hope_live/templates/pages/landing.html:213
-msgid "Recent"
-msgstr "مؤخرًا"
-
-#: src/hope_live/templates/pages/landing.html:215
-msgid ""
-"Lifeline of hope for families after Typhoon Yagi: UNICEF's first "
-"humanitarian cash transfers in Viet Nam."
+#: src/hope_live/templates/pages/landing.html:220
+#: src/hope_live/templates/pages/landing.html:239
+#: src/hope_live/templates/pages/landing.html:257
+#: src/hope_live/templates/pages/landing.html:275
+msgid "Read details"
 msgstr ""
-"شريان الحياة للأسر بعد إعصار ياغي: أول تحويلات نقدية إنسانية تقدمها اليونيسف"
-" في فيتنام."
-
-#: src/hope_live/templates/pages/landing.html:217
-msgid "Read story"
-msgstr "قراءة القصة"
-
-#: src/hope_live/templates/pages/landing.html:230
-msgid "Report"
-msgstr "تقرير"
-
-#: src/hope_live/templates/pages/landing.html:231
-#: src/hope_live/templates/pages/landing.html:249
-msgid "Featured"
-msgstr "مميز"
-
-#: src/hope_live/templates/pages/landing.html:233
-msgid ""
-"Advancing Sustainable Funding for UNICEF Digital Public Good (HOPE) cash "
-"assistance platform."
-msgstr ""
-"تعزيز التمويل المستدام لمنصة المساعدة النقدية للصالح العام الرقمي لليونيسف "
-"(HOPE)."
 
 #: src/hope_live/templates/pages/landing.html:235
-msgid "View report"
-msgstr "عرض التقرير"
-
-#: src/hope_live/templates/pages/landing.html:248
-msgid "Podcast"
-msgstr "بودكاست"
-
-#: src/hope_live/templates/pages/landing.html:251
-msgid ""
-"Bringing HOPE To Whoever Needs It Most: podcast on secure data and risk-"
-"informed cash transfers."
+msgid "May 19, 2026"
 msgstr ""
-"جلب الأمل لمن يحتاج إليه بشدة: بودكاست حول البيانات الآمنة والتحويلات "
-"النقدية المدروسة بالمخاطر."
+
+#: src/hope_live/templates/pages/landing.html:237
+msgid ""
+"New features and enhancements 1. Added the Facility Workers beneficiary "
+"group to the programme setup page, enabling visualization..."
+msgstr ""
 
 #: src/hope_live/templates/pages/landing.html:253
-msgid "Listen now"
-msgstr "استمع الآن"
+msgid "April 8, 2026"
+msgstr ""
 
-#: src/hope_live/templates/pages/landing.html:267
+#: src/hope_live/templates/pages/landing.html:255
+msgid ""
+"New features and enhancements 1. Added a new filter to select Household or "
+"Individual IDs for alternate collectors receiving p..."
+msgstr ""
+
+#: src/hope_live/templates/pages/landing.html:271
+msgid "March 16, 2026"
+msgstr ""
+
+#: src/hope_live/templates/pages/landing.html:273
+msgid ""
+"New features and enhancements 1. Added a Currency Conversion section to the "
+"payment plan module, allowing users to override the UN..."
+msgstr ""
+
+#: src/hope_live/templates/pages/landing.html:290
 msgid "Explore Dashboards"
 msgstr "استكشف لوحات المعلومات"
 
-#: src/hope_live/templates/pages/landing.html:271
+#: src/hope_live/templates/pages/landing.html:294
 msgid "Transfer values & logistics"
 msgstr "نقل القيم والخدمات اللوجستية"
 
-#: src/hope_live/templates/pages/landing.html:275
+#: src/hope_live/templates/pages/landing.html:298
 msgid "Population & households"
 msgstr "السكان والأسر"
 
-#: src/hope_live/templates/pages/landing.html:279
+#: src/hope_live/templates/pages/landing.html:302
 msgid "Feedback & grievances"
 msgstr "ردود الفعل والتظلمات"
 
-#: src/hope_live/templates/pages/landing.html:283
+#: src/hope_live/templates/pages/landing.html:306
 msgid "Completion rates & metrics"
 msgstr "معدلات الإنجاز والمقاييس"
 
-#: src/hope_live/templates/pages/landing.html:291
+#: src/hope_live/templates/pages/landing.html:314
 msgid "Trends over time"
 msgstr "الاتجاهات مع مرور الوقت"
 
-#: src/hope_live/templates/pages/landing.html:293
+#: src/hope_live/templates/pages/landing.html:316
 msgid "5 years"
 msgstr "5 سنوات"
 
-#: src/hope_live/templates/pages/landing.html:294
+#: src/hope_live/templates/pages/landing.html:317
 msgid "1 year"
 msgstr "1 سنة"
 
-#: src/hope_live/templates/pages/landing.html:297
+#: src/hope_live/templates/pages/landing.html:320
 msgid "Selected indicators (global)"
 msgstr "مؤشرات مختارة (عالمية)"
 
-#: src/hope_live/templates/pages/landing.html:311
+#: src/hope_live/templates/pages/landing.html:334
 msgid "Data responsibly"
 msgstr "البيانات بمسؤولية"
 
-#: src/hope_live/templates/pages/landing.html:312
+#: src/hope_live/templates/pages/landing.html:335
 msgid "We are committed to data protection, privacy and ethical use."
 msgstr "نحن ملتزمون بحماية البيانات والخصوصية والاستخدام الأخلاقي."
 
-#: src/hope_live/templates/pages/landing.html:320
+#: src/hope_live/templates/pages/landing.html:343
 msgid "Methodology"
 msgstr "المنهجية"
 
-#: src/hope_live/templates/pages/landing.html:321
+#: src/hope_live/templates/pages/landing.html:344
 msgid "Learn how HOPE data is produced and standards applied."
 msgstr "تعرف على كيفية إنتاج بيانات HOPE وتطبيق المعايير."
 
-#: src/hope_live/templates/pages/landing.html:329
+#: src/hope_live/templates/pages/landing.html:352
 msgid "Give feedback"
 msgstr "تقديم ردود الفعل"
 
-#: src/hope_live/templates/pages/landing.html:330
+#: src/hope_live/templates/pages/landing.html:353
 msgid "Help us improve HOPE by sharing your feedback."
 msgstr "ساعدنا على تحسين HOPE من خلال مشاركة تعليقاتك."
 
-#: src/hope_live/templates/pages/landing.html:338
+#: src/hope_live/templates/pages/landing.html:361
 msgid "Stay connected"
 msgstr "ابق على اتصال"
 
-#: src/hope_live/templates/pages/landing.html:339
+#: src/hope_live/templates/pages/landing.html:362
 msgid "Subscribe to updates and new data releases."
 msgstr "الاشتراك في التحديثات وإصدارات البيانات الجديدة."
 
-#: src/hope_live/templates/pages/landing.html:353
+#: src/hope_live/templates/pages/landing.html:376
 msgid "Contact Us"
 msgstr "اتصل بنا"
 
-#: src/hope_live/templates/pages/landing.html:914
+#: src/hope_live/templates/pages/landing.html:937
 msgid "Failed to load map visualization. Please refresh."
 msgstr "فشل تحميل تصور الخريطة. يرجى التحديث."
 
@@ -509,3 +527,48 @@ msgstr "عُد"
 #: src/hope_live/templates/unfold/helpers/site_branding.html:6
 msgid "Django administration"
 msgstr "إدارة جانغو"
+
+#~ msgid "Story"
+#~ msgstr "قصة"
+
+#~ msgid "Recent"
+#~ msgstr "مؤخرًا"
+
+#~ msgid ""
+#~ "Lifeline of hope for families after Typhoon Yagi: UNICEF's first "
+#~ "humanitarian cash transfers in Viet Nam."
+#~ msgstr ""
+#~ "شريان الحياة للأسر بعد إعصار ياغي: أول تحويلات نقدية إنسانية تقدمها "
+#~ "اليونيسف في فيتنام."
+
+#~ msgid "Read story"
+#~ msgstr "قراءة القصة"
+
+#~ msgid "Report"
+#~ msgstr "تقرير"
+
+#~ msgid "Featured"
+#~ msgstr "مميز"
+
+#~ msgid ""
+#~ "Advancing Sustainable Funding for UNICEF Digital Public Good (HOPE) cash "
+#~ "assistance platform."
+#~ msgstr ""
+#~ "تعزيز التمويل المستدام لمنصة المساعدة النقدية للصالح العام الرقمي "
+#~ "لليونيسف (HOPE)."
+
+#~ msgid "View report"
+#~ msgstr "عرض التقرير"
+
+#~ msgid "Podcast"
+#~ msgstr "بودكاست"
+
+#~ msgid ""
+#~ "Bringing HOPE To Whoever Needs It Most: podcast on secure data and risk-"
+#~ "informed cash transfers."
+#~ msgstr ""
+#~ "جلب الأمل لمن يحتاج إليه بشدة: بودكاست حول البيانات الآمنة والتحويلات "
+#~ "النقدية المدروسة بالمخاطر."
+
+#~ msgid "Listen now"
+#~ msgstr "استمع الآن"

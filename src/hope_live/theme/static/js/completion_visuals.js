@@ -40,6 +40,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Initialize empty Crossfilter
     let ndx = crossfilter([]);
+    const isFr = document.documentElement.lang && document.documentElement.lang.startsWith('fr');
+    const t = (en, fr) => isFr ? fr : en;
 
     const dateDimension = ndx.dimension(d => d.date);
     const countryDimension = ndx.dimension(d => d.country_slug);
@@ -167,8 +169,11 @@ document.addEventListener('DOMContentLoaded', function () {
         const openedPct = total > 0 ? (totalOpened / total * 100).toFixed(1) : 0;
         const completionRate = total > 0 ? (totalReconciled / total * 100) : 0;
 
-        document.getElementById('total-reconciled').textContent = `${formatFullVal(totalReconciled)} (${reconciledPct}% out of ${formatFullVal(total)} total)`;
-        document.getElementById('total-opened').textContent = `${formatFullVal(totalOpened)} (${openedPct}% out of ${formatFullVal(total)} total)`;
+        const outOfReconciled = t(`${reconciledPct}% out of ${formatFullVal(total)} total`, `${reconciledPct}% sur ${formatFullVal(total)} au total`);
+        document.getElementById('total-reconciled').textContent = `${formatFullVal(totalReconciled)} (${outOfReconciled})`;
+
+        const outOfOpened = t(`${openedPct}% out of ${formatFullVal(total)} total`, `${openedPct}% sur ${formatFullVal(total)} au total`);
+        document.getElementById('total-opened').textContent = `${formatFullVal(totalOpened)} (${outOfOpened})`;
         document.getElementById('completion-rate-text').textContent = `${completionRate.toFixed(1)}%`;
 
         // Update ECharts micro-gauge
@@ -211,7 +216,7 @@ document.addEventListener('DOMContentLoaded', function () {
     function updateAll(filterSource = null) {
         updateTotals();
 
-        const unitName = currentMetric === 'usd' ? 'USD' : 'payments';
+        const unitName = currentMetric === 'usd' ? 'USD' : t('payments', 'paiements');
 
         // 1. Stacked Monthly Timeline Chart
         const reconciledData = reconciledMonthGroup.all()
@@ -237,7 +242,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
             },
             legend: {
-                data: ['Reconciled', 'Still Opened'],
+                data: [t('Reconciled', 'Rapproché'), t('Still Opened', 'En cours')],
                 bottom: 0,
                 icon: 'roundRect'
             },
@@ -261,7 +266,7 @@ document.addEventListener('DOMContentLoaded', function () {
             },
             series: [
                 {
-                    name: 'Reconciled',
+                    name: t('Reconciled', 'Rapproché'),
                     type: 'bar',
                     stack: 'total',
                     color: '#97b552',
@@ -269,7 +274,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     data: reconciledData
                 },
                 {
-                    name: 'Still Opened',
+                    name: t('Still Opened', 'En cours'),
                     type: 'bar',
                     stack: 'total',
                     color: '#5ab1ef',
@@ -337,7 +342,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
             },
             legend: {
-                data: ['Reconciled', 'Still Opened'],
+                data: [t('Reconciled', 'Rapproché'), t('Still Opened', 'En cours')],
                 top: 0,
                 right: 20
             },
@@ -362,7 +367,7 @@ document.addEventListener('DOMContentLoaded', function () {
             },
             series: [
                 {
-                    name: 'Reconciled',
+                    name: t('Reconciled', 'Rapproché'),
                     type: 'bar',
                     stack: 'total',
                     barMaxWidth: 30,
@@ -370,7 +375,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     itemStyle: { borderRadius: [0, 0, 0, 0] }
                 },
                 {
-                    name: 'Still Opened',
+                    name: t('Still Opened', 'En cours'),
                     type: 'bar',
                     stack: 'total',
                     barMaxWidth: 30,
@@ -430,15 +435,15 @@ document.addEventListener('DOMContentLoaded', function () {
             const countryTitle = document.getElementById('country-chart-title');
 
             if (currentMetric === 'usd') {
-                if (reconciledTitle) reconciledTitle.textContent = 'Reconciled Amount (USD)';
-                if (openedTitle) openedTitle.textContent = 'Still Opened Amount (USD)';
-                if (timelineTitle) timelineTitle.textContent = 'Reconciliation Timeline (USD)';
-                if (countryTitle) countryTitle.textContent = 'Reconciliation Status by Country (USD)';
+                if (reconciledTitle) reconciledTitle.textContent = t('Reconciled Amount (USD)', 'Montant rapproché (USD)');
+                if (openedTitle) openedTitle.textContent = t('Still Opened Amount (USD)', 'Montant toujours ouvert (USD)');
+                if (timelineTitle) timelineTitle.textContent = t('Reconciliation Timeline (USD)', 'Chronologie du rapprochement (USD)');
+                if (countryTitle) countryTitle.textContent = t('Reconciliation Status by Country (USD)', 'État du rapprochement par pays (USD)');
             } else {
-                if (reconciledTitle) reconciledTitle.textContent = 'Reconciled Payments';
-                if (openedTitle) openedTitle.textContent = 'Still Opened Payments';
-                if (timelineTitle) timelineTitle.textContent = 'Reconciliation Timeline';
-                if (countryTitle) countryTitle.textContent = 'Reconciliation Status by Country';
+                if (reconciledTitle) reconciledTitle.textContent = t('Reconciled Payments', 'Paiements rapprochés');
+                if (openedTitle) openedTitle.textContent = t('Still Opened Payments', 'Paiements toujours ouverts');
+                if (timelineTitle) timelineTitle.textContent = t('Reconciliation Timeline', 'Chronologie du rapprochement');
+                if (countryTitle) countryTitle.textContent = t('Reconciliation Status by Country', 'État du rapprochement par pays');
             }
 
             updateAll();

@@ -41,6 +41,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Initialize empty Crossfilter
     let ndx = crossfilter([]);
+    const isFr = document.documentElement.lang && document.documentElement.lang.startsWith('fr');
+    const t = (en, fr) => isFr ? fr : en;
 
     // Dimensions
     const dateDimension = ndx.dimension(d => d.date);
@@ -183,7 +185,7 @@ document.addEventListener('DOMContentLoaded', function () {
             .filter(d => d.key !== null)
             .map(d => [d.key.getTime(), d.value[currentMetric]]);
 
-        const metricName = currentMetric === 'usd' ? 'Spending' : (currentMetric === 'qty' ? 'Quantity' : 'Payments');
+        const metricName = currentMetric === 'usd' ? t('Spending', 'Dépenses') : (currentMetric === 'qty' ? t('Quantity', 'Quantités') : t('Payments', 'Paiements'));
         const timelineOption = {
             tooltip: {
                 trigger: 'axis',
@@ -441,9 +443,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
             const timelineTitle = document.getElementById('timeline-title');
             if (timelineTitle) {
-                if (currentMetric === 'usd') timelineTitle.textContent = 'Spending Timeline';
-                else if (currentMetric === 'qty') timelineTitle.textContent = 'Quantity Distribution Timeline';
-                else timelineTitle.textContent = 'Payments Timeline';
+                if (currentMetric === 'usd') timelineTitle.textContent = t('Spending Timeline', 'Chronologie des dépenses');
+                else if (currentMetric === 'qty') timelineTitle.textContent = t('Quantity Distribution Timeline', 'Chronologie de distribution des quantités');
+                else timelineTitle.textContent = t('Payments Timeline', 'Chronologie des paiements');
             }
 
             updateAll();

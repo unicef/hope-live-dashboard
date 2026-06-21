@@ -11,11 +11,14 @@ document.addEventListener('DOMContentLoaded', function () {
         pwd: 'pwd'
     };
 
+    const isFr = document.documentElement.lang && document.documentElement.lang.startsWith('fr');
+    const t = (en, fr) => isFr ? fr : en;
+
     const labelMap = {
-        individuals: 'Individuals Reached',
-        households: 'Households Reached',
-        children: 'Children Reached',
-        pwd: 'PWD Reached'
+        individuals: t('Individuals Reached', 'Individus atteints'),
+        households: t('Households Reached', 'Ménages atteints'),
+        children: t('Children Reached', 'Enfants atteints'),
+        pwd: t('PWD Reached', 'Personnes handicapées atteintes')
     };
 
     const colorPalette = [
@@ -238,7 +241,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 axisPointer: { type: 'shadow' }
             },
             legend: {
-                data: ['Individuals', 'Households', 'Children', 'PWD'],
+                data: [t('Individuals', 'Individus'), t('Households', 'Ménages'), t('Children', 'Enfants'), t('PWD', 'Personnes handicapées')],
                 bottom: 0,
                 textStyle: { color: '#64748b' }
             },
@@ -332,7 +335,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 axisPointer: { type: 'shadow' }
             },
             legend: {
-                data: ['Individuals', 'Households', 'Children', 'PWD'],
+                data: [t('Individuals', 'Individus'), t('Households', 'Ménages'), t('Children', 'Enfants'), t('PWD', 'Personnes handicapées')],
                 bottom: 0,
                 textStyle: { color: '#64748b' }
             },
@@ -467,13 +470,13 @@ document.addEventListener('DOMContentLoaded', function () {
             const activeLabel = labelMap[currentMetric];
 
             const timelineTitle = document.getElementById('timeline-title');
-            if (timelineTitle) timelineTitle.textContent = `${activeLabel} Timeline`;
+            if (timelineTitle) timelineTitle.textContent = t(`${activeLabel} Timeline`, `Chronologie : ${activeLabel}`);
 
             const sectorShareTitle = document.getElementById('sector-share-title');
-            if (sectorShareTitle) sectorShareTitle.textContent = `Sector Share of ${activeLabel}`;
+            if (sectorShareTitle) sectorShareTitle.textContent = t(`Sector Share of ${activeLabel}`, `Part sectorielle : ${activeLabel}`);
 
             const countryShareTitle = document.getElementById('country-share-title');
-            if (countryShareTitle) countryShareTitle.textContent = `Country Share of ${activeLabel}`;
+            if (countryShareTitle) countryShareTitle.textContent = t(`Country Share of ${activeLabel}`, `Part par pays : ${activeLabel}`);
 
             updateAll();
         });
