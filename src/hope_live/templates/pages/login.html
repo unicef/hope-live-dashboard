@@ -1,5 +1,5 @@
 {% extends "layout.html" %}
-{% load static %}
+{% load i18n static %}
 
 {% block header %}
 <div class="flex flex-1 flex-col bg-primary shadow-md w-full">
@@ -13,7 +13,7 @@
 
 {% block content %}
 <div class="flex items-center justify-center">
-    <div class="text-5xl pt-20">HOPE Live Dashboard</div>
+    <div class="text-5xl pt-20">{% translate "HOPE Live Dashboard" %}</div>
 </div>
 
 <div class="flex items-center justify-center">
@@ -21,18 +21,18 @@
         <div class="text-center mt-10">
             <a class="px-8 py-3 btn btn-primary text-white border-none text-lg font-bold rounded shadow hover:bg-unicef-dark transition duration-200 inline-block"
                 href="{% url 'social:begin' 'azuread-tenant-oauth2' %}">
-                SSO Login
+                {% translate "SSO Login" %}
             </a>
         </div>
 
         {% if debug %}
         <div class="mt-8 p-4 border rounded bg-white w-full">
-            <h3 class="text-sm font-bold text-gray-500 mb-2 uppercase">Debug Login</h3>
+            <h3 class="text-sm font-bold text-gray-500 mb-2 uppercase">{% translate "Debug Login" %}</h3>
             <form method="post" class="space-y-4">
                 {% csrf_token %}
-                <input type="text" name="username" placeholder="Username" class="w-full p-2 border rounded">
-                <input type="password" name="password" placeholder="Password" class="w-full p-2 border rounded">
-                <button type="submit" class="w-full py-2 bg-gray-200 hover:bg-gray-300 rounded">Sign In</button>
+                <input type="text" name="username" placeholder="{% translate 'Username' %}" class="w-full p-2 border rounded">
+                <input type="password" name="password" placeholder="{% translate 'Password' %}" class="w-full p-2 border rounded">
+                <button type="submit" class="w-full py-2 bg-gray-200 hover:bg-gray-300 rounded">{% translate "Sign In" %}</button>
             </form>
         </div>
         {% endif %}
@@ -42,6 +42,6 @@
 
 {% block footer %}
 <div class="flex justify-center text-xs footer m-auto pt-1 pb-2 border-t-2 text-gray-400 border-gray-400 bg-white">
-    Hope Country Report dev - {{ year }} - {{ app.version }}
+    {% blocktranslate with year=year version=app.version %}Hope Country Report dev - {{ year }} - {{ version }}{% endblocktranslate %}
 </div>
 {% endblock footer %}

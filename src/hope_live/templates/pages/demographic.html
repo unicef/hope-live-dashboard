@@ -1,15 +1,15 @@
 {% extends "layout.html" %}
-{% load static %}
+{% load i18n static %}
 
 {% block content %}
 <div class="container mx-auto px-4 py-8">
     <div class="mb-8 flex justify-between items-center">
         <div>
-            <h1 class="text-3xl font-bold text-gray-900">Demographic Dashboard</h1>
-            <p class="text-gray-600">Breakdown of Individuals, Children, and PWD Reached</p>
+            <h1 class="text-3xl font-bold text-gray-900">{% translate "Demographic Dashboard" %}</h1>
+            <p class="text-gray-600">{% translate "Breakdown of Individuals, Children, and PWD Reached" %}</p>
         </div>
         <div>
-            <span class="bg-unicef-blue text-white text-xs font-medium mr-2 px-2.5 py-0.5 rounded">Live Data</span>
+            <span class="bg-unicef-blue text-white text-xs font-medium mr-2 px-2.5 py-0.5 rounded">{% translate "Live Data" %}</span>
         </div>
     </div>
 
@@ -29,63 +29,63 @@
 
     <!-- Metric Selector Pills -->
     <div class="mb-6 flex flex-wrap gap-2 items-center justify-between">
-        <div class="text-sm font-semibold text-gray-700">View Demographic Metrics by:</div>
+        <div class="text-sm font-semibold text-gray-700">{% translate "View Demographic Metrics by:" %}</div>
         <div class="flex bg-gray-100 p-1 rounded-lg space-x-1 border border-gray-200">
             <button id="btn-individuals" class="metric-tab px-4 py-1.5 text-xs font-bold rounded-md bg-white shadow text-blue-800 transition-all duration-200 active-metric" data-metric="individuals">
-                Individuals
+                {% translate "Individuals" %}
             </button>
             <button id="btn-households" class="metric-tab px-4 py-1.5 text-xs font-bold rounded-md text-gray-600 hover:text-gray-900 transition-all duration-200" data-metric="households">
-                Households
+                {% translate "Households" %}
             </button>
             <button id="btn-children" class="metric-tab px-4 py-1.5 text-xs font-bold rounded-md text-gray-600 hover:text-gray-900 transition-all duration-200" data-metric="children">
-                Children
+                {% translate "Children" %}
             </button>
             <button id="btn-pwd" class="metric-tab px-4 py-1.5 text-xs font-bold rounded-md text-gray-600 hover:text-gray-900 transition-all duration-200" data-metric="pwd">
-                PWD Reached
+                {% translate "PWD Reached" %}
             </button>
         </div>
     </div>
 
     <!-- Timeline Filter -->
     <div class="bg-white rounded-lg shadow p-6 mb-8">
-        <h3 id="timeline-title" class="text-lg font-semibold text-gray-900 mb-2">Reach Timeline</h3>
+        <h3 id="timeline-title" class="text-lg font-semibold text-gray-900 mb-2">{% translate "Reach Timeline" %}</h3>
         <div id="time-focus-chart" class="w-full" style="min-height: 350px;"></div>
         <div id="time-range-chart" style="display: none;"></div>
-        <p class="text-xs text-gray-500 mt-2 italic">* Use the slider handles at the bottom of the timeline or click and drag to filter dates.</p>
+        <p class="text-xs text-gray-500 mt-2 italic">{% translate "* Use the slider handles at the bottom of the timeline or click and drag to filter dates." %}</p>
     </div>
 
 
     <!-- Stats Cards -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         <div class="bg-white rounded-lg shadow p-6 border-l-4 border-unicef-blue">
-            <h3 class="text-gray-500 text-sm font-medium uppercase">Individuals Reached</h3>
+            <h3 class="text-gray-500 text-sm font-medium uppercase">{% translate "Individuals Reached" %}</h3>
             <p id="total-individuals" class="text-3xl font-bold text-gray-900 mt-2">0</p>
         </div>
         <div class="bg-white rounded-lg shadow p-6 border-l-4 border-green-500">
-            <h3 class="text-gray-500 text-sm font-medium uppercase">Households Reached</h3>
+            <h3 class="text-gray-500 text-sm font-medium uppercase">{% translate "Households Reached" %}</h3>
             <p id="total-households" class="text-3xl font-bold text-gray-900 mt-2">0</p>
         </div>
         <div class="bg-white rounded-lg shadow p-6 border-l-4 border-unicef-primary">
-            <h3 class="text-gray-500 text-sm font-medium uppercase">Children</h3>
+            <h3 class="text-gray-500 text-sm font-medium uppercase">{% translate "Children" %}</h3>
             <p id="total-children" class="text-3xl font-bold text-gray-900 mt-2">0</p>
-            <p class="text-xs text-gray-400 mt-2 italic">Note: For programmes (like DCT) not collecting children data, numbers are estimated by multiplying Household numbers by fertility rates.</p>
+            <p class="text-xs text-gray-400 mt-2 italic">{% translate "Note: For programmes (like DCT) not collecting children data, numbers are estimated by multiplying Household numbers by fertility rates." %}</p>
         </div>
         <div class="bg-white rounded-lg shadow p-6 border-l-4 border-purple-500">
-            <h3 class="text-gray-500 text-sm font-medium uppercase">PWD Reached</h3>
+            <h3 class="text-gray-500 text-sm font-medium uppercase">{% translate "PWD Reached" %}</h3>
             <p id="total-pwd" class="text-3xl font-bold text-gray-900 mt-2">0</p>
-            <p class="text-xs text-gray-400 mt-2 italic">Note: This reflects confirmed persons with disabilities. Some programmes (e.g., Pepukai) do not collect this data, so this figure is likely under-represented.</p>
+            <p class="text-xs text-gray-400 mt-2 italic">{% translate "Note: This reflects confirmed persons with disabilities. Some programmes (e.g., Pepukai) do not collect this data, so this figure is likely under-represented." %}</p>
         </div>
     </div>
 
     <!-- Main Demographic Charts -->
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
         <div class="bg-white rounded-lg shadow p-6">
-            <h3 class="text-lg font-semibold text-gray-900 mb-4">Demographic Breakdown by Sector</h3>
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">{% translate "Demographic Breakdown by Sector" %}</h3>
             <div id="sector-individuals-chart" class="w-full" style="min-height: 350px;"></div>
         </div>
         <div class="bg-white rounded-lg shadow p-6 flex flex-col">
-            <h3 id="sector-share-title" class="text-lg font-semibold text-gray-900 mb-2">Sector Share of Reached Population</h3>
-            <p class="text-xs text-gray-400 mb-4 italic">Note: For programmes (like DCT) not collecting children data, numbers are estimated by multiplying Household numbers by fertility rates.</p>
+            <h3 id="sector-share-title" class="text-lg font-semibold text-gray-900 mb-2">{% translate "Sector Share of Reached Population" %}</h3>
+            <p class="text-xs text-gray-400 mb-4 italic">{% translate "Note: For programmes (like DCT) not collecting children data, numbers are estimated by multiplying Household numbers by fertility rates." %}</p>
             <div id="sector-children-chart" class="w-full flex-grow" style="min-height: 350px;"></div>
         </div>
     </div>
@@ -93,11 +93,11 @@
     <!-- Geographic Breakdown -->
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
         <div class="bg-white rounded-lg shadow p-6">
-            <h3 class="text-lg font-semibold text-gray-900 mb-4">Demographic Breakdown by Country</h3>
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">{% translate "Demographic Breakdown by Country" %}</h3>
             <div id="country-individuals-chart" class="w-full" style="min-height: 500px;"></div>
         </div>
         <div class="bg-white rounded-lg shadow p-6">
-            <h3 id="country-share-title" class="text-lg font-semibold text-gray-900 mb-4">Country Share of Reached Population</h3>
+            <h3 id="country-share-title" class="text-lg font-semibold text-gray-900 mb-4">{% translate "Country Share of Reached Population" %}</h3>
             <div id="country-pwd-chart" class="w-full" style="min-height: 500px;"></div>
         </div>
     </div>

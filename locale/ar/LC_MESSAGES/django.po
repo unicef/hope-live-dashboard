@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-21 14:10+0000\n"
+"POT-Creation-Date: 2026-06-21 14:44+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -136,12 +136,20 @@ msgstr ""
 "الأطفال."
 
 #: src/hope_live/templates/menu.html:89
+#: src/hope_live/templates/pages/about.html:17
 msgid "Learn more"
 msgstr "يتعلم أكثر"
 
 #: src/hope_live/templates/menu.html:124
 msgid "Admin"
 msgstr "مسؤل"
+
+#: src/hope_live/templates/pages/about.html:15
+msgid ""
+"HOPE is UNICEF’s solution to collect and process personal data from "
+"beneficiaries and frontline workers to deliver humanitarian cash transfers "
+"safely"
+msgstr ""
 
 #: src/hope_live/templates/pages/completion.html:8
 msgid "Completion Rate Dashboard"
@@ -153,27 +161,24 @@ msgstr "تسوية الدفع وتتبع حالة الإكمال"
 
 #: src/hope_live/templates/pages/completion.html:12
 #: src/hope_live/templates/pages/dashboard.html:13
+#: src/hope_live/templates/pages/demographic.html:12
 #: src/hope_live/templates/pages/grievance.html:12
 msgid "Live Data"
 msgstr "البيانات الحية"
 
 #: src/hope_live/templates/pages/completion.html:32
-#, fuzzy
-#| msgid "Reconciliation Timeline"
 msgid "View Reconciliation Metrics by:"
-msgstr "الجدول الزمني للمصالحة"
+msgstr "عرض مقاييس المطابقة حسب:"
 
 #: src/hope_live/templates/pages/completion.html:35
 #: src/hope_live/templates/pages/dashboard.html:42
-#, fuzzy
-#| msgid "Number of Payments by Country"
 msgid "Payments Count"
-msgstr "عدد المدفوعات حسب البلد"
+msgstr "عدد الدفعات"
 
 #: src/hope_live/templates/pages/completion.html:38
 #: src/hope_live/templates/pages/dashboard.html:36
 msgid "Amount (USD)"
-msgstr ""
+msgstr "المبلغ (دولار أمريكي)"
 
 #: src/hope_live/templates/pages/completion.html:45
 msgid "Reconciliation Timeline"
@@ -181,6 +186,7 @@ msgstr "الجدول الزمني للمصالحة"
 
 #: src/hope_live/templates/pages/completion.html:48
 #: src/hope_live/templates/pages/dashboard.html:52
+#: src/hope_live/templates/pages/demographic.html:54
 #: src/hope_live/templates/pages/grievance.html:35
 msgid ""
 "* Use the slider handles at the bottom of the timeline or click and drag to "
@@ -198,14 +204,12 @@ msgid "Still Opened"
 msgstr "لا يزال مفتوحا"
 
 #: src/hope_live/templates/pages/completion.html:63
-#, fuzzy
-#| msgid "Reconciliation Timeline"
 msgid "Reconciliation Rate"
-msgstr "الجدول الزمني للمصالحة"
+msgstr "معدل المطابقة"
 
 #: src/hope_live/templates/pages/completion.html:73
 msgid "Reconciliation Status by Country"
-msgstr ""
+msgstr "حالة المطابقة حسب البلد"
 
 #: src/hope_live/templates/pages/dashboard.html:9
 msgid "Overview of Financial info"
@@ -213,11 +217,11 @@ msgstr "نظرة عامة على المعلومات المالية"
 
 #: src/hope_live/templates/pages/dashboard.html:33
 msgid "View Dashboard Metrics by:"
-msgstr ""
+msgstr "عرض مقاييس لوحة المعلومات حسب:"
 
 #: src/hope_live/templates/pages/dashboard.html:39
 msgid "Quantity (QTY)"
-msgstr ""
+msgstr "الكمية"
 
 #: src/hope_live/templates/pages/dashboard.html:49
 msgid "Spending Timeline"
@@ -233,7 +237,7 @@ msgstr "عدد الدفعات"
 
 #: src/hope_live/templates/pages/dashboard.html:70
 msgid "Total Quantity Distributed"
-msgstr ""
+msgstr "إجمالي الكمية الموزعة"
 
 #: src/hope_live/templates/pages/dashboard.html:74
 msgid "Outstanding Payment"
@@ -258,6 +262,89 @@ msgstr "التوزيع حسب البرنامج"
 #: src/hope_live/templates/pages/dashboard.html:110
 msgid "Financial Service Providers (FSP)"
 msgstr "مقدمو الخدمات المالية (FSP)"
+
+#: src/hope_live/templates/pages/demographic.html:8
+#, fuzzy
+#| msgid "Demographics"
+msgid "Demographic Dashboard"
+msgstr "التركيبة السكانية"
+
+#: src/hope_live/templates/pages/demographic.html:9
+msgid "Breakdown of Individuals, Children, and PWD Reached"
+msgstr ""
+
+#: src/hope_live/templates/pages/demographic.html:32
+#, fuzzy
+#| msgid "View Dashboard Metrics by:"
+msgid "View Demographic Metrics by:"
+msgstr "عرض مقاييس لوحة المعلومات حسب:"
+
+#: src/hope_live/templates/pages/demographic.html:35
+msgid "Individuals"
+msgstr ""
+
+#: src/hope_live/templates/pages/demographic.html:38
+#, fuzzy
+#| msgid "Households Reached"
+msgid "Households"
+msgstr "وصلت الأسر"
+
+#: src/hope_live/templates/pages/demographic.html:41
+#: src/hope_live/templates/pages/demographic.html:69
+#, fuzzy
+#| msgid "Children Reached"
+msgid "Children"
+msgstr "وصل الأطفال"
+
+#: src/hope_live/templates/pages/demographic.html:44
+#: src/hope_live/templates/pages/demographic.html:74
+msgid "PWD Reached"
+msgstr ""
+
+#: src/hope_live/templates/pages/demographic.html:51
+#, fuzzy
+#| msgid "Tickets Timeline"
+msgid "Reach Timeline"
+msgstr "الجدول الزمني للتذاكر"
+
+#: src/hope_live/templates/pages/demographic.html:61
+msgid "Individuals Reached"
+msgstr ""
+
+#: src/hope_live/templates/pages/demographic.html:65
+#: src/hope_live/templates/pages/landing.html:118
+msgid "Households Reached"
+msgstr "وصلت الأسر"
+
+#: src/hope_live/templates/pages/demographic.html:71
+#: src/hope_live/templates/pages/demographic.html:88
+msgid ""
+"Note: For programmes (like DCT) not collecting children data, numbers are "
+"estimated by multiplying Household numbers by fertility rates."
+msgstr ""
+
+#: src/hope_live/templates/pages/demographic.html:76
+msgid ""
+"Note: This reflects confirmed persons with disabilities. Some programmes "
+"(e.g., Pepukai) do not collect this data, so this figure is likely under-"
+"represented."
+msgstr ""
+
+#: src/hope_live/templates/pages/demographic.html:83
+msgid "Demographic Breakdown by Sector"
+msgstr ""
+
+#: src/hope_live/templates/pages/demographic.html:87
+msgid "Sector Share of Reached Population"
+msgstr ""
+
+#: src/hope_live/templates/pages/demographic.html:96
+msgid "Demographic Breakdown by Country"
+msgstr ""
+
+#: src/hope_live/templates/pages/demographic.html:100
+msgid "Country Share of Reached Population"
+msgstr ""
 
 #: src/hope_live/templates/pages/grievance.html:8
 msgid "Grievance Dashboard"
@@ -292,10 +379,8 @@ msgid "Issue Type"
 msgstr "نوع المشكلة"
 
 #: src/hope_live/templates/pages/grievance.html:72
-#, fuzzy
-#| msgid "Tickets by Country"
 msgid "Ticket Status by Country"
-msgstr "التذاكر حسب البلد"
+msgstr "حالة التذاكر حسب البلد"
 
 #: src/hope_live/templates/pages/landing.html:27
 msgid "Humanitarian cash"
@@ -353,10 +438,6 @@ msgstr "عير"
 msgid "countries"
 msgstr "بلدان"
 
-#: src/hope_live/templates/pages/landing.html:118
-msgid "Households Reached"
-msgstr "وصلت الأسر"
-
 #: src/hope_live/templates/pages/landing.html:120
 msgid "Humanitarian assistance"
 msgstr "المساعدة الإنسانية"
@@ -410,37 +491,43 @@ msgstr "عرض الكل"
 #: src/hope_live/templates/pages/landing.html:257
 #: src/hope_live/templates/pages/landing.html:275
 msgid "Read details"
-msgstr ""
+msgstr "قراءة التفاصيل"
 
 #: src/hope_live/templates/pages/landing.html:235
 msgid "May 19, 2026"
-msgstr ""
+msgstr "19 مايو 2026"
 
 #: src/hope_live/templates/pages/landing.html:237
 msgid ""
 "New features and enhancements 1. Added the Facility Workers beneficiary "
 "group to the programme setup page, enabling visualization..."
 msgstr ""
+"ميزات وتحسينات جديدة 1. إضافة مجموعة المستفيدين من عاملي المرافق إلى صفحة "
+"إعداد البرنامج، مما يتيح التصور..."
 
 #: src/hope_live/templates/pages/landing.html:253
 msgid "April 8, 2026"
-msgstr ""
+msgstr "8 أبريل 2026"
 
 #: src/hope_live/templates/pages/landing.html:255
 msgid ""
 "New features and enhancements 1. Added a new filter to select Household or "
 "Individual IDs for alternate collectors receiving p..."
 msgstr ""
+"ميزات وتحسينات جديدة 1. إضافة فلتر جديد لتحديد معرفات الأسر أو الأفراد "
+"للمحصلين البدلاء الذين يتلقون..."
 
 #: src/hope_live/templates/pages/landing.html:271
 msgid "March 16, 2026"
-msgstr ""
+msgstr "16 مارس 2026"
 
 #: src/hope_live/templates/pages/landing.html:273
 msgid ""
 "New features and enhancements 1. Added a Currency Conversion section to the "
 "payment plan module, allowing users to override the UN..."
 msgstr ""
+"ميزات وتحسينات جديدة 1. إضافة قسم تحويل العملات إلى وحدة خطة الدفع، مما يسمح "
+"للمستخدمين بتجاوز الأمم المتحدة..."
 
 #: src/hope_live/templates/pages/landing.html:290
 msgid "Explore Dashboards"
@@ -517,6 +604,39 @@ msgstr "اتصل بنا"
 #: src/hope_live/templates/pages/landing.html:937
 msgid "Failed to load map visualization. Please refresh."
 msgstr "فشل تحميل تصور الخريطة. يرجى التحديث."
+
+#: src/hope_live/templates/pages/login.html:16
+#, fuzzy
+#| msgid "HOPE Dashboard"
+msgid "HOPE Live Dashboard"
+msgstr "لوحة معلومات HOPE"
+
+#: src/hope_live/templates/pages/login.html:24
+msgid "SSO Login"
+msgstr ""
+
+#: src/hope_live/templates/pages/login.html:30
+msgid "Debug Login"
+msgstr ""
+
+#: src/hope_live/templates/pages/login.html:33
+msgid "Username"
+msgstr ""
+
+#: src/hope_live/templates/pages/login.html:34
+msgid "Password"
+msgstr ""
+
+#: src/hope_live/templates/pages/login.html:35
+#, fuzzy
+#| msgid "Sign Out"
+msgid "Sign In"
+msgstr "تسجيل الخروج"
+
+#: src/hope_live/templates/pages/login.html:45
+#, python-format
+msgid "Hope Country Report dev - %(year)s - %(version)s"
+msgstr ""
 
 #: src/hope_live/templates/unfold/helpers/header_back_button.html:7
 #: src/hope_live/templates/unfold/helpers/header_back_button.html:15
