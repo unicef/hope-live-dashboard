@@ -2,6 +2,64 @@ document.addEventListener('DOMContentLoaded', function () {
     const tabsContainer = document.getElementById('tabs-container');
     if (!tabsContainer) return;
 
+    const statusMap = {
+        "1": "New",
+        "2": "Assigned",
+        "3": "In Progress",
+        "4": "On Hold",
+        "5": "For Approval",
+        "6": "Closed"
+    };
+
+    const categoryMap = {
+        "1": "Payment Verification",
+        "2": "Data Change",
+        "3": "Sensitive Grievance",
+        "4": "Grievance Complaint",
+        "5": "Negative Feedback",
+        "6": "Referral",
+        "7": "Positive Feedback",
+        "8": "Needs Adjudication",
+        "9": "System Flagging",
+        "10": "Beneficiary"
+    };
+
+    const priorityMap = {
+        "0": "Not Set",
+        "1": "High",
+        "2": "Medium",
+        "3": "Low"
+    };
+
+    const issueTypeMap = {
+        "1": "Data breach",
+        "2": "Bribery, corruption or kickback",
+        "3": "Fraud and forgery",
+        "4": "Fraud involving misuse of programme funds by third party",
+        "5": "Harassment and abuse of authority",
+        "6": "Inappropriate staff conduct",
+        "7": "Unauthorized use, misuse or waste of UNICEF property or funds",
+        "8": "Conflict of interest",
+        "9": "Gross mismanagement",
+        "10": "Personal disputes",
+        "11": "Sexual harassment and sexual exploitation",
+        "12": "Miscellaneous",
+        "13": "Household Data Update",
+        "14": "Individual Data Update",
+        "15": "Withdraw Individual",
+        "16": "Add Individual",
+        "17": "Withdraw Household",
+        "18": "Payment Related Complaint",
+        "19": "FSP Related Complaint",
+        "20": "Registration Related Complaint",
+        "21": "Other Complaint",
+        "22": "Partner Related Complaint",
+        "23": "Unique Identifiers Similarity",
+        "24": "Biographical Data Similarity",
+        "25": "Biometrics Similarity",
+        "26": "Update Delegate"
+    };
+
     const colorPalette = [
         '#2ec7c9', '#b6a2de', '#5ab1ef', '#ffb980', '#d87a80',
         '#8d98b3', '#e5cf0d', '#97b552', '#95706d', '#dc69aa',
@@ -24,23 +82,75 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Dimensions
     const dateDimension = ndx.dimension(d => d.date);
-    const statusDimension = ndx.dimension(d => d.dimension_type === 'status' ? d.dimension_value : null);
-    const categoryDimension = ndx.dimension(d => d.dimension_type === 'category' ? d.dimension_value : null);
-    const issueTypeDimension = ndx.dimension(d => d.dimension_type === 'issue_type' ? d.dimension_value : null);
-    const priorityDimension = ndx.dimension(d => d.dimension_type === 'priority' ? d.dimension_value : null);
+    const statusDimension = ndx.dimension(d => d.dimension_type === 'status' ? d.dimension_value : '');
+    const categoryDimension = ndx.dimension(d => d.dimension_type === 'category' ? d.dimension_value : '');
+    const issueTypeDimension = ndx.dimension(d => d.dimension_type === 'issue_type' ? d.dimension_value : '');
+    const priorityDimension = ndx.dimension(d => d.dimension_type === 'priority' ? d.dimension_value : '');
     const countryDimension = ndx.dimension(d => d.country_slug);
 
     const primaryDimFilter = d => d.dimension_type === 'category';
 
     // Groups
     const moveDays = dateDimension.group(d3.timeDay);
-    const ticketsByDayGroup = moveDays.reduceSum(d => primaryDimFilter(d) ? d.ticket_count : 0);
+
+    // Custom reduction to split Open vs Resolved tickets over time
+    const ticketsByDayGroup = moveDays.reduce(
+        (p, v) => {
+            if (v.dimension_type === 'status') {
+                const status = String(v.dimension_value).toUpperCase();
+                if (status.includes('RESOLVED') || status.includes('CLOSED')) {
+                    p.resolved += v.ticket_count;
+                } else {
+                    p.open += v.ticket_count;
+                }
+            }
+            return p;
+        },
+        (p, v) => {
+            if (v.dimension_type === 'status') {
+                const status = String(v.dimension_value).toUpperCase();
+                if (status.includes('RESOLVED') || status.includes('CLOSED')) {
+                    p.resolved -= v.ticket_count;
+                } else {
+                    p.open -= v.ticket_count;
+                }
+            }
+            return p;
+        },
+        () => ({ open: 0, resolved: 0 })
+    );
 
     const statusGroup = statusDimension.group().reduceSum(d => d.dimension_type === 'status' ? d.ticket_count : 0);
     const categoryGroup = categoryDimension.group().reduceSum(d => d.dimension_type === 'category' ? d.ticket_count : 0);
     const issueTypeGroup = issueTypeDimension.group().reduceSum(d => d.dimension_type === 'issue_type' ? d.ticket_count : 0);
     const priorityGroup = priorityDimension.group().reduceSum(d => d.dimension_type === 'priority' ? d.ticket_count : 0);
-    const countryGroup = countryDimension.group().reduceSum(d => primaryDimFilter(d) ? d.ticket_count : 0);
+
+    // Custom reduction to split Open vs Resolved tickets by country
+    const countryGroup = countryDimension.group().reduce(
+        (p, v) => {
+            if (v.dimension_type === 'status') {
+                const status = String(v.dimension_value).toUpperCase();
+                if (status.includes('RESOLVED') || status.includes('CLOSED')) {
+                    p.resolved += v.ticket_count;
+                } else {
+                    p.open += v.ticket_count;
+                }
+            }
+            return p;
+        },
+        (p, v) => {
+            if (v.dimension_type === 'status') {
+                const status = String(v.dimension_value).toUpperCase();
+                if (status.includes('RESOLVED') || status.includes('CLOSED')) {
+                    p.resolved -= v.ticket_count;
+                } else {
+                    p.open -= v.ticket_count;
+                }
+            }
+            return p;
+        },
+        () => ({ open: 0, resolved: 0 })
+    );
 
     // Active filters
     const selectedStatuses = new Set();
@@ -78,10 +188,14 @@ document.addEventListener('DOMContentLoaded', function () {
     function updateAll(filterSource = null) {
         updateTotals();
 
-        // 1. Timeline Chart (Area time chart)
-        const timelineData = ticketsByDayGroup.all()
+        // 1. Timeline Chart (Stacked Area Chart of Open vs Resolved Tickets)
+        const timelineDataOpen = ticketsByDayGroup.all()
             .filter(d => d.key !== null)
-            .map(d => [d.key.getTime(), d.value]);
+            .map(d => [d.key.getTime(), d.value.open]);
+
+        const timelineDataResolved = ticketsByDayGroup.all()
+            .filter(d => d.key !== null)
+            .map(d => [d.key.getTime(), d.value.resolved]);
 
         const timelineOption = {
             tooltip: {
@@ -89,11 +203,19 @@ document.addEventListener('DOMContentLoaded', function () {
                 formatter: function (params) {
                     const date = new Date(params[0].value[0]);
                     const formattedDate = d3.timeFormat("%B %d, %Y")(date);
-                    const formattedValue = d3.format(",")(params[0].value[1]);
-                    return `${formattedDate}<br/><b>${formattedValue}</b> tickets`;
+                    let tooltipHtml = `${formattedDate}<br/>`;
+                    params.forEach(p => {
+                        tooltipHtml += `${p.marker} ${p.seriesName}: <b>${d3.format(",")(p.value[1])}</b> tickets<br/>`;
+                    });
+                    return tooltipHtml;
                 }
             },
-            grid: { top: 20, bottom: 80, left: 60, right: 30 },
+            legend: {
+                data: ['Resolved & Closed', 'Open & Active'],
+                bottom: 0,
+                icon: 'roundRect'
+            },
+            grid: { top: 20, bottom: 80, left: 70, right: 30 },
             xAxis: {
                 type: 'time',
                 axisLabel: { color: '#64748b' }
@@ -106,26 +228,44 @@ document.addEventListener('DOMContentLoaded', function () {
                 },
                 splitLine: { lineStyle: { type: 'dashed', color: '#f1f5f9' } }
             },
-            series: [{
-                name: 'Tickets',
-                type: 'line',
-                smooth: true,
-                symbol: 'none',
-                lineStyle: { color: '#5ab1ef', width: 2.5 },
-                areaStyle: {
-                    color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-                        { offset: 0, color: 'rgba(90, 177, 239, 0.4)' },
-                        { offset: 1, color: 'rgba(90, 177, 239, 0.02)' }
-                    ])
+            series: [
+                {
+                    name: 'Resolved & Closed',
+                    type: 'line',
+                    stack: 'total',
+                    smooth: true,
+                    symbol: 'none',
+                    lineStyle: { color: '#97b552', width: 2 },
+                    areaStyle: {
+                        color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                            { offset: 0, color: 'rgba(151, 181, 82, 0.4)' },
+                            { offset: 1, color: 'rgba(151, 181, 82, 0.02)' }
+                        ])
+                    },
+                    data: timelineDataResolved
                 },
-                data: timelineData
-            }]
+                {
+                    name: 'Open & Active',
+                    type: 'line',
+                    stack: 'total',
+                    smooth: true,
+                    symbol: 'none',
+                    lineStyle: { color: '#d87a80', width: 2 },
+                    areaStyle: {
+                        color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                            { offset: 0, color: 'rgba(216, 122, 128, 0.4)' },
+                            { offset: 1, color: 'rgba(216, 122, 128, 0.02)' }
+                        ])
+                    },
+                    data: timelineDataOpen
+                }
+            ]
         };
 
         if (filterSource !== 'timeline') {
             timelineOption.dataZoom = [
                 { type: 'inside', start: 0, end: 100 },
-                { show: true, type: 'slider', start: 0, end: 100, bottom: 10, textStyle: { color: '#64748b' } }
+                { show: true, type: 'slider', start: 0, end: 100, bottom: 25, textStyle: { color: '#64748b' } }
             ];
             timelineChart.setOption(timelineOption, { notMerge: true });
         } else {
@@ -133,37 +273,37 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         // 2. Status Chart (Donut Pie)
-        const statusData = statusGroup.all().filter(d => d.key !== null && d.value > 0);
+        const statusData = statusGroup.all().filter(d => d.key !== '' && d.key !== null && d.value > 0);
         statusChart.setOption({
             tooltip: { trigger: 'item', formatter: '{b}: <b>{c}</b> ({d}%)' },
             series: [{
                 type: 'pie',
-                radius: ['40%', '70%'],
-                avoidLabelOverlap: false,
+                radius: ['45%', '70%'],
+                avoidLabelOverlap: true,
                 itemStyle: { borderRadius: 6, borderColor: '#fff', borderWidth: 2 },
                 label: { show: true, formatter: '{b}: {c}' },
-                emphasis: { label: { show: true, fontSize: 14, fontWeight: 'bold' } },
+                emphasis: { label: { show: true, fontSize: 13, fontWeight: 'bold' } },
                 data: statusData.map(d => ({ name: d.key, value: d.value }))
             }]
-        });
+        }, { notMerge: true });
 
         // 3. Priority Chart (Donut Pie)
-        const priorityData = priorityGroup.all().filter(d => d.key !== null && d.value > 0);
+        const priorityData = priorityGroup.all().filter(d => d.key !== '' && d.key !== null && d.value > 0);
         priorityChart.setOption({
             tooltip: { trigger: 'item', formatter: '{b}: <b>{c}</b> ({d}%)' },
             series: [{
                 type: 'pie',
-                radius: ['40%', '70%'],
-                avoidLabelOverlap: false,
+                radius: ['45%', '70%'],
+                avoidLabelOverlap: true,
                 itemStyle: { borderRadius: 6, borderColor: '#fff', borderWidth: 2 },
                 label: { show: true, formatter: '{b}: {c}' },
-                emphasis: { label: { show: true, fontSize: 14, fontWeight: 'bold' } },
+                emphasis: { label: { show: true, fontSize: 13, fontWeight: 'bold' } },
                 data: priorityData.map(d => ({ name: d.key, value: d.value }))
             }]
-        });
+        }, { notMerge: true });
 
         // 4. Category Chart (Horizontal Bar / Row)
-        const categoryData = categoryGroup.all().filter(d => d.key !== null && d.value > 0);
+        const categoryData = categoryGroup.all().filter(d => d.key !== '' && d.key !== null && d.value > 0);
         categoryData.sort((a, b) => b.value - a.value);
 
         const hasAnyCategorySelection = selectedCategories.size > 0;
@@ -200,10 +340,10 @@ document.addEventListener('DOMContentLoaded', function () {
                 barMaxWidth: 22,
                 itemStyle: { borderRadius: [0, 4, 4, 0] }
             }]
-        });
+        }, { notMerge: true });
 
         // 5. Issue Type Chart (Horizontal Bar / Row)
-        const issueTypeData = issueTypeGroup.all().filter(d => d.key !== null && d.value > 0);
+        const issueTypeData = issueTypeGroup.all().filter(d => d.key !== '' && d.key !== null && d.value > 0);
         issueTypeData.sort((a, b) => b.value - a.value);
 
         const hasAnyIssueTypeSelection = selectedIssueTypes.size > 0;
@@ -240,31 +380,58 @@ document.addEventListener('DOMContentLoaded', function () {
                 barMaxWidth: 22,
                 itemStyle: { borderRadius: [0, 4, 4, 0] }
             }]
-        });
+        }, { notMerge: true });
 
-        // 6. Country Chart (Vertical Bar)
+        // 6. Country Chart (Stacked status bar)
         const countryData = countryGroup.all()
-            .filter(d => d.key !== null && d.value > 0)
-            .sort((a, b) => b.value - a.value)
+            .map(d => ({
+                key: d.key,
+                open: d.value.open,
+                resolved: d.value.resolved,
+                total: d.value.open + d.value.resolved
+            }))
+            .filter(d => d.key !== null && d.total > 0)
+            .sort((a, b) => b.total - a.total)
             .slice(0, 15);
 
         const hasAnyCountrySelection = selectedCountries.size > 0;
-        const countrySeriesData = countryData.map(d => {
-            const stableColor = getStableColor(d.key);
+
+        const countrySeriesDataResolved = countryData.map(d => {
+            const isSelected = selectedCountries.has(d.key);
+            const opacity = isSelected ? 1 : (hasAnyCountrySelection ? 0.35 : 1);
             return {
-                name: d.key,
-                value: d.value,
-                itemStyle: {
-                    color: selectedCountries.has(d.key)
-                        ? stableColor
-                        : (hasAnyCountrySelection ? '#cbd5e1' : stableColor)
-                }
+                value: d.resolved,
+                itemStyle: { color: '#97b552', opacity: opacity }
+            };
+        });
+
+        const countrySeriesDataOpen = countryData.map(d => {
+            const isSelected = selectedCountries.has(d.key);
+            const opacity = isSelected ? 1 : (hasAnyCountrySelection ? 0.35 : 1);
+            return {
+                value: d.open,
+                itemStyle: { color: '#d87a80', opacity: opacity }
             };
         });
 
         countryChart.setOption({
-            tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' }, formatter: params => `${params[0].name}: <b>${d3.format(",")(params[0].value)}</b>` },
-            grid: { top: 30, bottom: 95, left: 70, right: 20 },
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: { type: 'shadow' },
+                formatter: function (params) {
+                    let tooltipHtml = `${params[0].name}<br/>`;
+                    params.forEach(p => {
+                        tooltipHtml += `${p.marker} ${p.seriesName}: <b>${d3.format(",")(p.value)}</b> tickets<br/>`;
+                    });
+                    return tooltipHtml;
+                }
+            },
+            legend: {
+                data: ['Resolved & Closed', 'Open & Active'],
+                top: 0,
+                right: 20
+            },
+            grid: { top: 35, bottom: 95, left: 75, right: 20 },
             xAxis: {
                 type: 'category',
                 data: countryData.map(d => d.key),
@@ -275,13 +442,25 @@ document.addEventListener('DOMContentLoaded', function () {
                 axisLabel: { formatter: val => d3.format(".2s")(val).replace('G', 'B'), color: '#64748b' },
                 splitLine: { lineStyle: { color: '#f1f5f9' } }
             },
-            series: [{
-                type: 'bar',
-                data: countrySeriesData,
-                barMaxWidth: 30,
-                itemStyle: { borderRadius: [4, 4, 0, 0] }
-            }]
-        });
+            series: [
+                {
+                    name: 'Resolved & Closed',
+                    type: 'bar',
+                    stack: 'status',
+                    barMaxWidth: 30,
+                    data: countrySeriesDataResolved,
+                    itemStyle: { borderRadius: [0, 0, 0, 0] }
+                },
+                {
+                    name: 'Open & Active',
+                    type: 'bar',
+                    stack: 'status',
+                    barMaxWidth: 30,
+                    data: countrySeriesDataOpen,
+                    itemStyle: { borderRadius: [4, 4, 0, 0] }
+                }
+            ]
+        }, { notMerge: true });
     }
 
     // --- Interactive Filters Bindings ---
@@ -384,6 +563,18 @@ document.addEventListener('DOMContentLoaded', function () {
             data.forEach(d => {
                 d.date = dateFormat(d.date);
                 d.ticket_count = +d.ticket_count;
+
+                // Map numeric choices to human-readable strings
+                const valStr = String(d.dimension_value);
+                if (d.dimension_type === 'status' && statusMap[valStr]) {
+                    d.dimension_value = statusMap[valStr];
+                } else if (d.dimension_type === 'category' && categoryMap[valStr]) {
+                    d.dimension_value = categoryMap[valStr];
+                } else if (d.dimension_type === 'priority' && priorityMap[valStr]) {
+                    d.dimension_value = priorityMap[valStr];
+                } else if (d.dimension_type === 'issue_type' && issueTypeMap[valStr]) {
+                    d.dimension_value = issueTypeMap[valStr];
+                }
             });
 
             const now = new Date();

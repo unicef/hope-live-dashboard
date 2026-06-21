@@ -2,6 +2,22 @@ document.addEventListener('DOMContentLoaded', function () {
     const tabsContainer = document.getElementById('tabs-container');
     if (!tabsContainer) return;
 
+    let currentMetric = 'individuals'; // Default metric: individuals. Can be: 'individuals', 'households', 'children', 'pwd'
+
+    const fieldMap = {
+        individuals: 'beneficiaries',
+        households: 'households',
+        children: 'children',
+        pwd: 'pwd'
+    };
+
+    const labelMap = {
+        individuals: 'Individuals Reached',
+        households: 'Households Reached',
+        children: 'Children Reached',
+        pwd: 'PWD Reached'
+    };
+
     const colorPalette = [
         '#2ec7c9', '#b6a2de', '#5ab1ef', '#ffb980', '#d87a80',
         '#8d98b3', '#e5cf0d', '#97b552', '#95706d', '#dc69aa',
@@ -25,16 +41,69 @@ document.addEventListener('DOMContentLoaded', function () {
     // Filter and Dimensions
     const primaryDimFilter = d => d.dimension_type === 'sector';
     const dateDimension = ndx.dimension(d => d.date);
-    const sectorDimension = ndx.dimension(d => primaryDimFilter(d) ? d.dimension_value : null);
+    const sectorDimension = ndx.dimension(d => primaryDimFilter(d) ? d.dimension_value : '');
     const countryDimension = ndx.dimension(d => d.country_slug);
+
+    // Multi-metric custom reduction helper
+    function reduceDemographics(dimType) {
+        return {
+            add: (p, v) => {
+                if (v.dimension_type === dimType) {
+                    p.beneficiaries += +v.total_beneficiaries;
+                    p.households += +v.total_households;
+                    p.children += +v.total_children;
+                    p.pwd += +v.total_pwd;
+                }
+                return p;
+            },
+            remove: (p, v) => {
+                if (v.dimension_type === dimType) {
+                    p.beneficiaries -= +v.total_beneficiaries;
+                    p.households -= +v.total_households;
+                    p.children -= +v.total_children;
+                    p.pwd -= +v.total_pwd;
+                }
+                return p;
+            },
+            init: () => ({ beneficiaries: 0, households: 0, children: 0, pwd: 0 })
+        };
+    }
 
     // Groups
     const moveDays = dateDimension.group(d3.timeDay);
-    const individualsByDayGroup = moveDays.reduceSum(d => primaryDimFilter(d) ? d.total_beneficiaries : 0);
-    const sectorIndividualsGroup = sectorDimension.group().reduceSum(d => primaryDimFilter(d) ? d.total_beneficiaries : 0);
-    const sectorChildrenGroup = sectorDimension.group().reduceSum(d => primaryDimFilter(d) ? d.total_children : 0);
-    const countryIndividualsGroup = countryDimension.group().reduceSum(d => primaryDimFilter(d) ? d.total_beneficiaries : 0);
-    const countryPwdGroup = countryDimension.group().reduceSum(d => primaryDimFilter(d) ? d.total_pwd : 0);
+    const volumeByDayGroup = moveDays.reduce(
+        (p, v) => {
+            if (primaryDimFilter(v)) {
+                p.beneficiaries += +v.total_beneficiaries;
+                p.households += +v.total_households;
+                p.children += +v.total_children;
+                p.pwd += +v.total_pwd;
+            }
+            return p;
+        },
+        (p, v) => {
+            if (primaryDimFilter(v)) {
+                p.beneficiaries -= +v.total_beneficiaries;
+                p.households -= +v.total_households;
+                p.children -= +v.total_children;
+                p.pwd -= +v.total_pwd;
+            }
+            return p;
+        },
+        () => ({ beneficiaries: 0, households: 0, children: 0, pwd: 0 })
+    );
+
+    const sectorGroup = sectorDimension.group().reduce(
+        reduceDemographics('sector').add,
+        reduceDemographics('sector').remove,
+        reduceDemographics('sector').init
+    );
+
+    const countryGroup = countryDimension.group().reduce(
+        reduceDemographics('sector').add,
+        reduceDemographics('sector').remove,
+        reduceDemographics('sector').init
+    );
 
     // Active Filters Sets
     const selectedSectors = new Set();
@@ -71,10 +140,13 @@ document.addEventListener('DOMContentLoaded', function () {
     function updateAll(filterSource = null) {
         updateTotals();
 
+        const activeField = fieldMap[currentMetric];
+        const activeLabel = labelMap[currentMetric];
+
         // 1. Timeline Chart (Area / Time Axis with linear gradient and smooth curves)
-        const timelineData = individualsByDayGroup.all()
+        const timelineData = volumeByDayGroup.all()
             .filter(d => d.key !== null)
-            .map(d => [d.key.getTime(), d.value]);
+            .map(d => [d.key.getTime(), d.value[activeField]]);
 
         const timelineOption = {
             tooltip: {
@@ -83,38 +155,29 @@ document.addEventListener('DOMContentLoaded', function () {
                     const date = new Date(params[0].value[0]);
                     const formattedDate = d3.timeFormat("%B %d, %Y")(date);
                     const formattedValue = d3.format(",")(params[0].value[1]);
-                    return `${formattedDate}<br/><b>${formattedValue}</b> individuals`;
+                    return `${formattedDate}<br/><b>${formattedValue}</b> ${activeLabel.toLowerCase()}`;
                 }
             },
             grid: {
                 top: 20,
                 bottom: 80,
-                left: 60,
+                left: 70,
                 right: 30
             },
             xAxis: {
                 type: 'time',
-                axisLabel: {
-                    color: '#64748b'
-                }
+                axisLabel: { color: '#64748b' }
             },
             yAxis: {
                 type: 'value',
                 axisLabel: {
-                    formatter: function (val) {
-                        return d3.format(".2s")(val).replace('G', 'B');
-                    },
+                    formatter: val => d3.format(".2s")(val).replace('G', 'B'),
                     color: '#64748b'
                 },
-                splitLine: {
-                    lineStyle: {
-                        type: 'dashed',
-                        color: '#f1f5f9'
-                    }
-                }
+                splitLine: { lineStyle: { type: 'dashed', color: '#f1f5f9' } }
             },
             series: [{
-                name: 'Individuals Reached',
+                name: activeLabel,
                 type: 'line',
                 smooth: true,
                 symbol: 'none',
@@ -134,52 +197,52 @@ document.addEventListener('DOMContentLoaded', function () {
 
         if (filterSource !== 'timeline') {
             timelineOption.dataZoom = [
-                {
-                    type: 'inside',
-                    start: 0,
-                    end: 100
-                },
-                {
-                    show: true,
-                    type: 'slider',
-                    start: 0,
-                    end: 100,
-                    bottom: 10,
-                    textStyle: {
-                        color: '#64748b'
-                    }
-                }
+                { type: 'inside', start: 0, end: 100 },
+                { show: true, type: 'slider', start: 0, end: 100, bottom: 10, textStyle: { color: '#64748b' } }
             ];
             timelineChart.setOption(timelineOption, { notMerge: true });
         } else {
             timelineChart.setOption(timelineOption);
         }
 
-        // 2. Sector Individuals Chart (Horizontal bar)
-        const secIndData = sectorIndividualsGroup.all().filter(d => d.key !== null && d.value > 0);
-        secIndData.sort((a, b) => b.value - a.value);
+        // 2. Sector Breakdown Chart (Grouped Horizontal Bars)
+        const sectorData = sectorGroup.all().filter(d => d.key !== '' && d.key !== null && d.value.beneficiaries > 0);
+        sectorData.sort((a, b) => b.value[activeField] - a.value[activeField]);
 
+        const categories = sectorData.map(d => d.key);
         const hasAnySectorSelection = selectedSectors.size > 0;
-        const secIndSeriesData = secIndData.map(d => {
-            const stableColor = getStableColor(d.key);
+
+        function getSectorSeries(metricKey, displayName, colorVal) {
             return {
-                name: d.key,
-                value: d.value,
-                itemStyle: {
-                    color: selectedSectors.has(d.key)
-                        ? stableColor
-                        : (hasAnySectorSelection ? '#cbd5e1' : stableColor)
-                }
+                name: displayName,
+                type: 'bar',
+                barMaxWidth: 10,
+                data: sectorData.map(d => {
+                    const isSelected = selectedSectors.has(d.key);
+                    const opacity = isSelected ? 1 : (hasAnySectorSelection ? 0.35 : 1);
+                    return {
+                        value: d.value[metricKey],
+                        itemStyle: {
+                            color: colorVal,
+                            opacity: opacity
+                        }
+                    };
+                }),
+                itemStyle: { borderRadius: [0, 2, 2, 0] }
             };
-        });
+        }
 
         sectorIndChart.setOption({
             tooltip: {
                 trigger: 'axis',
-                axisPointer: { type: 'shadow' },
-                formatter: params => `${params[0].name}: <b>${d3.format(",")(params[0].value)}</b>`
+                axisPointer: { type: 'shadow' }
             },
-            grid: { top: 20, bottom: 30, left: 140, right: 30 },
+            legend: {
+                data: ['Individuals', 'Households', 'Children', 'PWD'],
+                bottom: 0,
+                textStyle: { color: '#64748b' }
+            },
+            grid: { top: 20, bottom: 40, left: 140, right: 30 },
             xAxis: {
                 type: 'value',
                 axisLabel: {
@@ -190,94 +253,93 @@ document.addEventListener('DOMContentLoaded', function () {
             },
             yAxis: {
                 type: 'category',
-                data: secIndData.map(d => d.key),
+                data: categories,
                 inverse: true,
                 axisLabel: { color: '#1f2937', fontWeight: 500 }
             },
-            series: [{
-                type: 'bar',
-                data: secIndSeriesData,
-                barMaxWidth: 25,
-                itemStyle: { borderRadius: [0, 4, 4, 0] }
-            }]
-        });
+            series: [
+                getSectorSeries('beneficiaries', 'Individuals', '#2ec7c9'),
+                getSectorSeries('households', 'Households', '#5ab1ef'),
+                getSectorSeries('children', 'Children', '#b6a2de'),
+                getSectorSeries('pwd', 'PWD', '#ffb980')
+            ]
+        }, { notMerge: true });
 
-        // 3. Sector Children Chart (Horizontal bar)
-        const secChildData = sectorChildrenGroup.all().filter(d => d.key !== null && d.value > 0);
-        secChildData.sort((a, b) => b.value - a.value);
-
-        const secChildSeriesData = secChildData.map(d => {
+        // 3. Sector Distribution Chart (Donut Chart showing sector shares of selected metric)
+        const sectorDonutData = sectorData.map(d => {
             const stableColor = getStableColor(d.key);
+            const isSelected = selectedSectors.has(d.key);
             return {
                 name: d.key,
-                value: d.value,
+                value: d.value[activeField],
                 itemStyle: {
-                    color: selectedSectors.has(d.key)
-                        ? stableColor
-                        : (hasAnySectorSelection ? '#cbd5e1' : stableColor)
+                    color: isSelected ? stableColor : (hasAnySectorSelection ? '#cbd5e1' : stableColor)
                 }
             };
-        });
+        }).filter(d => d.value > 0);
 
         sectorChildChart.setOption({
             tooltip: {
-                trigger: 'axis',
-                axisPointer: { type: 'shadow' },
-                formatter: params => `${params[0].name}: <b>${d3.format(",")(params[0].value)}</b>`
+                trigger: 'item',
+                formatter: '{b}: <b>{c}</b> ({d}%)'
             },
-            grid: { top: 20, bottom: 30, left: 140, right: 30 },
-            xAxis: {
-                type: 'value',
-                axisLabel: {
-                    formatter: val => d3.format(".2s")(val).replace('G', 'B'),
-                    color: '#64748b'
-                },
-                splitLine: { lineStyle: { color: '#f1f5f9' } }
-            },
-            yAxis: {
-                type: 'category',
-                data: secChildData.map(d => d.key),
-                inverse: true,
-                axisLabel: { color: '#1f2937', fontWeight: 500 }
+            legend: {
+                show: false
             },
             series: [{
-                type: 'bar',
-                data: secChildSeriesData,
-                barMaxWidth: 25,
-                itemStyle: { borderRadius: [0, 4, 4, 0] }
+                type: 'pie',
+                radius: ['45%', '70%'],
+                avoidLabelOverlap: true,
+                itemStyle: { borderRadius: 6, borderColor: '#fff', borderWidth: 2 },
+                label: { show: true, formatter: '{b}\n({d}%)', fontSize: 11 },
+                emphasis: { label: { show: true, fontSize: 13, fontWeight: 'bold' } },
+                data: sectorDonutData
             }]
-        });
+        }, { notMerge: true });
 
-        // 4. Country Individuals Chart (Vertical bar)
-        const countryIndData = countryIndividualsGroup.all()
-            .filter(d => d.key !== null && d.value > 0)
-            .sort((a, b) => b.value - a.value)
-            .slice(0, 15);
+        // 4. Country Breakdown Chart (Grouped Vertical Bars)
+        const countryData = countryGroup.all()
+            .filter(d => d.key !== null && d.value.beneficiaries > 0)
+            .sort((a, b) => b.value[activeField] - a.value[activeField])
+            .slice(0, 10);
 
+        const countryNames = countryData.map(d => d.key);
         const hasAnyCountrySelection = selectedCountries.size > 0;
-        const countryIndSeriesData = countryIndData.map(d => {
-            const stableColor = getStableColor(d.key);
+
+        function getCountrySeries(metricKey, displayName, colorVal) {
             return {
-                name: d.key,
-                value: d.value,
-                itemStyle: {
-                    color: selectedCountries.has(d.key)
-                        ? stableColor
-                        : (hasAnyCountrySelection ? '#cbd5e1' : stableColor)
-                }
+                name: displayName,
+                type: 'bar',
+                barMaxWidth: 10,
+                data: countryData.map(d => {
+                    const isSelected = selectedCountries.has(d.key);
+                    const opacity = isSelected ? 1 : (hasAnyCountrySelection ? 0.35 : 1);
+                    return {
+                        value: d.value[metricKey],
+                        itemStyle: {
+                            color: colorVal,
+                            opacity: opacity
+                        }
+                    };
+                }),
+                itemStyle: { borderRadius: [2, 2, 0, 0] }
             };
-        });
+        }
 
         countryIndChart.setOption({
             tooltip: {
                 trigger: 'axis',
-                axisPointer: { type: 'shadow' },
-                formatter: params => `${params[0].name}: <b>${d3.format(",")(params[0].value)}</b>`
+                axisPointer: { type: 'shadow' }
             },
-            grid: { top: 30, bottom: 95, left: 70, right: 20 },
+            legend: {
+                data: ['Individuals', 'Households', 'Children', 'PWD'],
+                bottom: 0,
+                textStyle: { color: '#64748b' }
+            },
+            grid: { top: 30, bottom: 95, left: 75, right: 20 },
             xAxis: {
                 type: 'category',
-                data: countryIndData.map(d => d.key),
+                data: countryNames,
                 axisLabel: {
                     rotate: 30,
                     interval: 0,
@@ -293,65 +355,45 @@ document.addEventListener('DOMContentLoaded', function () {
                 },
                 splitLine: { lineStyle: { color: '#f1f5f9' } }
             },
-            series: [{
-                type: 'bar',
-                data: countryIndSeriesData,
-                barMaxWidth: 30,
-                itemStyle: { borderRadius: [4, 4, 0, 0] }
-            }]
-        });
+            series: [
+                getCountrySeries('beneficiaries', 'Individuals', '#2ec7c9'),
+                getCountrySeries('households', 'Households', '#5ab1ef'),
+                getCountrySeries('children', 'Children', '#b6a2de'),
+                getCountrySeries('pwd', 'PWD', '#ffb980')
+            ]
+        }, { notMerge: true });
 
-        // 5. Country PWD Chart (Vertical bar)
-        const countryPwdData = countryPwdGroup.all()
-            .filter(d => d.key !== null && d.value > 0)
-            .sort((a, b) => b.value - a.value)
-            .slice(0, 15);
-
-        const countryPwdSeriesData = countryPwdData.map(d => {
+        // 5. Country Distribution Chart (Donut chart showing country shares of selected metric)
+        const countryDonutData = countryData.map(d => {
             const stableColor = getStableColor(d.key);
+            const isSelected = selectedCountries.has(d.key);
             return {
                 name: d.key,
-                value: d.value,
+                value: d.value[activeField],
                 itemStyle: {
-                    color: selectedCountries.has(d.key)
-                        ? stableColor
-                        : (hasAnyCountrySelection ? '#cbd5e1' : stableColor)
+                    color: isSelected ? stableColor : (hasAnyCountrySelection ? '#cbd5e1' : stableColor)
                 }
             };
-        });
+        }).filter(d => d.value > 0);
 
         countryPwdChart.setOption({
             tooltip: {
-                trigger: 'axis',
-                axisPointer: { type: 'shadow' },
-                formatter: params => `${params[0].name}: <b>${d3.format(",")(params[0].value)}</b>`
+                trigger: 'item',
+                formatter: '{b}: <b>{c}</b> ({d}%)'
             },
-            grid: { top: 30, bottom: 95, left: 70, right: 20 },
-            xAxis: {
-                type: 'category',
-                data: countryPwdData.map(d => d.key),
-                axisLabel: {
-                    rotate: 30,
-                    interval: 0,
-                    color: '#1f2937',
-                    fontWeight: 500
-                }
-            },
-            yAxis: {
-                type: 'value',
-                axisLabel: {
-                    formatter: val => d3.format(".2s")(val).replace('G', 'B'),
-                    color: '#64748b'
-                },
-                splitLine: { lineStyle: { color: '#f1f5f9' } }
+            legend: {
+                show: false
             },
             series: [{
-                type: 'bar',
-                data: countryPwdSeriesData,
-                barMaxWidth: 30,
-                itemStyle: { borderRadius: [4, 4, 0, 0] }
+                type: 'pie',
+                radius: ['45%', '70%'],
+                avoidLabelOverlap: true,
+                itemStyle: { borderRadius: 6, borderColor: '#fff', borderWidth: 2 },
+                label: { show: true, formatter: '{b}\n({d}%)', fontSize: 11 },
+                emphasis: { label: { show: true, fontSize: 13, fontWeight: 'bold' } },
+                data: countryDonutData
             }]
-        });
+        }, { notMerge: true });
     }
 
     // --- Interactive Filters Bindings ---
@@ -409,6 +451,33 @@ document.addEventListener('DOMContentLoaded', function () {
 
     countryIndChart.on('click', handleCountryClick);
     countryPwdChart.on('click', handleCountryClick);
+
+    // Metric Toggle Tab Selection
+    const metricTabs = document.querySelectorAll('.metric-tab');
+    metricTabs.forEach(btn => {
+        btn.addEventListener('click', function() {
+            metricTabs.forEach(b => {
+                b.classList.remove('bg-white', 'shadow', 'text-blue-800', 'active-metric');
+                b.classList.add('text-gray-600');
+            });
+            this.classList.add('bg-white', 'shadow', 'text-blue-800', 'active-metric');
+            this.classList.remove('text-gray-600');
+            currentMetric = this.dataset.metric;
+
+            const activeLabel = labelMap[currentMetric];
+
+            const timelineTitle = document.getElementById('timeline-title');
+            if (timelineTitle) timelineTitle.textContent = `${activeLabel} Timeline`;
+
+            const sectorShareTitle = document.getElementById('sector-share-title');
+            if (sectorShareTitle) sectorShareTitle.textContent = `Sector Share of ${activeLabel}`;
+
+            const countryShareTitle = document.getElementById('country-share-title');
+            if (countryShareTitle) countryShareTitle.textContent = `Country Share of ${activeLabel}`;
+
+            updateAll();
+        });
+    });
 
     // --- Load Data ---
     async function loadData(year) {

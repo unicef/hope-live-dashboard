@@ -2,6 +2,25 @@ document.addEventListener('DOMContentLoaded', function () {
     const tabsContainer = document.getElementById('tabs-container');
     if (!tabsContainer) return;
 
+    let currentMetric = 'payments'; // Default metric: payments. Can be 'payments' or 'usd'
+
+    const formatMetric = (val) => {
+        if (currentMetric === 'usd') {
+            if (Math.abs(val) < 1) return '$0';
+            return '$' + d3.format(".2s")(val).replace('G', 'B');
+        } else {
+            return d3.format(",")(val);
+        }
+    };
+
+    const formatFullVal = (val) => {
+        if (currentMetric === 'usd') {
+            return '$' + d3.format(",.2f")(val);
+        } else {
+            return d3.format(",")(val);
+        }
+    };
+
     const colorPalette = [
         '#2ec7c9', '#b6a2de', '#5ab1ef', '#ffb980', '#d87a80',
         '#8d98b3', '#e5cf0d', '#97b552', '#95706d', '#dc69aa',
@@ -30,20 +49,88 @@ document.addEventListener('DOMContentLoaded', function () {
     const moveDays = dateDimension.group(d3.timeDay);
     const moveMonths = dateDimension.group(d3.timeMonth);
 
-    // Groups
-    const reconciledMonthGroup = moveMonths.reduceSum(d => {
-        if (!primaryDimFilter(d) || !d.dimension_value) return 0;
-        const key = String(d.dimension_value).toUpperCase();
-        return (key.includes('RECONCILED') || key.includes('PAID')) ? d.payment_count : 0;
-    });
+    // Groups (aggregates usd and payments simultaneously)
+    const reconciledMonthGroup = moveMonths.reduce(
+        (p, v) => {
+            if (primaryDimFilter(v) && v.dimension_value) {
+                const key = String(v.dimension_value).toUpperCase();
+                if (key.includes('RECONCILED') || key.includes('PAID')) {
+                    p.payments += v.payment_count;
+                    p.usd += +v.total_usd;
+                }
+            }
+            return p;
+        },
+        (p, v) => {
+            if (primaryDimFilter(v) && v.dimension_value) {
+                const key = String(v.dimension_value).toUpperCase();
+                if (key.includes('RECONCILED') || key.includes('PAID')) {
+                    p.payments -= v.payment_count;
+                    p.usd -= +v.total_usd;
+                }
+            }
+            return p;
+        },
+        () => ({ payments: 0, usd: 0 })
+    );
 
-    const openedMonthGroup = moveMonths.reduceSum(d => {
-        if (!primaryDimFilter(d) || !d.dimension_value) return 0;
-        const key = String(d.dimension_value).toUpperCase();
-        return (key.includes('OPEN') || key.includes('PENDING')) ? d.payment_count : 0;
-    });
+    const openedMonthGroup = moveMonths.reduce(
+        (p, v) => {
+            if (primaryDimFilter(v) && v.dimension_value) {
+                const key = String(v.dimension_value).toUpperCase();
+                if (key.includes('OPEN') || key.includes('PENDING')) {
+                    p.payments += v.payment_count;
+                    p.usd += +v.total_usd;
+                }
+            }
+            return p;
+        },
+        (p, v) => {
+            if (primaryDimFilter(v) && v.dimension_value) {
+                const key = String(v.dimension_value).toUpperCase();
+                if (key.includes('OPEN') || key.includes('PENDING')) {
+                    p.payments -= v.payment_count;
+                    p.usd -= +v.total_usd;
+                }
+            }
+            return p;
+        },
+        () => ({ payments: 0, usd: 0 })
+    );
 
-    const countryStatusGroup = countryDimension.group().reduceSum(d => primaryDimFilter(d) ? d.payment_count : 0);
+    const countryStatusGroup = countryDimension.group().reduce(
+        (p, v) => {
+            if (primaryDimFilter(v) && v.dimension_value) {
+                const key = String(v.dimension_value).toUpperCase();
+                const isReconciled = (key.includes('RECONCILED') || key.includes('PAID'));
+                const isOpened = (key.includes('OPEN') || key.includes('PENDING'));
+                if (isReconciled) {
+                    p.reconciled_payments += v.payment_count;
+                    p.reconciled_usd += +v.total_usd;
+                } else if (isOpened) {
+                    p.opened_payments += v.payment_count;
+                    p.opened_usd += +v.total_usd;
+                }
+            }
+            return p;
+        },
+        (p, v) => {
+            if (primaryDimFilter(v) && v.dimension_value) {
+                const key = String(v.dimension_value).toUpperCase();
+                const isReconciled = (key.includes('RECONCILED') || key.includes('PAID'));
+                const isOpened = (key.includes('OPEN') || key.includes('PENDING'));
+                if (isReconciled) {
+                    p.reconciled_payments -= v.payment_count;
+                    p.reconciled_usd -= +v.total_usd;
+                } else if (isOpened) {
+                    p.opened_payments -= v.payment_count;
+                    p.opened_usd -= +v.total_usd;
+                }
+            }
+            return p;
+        },
+        () => ({ reconciled_payments: 0, reconciled_usd: 0, opened_payments: 0, opened_usd: 0 })
+    );
 
     // Active filters
     const selectedCountries = new Set();
@@ -51,45 +138,89 @@ document.addEventListener('DOMContentLoaded', function () {
     // Initialize ECharts instances with macarons theme
     const timelineChart = echarts.init(document.getElementById('time-focus-chart'), 'macarons');
     const countryChart = echarts.init(document.getElementById('status-country-chart'), 'macarons');
+    const completionGauge = echarts.init(document.getElementById('completion-gauge'), 'macarons');
 
     // Resize Handler
     window.addEventListener('resize', function () {
         timelineChart.resize();
         countryChart.resize();
+        completionGauge.resize();
     });
 
     function updateTotals() {
         const totalReconciled = ndx.groupAll().reduceSum(d => {
             if (!primaryDimFilter(d) || !d.dimension_value) return 0;
             const key = String(d.dimension_value).toUpperCase();
-            return (key.includes('RECONCILED') || key.includes('PAID')) ? d.payment_count : 0;
+            const match = (key.includes('RECONCILED') || key.includes('PAID'));
+            return match ? (currentMetric === 'usd' ? +d.total_usd : d.payment_count) : 0;
         }).value();
 
         const totalOpened = ndx.groupAll().reduceSum(d => {
             if (!primaryDimFilter(d) || !d.dimension_value) return 0;
             const key = String(d.dimension_value).toUpperCase();
-            return (key.includes('OPEN') || key.includes('PENDING')) ? d.payment_count : 0;
+            const match = (key.includes('OPEN') || key.includes('PENDING'));
+            return match ? (currentMetric === 'usd' ? +d.total_usd : d.payment_count) : 0;
         }).value();
 
         const total = totalReconciled + totalOpened;
         const reconciledPct = total > 0 ? (totalReconciled / total * 100).toFixed(1) : 0;
         const openedPct = total > 0 ? (totalOpened / total * 100).toFixed(1) : 0;
+        const completionRate = total > 0 ? (totalReconciled / total * 100) : 0;
 
-        document.getElementById('total-reconciled').textContent = `${d3.format(',')(totalReconciled)} (${reconciledPct}% out of ${d3.format(',')(total)} total payments)`;
-        document.getElementById('total-opened').textContent = `${d3.format(',')(totalOpened)} (${openedPct}% out of ${d3.format(',')(total)} total payments)`;
+        document.getElementById('total-reconciled').textContent = `${formatFullVal(totalReconciled)} (${reconciledPct}% out of ${formatFullVal(total)} total)`;
+        document.getElementById('total-opened').textContent = `${formatFullVal(totalOpened)} (${openedPct}% out of ${formatFullVal(total)} total)`;
+        document.getElementById('completion-rate-text').textContent = `${completionRate.toFixed(1)}%`;
+
+        // Update ECharts micro-gauge
+        completionGauge.setOption({
+            series: [{
+                type: 'gauge',
+                startAngle: 180,
+                endAngle: 0,
+                center: ['50%', '75%'],
+                radius: '95%',
+                min: 0,
+                max: 100,
+                splitNumber: 2,
+                axisLine: {
+                    lineStyle: {
+                        width: 5,
+                        color: [
+                            [0.3, '#d87a80'],
+                            [0.7, '#ffb980'],
+                            [1, '#2ec7c9']
+                        ]
+                    }
+                },
+                pointer: {
+                    icon: 'path://M12.8,29.5C13,29.5,13,29.5,13,29.5c0-0.4-0.3-0.7-0.7-0.7c-0.4,0-0.7,0.3-0.7,0.7C11.6,29.5,11.7,29.5,12.8,29.5z',
+                    width: 2.5,
+                    length: '60%',
+                    offsetCenter: [0, 2]
+                },
+                axisTick: { show: false },
+                splitLine: { show: false },
+                axisLabel: { show: false },
+                title: { show: false },
+                detail: { show: false },
+                data: [{ value: completionRate.toFixed(1) }]
+            }]
+        }, { notMerge: true });
     }
 
     function updateAll(filterSource = null) {
         updateTotals();
 
+        const unitName = currentMetric === 'usd' ? 'USD' : 'payments';
+
         // 1. Stacked Monthly Timeline Chart
         const reconciledData = reconciledMonthGroup.all()
             .filter(d => d.key !== null)
-            .map(d => [d.key.getTime(), d.value]);
+            .map(d => [d.key.getTime(), d.value[currentMetric]]);
 
         const openedData = openedMonthGroup.all()
             .filter(d => d.key !== null)
-            .map(d => [d.key.getTime(), d.value]);
+            .map(d => [d.key.getTime(), d.value[currentMetric]]);
 
         const timelineOption = {
             tooltip: {
@@ -100,7 +231,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     const formattedDate = d3.timeFormat("%B %Y")(date);
                     let tooltipHtml = `${formattedDate}<br/>`;
                     params.forEach(p => {
-                        tooltipHtml += `${p.marker} ${p.seriesName}: <b>${d3.format(",")(p.value[1])}</b> payments<br/>`;
+                        tooltipHtml += `${p.marker} ${p.seriesName}: <b>${formatFullVal(p.value[1])}</b> ${unitName}<br/>`;
                     });
                     return tooltipHtml;
                 }
@@ -113,7 +244,7 @@ document.addEventListener('DOMContentLoaded', function () {
             grid: {
                 top: 20,
                 bottom: 80,
-                left: 60,
+                left: 70,
                 right: 30
             },
             xAxis: {
@@ -123,7 +254,7 @@ document.addEventListener('DOMContentLoaded', function () {
             yAxis: {
                 type: 'value',
                 axisLabel: {
-                    formatter: val => d3.format(".2s")(val).replace('G', 'B'),
+                    formatter: val => formatMetric(val),
                     color: '#64748b'
                 },
                 splitLine: { lineStyle: { type: 'dashed', color: '#f1f5f9' } }
@@ -150,42 +281,46 @@ document.addEventListener('DOMContentLoaded', function () {
 
         if (filterSource !== 'timeline') {
             timelineOption.dataZoom = [
-                {
-                    type: 'inside',
-                    start: 0,
-                    end: 100
-                },
-                {
-                    show: true,
-                    type: 'slider',
-                    start: 0,
-                    end: 100,
-                    bottom: 30,
-                    textStyle: { color: '#64748b' }
-                }
+                { type: 'inside', start: 0, end: 100 },
+                { show: true, type: 'slider', start: 0, end: 100, bottom: 30, textStyle: { color: '#64748b' } }
             ];
             timelineChart.setOption(timelineOption, { notMerge: true });
         } else {
             timelineChart.setOption(timelineOption);
         }
 
-        // 2. Country Chart
+        // 2. Stacked Country Chart
         const countryData = countryStatusGroup.all()
-            .filter(d => d.key !== null && d.value > 0)
-            .sort((a, b) => b.value - a.value)
+            .map(d => {
+                const reconciled = currentMetric === 'usd' ? d.value.reconciled_usd : d.value.reconciled_payments;
+                const opened = currentMetric === 'usd' ? d.value.opened_usd : d.value.opened_payments;
+                return {
+                    key: d.key,
+                    reconciled: reconciled,
+                    opened: opened,
+                    total: reconciled + opened
+                };
+            })
+            .filter(d => d.key !== '' && d.key !== null && d.total > 0)
+            .sort((a, b) => b.total - a.total)
             .slice(0, 15);
 
         const hasAnyCountrySelection = selectedCountries.size > 0;
-        const countrySeriesData = countryData.map(d => {
-            const stableColor = getStableColor(d.key);
+        const countrySeriesDataReconciled = countryData.map(d => {
+            const isSelected = selectedCountries.has(d.key);
+            const opacity = isSelected ? 1 : (hasAnyCountrySelection ? 0.35 : 1);
             return {
-                name: d.key,
-                value: d.value,
-                itemStyle: {
-                    color: selectedCountries.has(d.key)
-                        ? stableColor
-                        : (hasAnyCountrySelection ? '#cbd5e1' : stableColor)
-                }
+                value: d.reconciled,
+                itemStyle: { color: '#97b552', opacity: opacity }
+            };
+        });
+
+        const countrySeriesDataOpened = countryData.map(d => {
+            const isSelected = selectedCountries.has(d.key);
+            const opacity = isSelected ? 1 : (hasAnyCountrySelection ? 0.35 : 1);
+            return {
+                value: d.opened,
+                itemStyle: { color: '#5ab1ef', opacity: opacity }
             };
         });
 
@@ -193,9 +328,20 @@ document.addEventListener('DOMContentLoaded', function () {
             tooltip: {
                 trigger: 'axis',
                 axisPointer: { type: 'shadow' },
-                formatter: params => `${params[0].name}: <b>${d3.format(",")(params[0].value)}</b> payments`
+                formatter: function (params) {
+                    let tooltipHtml = `${params[0].name}<br/>`;
+                    params.forEach(p => {
+                        tooltipHtml += `${p.marker} ${p.seriesName}: <b>${formatFullVal(p.value)}</b> ${unitName}<br/>`;
+                    });
+                    return tooltipHtml;
+                }
             },
-            grid: { top: 30, bottom: 95, left: 70, right: 20 },
+            legend: {
+                data: ['Reconciled', 'Still Opened'],
+                top: 0,
+                right: 20
+            },
+            grid: { top: 35, bottom: 95, left: 75, right: 20 },
             xAxis: {
                 type: 'category',
                 data: countryData.map(d => d.key),
@@ -209,18 +355,30 @@ document.addEventListener('DOMContentLoaded', function () {
             yAxis: {
                 type: 'value',
                 axisLabel: {
-                    formatter: val => d3.format(".2s")(val).replace('G', 'B'),
+                    formatter: val => formatMetric(val),
                     color: '#64748b'
                 },
                 splitLine: { lineStyle: { color: '#f1f5f9' } }
             },
-            series: [{
-                type: 'bar',
-                data: countrySeriesData,
-                barMaxWidth: 30,
-                itemStyle: { borderRadius: [4, 4, 0, 0] }
-            }]
-        });
+            series: [
+                {
+                    name: 'Reconciled',
+                    type: 'bar',
+                    stack: 'total',
+                    barMaxWidth: 30,
+                    data: countrySeriesDataReconciled,
+                    itemStyle: { borderRadius: [0, 0, 0, 0] }
+                },
+                {
+                    name: 'Still Opened',
+                    type: 'bar',
+                    stack: 'total',
+                    barMaxWidth: 30,
+                    data: countrySeriesDataOpened,
+                    itemStyle: { borderRadius: [4, 4, 0, 0] }
+                }
+            ]
+        }, { notMerge: true });
     }
 
     // --- Interaction Bindings ---
@@ -251,6 +409,40 @@ document.addEventListener('DOMContentLoaded', function () {
             countryDimension.filterFunction(d => selectedCountries.has(d));
         }
         updateAll();
+    });
+
+    // Metric selector toggler
+    const metricTabs = document.querySelectorAll('.metric-tab');
+    metricTabs.forEach(btn => {
+        btn.addEventListener('click', function() {
+            metricTabs.forEach(b => {
+                b.classList.remove('bg-white', 'shadow', 'text-blue-800', 'active-metric');
+                b.classList.add('text-gray-600');
+            });
+            this.classList.add('bg-white', 'shadow', 'text-blue-800', 'active-metric');
+            this.classList.remove('text-gray-600');
+            currentMetric = this.dataset.metric;
+
+            // Update card and chart titles
+            const reconciledTitle = document.getElementById('reconciled-card-title');
+            const openedTitle = document.getElementById('opened-card-title');
+            const timelineTitle = document.getElementById('timeline-title');
+            const countryTitle = document.getElementById('country-chart-title');
+
+            if (currentMetric === 'usd') {
+                if (reconciledTitle) reconciledTitle.textContent = 'Reconciled Amount (USD)';
+                if (openedTitle) openedTitle.textContent = 'Still Opened Amount (USD)';
+                if (timelineTitle) timelineTitle.textContent = 'Reconciliation Timeline (USD)';
+                if (countryTitle) countryTitle.textContent = 'Reconciliation Status by Country (USD)';
+            } else {
+                if (reconciledTitle) reconciledTitle.textContent = 'Reconciled Payments';
+                if (openedTitle) openedTitle.textContent = 'Still Opened Payments';
+                if (timelineTitle) timelineTitle.textContent = 'Reconciliation Timeline';
+                if (countryTitle) countryTitle.textContent = 'Reconciliation Status by Country';
+            }
+
+            updateAll();
+        });
     });
 
     // --- Load Data ---

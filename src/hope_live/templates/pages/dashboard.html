@@ -28,9 +28,25 @@
         </div>
     </div>
 
+    <!-- Metric Selector Pills -->
+    <div class="mb-6 flex flex-wrap gap-2 items-center justify-between">
+        <div class="text-sm font-semibold text-gray-700">{% translate "View Dashboard Metrics by:" %}</div>
+        <div class="flex bg-gray-100 p-1 rounded-lg space-x-1 border border-gray-200">
+            <button id="btn-usd" class="metric-tab px-4 py-1.5 text-xs font-bold rounded-md bg-white shadow text-blue-800 transition-all duration-200 active-metric" data-metric="usd">
+                {% translate "Amount (USD)" %}
+            </button>
+            <button id="btn-qty" class="metric-tab px-4 py-1.5 text-xs font-bold rounded-md text-gray-600 hover:text-gray-900 transition-all duration-200" data-metric="qty">
+                {% translate "Quantity (QTY)" %}
+            </button>
+            <button id="btn-payments" class="metric-tab px-4 py-1.5 text-xs font-bold rounded-md text-gray-600 hover:text-gray-900 transition-all duration-200" data-metric="payments">
+                {% translate "Payments Count" %}
+            </button>
+        </div>
+    </div>
+
     <!-- Timeline Filter (Full Width, Top) -->
     <div class="bg-white rounded-lg shadow p-6 mb-8">
-        <h3 class="text-lg font-semibold text-gray-900 mb-2">{% translate "Spending Timeline" %}</h3>
+        <h3 id="timeline-title" class="text-lg font-semibold text-gray-900 mb-2">{% translate "Spending Timeline" %}</h3>
         <div id="time-focus-chart" class="w-full" style="min-height: 350px;"></div>
         <div id="time-range-chart" style="display: none;"></div>
         <p class="text-xs text-gray-500 mt-2 italic">{% translate "* Use the slider handles at the bottom of the timeline or click and drag to filter dates." %}</p>
@@ -41,7 +57,7 @@
 
         <div class="lg:col-span-3 flex flex-col gap-6">
 
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                 <div class="bg-white rounded-lg shadow p-4 border-l-4 border-green-500 flex flex-col justify-center min-h-[120px]">
                     <h3 class="text-gray-500 text-xs font-medium uppercase">{% translate "Total Amount Paid" %}</h3>
                     <p id="total-amount-paid" class="text-xl lg:text-2xl font-bold text-gray-900 mt-1">$0.00</p>
@@ -49,6 +65,10 @@
                 <div class="bg-white rounded-lg shadow p-4 border-l-4 border-blue-500 flex flex-col justify-center min-h-[120px]">
                     <h3 class="text-gray-500 text-xs font-medium uppercase">{% translate "Number of Payments" %}</h3>
                     <p id="total-payments" class="text-xl lg:text-2xl font-bold text-gray-900 mt-1">0</p>
+                </div>
+                <div class="bg-white rounded-lg shadow p-4 border-l-4 border-purple-500 flex flex-col justify-center min-h-[120px]">
+                    <h3 class="text-gray-500 text-xs font-medium uppercase">{% translate "Total Quantity Distributed" %}</h3>
+                    <p id="total-qty-distributed" class="text-xl lg:text-2xl font-bold text-gray-900 mt-1">0</p>
                 </div>
                 <div class="bg-white rounded-lg shadow p-4 border-l-4 border-yellow-500 flex flex-col justify-center min-h-[120px]">
                     <h3 class="text-gray-500 text-xs font-medium uppercase">{% translate "Outstanding Payment" %}</h3>

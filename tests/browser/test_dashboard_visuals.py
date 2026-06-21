@@ -158,6 +158,7 @@ def test_financial_dashboard_loads(browser, financial_aggregates):
     browser.wait_for_element_visible("#region-chart canvas")
     browser.wait_for_element_visible("#program-chart canvas")
     browser.wait_for_element_visible("#fsp-chart canvas")
+    browser.wait_for_element_visible("#total-qty-distributed")
 
     # Assert current year totals (for loops will default to current year first)
     browser.assert_text("25", "#total-payments")
@@ -178,7 +179,10 @@ def test_demographic_dashboard_loads(browser, demographic_aggregates, financial_
     browser.wait_for_element_visible("#total-households")
     browser.wait_for_element_visible("#total-pwd")
     browser.wait_for_element_visible("#sector-individuals-chart canvas")
+    browser.wait_for_element_visible("#sector-children-chart canvas")
     browser.wait_for_element_visible("#country-individuals-chart canvas")
+    browser.wait_for_element_visible("#country-pwd-chart canvas")
+    browser.wait_for_element_visible("#time-focus-chart canvas")
 
     # Assert current year totals
     browser.assert_text("1,000", "#total-individuals")
@@ -204,16 +208,17 @@ def test_completion_dashboard_loads(browser, completion_aggregates, financial_ag
     browser.wait_for_element_visible("#total-opened")
     browser.wait_for_element_visible("#time-focus-chart canvas")
     browser.wait_for_element_visible("#status-country-chart canvas")
+    browser.wait_for_element_visible("#completion-gauge canvas")
 
     # Assert current year totals
-    browser.assert_text("15 (100.0% out of 15 total payments)", "#total-reconciled")
+    browser.assert_text("15 (100.0% out of 15 total)", "#total-reconciled")
 
     # Click the previous year tab
     prev_year = datetime.datetime.now().year - 1
     browser.click(f'button.year-tab[data-year="{prev_year}"]')
 
     # Wait and assert updated previous year totals
-    browser.wait_for_text_visible("30 (100.0% out of 30 total payments)", "#total-reconciled")
+    browser.wait_for_text_visible("30 (100.0% out of 30 total)", "#total-reconciled")
 
 
 def test_grievance_dashboard_loads(browser, grievance_aggregates, grievance_status_aggregates, financial_aggregates):
@@ -225,12 +230,13 @@ def test_grievance_dashboard_loads(browser, grievance_aggregates, grievance_stat
     browser.wait_for_text_visible("Priority")
     browser.wait_for_text_visible("Category")
     browser.wait_for_text_visible("Issue Type")
-    browser.wait_for_text_visible("Tickets by Country")
+    browser.wait_for_text_visible("Ticket Status by Country")
     browser.wait_for_element_visible("#grievance-status-chart canvas")
     browser.wait_for_element_visible("#grievance-priority-chart canvas")
     browser.wait_for_element_visible("#grievance-category-chart canvas")
     browser.wait_for_element_visible("#grievance-issue-type-chart canvas")
     browser.wait_for_element_visible("#grievance-country-chart canvas")
+    browser.wait_for_element_visible("#time-focus-chart canvas")
 
     # Assert current year totals
     browser.assert_text("50", "#total-tickets")

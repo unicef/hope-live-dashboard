@@ -29,7 +29,7 @@
 
     <!-- Timeline Filter -->
     <div class="bg-white rounded-lg shadow p-6 mb-8">
-        <h3 class="text-lg font-semibold text-gray-900 mb-2">{% translate "Tickets Timeline" %}</h3>
+        <h3 id="timeline-title" class="text-lg font-semibold text-gray-900 mb-2">{% translate "Tickets Timeline" %}</h3>
         <div id="time-focus-chart" class="w-full" style="min-height: 350px;"></div>
         <div id="time-range-chart" style="display: none;"></div>
         <p class="text-xs text-gray-500 mt-2 italic">{% translate "* Use the slider handles at the bottom of the timeline or click and drag to filter dates." %}</p>
@@ -69,7 +69,7 @@
     <!-- Geographic Breakdown -->
     <div class="grid grid-cols-1 gap-8 mb-8">
         <div class="bg-white rounded-lg shadow p-6">
-            <h3 class="text-lg font-semibold text-gray-900 mb-4">{% translate "Tickets by Country" %}</h3>
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">{% translate "Ticket Status by Country" %}</h3>
             <div id="grievance-country-chart" class="w-full" style="min-height: 500px;"></div>
         </div>
     </div>
