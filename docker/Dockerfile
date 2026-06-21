@@ -34,6 +34,7 @@ RUN set -x \
 cmake \
 curl \
 gcc \
+gettext \
 git \
 libfontconfig1 \
 libgconf-2-4 \
@@ -79,7 +80,8 @@ RUN --mount=type=cache,target=/root/.uv-cache \
     uv sync --cache-dir=/root/.uv-cache \
         --python=/usr/local/bin/python \
         --python-preference=system \
-        --frozen --group dev
+        --frozen --group dev \
+    && django-admin compilemessages
 
 # ------- production only deps-------
 FROM builder AS production
@@ -101,7 +103,8 @@ RUN --mount=type=cache,target=/root/.uv-cache \
     uv sync --cache-dir=/root/.uv-cache \
         --python=/usr/local/bin/python \
         --python-preference=system \
-        --frozen
+        --frozen \
+    && django-admin compilemessages
 
 
 
@@ -142,6 +145,7 @@ COPY docker/conf /conf/
 COPY docker/bin/* /usr/local/bin/
 
 COPY . /app/
+COPY --from=production /app/src/hope_live/locale/ /app/src/hope_live/locale/
 
 COPY --chown=hope:unicef --from=production /venv /venv
 COPY --from=builder /usr/local/bin/uwsgi /usr/local/bin/uv /usr/local/bin/
