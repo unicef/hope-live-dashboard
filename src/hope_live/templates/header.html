@@ -37,7 +37,7 @@
                             {% csrf_token %}
                             <input name="next" type="hidden" value="{{ request.get_full_path }}">
                             <input name="language" type="hidden" value="{{ lang.code }}">
-                            <button type="submit" onclick="event.stopPropagation();" class="flex items-center justify-between w-full px-4 py-2.5 text-sm text-left hover:bg-sky-50/50 text-gray-750 font-semibold transition-colors {% if lang.code == LANGUAGE_CODE %}bg-sky-50 text-[#00adef] font-bold{% endif %}">
+                            <button type="submit" onclick="this.form.submit();" class="flex items-center justify-between w-full px-4 py-2.5 text-sm text-left hover:bg-sky-50/50 text-gray-750 font-semibold transition-colors {% if lang.code == LANGUAGE_CODE %}bg-sky-50 text-[#00adef] font-bold{% endif %}">
                                 <span>{{ lang.name_local }}</span>
                                 <span class="text-[9px] text-gray-400 uppercase font-bold px-1.5 py-0.5 bg-gray-100 rounded">{{ lang.code }}</span>
                             </button>

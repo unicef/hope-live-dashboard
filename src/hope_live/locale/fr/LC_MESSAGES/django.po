@@ -382,11 +382,11 @@ msgstr "Statut des tickets par pays"
 
 #: src/hope_live/templates/pages/landing.html:27
 msgid "Humanitarian cash"
-msgstr "Argent humanitaire"
+msgstr "Transfer monaitaire humanitaire"
 
 #: src/hope_live/templates/pages/landing.html:28
 msgid "Operations and Programme"
-msgstr "Opérations et programme"
+msgstr "Opérationnelle et programmatique"
 
 #: src/hope_live/templates/pages/landing.html:29
 msgid "Ecosystem"

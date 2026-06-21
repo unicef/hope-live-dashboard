@@ -151,7 +151,7 @@ AUTHENTICATION_BACKENDS = (
 # Internationalization
 # https://docs.djangoproject.com/en/5.2/topics/i18n/
 
-LANGUAGE_CODE = "en-us"
+LANGUAGE_CODE = "en"
 ugettext = lambda s: s  # noqa E731
 LANGUAGES = (
     ("es", ugettext("Spanish")),  # type: ignore[no-untyped-call]
