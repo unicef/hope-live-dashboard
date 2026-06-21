@@ -488,7 +488,7 @@ document.addEventListener('DOMContentLoaded', function () {
             selectedStatuses.add(name);
         }
         if (selectedStatuses.size === 0) statusDimension.filterAll();
-        else statusDimension.filterFunction(d => selectedStatuses.has(d));
+        else statusDimension.filterFunction(d => d === '' || selectedStatuses.has(d));
         updateAll();
     });
 
@@ -500,7 +500,7 @@ document.addEventListener('DOMContentLoaded', function () {
             selectedPriorities.add(name);
         }
         if (selectedPriorities.size === 0) priorityDimension.filterAll();
-        else priorityDimension.filterFunction(d => selectedPriorities.has(d));
+        else priorityDimension.filterFunction(d => d === '' || selectedPriorities.has(d));
         updateAll();
     });
 
@@ -512,7 +512,7 @@ document.addEventListener('DOMContentLoaded', function () {
             selectedCategories.add(name);
         }
         if (selectedCategories.size === 0) categoryDimension.filterAll();
-        else categoryDimension.filterFunction(d => selectedCategories.has(d));
+        else categoryDimension.filterFunction(d => d === '' || selectedCategories.has(d));
         updateAll();
     });
 
@@ -524,7 +524,7 @@ document.addEventListener('DOMContentLoaded', function () {
             selectedIssueTypes.add(name);
         }
         if (selectedIssueTypes.size === 0) issueTypeDimension.filterAll();
-        else issueTypeDimension.filterFunction(d => selectedIssueTypes.has(d));
+        else issueTypeDimension.filterFunction(d => d === '' || selectedIssueTypes.has(d));
         updateAll();
     });
 

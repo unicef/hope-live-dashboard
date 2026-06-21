@@ -39,6 +39,34 @@ document.addEventListener('DOMContentLoaded', function () {
         return colorPalette[index];
     }
 
+    const fallbackCountryToRegion = {
+        'afghanistan': 'SAR',
+        'angola': 'ESAR',
+        'armenia': 'ECAR',
+        'bangladesh': 'SAR',
+        'botswana': 'ESAR',
+        'central-african-republic': 'WCAR',
+        'chad': 'WCAR',
+        'democratic-republic-of-congo': 'WCAR',
+        'haiti': 'LACR',
+        'kenya': 'ESAR',
+        'madagascar': 'ESAR',
+        'myanmar': 'EAPR',
+        'nigeria': 'WCAR',
+        'palestine-state-of': 'MENAR',
+        'republic-of-cameroon': 'WCAR',
+        'republic-of-mozambique': 'ESAR',
+        'senegal': 'WCAR',
+        'sierra-leone': 'WCAR',
+        'somalia': 'ESAR',
+        'south-sudan': 'ESAR',
+        'sudan': 'MENAR',
+        'syria': 'MENAR',
+        'ukraine': 'ECAR',
+        'vietnam': 'EAPR',
+        'yemen': 'MENAR'
+    };
+
     // Initialize empty Crossfilter
     let ndx = crossfilter([]);
     const isFr = document.documentElement.lang && document.documentElement.lang.startsWith('fr');
@@ -50,7 +78,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const programDimension = ndx.dimension(d => d.dimension_type === 'program' ? d.dimension_value : '');
     const deliveryDimension = ndx.dimension(d => d.dimension_type === 'delivery_type' ? d.dimension_value : '');
     const fspDimension = ndx.dimension(d => d.dimension_type === 'financial_service_provider' ? d.dimension_value : '');
-    const regionDimension = ndx.dimension(d => d.dimension_type === 'region' ? d.dimension_value : '');
+    const regionDimension = ndx.dimension(d => d.region);
     const statusDimension = ndx.dimension(d => d.dimension_type === 'status' ? d.dimension_value : '');
     const countryDimension = ndx.dimension(d => d.country_slug);
 
@@ -60,22 +88,38 @@ document.addEventListener('DOMContentLoaded', function () {
     function reduceMetric(dimType) {
         return {
             add: (p, v) => {
-                if (v.dimension_type === dimType) {
-                    p.usd += +v.total_usd;
-                    p.qty += +v.total_qty;
-                    p.payments += +v.payment_count;
+                if (dimType) {
+                    if (v.dimension_type === dimType) {
+                        p.usd += +v.total_usd;
+                        p.qty += +v.total_qty;
+                        p.payments += +v.payment_count;
+                    }
+                } else {
+                    const type = v.dimension_type;
+                    if (!p[type]) p[type] = { usd: 0, qty: 0, payments: 0 };
+                    p[type].usd += +v.total_usd;
+                    p[type].qty += +v.total_qty;
+                    p[type].payments += +v.payment_count;
                 }
                 return p;
             },
             remove: (p, v) => {
-                if (v.dimension_type === dimType) {
-                    p.usd -= +v.total_usd;
-                    p.qty -= +v.total_qty;
-                    p.payments -= +v.payment_count;
+                if (dimType) {
+                    if (v.dimension_type === dimType) {
+                        p.usd -= +v.total_usd;
+                        p.qty -= +v.total_qty;
+                        p.payments -= +v.payment_count;
+                    }
+                } else {
+                    const type = v.dimension_type;
+                    if (!p[type]) p[type] = { usd: 0, qty: 0, payments: 0 };
+                    p[type].usd -= +v.total_usd;
+                    p[type].qty -= +v.total_qty;
+                    p[type].payments -= +v.payment_count;
                 }
                 return p;
             },
-            init: () => ({ usd: 0, qty: 0, payments: 0 })
+            init: () => dimType ? { usd: 0, qty: 0, payments: 0 } : {}
         };
     }
 
@@ -83,30 +127,30 @@ document.addEventListener('DOMContentLoaded', function () {
     const moveDays = dateDimension.group(d3.timeDay);
     const volumeByDayGroup = moveDays.reduce(
         (p, v) => {
-            if (primaryDimFilter(v)) {
-                p.usd += +v.total_usd;
-                p.qty += +v.total_qty;
-                p.payments += +v.payment_count;
-            }
+            const type = v.dimension_type;
+            if (!p[type]) p[type] = { usd: 0, qty: 0, payments: 0 };
+            p[type].usd += +v.total_usd;
+            p[type].qty += +v.total_qty;
+            p[type].payments += +v.payment_count;
             return p;
         },
         (p, v) => {
-            if (primaryDimFilter(v)) {
-                p.usd -= +v.total_usd;
-                p.qty -= +v.total_qty;
-                p.payments -= +v.payment_count;
-            }
+            const type = v.dimension_type;
+            if (!p[type]) p[type] = { usd: 0, qty: 0, payments: 0 };
+            p[type].usd -= +v.total_usd;
+            p[type].qty -= +v.total_qty;
+            p[type].payments -= +v.payment_count;
             return p;
         },
-        () => ({ usd: 0, qty: 0, payments: 0 })
+        () => ({})
     );
 
     const sectorGroup = sectorDimension.group().reduce(reduceMetric('sector').add, reduceMetric('sector').remove, reduceMetric('sector').init);
     const programGroup = programDimension.group().reduce(reduceMetric('program').add, reduceMetric('program').remove, reduceMetric('program').init);
     const deliveryGroup = deliveryDimension.group().reduce(reduceMetric('delivery_type').add, reduceMetric('delivery_type').remove, reduceMetric('delivery_type').init);
     const fspGroup = fspDimension.group().reduce(reduceMetric('financial_service_provider').add, reduceMetric('financial_service_provider').remove, reduceMetric('financial_service_provider').init);
-    const countryGroup = countryDimension.group().reduce(reduceMetric('sector').add, reduceMetric('sector').remove, reduceMetric('sector').init);
-    const regionGroup = regionDimension.group().reduce(reduceMetric('region').add, reduceMetric('region').remove, reduceMetric('region').init);
+    const countryGroup = countryDimension.group().reduce(reduceMetric().add, reduceMetric().remove, reduceMetric().init);
+    const regionGroup = regionDimension.group().reduce(reduceMetric().add, reduceMetric().remove, reduceMetric().init);
 
     // Active filters
     const selectedSectors = new Set();
@@ -144,9 +188,15 @@ document.addEventListener('DOMContentLoaded', function () {
     ].map(s => s.toUpperCase());
 
     function updateTotals() {
-        // Total Payments: Count from Sector rows (the most reliable source)
+        let activeDimType = 'sector';
+        if (selectedPrograms.size > 0) activeDimType = 'program';
+        else if (selectedDeliveries.size > 0) activeDimType = 'delivery_type';
+        else if (selectedFsps.size > 0) activeDimType = 'financial_service_provider';
+        else if (selectedSectors.size > 0) activeDimType = 'sector';
+
+        // Total Payments: Count from active dimension rows
         const totalPayments = ndx.groupAll().reduceSum(d =>
-            d.dimension_type === 'sector' ? d.payment_count : 0
+            d.dimension_type === activeDimType ? d.payment_count : 0
         ).value();
 
         // Total Amount Paid: Sum only the Status rows matching successful statuses
@@ -154,9 +204,9 @@ document.addEventListener('DOMContentLoaded', function () {
             (d.dimension_type === 'status' && successfulList.includes(String(d.dimension_value).toUpperCase())) ? d.total_usd : 0
         ).value();
 
-        // Total Quantity: Sum from Sector rows
+        // Total Quantity: Sum from active dimension rows
         const totalQty = ndx.groupAll().reduceSum(d =>
-            d.dimension_type === 'sector' ? d.total_qty : 0
+            d.dimension_type === activeDimType ? d.total_qty : 0
         ).value();
 
         // Outstanding: Sum only the Status rows matching pending statuses
@@ -178,12 +228,21 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function updateAll(filterSource = null) {
+        let activeDimType = 'sector';
+        if (selectedPrograms.size > 0) activeDimType = 'program';
+        else if (selectedDeliveries.size > 0) activeDimType = 'delivery_type';
+        else if (selectedFsps.size > 0) activeDimType = 'financial_service_provider';
+        else if (selectedSectors.size > 0) activeDimType = 'sector';
+
         updateTotals();
 
         // 1. Timeline Chart (Area time chart)
         const timelineData = volumeByDayGroup.all()
             .filter(d => d.key !== null)
-            .map(d => [d.key.getTime(), d.value[currentMetric]]);
+            .map(d => {
+                const valObj = d.value[activeDimType] || { usd: 0, qty: 0, payments: 0 };
+                return [d.key.getTime(), valObj[currentMetric]];
+            });
 
         const metricName = currentMetric === 'usd' ? t('Spending', 'Dépenses') : (currentMetric === 'qty' ? t('Quantity', 'Quantités') : t('Payments', 'Paiements'));
         const timelineOption = {
@@ -236,9 +295,16 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         // Helper to update horizontal bar charts (row charts)
-        function updateHorizontalBarChart(chartObj, group, activeFiltersSet, leftMargin = 120, maxBars = 100) {
+        function updateHorizontalBarChart(chartObj, group, activeFiltersSet, leftMargin = 120, maxBars = 100, isRegionalOrCountry = false) {
             const rawData = group.all()
-                .map(d => ({ key: d.key, value: d.value[currentMetric] }))
+                .map(d => {
+                    if (isRegionalOrCountry) {
+                        const valObj = d.value[activeDimType] || { usd: 0, qty: 0, payments: 0 };
+                        return { key: d.key, value: valObj[currentMetric] };
+                    } else {
+                        return { key: d.key, value: d.value[currentMetric] };
+                    }
+                })
                 .filter(d => d.key !== '' && d.key !== null && d.value > 0)
                 .sort((a, b) => b.value - a.value)
                 .slice(0, maxBars);
@@ -349,11 +415,14 @@ document.addEventListener('DOMContentLoaded', function () {
         updateHorizontalBarChart(programChart, programGroup, selectedPrograms, 140, 10);
         updateDonutChart(deliveryChart, deliveryGroup, selectedDeliveries); // Donut for delivery types!
         updateHorizontalBarChart(fspChart, fspGroup, selectedFsps, 140, 10);
-        updateHorizontalBarChart(regionChart, regionGroup, selectedRegions, 140);
+        updateHorizontalBarChart(regionChart, regionGroup, selectedRegions, 140, 100, true);
 
         // 2. Country Chart (Vertical Bar)
         const countryData = countryGroup.all()
-            .map(d => ({ key: d.key, value: d.value[currentMetric] }))
+            .map(d => {
+                const valObj = d.value[activeDimType] || { usd: 0, qty: 0, payments: 0 };
+                return { key: d.key, value: valObj[currentMetric] };
+            })
             .filter(d => d.key !== '' && d.key !== null && d.value > 0)
             .sort((a, b) => b.value - a.value)
             .slice(0, 15);
@@ -417,7 +486,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 activeFiltersSet.add(name);
             }
             if (activeFiltersSet.size === 0) dimension.filterAll();
-            else dimension.filterFunction(d => activeFiltersSet.has(d));
+            else dimension.filterFunction(d => d === '' || activeFiltersSet.has(d));
             updateAll();
         });
     };
@@ -474,12 +543,20 @@ document.addEventListener('DOMContentLoaded', function () {
 
             const data = await response.json();
 
+            const countryToRegion = Object.assign({}, fallbackCountryToRegion);
+            data.forEach(d => {
+                if (d.dimension_type === 'region') {
+                    countryToRegion[d.country_slug] = d.dimension_value;
+                }
+            });
+
             const dateFormat = d3.timeParse('%Y-%m-%d');
             data.forEach(d => {
                 d.date = dateFormat(d.date);
                 d.total_usd = +d.total_usd;
                 d.total_qty = +d.total_qty || 0;
                 d.payment_count = +d.payment_count;
+                d.region = countryToRegion[d.country_slug] || '';
             });
 
             const now = new Date();
