@@ -34,7 +34,6 @@ RUN set -x \
 cmake \
 curl \
 gcc \
-gettext \
 git \
 libfontconfig1 \
 libgconf-2-4 \
@@ -80,8 +79,7 @@ RUN --mount=type=cache,target=/root/.uv-cache \
     uv sync --cache-dir=/root/.uv-cache \
         --python=/usr/local/bin/python \
         --python-preference=system \
-        --frozen --group dev \
-    && django-admin compilemessages
+        --frozen --group dev
 
 # ------- production only deps-------
 FROM builder AS production
@@ -103,8 +101,7 @@ RUN --mount=type=cache,target=/root/.uv-cache \
     uv sync --cache-dir=/root/.uv-cache \
         --python=/usr/local/bin/python \
         --python-preference=system \
-        --frozen \
-    && django-admin compilemessages
+        --frozen
 
 
 
