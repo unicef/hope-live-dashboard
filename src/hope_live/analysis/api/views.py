@@ -4,10 +4,11 @@ from django.db import models
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
 from drf_spectacular.utils import OpenApiExample, OpenApiParameter, extend_schema
-from rest_framework import (
-    generics,  # type: ignore[import-untyped]
+from rest_framework import (  # type: ignore[import-untyped]
+    generics,
     serializers,
 )
+from rest_framework.permissions import AllowAny  # type: ignore[import-untyped]
 from rest_framework.request import Request  # type: ignore[import-untyped]
 from rest_framework.response import Response  # type: ignore[import-untyped]
 
@@ -23,6 +24,8 @@ from ..serializers import (
 @method_decorator(cache_page(60 * 60 * 6), name="dispatch")
 class AggregateListView(generics.ListAPIView):  # type: ignore[misc]
     """API endpoint for listing Aggregate records with filtering."""
+
+    permission_classes = [AllowAny]
 
     def get_serializer_class(self) -> type[serializers.ModelSerializer]:
         dash_type = self.request.query_params.get("dashboard")
@@ -103,7 +106,9 @@ class AggregateListView(generics.ListAPIView):  # type: ignore[misc]
                 queryset = GrievanceAggregate.objects.all()
 
         # Filter by the correct time grain for this dashboard type
-        time_grain = TimeGrain.MONTHLY if dash_type == "demographic" else TimeGrain.DAILY
+        time_grain = self.request.query_params.get("time_grain")
+        if not time_grain or time_grain not in TimeGrain.values:
+            time_grain = TimeGrain.MONTHLY if dash_type == "demographic" else TimeGrain.DAILY
         queryset = queryset.filter(time_grain=time_grain)
 
         year = self.request.query_params.get("year")

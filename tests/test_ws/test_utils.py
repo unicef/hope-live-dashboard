@@ -1,10 +1,11 @@
-from unittest.mock import Mock, patch
+from unittest.mock import AsyncMock, Mock, patch
 
 import pytest
 
 from hope_live.ws.utils import notify_ui
 
 
+@pytest.mark.asyncio
 @pytest.mark.parametrize(
     "message",
     [
@@ -15,40 +16,30 @@ from hope_live.ws.utils import notify_ui
         {},
     ],
 )
-def test_notify_ui(message):
+async def test_notify_ui(message):
     mock_channel_layer = Mock()
-    mock_channel_layer.group_send = Mock()
+    mock_channel_layer.group_send = AsyncMock()
 
     with patch("channels.layers.get_channel_layer", return_value=mock_channel_layer):
-        with patch("hope_live.ws.utils.async_to_sync") as mock_async_to_sync:
-            mock_wrapped = Mock()
-            mock_async_to_sync.return_value = mock_wrapped
-
-            notify_ui(message)
-
-            mock_async_to_sync.assert_called_once()
-            mock_wrapped.assert_called_once_with("ALL", {"type": "send.json", "payload": message})
+        await notify_ui(message)
+        mock_channel_layer.group_send.assert_called_once_with("ALL", {"type": "ui.message", "payload": message})
 
 
-def test_notify_ui_with_args_kwargs():
+@pytest.mark.asyncio
+async def test_notify_ui_with_args_kwargs():
     mock_channel_layer = Mock()
-    mock_channel_layer.group_send = Mock()
+    mock_channel_layer.group_send = AsyncMock()
 
     with patch("channels.layers.get_channel_layer", return_value=mock_channel_layer):
-        with patch("hope_live.ws.utils.async_to_sync") as mock_async_to_sync:
-            mock_wrapped = Mock()
-            mock_async_to_sync.return_value = mock_wrapped
-
-            test_message = {"type": "test.message", "data": {"key": "value"}}
-
-            notify_ui(test_message, "arg1", "arg2", extra="value")
-
-            mock_wrapped.assert_called_once_with("ALL", {"type": "send.json", "payload": test_message})
+        test_message = {"type": "test.message", "data": {"key": "value"}}
+        await notify_ui(test_message, "arg1", "arg2", extra="value")
+        mock_channel_layer.group_send.assert_called_once_with("ALL", {"type": "ui.message", "payload": test_message})
 
 
-def test_notify_ui_no_channel_layer():
+@pytest.mark.asyncio
+async def test_notify_ui_no_channel_layer():
     with patch("channels.layers.get_channel_layer", return_value=None):
-        notify_ui({"type": "test"})
+        await notify_ui({"type": "test"})
 
 
 def test_notify_ui_function_signature():

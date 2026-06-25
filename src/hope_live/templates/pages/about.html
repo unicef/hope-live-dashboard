@@ -1,8 +1,9 @@
 {% extends "layout.html" %}
+{% load i18n %}
 
 {% block menu %}{% endblock %}
 
-{% block page %}
+{% block content %}
 {# <div class="justify-center-safe"> #}
     <div class="hero bg-base-200 in-h-screen">
         <div class="hero-content flex-col lg:flex-row">
@@ -11,11 +12,11 @@
             <div>
                 <h1 class="text-5xl font-bold">HOPE</h1>
                 <p class="py-6">
-                    HOPE is UNICEF’s solution to collect and process personal data from beneficiaries and frontline workers to deliver humanitarian cash transfers safely
+                    {% translate "HOPE is UNICEF’s solution to collect and process personal data from beneficiaries and frontline workers to deliver humanitarian cash transfers safely" %}
                 </p>
-                <a class="btn btn-primary" href="https://www.unicef.org/hope-hct/about">Learn more</a>
+                <a class="btn btn-primary" href="https://www.unicef.org/hope-hct/about">{% translate "Learn more" %}</a>
             </div>
         </div>
     </div>
 {# </div> #}
-{% endblock page %}
+{% endblock content %}

@@ -27,33 +27,51 @@
         </div>
     </div>
 
+    <!-- Metric Selector Pills -->
+    <div class="mb-6 flex flex-wrap gap-2 items-center justify-between">
+        <div class="text-sm font-semibold text-gray-700">{% translate "View Reconciliation Metrics by:" %}</div>
+        <div class="flex bg-gray-100 p-1 rounded-lg space-x-1 border border-gray-200">
+            <button id="btn-count" class="metric-tab px-4 py-1.5 text-xs font-bold rounded-md bg-white shadow text-blue-800 transition-all duration-200 active-metric" data-metric="payments">
+                {% translate "Payments Count" %}
+            </button>
+            <button id="btn-usd" class="metric-tab px-4 py-1.5 text-xs font-bold rounded-md text-gray-600 hover:text-gray-900 transition-all duration-200" data-metric="usd">
+                {% translate "Amount (USD)" %}
+            </button>
+        </div>
+    </div>
+
     <!-- Timeline Filter -->
     <div class="bg-white rounded-lg shadow p-6 mb-8">
-        <h3 class="text-lg font-semibold text-gray-900 mb-2">{% translate "Reconciliation Timeline" %}</h3>
-        <div id="time-focus-chart" class="w-full"></div>
-        <div id="time-range-chart" class="w-full mt-4"></div>
-        <p class="text-xs text-gray-500 mt-2 italic">{% translate "* Select a range on the smaller chart at the bottom to zoom in on the focus chart" %}</p>
+        <h3 id="timeline-title" class="text-lg font-semibold text-gray-900 mb-2">{% translate "Reconciliation Timeline" %}</h3>
+        <div id="time-focus-chart" class="w-full" style="min-height: 350px;"></div>
+        <div id="time-range-chart" style="display: none;"></div>
+        <p class="text-xs text-gray-500 mt-2 italic">{% translate "* Use the slider handles at the bottom of the timeline or click and drag to filter dates." %}</p>
     </div>
 
     <!-- Stats Cards -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6 mb-8">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
         <div class="bg-white rounded-lg shadow p-6 border-l-4 border-unicef-blue">
-            <h3 class="text-gray-500 text-sm font-medium uppercase">{% translate "Reconciled Payments" %}</h3>
-            <p id="total-reconciled" class="text-3xl font-bold text-gray-900 mt-2">0</p>
+            <h3 id="reconciled-card-title" class="text-gray-500 text-sm font-medium uppercase">{% translate "Reconciled Payments" %}</h3>
+            <p id="total-reconciled" class="text-xl lg:text-2xl font-bold text-gray-900 mt-2">0</p>
         </div>
         <div class="bg-white rounded-lg shadow p-6 border-l-4 border-unicef-primary">
-            <h3 class="text-gray-500 text-sm font-medium uppercase">{% translate "Still Opened" %}</h3>
-            <p id="total-opened" class="text-3xl font-bold text-gray-900 mt-2">0</p>
+            <h3 id="opened-card-title" class="text-gray-500 text-sm font-medium uppercase">{% translate "Still Opened" %}</h3>
+            <p id="total-opened" class="text-xl lg:text-2xl font-bold text-gray-900 mt-2">0</p>
+        </div>
+        <div class="bg-white rounded-lg shadow p-6 border-l-4 border-green-500 flex justify-between items-center min-h-[120px]">
+            <div>
+                <h3 class="text-gray-500 text-sm font-medium uppercase">{% translate "Reconciliation Rate" %}</h3>
+                <p id="completion-rate-text" class="text-2xl font-bold text-gray-900 mt-1">0%</p>
+            </div>
+            <div id="completion-gauge" style="width: 120px; height: 90px;"></div>
         </div>
     </div>
-
-    <!-- Main Completion Charts removed per design update -->
 
     <!-- Geographic Breakdown -->
     <div class="grid grid-cols-1 lg:grid-cols-1 gap-8">
         <div class="bg-white rounded-lg shadow p-6">
-            <h3 class="text-lg font-semibold text-gray-900 mb-4">{% translate "Number of Payments by Country" %}</h3>
-            <div id="status-country-chart" class="w-full"></div>
+            <h3 id="country-chart-title" class="text-lg font-semibold text-gray-900 mb-4">{% translate "Reconciliation Status by Country" %}</h3>
+            <div id="status-country-chart" class="w-full" style="min-height: 500px;"></div>
         </div>
     </div>
 </div>
@@ -68,7 +86,7 @@
 
 {% block extra_js %}
 <script src="{% static 'js/crossfilter.min.js' %}"></script>
-<script src="{% static 'js/dc.min.js' %}"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dc/4.2.7/style/dc.min.css" />
+<script src="{% static 'js/echarts.min.js' %}"></script>
+<script src="{% static 'js/macarons.js' %}"></script>
 <script src="{% static 'js/completion_visuals.js' %}"></script>
 {% endblock extra_js %}

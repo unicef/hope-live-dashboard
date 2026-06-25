@@ -2,7 +2,7 @@ from django.conf import settings
 
 from .. import env
 
-CONSTANCE_REDIS_CONNECTION = env("CONSTANCE_REDIS_URL")
+CONSTANCE_REDIS_CONNECTION = env("CONSTANCE_REDIS_URL") or "redis://127.0.0.1:6379/1"
 CONSTANCE_REDIS_CACHE_TIMEOUT = 1
 CONSTANCE_ADDITIONAL_FIELDS = {
     "group_select": [
@@ -27,7 +27,7 @@ CONSTANCE_ADDITIONAL_FIELDS = {
 
 CONSTANCE_DBS = ("default",)
 
-addr = settings.ALLOWED_HOSTS[0] if settings.ALLOWED_HOSTS else None  # type: ignore[has-type]
+addr = settings.ALLOWED_HOSTS[0] if settings.ALLOWED_HOSTS else ""  # type: ignore[has-type]
 
 CONSTANCE_CONFIG = {
     "NEW_USER_DEFAULT_GROUP": (
@@ -74,6 +74,11 @@ CONSTANCE_CONFIG = {
     "HOPE_GRIEVANCE_REPORT_QUERY_ID": (
         9,
         "Query ID for Grievance Aggregate Dataset",
+        int,
+    ),
+    "HOPE_NEWS_REPORT_QUERY_ID": (
+        159,
+        "Query ID for News Updates/Alerts Dataset",
         int,
     ),
 }

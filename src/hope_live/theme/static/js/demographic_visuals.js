@@ -2,75 +2,131 @@ document.addEventListener('DOMContentLoaded', function () {
     const tabsContainer = document.getElementById('tabs-container');
     if (!tabsContainer) return;
 
-    // Set modern D3 color scheme to avoid d3.schemeCategory20c deprecation warning
-    dc.config.defaultColors(d3.schemeCategory10);
+    let currentMetric = 'individuals'; // Default metric: individuals. Can be: 'individuals', 'households', 'children', 'pwd'
 
+    const fieldMap = {
+        individuals: 'beneficiaries',
+        households: 'households',
+        children: 'children',
+        pwd: 'pwd'
+    };
+
+    const isFr = document.documentElement.lang && document.documentElement.lang.startsWith('fr');
+    const t = (en, fr) => isFr ? fr : en;
+
+    const labelMap = {
+        individuals: t('Individuals Reached', 'Individus atteints'),
+        households: t('Households Reached', 'Ménages atteints'),
+        children: t('Children Reached', 'Enfants atteints'),
+        pwd: t('PWD Reached', 'Personnes handicapées atteintes')
+    };
+
+    const colorPalette = [
+        '#2ec7c9', '#b6a2de', '#5ab1ef', '#ffb980', '#d87a80',
+        '#8d98b3', '#e5cf0d', '#97b552', '#95706d', '#dc69aa',
+        '#07a2a4', '#9a7fd1', '#588dd5', '#f5994e', '#c05050',
+        '#59678c', '#c9ab00', '#76933c', '#bc65a6'
+    ];
+
+    function getStableColor(name) {
+        if (!name) return '#5470c6';
+        let hash = 0;
+        for (let i = 0; i < name.length; i++) {
+            hash = name.charCodeAt(i) + ((hash << 5) - hash);
+        }
+        const index = Math.abs(hash) % colorPalette.length;
+        return colorPalette[index];
+    }
+
+    // Initialize empty Crossfilter
     let ndx = crossfilter([]);
-    const dataCache = {};
 
+    // Filter and Dimensions
     const primaryDimFilter = d => d.dimension_type === 'sector';
     const dateDimension = ndx.dimension(d => d.date);
-    const sectorDimension = ndx.dimension(d => primaryDimFilter(d) ? d.dimension_value : null);
+    const sectorDimension = ndx.dimension(d => primaryDimFilter(d) ? d.dimension_value : '');
     const countryDimension = ndx.dimension(d => d.country_slug);
-    const moveMonths = dateDimension.group(d3.timeMonth);
-    const individualsByMonthGroup = moveMonths.reduceSum(d => primaryDimFilter(d) ? d.total_beneficiaries : 0);
+
+    // Multi-metric custom reduction helper
+    function reduceDemographics(dimType) {
+        return {
+            add: (p, v) => {
+                if (v.dimension_type === dimType) {
+                    p.beneficiaries += +v.total_beneficiaries;
+                    p.households += +v.total_households;
+                    p.children += +v.total_children;
+                    p.pwd += +v.total_pwd;
+                }
+                return p;
+            },
+            remove: (p, v) => {
+                if (v.dimension_type === dimType) {
+                    p.beneficiaries -= +v.total_beneficiaries;
+                    p.households -= +v.total_households;
+                    p.children -= +v.total_children;
+                    p.pwd -= +v.total_pwd;
+                }
+                return p;
+            },
+            init: () => ({ beneficiaries: 0, households: 0, children: 0, pwd: 0 })
+        };
+    }
+
+    // Groups
     const moveDays = dateDimension.group(d3.timeDay);
-    const individualsByDayGroup = moveDays.reduceSum(d => primaryDimFilter(d) ? d.total_beneficiaries : 0);
-    const sectorIndividualsGroup = sectorDimension.group().reduceSum(d => primaryDimFilter(d) ? d.total_beneficiaries : 0);
-    const sectorChildrenGroup = sectorDimension.group().reduceSum(d => primaryDimFilter(d) ? d.total_children : 0);
-    const countryIndividualsGroup = countryDimension.group().reduceSum(d => primaryDimFilter(d) ? d.total_beneficiaries : 0);
-    const countryPwdGroup = countryDimension.group().reduceSum(d => primaryDimFilter(d) ? d.total_pwd : 0);
+    const volumeByDayGroup = moveDays.reduce(
+        (p, v) => {
+            if (primaryDimFilter(v)) {
+                p.beneficiaries += +v.total_beneficiaries;
+                p.households += +v.total_households;
+                p.children += +v.total_children;
+                p.pwd += +v.total_pwd;
+            }
+            return p;
+        },
+        (p, v) => {
+            if (primaryDimFilter(v)) {
+                p.beneficiaries -= +v.total_beneficiaries;
+                p.households -= +v.total_households;
+                p.children -= +v.total_children;
+                p.pwd -= +v.total_pwd;
+            }
+            return p;
+        },
+        () => ({ beneficiaries: 0, households: 0, children: 0, pwd: 0 })
+    );
 
-    const focusChart = dc.lineChart('#time-focus-chart');
-    const rangeChart = dc.barChart('#time-range-chart');
-    const sectorIndividualsChart = dc.rowChart('#sector-individuals-chart');
-    const sectorChildrenChart = dc.rowChart('#sector-children-chart');
-    const countryIndividualsChart = dc.rowChart('#country-individuals-chart');
-    const countryPwdChart = dc.rowChart('#country-pwd-chart');
+    const sectorGroup = sectorDimension.group().reduce(
+        reduceDemographics('sector').add,
+        reduceDemographics('sector').remove,
+        reduceDemographics('sector').init
+    );
 
-    // Set initial domain to prevent grid line errors
-    const initialYear = new Date().getFullYear();
-    const initialDomain = [new Date(initialYear, 0, 1), new Date(initialYear, 11, 31)];
+    const countryGroup = countryDimension.group().reduce(
+        reduceDemographics('sector').add,
+        reduceDemographics('sector').remove,
+        reduceDemographics('sector').init
+    );
 
-    focusChart.width(null).height(200).margins({ top: 10, right: 50, bottom: 30, left: 90 })
-        .dimension(dateDimension).group(individualsByMonthGroup)
-        .transitionDuration(500)
-        .x(d3.scaleTime().domain(initialDomain))  // Set initial scale
-        .round(d3.timeMonth.round).xUnits(d3.timeMonths).elasticY(true)
-        .renderArea(true)
-        .curve(d3.curveMonotoneX)
-        .mouseZoomable(true)
-        .renderHorizontalGridLines(true).rangeChart(rangeChart).brushOn(false)
-        .title(function(d) {
-            const formatTime = d3.timeFormat("%B %Y");
-            const formatValue = d3.format(",");
-            return `${formatTime(d.key)}: ${formatValue(d.value)}`;
-        })
-        .on('filtered', updateTotals);
+    // Active Filters Sets
+    const selectedSectors = new Set();
+    const selectedCountries = new Set();
 
-    focusChart.yAxis().tickFormat(d => d3.format(".2s")(d).replace('G', 'B'));
+    // Initialize ECharts instances with macarons theme
+    const timelineChart = echarts.init(document.getElementById('time-focus-chart'), 'macarons');
+    const sectorIndChart = echarts.init(document.getElementById('sector-individuals-chart'), 'macarons');
+    const sectorChildChart = echarts.init(document.getElementById('sector-children-chart'), 'macarons');
+    const countryIndChart = echarts.init(document.getElementById('country-individuals-chart'), 'macarons');
+    const countryPwdChart = echarts.init(document.getElementById('country-pwd-chart'), 'macarons');
 
-    rangeChart.width(null).height(60).margins({ top: 0, right: 50, bottom: 20, left: 90 })
-        .dimension(dateDimension).group(individualsByDayGroup).centerBar(true).gap(1)
-        .x(d3.scaleTime().domain(initialDomain))  // Set initial scale
-        .round(d3.timeDay.round).alwaysUseRounding(true).xUnits(d3.timeDays).elasticY(true)
-        .filterPrinter(function (filters) {
-            const dateFmt = d3.timeFormat("%b %d, %Y");
-            return `[${dateFmt(filters[0][0])} to ${dateFmt(filters[0][1])}]`;
-        })
-        .yAxis().ticks(0);
-
-    const demoMargins = { top: 10, right: 30, bottom: 30, left: 20 };
-
-    [sectorIndividualsChart, sectorChildrenChart, countryIndividualsChart, countryPwdChart].forEach(chart => {
-        chart.width(null).height(350).margins(demoMargins).elasticX(true).gap(10).on('filtered', updateTotals);
-        chart.xAxis().ticks(4).tickFormat(d3.format(".2s"));
+    // Resize Handler
+    window.addEventListener('resize', function () {
+        timelineChart.resize();
+        sectorIndChart.resize();
+        sectorChildChart.resize();
+        countryIndChart.resize();
+        countryPwdChart.resize();
     });
-
-    sectorIndividualsChart.dimension(sectorDimension).group(sectorIndividualsGroup).data(group => group.all().filter(d => d.key !== null && d.value > 0));
-    sectorChildrenChart.dimension(sectorDimension).group(sectorChildrenGroup).colors(['#2C96D2']).data(group => group.all().filter(d => d.key !== null && d.value > 0));
-    countryIndividualsChart.dimension(countryDimension).group(countryIndividualsGroup).data(group => group.top(10));
-    countryPwdChart.dimension(countryDimension).group(countryPwdGroup).colors(['#9333ea']).data(group => group.top(10));
 
     function updateTotals() {
         const totalIndividuals = ndx.groupAll().reduceSum(d => primaryDimFilter(d) ? d.total_beneficiaries : 0).value();
@@ -84,61 +140,394 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('total-households').textContent = d3.format(',')(totalHouseholds);
     }
 
-    async function loadData(year, isInitial = false) {
-        try {
-            let data;
+    function updateAll(filterSource = null) {
+        updateTotals();
 
-            if (dataCache[year]) {
-                data = dataCache[year];
-            } else {
-                const url = `${window.DASHBOARD_CONFIG.endpoint}?year=${year}&dashboard=${window.DASHBOARD_CONFIG.type}`;
-                const response = await fetch(url, {
-                    credentials: 'same-origin',
-                    headers: {
-                        'Accept': 'application/json',
-                        'X-Requested-With': 'XMLHttpRequest'
-                    }
-                });
+        const activeField = fieldMap[currentMetric];
+        const activeLabel = labelMap[currentMetric];
 
-                if (!response.ok) {
-                    if (response.status === 403) {
-                        console.error('Authentication required. Please log in.');
-                        return;
-                    }
-                    throw new Error(`HTTP error! status: ${response.status}`);
+        // 1. Timeline Chart (Area / Time Axis with linear gradient and smooth curves)
+        const timelineData = volumeByDayGroup.all()
+            .filter(d => d.key !== null)
+            .map(d => [d.key.getTime(), d.value[activeField]]);
+
+        const timelineOption = {
+            tooltip: {
+                trigger: 'axis',
+                formatter: function (params) {
+                    const date = new Date(params[0].value[0]);
+                    const formattedDate = d3.timeFormat("%B %d, %Y")(date);
+                    const formattedValue = d3.format(",")(params[0].value[1]);
+                    return `${formattedDate}<br/><b>${formattedValue}</b> ${activeLabel.toLowerCase()}`;
                 }
+            },
+            grid: {
+                top: 20,
+                bottom: 80,
+                left: 70,
+                right: 30
+            },
+            xAxis: {
+                type: 'time',
+                axisLabel: { color: '#64748b' }
+            },
+            yAxis: {
+                type: 'value',
+                axisLabel: {
+                    formatter: val => d3.format(".2s")(val).replace('G', 'B'),
+                    color: '#64748b'
+                },
+                splitLine: { lineStyle: { type: 'dashed', color: '#f1f5f9' } }
+            },
+            series: [{
+                name: activeLabel,
+                type: 'line',
+                smooth: true,
+                symbol: 'none',
+                lineStyle: {
+                    color: '#2ec7c9',
+                    width: 2.5
+                },
+                areaStyle: {
+                    color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                        { offset: 0, color: 'rgba(46, 199, 201, 0.4)' },
+                        { offset: 1, color: 'rgba(46, 199, 201, 0.02)' }
+                    ])
+                },
+                data: timelineData
+            }]
+        };
 
-                data = await response.json();
+        if (filterSource !== 'timeline') {
+            timelineOption.dataZoom = [
+                { type: 'inside', start: 0, end: 100 },
+                { show: true, type: 'slider', start: 0, end: 100, bottom: 10, textStyle: { color: '#64748b' } }
+            ];
+            timelineChart.setOption(timelineOption, { notMerge: true });
+        } else {
+            timelineChart.setOption(timelineOption);
+        }
 
-                const dateFormat = d3.timeParse('%Y-%m-%d');
-                data.forEach(d => {
-                    d.date = dateFormat(d.date);
-                    d.total_beneficiaries = +d.total_beneficiaries;
-                    d.total_children = +d.total_children;
-                    d.total_pwd = +d.total_pwd;
-                    d.total_households = +d.total_households || 0;
-                });
+        // 2. Sector Breakdown Chart (Grouped Horizontal Bars)
+        const sectorData = sectorGroup.all().filter(d => d.key !== '' && d.key !== null && d.value.beneficiaries > 0);
+        sectorData.sort((a, b) => b.value[activeField] - a.value[activeField]);
 
-                dataCache[year] = data;
+        const categories = sectorData.map(d => d.key);
+        const hasAnySectorSelection = selectedSectors.size > 0;
+
+        function getSectorSeries(metricKey, displayName, colorVal) {
+            return {
+                name: displayName,
+                type: 'bar',
+                barMaxWidth: 10,
+                data: sectorData.map(d => {
+                    const isSelected = selectedSectors.has(d.key);
+                    const opacity = isSelected ? 1 : (hasAnySectorSelection ? 0.35 : 1);
+                    return {
+                        value: d.value[metricKey],
+                        itemStyle: {
+                            color: colorVal,
+                            opacity: opacity
+                        }
+                    };
+                }),
+                itemStyle: { borderRadius: [0, 2, 2, 0] }
+            };
+        }
+
+        sectorIndChart.setOption({
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: { type: 'shadow' }
+            },
+            legend: {
+                data: [t('Individuals', 'Individus'), t('Households', 'Ménages'), t('Children', 'Enfants'), t('PWD', 'Personnes handicapées')],
+                bottom: 0,
+                textStyle: { color: '#64748b' }
+            },
+            grid: { top: 20, bottom: 40, left: 140, right: 30 },
+            xAxis: {
+                type: 'value',
+                axisLabel: {
+                    formatter: val => d3.format(".2s")(val).replace('G', 'B'),
+                    color: '#64748b'
+                },
+                splitLine: { lineStyle: { color: '#f1f5f9' } }
+            },
+            yAxis: {
+                type: 'category',
+                data: categories,
+                inverse: true,
+                axisLabel: { color: '#1f2937', fontWeight: 500 }
+            },
+            series: [
+                getSectorSeries('beneficiaries', 'Individuals', '#2ec7c9'),
+                getSectorSeries('households', 'Households', '#5ab1ef'),
+                getSectorSeries('children', 'Children', '#b6a2de'),
+                getSectorSeries('pwd', 'PWD', '#ffb980')
+            ]
+        }, { notMerge: true });
+
+        // 3. Sector Distribution Chart (Donut Chart showing sector shares of selected metric)
+        const sectorDonutData = sectorData.map(d => {
+            const stableColor = getStableColor(d.key);
+            const isSelected = selectedSectors.has(d.key);
+            return {
+                name: d.key,
+                value: d.value[activeField],
+                itemStyle: {
+                    color: isSelected ? stableColor : (hasAnySectorSelection ? '#cbd5e1' : stableColor)
+                }
+            };
+        }).filter(d => d.value > 0);
+
+        sectorChildChart.setOption({
+            tooltip: {
+                trigger: 'item',
+                formatter: '{b}: <b>{c}</b> ({d}%)'
+            },
+            legend: {
+                show: false
+            },
+            series: [{
+                type: 'pie',
+                radius: ['45%', '70%'],
+                avoidLabelOverlap: true,
+                itemStyle: { borderRadius: 6, borderColor: '#fff', borderWidth: 2 },
+                label: { show: true, formatter: '{b}\n({d}%)', fontSize: 11 },
+                emphasis: { label: { show: true, fontSize: 13, fontWeight: 'bold' } },
+                data: sectorDonutData
+            }]
+        }, { notMerge: true });
+
+        // 4. Country Breakdown Chart (Grouped Vertical Bars)
+        const countryData = countryGroup.all()
+            .filter(d => d.key !== null && d.value.beneficiaries > 0)
+            .sort((a, b) => b.value[activeField] - a.value[activeField])
+            .slice(0, 10);
+
+        const countryNames = countryData.map(d => d.key);
+        const hasAnyCountrySelection = selectedCountries.size > 0;
+
+        function getCountrySeries(metricKey, displayName, colorVal) {
+            return {
+                name: displayName,
+                type: 'bar',
+                barMaxWidth: 10,
+                data: countryData.map(d => {
+                    const isSelected = selectedCountries.has(d.key);
+                    const opacity = isSelected ? 1 : (hasAnyCountrySelection ? 0.35 : 1);
+                    return {
+                        value: d.value[metricKey],
+                        itemStyle: {
+                            color: colorVal,
+                            opacity: opacity
+                        }
+                    };
+                }),
+                itemStyle: { borderRadius: [2, 2, 0, 0] }
+            };
+        }
+
+        countryIndChart.setOption({
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: { type: 'shadow' }
+            },
+            legend: {
+                data: [t('Individuals', 'Individus'), t('Households', 'Ménages'), t('Children', 'Enfants'), t('PWD', 'Personnes handicapées')],
+                bottom: 0,
+                textStyle: { color: '#64748b' }
+            },
+            grid: { top: 30, bottom: 95, left: 75, right: 20 },
+            xAxis: {
+                type: 'category',
+                data: countryNames,
+                axisLabel: {
+                    rotate: 30,
+                    interval: 0,
+                    color: '#1f2937',
+                    fontWeight: 500
+                }
+            },
+            yAxis: {
+                type: 'value',
+                axisLabel: {
+                    formatter: val => d3.format(".2s")(val).replace('G', 'B'),
+                    color: '#64748b'
+                },
+                splitLine: { lineStyle: { color: '#f1f5f9' } }
+            },
+            series: [
+                getCountrySeries('beneficiaries', 'Individuals', '#2ec7c9'),
+                getCountrySeries('households', 'Households', '#5ab1ef'),
+                getCountrySeries('children', 'Children', '#b6a2de'),
+                getCountrySeries('pwd', 'PWD', '#ffb980')
+            ]
+        }, { notMerge: true });
+
+        // 5. Country Distribution Chart (Donut chart showing country shares of selected metric)
+        const countryDonutData = countryData.map(d => {
+            const stableColor = getStableColor(d.key);
+            const isSelected = selectedCountries.has(d.key);
+            return {
+                name: d.key,
+                value: d.value[activeField],
+                itemStyle: {
+                    color: isSelected ? stableColor : (hasAnyCountrySelection ? '#cbd5e1' : stableColor)
+                }
+            };
+        }).filter(d => d.value > 0);
+
+        countryPwdChart.setOption({
+            tooltip: {
+                trigger: 'item',
+                formatter: '{b}: <b>{c}</b> ({d}%)'
+            },
+            legend: {
+                show: false
+            },
+            series: [{
+                type: 'pie',
+                radius: ['45%', '70%'],
+                avoidLabelOverlap: true,
+                itemStyle: { borderRadius: 6, borderColor: '#fff', borderWidth: 2 },
+                label: { show: true, formatter: '{b}\n({d}%)', fontSize: 11 },
+                emphasis: { label: { show: true, fontSize: 13, fontWeight: 'bold' } },
+                data: countryDonutData
+            }]
+        }, { notMerge: true });
+    }
+
+    // --- Interactive Filters Bindings ---
+
+    // Timeline Zoom
+    timelineChart.on('datazoom', function (params) {
+        const option = timelineChart.getOption();
+        const startVal = option.dataZoom[0].startValue;
+        const endVal = option.dataZoom[0].endValue;
+
+        if (startVal !== undefined && endVal !== undefined) {
+            const startDate = new Date(startVal);
+            const endDate = new Date(endVal);
+            dateDimension.filterRange([startDate, endDate]);
+            updateAll('timeline');
+        }
+    });
+
+    // Sector Filter Selection Toggle
+    const handleSectorClick = function (params) {
+        const sectorName = params.name;
+        if (selectedSectors.has(sectorName)) {
+            selectedSectors.delete(sectorName);
+        } else {
+            selectedSectors.add(sectorName);
+        }
+
+        if (selectedSectors.size === 0) {
+            sectorDimension.filterAll();
+        } else {
+            sectorDimension.filterFunction(d => selectedSectors.has(d));
+        }
+        updateAll();
+    };
+
+    sectorIndChart.on('click', handleSectorClick);
+    sectorChildChart.on('click', handleSectorClick);
+
+    // Country Filter Selection Toggle
+    const handleCountryClick = function (params) {
+        const countryName = params.name;
+        if (selectedCountries.has(countryName)) {
+            selectedCountries.delete(countryName);
+        } else {
+            selectedCountries.add(countryName);
+        }
+
+        if (selectedCountries.size === 0) {
+            countryDimension.filterAll();
+        } else {
+            countryDimension.filterFunction(d => selectedCountries.has(d));
+        }
+        updateAll();
+    };
+
+    countryIndChart.on('click', handleCountryClick);
+    countryPwdChart.on('click', handleCountryClick);
+
+    // Metric Toggle Tab Selection
+    const metricTabs = document.querySelectorAll('.metric-tab');
+    metricTabs.forEach(btn => {
+        btn.addEventListener('click', function() {
+            metricTabs.forEach(b => {
+                b.classList.remove('bg-white', 'shadow', 'text-blue-800', 'active-metric');
+                b.classList.add('text-gray-600');
+            });
+            this.classList.add('bg-white', 'shadow', 'text-blue-800', 'active-metric');
+            this.classList.remove('text-gray-600');
+            currentMetric = this.dataset.metric;
+
+            const activeLabel = labelMap[currentMetric];
+
+            const timelineTitle = document.getElementById('timeline-title');
+            if (timelineTitle) timelineTitle.textContent = t(`${activeLabel} Timeline`, `Chronologie : ${activeLabel}`);
+
+            const sectorShareTitle = document.getElementById('sector-share-title');
+            if (sectorShareTitle) sectorShareTitle.textContent = t(`Sector Share of ${activeLabel}`, `Part sectorielle : ${activeLabel}`);
+
+            const countryShareTitle = document.getElementById('country-share-title');
+            if (countryShareTitle) countryShareTitle.textContent = t(`Country Share of ${activeLabel}`, `Part par pays : ${activeLabel}`);
+
+            updateAll();
+        });
+    });
+
+    // --- Load Data ---
+    async function loadData(year) {
+        try {
+            const url = `${window.DASHBOARD_CONFIG.endpoint}?year=${year}&dashboard=${window.DASHBOARD_CONFIG.type}&time_grain=daily`;
+            const response = await fetch(url, {
+                credentials: 'same-origin',
+                headers: {
+                    'Accept': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            });
+
+            if (!response.ok) {
+                if (response.status === 403) {
+                    console.error('Authentication required. Please log in.');
+                    return;
+                }
+                throw new Error(`HTTP error! status: ${response.status}`);
             }
+
+            const data = await response.json();
+
+            const dateFormat = d3.timeParse('%Y-%m-%d');
+            data.forEach(d => {
+                d.date = dateFormat(d.date);
+                d.total_beneficiaries = +d.total_beneficiaries;
+                d.total_children = +d.total_children;
+                d.total_pwd = +d.total_pwd;
+                d.total_households = +d.total_households || 0;
+            });
 
             const now = new Date();
             now.setHours(23, 59, 59, 999);
             const currentData = data.filter(d => d.date <= now);
 
+            // Clean existing state and filters (clear filters FIRST, then remove old data)
+            selectedSectors.clear();
+            selectedCountries.clear();
+            sectorDimension.filterAll();
+            countryDimension.filterAll();
+            dateDimension.filterAll();
+
             ndx.remove();
             ndx.add(currentData);
 
-            const yearDomain = [new Date(year, 0, 1), new Date(year, 11, 31)];
-            focusChart.x(d3.scaleTime().domain(yearDomain));
-            rangeChart.x(d3.scaleTime().domain(yearDomain));
-
-            if (isInitial) {
-                dc.renderAll();
-            } else {
-                dc.redrawAll();
-            }
-            updateTotals();
+            updateAll();
         } catch (error) {
             console.error('Error loading demographic data:', error);
         }
@@ -155,12 +544,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const firstYear = tabsContainer.querySelector('.active-tab')?.dataset.year;
     if (firstYear) {
-        loadData(firstYear, true);  // Pass true for initial load
+        loadData(firstYear);
     }
-
-    window.addEventListener('resize', function () {
-        focusChart.rescale();
-        rangeChart.rescale();
-        dc.renderAll();
-    });
 });

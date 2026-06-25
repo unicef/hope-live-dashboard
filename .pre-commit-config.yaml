@@ -22,12 +22,12 @@ repos:
         args: [ "-p", "lint" ]
 
   - repo: https://github.com/tox-dev/pyproject-fmt
-    rev: "v2.18.1"
+    rev: "v2.23.0"
     hooks:
       - id: pyproject-fmt
 
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.15.5
+    rev: v0.15.16
     hooks:
       - id: ruff
       - id: ruff-format

@@ -3,6 +3,7 @@ build-backend = "hatchling.build"
 requires = [
   "hatch-vcs>=0.4",
   "hatchling>=1.25",
+  "polib",
 ]
 
 [project]
@@ -64,9 +65,12 @@ dev = [
   "django-webtest>=1.9.13",
   "factory-boy>=3.3.3",
   "freezegun>=1.5.5",
+  "hatchling>=1.25",
+  "polib",
   "pre-commit>=4.3",
   "pyquery>=2.0.1",
   "pytest>=8.4.2",
+  "pytest-asyncio>=0.24",
   "pytest-cov>=7",
   "pytest-coverage>=0",
   "pytest-django>=4.11.1",
@@ -78,6 +82,7 @@ dev = [
   "ruff>=0.13.1",
   "seleniumbase>=4.41.6",
   "tox>=4.30.2",
+  "watchdog[watchmedo]",
 ]
 docs = [
   "markupsafe>=2.1.5",
@@ -116,9 +121,10 @@ type-check = [
 ]
 
 [tool.hatch]
+version.source = "vcs"
+build.hooks.custom = {}
 build.hooks.vcs.version-file = "src/hope_live/version.py"
+build.targets.wheel.packages = [ "src/hope_live" ]
 build.targets.sdist.ignore-vcs = true
 build.targets.sdist.only-include = [ "src/hope_live" ]
-build.targets.wheel.packages = [ "src/hope_live" ]
-version.source = "vcs"
 raw-options = { root = "../.." }

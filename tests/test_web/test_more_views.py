@@ -1,8 +1,14 @@
 import pytest
+import responses
 from django.test import RequestFactory
-from django.urls import reverse
 
-from hope_live.web.views import AboutView, ContactView, DetailsView, IndexView, TransfersView
+from hope_live.analysis.models import (
+    CompletionAggregate,
+    DemographicAggregate,
+    FinancialAggregate,
+    TimeGrain,
+)
+from hope_live.web.views import AboutView, ContactView, DetailsView, IndexView, TransfersView, format_large_number
 
 
 @pytest.mark.django_db
@@ -25,7 +31,7 @@ def test_simple_template_views(user_factory):
 
 
 @pytest.mark.django_db
-def test_index_redirect_view(user_factory):
+def test_index_view(user_factory):
     user = user_factory()
     request = RequestFactory().get("/")
     request.user = user
@@ -33,5 +39,146 @@ def test_index_redirect_view(user_factory):
     view = IndexView.as_view()
     response = view(request)
 
+    assert response.status_code == 200
+
+
+def test_format_large_number():
+    assert format_large_number(1_200_000_000) == "1.2B"
+    assert format_large_number(1_000_000_000) == "1B"
+    assert format_large_number(15_400_000) == "15.4M"
+    assert format_large_number(15_000_000) == "15M"
+    assert format_large_number(450_000) == "450K"
+    assert format_large_number(450) == "450"
+    assert format_large_number(0) == "0"
+
+
+@pytest.mark.django_db
+def test_index_view_dynamic_context(user_factory):
+    # Setup test aggregates
+    FinancialAggregate.objects.create(
+        date="2026-05-15",
+        time_grain=TimeGrain.DAILY,
+        country_slug="kenya",
+        dimension_type="sector",
+        dimension_value="health",
+        total_usd=1_500_000,
+        payment_count=5,
+    )
+    FinancialAggregate.objects.create(
+        date="2026-06-01",
+        time_grain=TimeGrain.DAILY,
+        country_slug="somalia",
+        dimension_type="program",
+        dimension_value="DCT-Somalia",
+        total_usd=3_000_000,
+        payment_count=10,
+    )
+
+    DemographicAggregate.objects.create(
+        date="2026-05-20",
+        time_grain=TimeGrain.DAILY,
+        country_slug="kenya",
+        dimension_type="sector",
+        dimension_value="health",
+        total_beneficiaries=50_000,
+        total_children=35_000,
+        total_pwd=5_000,
+        total_households=10_000,
+    )
+
+    CompletionAggregate.objects.create(
+        date="2026-05-20",
+        time_grain=TimeGrain.DAILY,
+        country_slug="kenya",
+        dimension_type="status",
+        dimension_value="RECONCILED",
+        payment_count=80,
+    )
+    CompletionAggregate.objects.create(
+        date="2026-05-20",
+        time_grain=TimeGrain.DAILY,
+        country_slug="kenya",
+        dimension_type="status",
+        dimension_value="OPEN",
+        payment_count=20,
+    )
+
+    user = user_factory()
+    request = RequestFactory().get("/")
+    request.user = user
+
+    view = IndexView()
+    view.setup(request)
+    context = view.get_context_data()
+
+    # Assert correct calculations and formatting
+    assert context["total_cash_disbursed"] == "1.5M"  # from sector filter
+    assert context["total_individuals_reached"] == "50K"  # from sector filter
+    assert context["total_children"] == "35K"
+    assert context["total_households"] == "10K"
+    assert context["total_countries"] == 2  # kenya, somalia
+    assert context["total_countries_glance"] == 2
+    assert context["total_programs_glance"] == 1  # DCT-Somalia
+    assert context["total_sources_glance"] == "HOPE Database"
+    assert context["latest_data_str"] == "June 2026"
+    assert context["verification_success_rate"] == 80.0
+
+
+@pytest.mark.django_db
+def test_language_switch_views(client):
+    response = client.get("/")
+    assert response.status_code == 200
+
+    response_es = client.get("/es/")
+    assert response_es.status_code == 200
+
+    response_fr = client.get("/fr/")
+    assert response_fr.status_code == 200
+    assert "HOPE en bref" in response_fr.content.decode("utf-8")
+
+
+@pytest.mark.django_db
+def test_set_language_post(client):
+    from django.urls import reverse
+
+    url = reverse("set_language")
+    response = client.post(url, data={"language": "es", "next": "/"})
     assert response.status_code == 302
-    assert response.url == reverse("web:dashboard")
+    assert response.url == "/es/"
+
+
+@pytest.mark.django_db
+@responses.activate
+def test_fetch_hope_news():
+    from django.core.cache import cache
+
+    cache.delete("hope_news_updates_list")  # Ensure cache is empty
+
+    from constance import config
+
+    from hope_live.web.views import fetch_hope_news
+
+    api_url = config.HOPE_COUNTRY_REPORT_API_URL
+    query_id = getattr(config, "HOPE_NEWS_REPORT_QUERY_ID", 159)
+
+    # Mock datasets endpoint
+    responses.add(responses.GET, f"{api_url}queries/{query_id}/dataset", json=[{"id": 42}], status=200)
+    # Mock dataset data endpoint
+    responses.add(
+        responses.GET,
+        f"{api_url}queries/{query_id}/dataset/42/data/?page_size=50",
+        json=[
+            {
+                "description": "**New features**\r\n\r\n1. Added bio details.",
+                "version": "HOPE v2025.4.15.0",
+                "active": True,
+                "date": "2026-05-19",
+            }
+        ],
+        status=200,
+    )
+
+    news = fetch_hope_news()
+    assert len(news) == 1
+    assert news[0]["version"] == "HOPE v2025.4.15.0"
+    assert news[0]["snippet"] == "New features 1. Added bio details."

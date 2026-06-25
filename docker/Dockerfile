@@ -72,7 +72,7 @@ ENV PATH=/venv/bin:/usr/local/bin/:/usr/bin:/bin \
     SETUPTOOLS_SCM_PRETEND_VERSION=${VERSION:-0.0.0.dev0}
 
 WORKDIR /app
-COPY uv.lock README.md MANIFEST.in pyproject.toml /app/
+COPY uv.lock README.md MANIFEST.in pyproject.toml hatch_build.py /app/
 COPY src /app/src/
 
 RUN --mount=type=cache,target=/root/.uv-cache \
@@ -94,7 +94,7 @@ ENV PATH=/venv/bin:/usr/local/bin/:/usr/bin:/bin \
     SETUPTOOLS_SCM_PRETEND_VERSION=${VERSION:-0.0.0.dev0}
 
 WORKDIR /app
-COPY uv.lock README.md MANIFEST.in pyproject.toml /app/
+COPY uv.lock README.md MANIFEST.in pyproject.toml hatch_build.py /app/
 COPY src /app/src/
 
 RUN --mount=type=cache,target=/root/.uv-cache \
@@ -142,6 +142,7 @@ COPY docker/conf /conf/
 COPY docker/bin/* /usr/local/bin/
 
 COPY . /app/
+COPY --from=production /app/src/hope_live/locale/ /app/src/hope_live/locale/
 
 COPY --chown=hope:unicef --from=production /venv /venv
 COPY --from=builder /usr/local/bin/uwsgi /usr/local/bin/uv /usr/local/bin/

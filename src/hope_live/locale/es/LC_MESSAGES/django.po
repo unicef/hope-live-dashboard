@@ -1,0 +1,700 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-06-21 14:44+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? "
+"1 : 2;\n"
+
+#: src/hope_live/config/settings.py:157
+msgid "Spanish"
+msgstr "Español"
+
+#: src/hope_live/config/settings.py:158
+msgid "French"
+msgstr "Francés"
+
+#: src/hope_live/config/settings.py:159
+msgid "English"
+msgstr "Inglés"
+
+#: src/hope_live/config/settings.py:160
+msgid "Arabic"
+msgstr "Árabe"
+
+#: src/hope_live/config/settings.py:161
+msgid "Russian"
+msgstr "Ruso"
+
+#: src/hope_live/config/settings.py:162
+msgid "Chinese"
+msgstr "Chino"
+
+#: src/hope_live/templates/footer.html:7
+#, python-format
+msgid "Copyright © %(year)s - All right reserved by UNICEF - %(version)s"
+msgstr ""
+"Copyright © %(year)s - Todos los derechos reservados por UNICEF - %(version)s"
+
+#: src/hope_live/templates/header.html:8
+msgid "Search for a country, indicator, dataset..."
+msgstr "Buscar un país, indicador, conjunto de datos..."
+
+#: src/hope_live/templates/header.html:29
+msgid "Select Language"
+msgstr "Seleccionar idioma"
+
+#: src/hope_live/templates/header.html:58 src/hope_live/templates/menu.html:136
+msgid "Sign Out"
+msgstr "Cerrar sesión"
+
+#: src/hope_live/templates/header.html:69
+msgid "Open Issue"
+msgstr "Problema abierto"
+
+#: src/hope_live/templates/layout.html:10
+msgid "HOPE Dashboard"
+msgstr "Tablero de HOPE"
+
+#: src/hope_live/templates/menu.html:19
+#: src/hope_live/templates/unfold/helpers/site_icon.html:7
+#: src/hope_live/templates/unfold/helpers/site_icon.html:9
+#: src/hope_live/templates/unfold/helpers/site_icon.html:11
+#: src/hope_live/templates/unfold/helpers/site_logo.html:5
+#: src/hope_live/templates/unfold/helpers/site_logo.html:7
+#: src/hope_live/templates/unfold/helpers/site_logo.html:9
+msgid "Home"
+msgstr "Inicio"
+
+#: src/hope_live/templates/menu.html:26
+#: src/hope_live/templates/pages/dashboard.html:8
+#: src/hope_live/templates/pages/landing.html:293
+msgid "Financial Dashboard"
+msgstr "Tablero Financiero"
+
+#: src/hope_live/templates/menu.html:32
+#: src/hope_live/templates/pages/landing.html:297
+msgid "Demographics"
+msgstr "Demografía"
+
+#: src/hope_live/templates/menu.html:38
+#: src/hope_live/templates/pages/landing.html:301
+msgid "Accountability"
+msgstr "Responsabilidad"
+
+#: src/hope_live/templates/menu.html:44
+#: src/hope_live/templates/pages/landing.html:305
+msgid "Programme Quality"
+msgstr "Calidad del programa"
+
+#: src/hope_live/templates/menu.html:51
+msgid "Dashboards"
+msgstr "Paneles de control"
+
+#: src/hope_live/templates/menu.html:58
+#: src/hope_live/templates/pages/dashboard.html:99
+msgid "Countries"
+msgstr "Países"
+
+#: src/hope_live/templates/menu.html:64
+msgid "Data & API"
+msgstr "Datos y API"
+
+#: src/hope_live/templates/menu.html:70
+msgid "Documentation"
+msgstr "Documentación"
+
+#: src/hope_live/templates/menu.html:76
+#: src/hope_live/templates/pages/landing.html:43
+#: src/hope_live/templates/pages/landing.html:375
+msgid "About HOPE"
+msgstr "Acerca de HOPE"
+
+#: src/hope_live/templates/menu.html:84
+msgid "HOPE in Action"
+msgstr "ESPERANZA en acción"
+
+#: src/hope_live/templates/menu.html:86
+msgid ""
+"HOPE helps countries strengthen evidence for humanitarian action for "
+"children."
+msgstr ""
+"HOPE ayuda a los países a fortalecer la evidencia para la acción humanitaria "
+"en favor de los niños."
+
+#: src/hope_live/templates/menu.html:89
+#: src/hope_live/templates/pages/about.html:17
+msgid "Learn more"
+msgstr "Más información"
+
+#: src/hope_live/templates/menu.html:124
+msgid "Admin"
+msgstr "Administración"
+
+#: src/hope_live/templates/pages/about.html:15
+msgid ""
+"HOPE is UNICEF’s solution to collect and process personal data from "
+"beneficiaries and frontline workers to deliver humanitarian cash transfers "
+"safely"
+msgstr ""
+
+#: src/hope_live/templates/pages/completion.html:8
+msgid "Completion Rate Dashboard"
+msgstr "Tablero de Tasa de Finalización"
+
+#: src/hope_live/templates/pages/completion.html:9
+msgid "Payment Reconciliation and Completion Status Tracking"
+msgstr "Conciliación de pagos y seguimiento del estado de finalización"
+
+#: src/hope_live/templates/pages/completion.html:12
+#: src/hope_live/templates/pages/dashboard.html:13
+#: src/hope_live/templates/pages/demographic.html:12
+#: src/hope_live/templates/pages/grievance.html:12
+msgid "Live Data"
+msgstr "Datos en vivo"
+
+#: src/hope_live/templates/pages/completion.html:32
+msgid "View Reconciliation Metrics by:"
+msgstr "Ver métricas de conciliación por:"
+
+#: src/hope_live/templates/pages/completion.html:35
+#: src/hope_live/templates/pages/dashboard.html:42
+msgid "Payments Count"
+msgstr "Recuento de pagos"
+
+#: src/hope_live/templates/pages/completion.html:38
+#: src/hope_live/templates/pages/dashboard.html:36
+msgid "Amount (USD)"
+msgstr "Monto (USD)"
+
+#: src/hope_live/templates/pages/completion.html:45
+msgid "Reconciliation Timeline"
+msgstr "Cronología de la reconciliación"
+
+#: src/hope_live/templates/pages/completion.html:48
+#: src/hope_live/templates/pages/dashboard.html:52
+#: src/hope_live/templates/pages/demographic.html:54
+#: src/hope_live/templates/pages/grievance.html:35
+msgid ""
+"* Use the slider handles at the bottom of the timeline or click and drag to "
+"filter dates."
+msgstr ""
+"* Utilice los controles deslizantes en la parte inferior de la línea de "
+"tiempo o haga clic y arrastre para filtrar fechas."
+
+#: src/hope_live/templates/pages/completion.html:54
+msgid "Reconciled Payments"
+msgstr "Pagos conciliados"
+
+#: src/hope_live/templates/pages/completion.html:58
+msgid "Still Opened"
+msgstr "Aún abierto"
+
+#: src/hope_live/templates/pages/completion.html:63
+msgid "Reconciliation Rate"
+msgstr "Tasa de conciliación"
+
+#: src/hope_live/templates/pages/completion.html:73
+msgid "Reconciliation Status by Country"
+msgstr "Estado de conciliación por país"
+
+#: src/hope_live/templates/pages/dashboard.html:9
+msgid "Overview of Financial info"
+msgstr "Descripción general de la información financiera"
+
+#: src/hope_live/templates/pages/dashboard.html:33
+msgid "View Dashboard Metrics by:"
+msgstr "Ver métricas del tablero por:"
+
+#: src/hope_live/templates/pages/dashboard.html:39
+msgid "Quantity (QTY)"
+msgstr "Cantidad (QTY)"
+
+#: src/hope_live/templates/pages/dashboard.html:49
+msgid "Spending Timeline"
+msgstr "Cronograma de gastos"
+
+#: src/hope_live/templates/pages/dashboard.html:62
+msgid "Total Amount Paid"
+msgstr "Monto total pagado"
+
+#: src/hope_live/templates/pages/dashboard.html:66
+msgid "Number of Payments"
+msgstr "Número de pagos"
+
+#: src/hope_live/templates/pages/dashboard.html:70
+msgid "Total Quantity Distributed"
+msgstr "Cantidad total distribuida"
+
+#: src/hope_live/templates/pages/dashboard.html:74
+msgid "Outstanding Payment"
+msgstr "Pago pendiente"
+
+#: src/hope_live/templates/pages/dashboard.html:81
+msgid "Delivery Types"
+msgstr "Tipos de entrega"
+
+#: src/hope_live/templates/pages/dashboard.html:85
+msgid "Regions"
+msgstr "Regiones"
+
+#: src/hope_live/templates/pages/dashboard.html:92
+msgid "Distribution by Sector"
+msgstr "Distribución por Sector"
+
+#: src/hope_live/templates/pages/dashboard.html:106
+msgid "Distribution by Program"
+msgstr "Distribución por programa"
+
+#: src/hope_live/templates/pages/dashboard.html:110
+msgid "Financial Service Providers (FSP)"
+msgstr "Proveedores de servicios financieros (FSP)"
+
+#: src/hope_live/templates/pages/demographic.html:8
+#, fuzzy
+#| msgid "Demographics"
+msgid "Demographic Dashboard"
+msgstr "Demografía"
+
+#: src/hope_live/templates/pages/demographic.html:9
+msgid "Breakdown of Individuals, Children, and PWD Reached"
+msgstr ""
+
+#: src/hope_live/templates/pages/demographic.html:32
+#, fuzzy
+#| msgid "View Dashboard Metrics by:"
+msgid "View Demographic Metrics by:"
+msgstr "Ver métricas del tablero por:"
+
+#: src/hope_live/templates/pages/demographic.html:35
+msgid "Individuals"
+msgstr ""
+
+#: src/hope_live/templates/pages/demographic.html:38
+#, fuzzy
+#| msgid "Households Reached"
+msgid "Households"
+msgstr "Hogares alcanzados"
+
+#: src/hope_live/templates/pages/demographic.html:41
+#: src/hope_live/templates/pages/demographic.html:69
+#, fuzzy
+#| msgid "Children Reached"
+msgid "Children"
+msgstr "Niños alcanzados"
+
+#: src/hope_live/templates/pages/demographic.html:44
+#: src/hope_live/templates/pages/demographic.html:74
+msgid "PWD Reached"
+msgstr ""
+
+#: src/hope_live/templates/pages/demographic.html:51
+#, fuzzy
+#| msgid "Tickets Timeline"
+msgid "Reach Timeline"
+msgstr "Cronología de entradas"
+
+#: src/hope_live/templates/pages/demographic.html:61
+msgid "Individuals Reached"
+msgstr ""
+
+#: src/hope_live/templates/pages/demographic.html:65
+#: src/hope_live/templates/pages/landing.html:118
+msgid "Households Reached"
+msgstr "Hogares alcanzados"
+
+#: src/hope_live/templates/pages/demographic.html:71
+#: src/hope_live/templates/pages/demographic.html:88
+msgid ""
+"Note: For programmes (like DCT) not collecting children data, numbers are "
+"estimated by multiplying Household numbers by fertility rates."
+msgstr ""
+
+#: src/hope_live/templates/pages/demographic.html:76
+msgid ""
+"Note: This reflects confirmed persons with disabilities. Some programmes "
+"(e.g., Pepukai) do not collect this data, so this figure is likely under-"
+"represented."
+msgstr ""
+
+#: src/hope_live/templates/pages/demographic.html:83
+msgid "Demographic Breakdown by Sector"
+msgstr ""
+
+#: src/hope_live/templates/pages/demographic.html:87
+msgid "Sector Share of Reached Population"
+msgstr ""
+
+#: src/hope_live/templates/pages/demographic.html:96
+msgid "Demographic Breakdown by Country"
+msgstr ""
+
+#: src/hope_live/templates/pages/demographic.html:100
+msgid "Country Share of Reached Population"
+msgstr ""
+
+#: src/hope_live/templates/pages/grievance.html:8
+msgid "Grievance Dashboard"
+msgstr "Tablero de Quejas"
+
+#: src/hope_live/templates/pages/grievance.html:9
+msgid "Overview of Feedback and Grievance Tickets"
+msgstr "Descripción general de los tickets de comentarios y quejas"
+
+#: src/hope_live/templates/pages/grievance.html:32
+msgid "Tickets Timeline"
+msgstr "Cronología de entradas"
+
+#: src/hope_live/templates/pages/grievance.html:41
+msgid "Total Tickets"
+msgstr "Entradas totales"
+
+#: src/hope_live/templates/pages/grievance.html:49
+msgid "Status"
+msgstr "Estado"
+
+#: src/hope_live/templates/pages/grievance.html:53
+msgid "Priority"
+msgstr "Prioridad"
+
+#: src/hope_live/templates/pages/grievance.html:60
+msgid "Category"
+msgstr "Categoría"
+
+#: src/hope_live/templates/pages/grievance.html:64
+msgid "Issue Type"
+msgstr "Tipo de problema"
+
+#: src/hope_live/templates/pages/grievance.html:72
+msgid "Ticket Status by Country"
+msgstr "Estado de los tickets por país"
+
+#: src/hope_live/templates/pages/landing.html:27
+msgid "Humanitarian cash"
+msgstr "Efectivo humanitario"
+
+#: src/hope_live/templates/pages/landing.html:28
+msgid "Operations and Programme"
+msgstr "Operaciones y Programa"
+
+#: src/hope_live/templates/pages/landing.html:29
+msgid "Ecosystem"
+msgstr "Ecosistema"
+
+#: src/hope_live/templates/pages/landing.html:34
+msgid "Data and evidence to deliver humanitarian cash transfers safely."
+msgstr ""
+"Datos y pruebas para realizar transferencias humanitarias en efectivo de "
+"forma segura."
+
+#: src/hope_live/templates/pages/landing.html:39
+msgid "Explore the data"
+msgstr "Explora los datos"
+
+#: src/hope_live/templates/pages/landing.html:52
+msgid "HOPE at a glance"
+msgstr "HOPE de un vistazo"
+
+#: src/hope_live/templates/pages/landing.html:61
+msgid "Countries & territories"
+msgstr "Países y territorios"
+
+#: src/hope_live/templates/pages/landing.html:71
+msgid "Programs"
+msgstr "Programas"
+
+#: src/hope_live/templates/pages/landing.html:81
+msgid "Data source"
+msgstr "fuente de datos"
+
+#: src/hope_live/templates/pages/landing.html:90
+msgid "Updated regularly"
+msgstr "Actualizado periódicamente"
+
+#: src/hope_live/templates/pages/landing.html:91
+msgid "Latest data:"
+msgstr "Últimos datos:"
+
+#: src/hope_live/templates/pages/landing.html:106
+msgid "Children Reached"
+msgstr "Niños alcanzados"
+
+#: src/hope_live/templates/pages/landing.html:108
+msgid "Across"
+msgstr "Al otro lado de"
+
+#: src/hope_live/templates/pages/landing.html:108
+msgid "countries"
+msgstr "países"
+
+#: src/hope_live/templates/pages/landing.html:120
+msgid "Humanitarian assistance"
+msgstr "Asistencia humanitaria"
+
+#: src/hope_live/templates/pages/landing.html:130
+msgid "Active Countries"
+msgstr "Países activos"
+
+#: src/hope_live/templates/pages/landing.html:132
+msgid "Global cash operations"
+msgstr "Operaciones globales de efectivo"
+
+#: src/hope_live/templates/pages/landing.html:142
+msgid "Assistance Delivered"
+msgstr "Asistencia entregada"
+
+#: src/hope_live/templates/pages/landing.html:144
+msgid "Direct cash transfers"
+msgstr "Transferencias directas de efectivo"
+
+#: src/hope_live/templates/pages/landing.html:154
+msgid "Verified Transactions"
+msgstr "Transacciones verificadas"
+
+#: src/hope_live/templates/pages/landing.html:156
+msgid "Verification success rate"
+msgstr "Tasa de éxito de la verificación"
+
+#: src/hope_live/templates/pages/landing.html:170
+msgid "Where children need help the most"
+msgstr "Donde los niños necesitan más ayuda"
+
+#: src/hope_live/templates/pages/landing.html:172
+msgid "Explore map"
+msgstr "Explorar mapa"
+
+#: src/hope_live/templates/pages/landing.html:176
+msgid "Children in Need of Humanitarian Assistance (2026)"
+msgstr "Niños que necesitan asistencia humanitaria (2026)"
+
+#: src/hope_live/templates/pages/landing.html:198
+msgid "Latest updates & alerts"
+msgstr "Últimas actualizaciones y alertas"
+
+#: src/hope_live/templates/pages/landing.html:200
+msgid "View all"
+msgstr "Ver todo"
+
+#: src/hope_live/templates/pages/landing.html:220
+#: src/hope_live/templates/pages/landing.html:239
+#: src/hope_live/templates/pages/landing.html:257
+#: src/hope_live/templates/pages/landing.html:275
+msgid "Read details"
+msgstr "Leer detalles"
+
+#: src/hope_live/templates/pages/landing.html:235
+msgid "May 19, 2026"
+msgstr "19 de mayo de 2026"
+
+#: src/hope_live/templates/pages/landing.html:237
+msgid ""
+"New features and enhancements 1. Added the Facility Workers beneficiary "
+"group to the programme setup page, enabling visualization..."
+msgstr ""
+"Nuevas funciones y mejoras 1. Se agregó el grupo de beneficiarios de "
+"trabajadores del centro a la página de configuración del programa, lo que "
+"permite la visualización..."
+
+#: src/hope_live/templates/pages/landing.html:253
+msgid "April 8, 2026"
+msgstr "8 de abril de 2026"
+
+#: src/hope_live/templates/pages/landing.html:255
+msgid ""
+"New features and enhancements 1. Added a new filter to select Household or "
+"Individual IDs for alternate collectors receiving p..."
+msgstr ""
+"Nuevas funciones y mejoras 1. Se agregó un nuevo filtro para seleccionar ID "
+"de hogares o individuales para recolectores alternativos que reciben..."
+
+#: src/hope_live/templates/pages/landing.html:271
+msgid "March 16, 2026"
+msgstr "16 de marzo de 2026"
+
+#: src/hope_live/templates/pages/landing.html:273
+msgid ""
+"New features and enhancements 1. Added a Currency Conversion section to the "
+"payment plan module, allowing users to override the UN..."
+msgstr ""
+"Nuevas funciones y mejoras 1. Se agregó una sección de conversión de moneda "
+"al módulo del plan de pago, lo que permite a los usuarios anular la ONU..."
+
+#: src/hope_live/templates/pages/landing.html:290
+msgid "Explore Dashboards"
+msgstr "Explorar paneles"
+
+#: src/hope_live/templates/pages/landing.html:294
+msgid "Transfer values & logistics"
+msgstr "Transferencia de valores y logística"
+
+#: src/hope_live/templates/pages/landing.html:298
+msgid "Population & households"
+msgstr "Población y hogares"
+
+#: src/hope_live/templates/pages/landing.html:302
+msgid "Feedback & grievances"
+msgstr "Comentarios y quejas"
+
+#: src/hope_live/templates/pages/landing.html:306
+msgid "Completion rates & metrics"
+msgstr "Tasas de finalización y métricas"
+
+#: src/hope_live/templates/pages/landing.html:314
+msgid "Trends over time"
+msgstr "Tendencias a lo largo del tiempo"
+
+#: src/hope_live/templates/pages/landing.html:316
+msgid "5 years"
+msgstr "5 años"
+
+#: src/hope_live/templates/pages/landing.html:317
+msgid "1 year"
+msgstr "1 año"
+
+#: src/hope_live/templates/pages/landing.html:320
+msgid "Selected indicators (global)"
+msgstr "Indicadores seleccionados (globales)"
+
+#: src/hope_live/templates/pages/landing.html:334
+msgid "Data responsibly"
+msgstr "Datos responsables"
+
+#: src/hope_live/templates/pages/landing.html:335
+msgid "We are committed to data protection, privacy and ethical use."
+msgstr ""
+"Estamos comprometidos con la protección de datos, la privacidad y el uso "
+"ético."
+
+#: src/hope_live/templates/pages/landing.html:343
+msgid "Methodology"
+msgstr "Metodología"
+
+#: src/hope_live/templates/pages/landing.html:344
+msgid "Learn how HOPE data is produced and standards applied."
+msgstr ""
+"Descubra cómo se producen los datos de HOPE y cómo se aplican los estándares."
+
+#: src/hope_live/templates/pages/landing.html:352
+msgid "Give feedback"
+msgstr "dar retroalimentación"
+
+#: src/hope_live/templates/pages/landing.html:353
+msgid "Help us improve HOPE by sharing your feedback."
+msgstr "Ayúdanos a mejorar HOPE compartiendo tus comentarios."
+
+#: src/hope_live/templates/pages/landing.html:361
+msgid "Stay connected"
+msgstr "Mantente conectado"
+
+#: src/hope_live/templates/pages/landing.html:362
+msgid "Subscribe to updates and new data releases."
+msgstr "Suscríbase a actualizaciones y nuevas publicaciones de datos."
+
+#: src/hope_live/templates/pages/landing.html:376
+msgid "Contact Us"
+msgstr "Contáctenos"
+
+#: src/hope_live/templates/pages/landing.html:937
+msgid "Failed to load map visualization. Please refresh."
+msgstr "No se pudo cargar la visualización del mapa. Por favor actualice."
+
+#: src/hope_live/templates/pages/login.html:16
+#, fuzzy
+#| msgid "HOPE Dashboard"
+msgid "HOPE Live Dashboard"
+msgstr "Tablero de HOPE"
+
+#: src/hope_live/templates/pages/login.html:24
+msgid "SSO Login"
+msgstr ""
+
+#: src/hope_live/templates/pages/login.html:30
+msgid "Debug Login"
+msgstr ""
+
+#: src/hope_live/templates/pages/login.html:33
+msgid "Username"
+msgstr ""
+
+#: src/hope_live/templates/pages/login.html:34
+msgid "Password"
+msgstr ""
+
+#: src/hope_live/templates/pages/login.html:35
+#, fuzzy
+#| msgid "Sign Out"
+msgid "Sign In"
+msgstr "Cerrar sesión"
+
+#: src/hope_live/templates/pages/login.html:45
+#, python-format
+msgid "Hope Country Report dev - %(year)s - %(version)s"
+msgstr ""
+
+#: src/hope_live/templates/unfold/helpers/header_back_button.html:7
+#: src/hope_live/templates/unfold/helpers/header_back_button.html:15
+msgid " Go back"
+msgstr "Volver"
+
+#: src/hope_live/templates/unfold/helpers/site_branding.html:3
+#: src/hope_live/templates/unfold/helpers/site_branding.html:6
+msgid "Django administration"
+msgstr "administración de django"
+
+#~ msgid "Story"
+#~ msgstr "Historia"
+
+#~ msgid "Recent"
+#~ msgstr "Reciente"
+
+#~ msgid ""
+#~ "Lifeline of hope for families after Typhoon Yagi: UNICEF's first "
+#~ "humanitarian cash transfers in Viet Nam."
+#~ msgstr ""
+#~ "Un salvavidas de esperanza para las familias después del tifón Yagi: las "
+#~ "primeras transferencias humanitarias de efectivo de UNICEF en Vietnam."
+
+#~ msgid "Read story"
+#~ msgstr "leer historia"
+
+#~ msgid "Report"
+#~ msgstr "Informe"
+
+#~ msgid "Featured"
+#~ msgstr "Presentado"
+
+#~ msgid ""
+#~ "Advancing Sustainable Funding for UNICEF Digital Public Good (HOPE) cash "
+#~ "assistance platform."
+#~ msgstr ""
+#~ "Promoción de la financiación sostenible para la plataforma de asistencia "
+#~ "en efectivo para el bien público digital (HOPE) de UNICEF."
+
+#~ msgid "View report"
+#~ msgstr "Ver informe"
+
+#~ msgid "Podcast"
+#~ msgstr "Podcast"
+
+#~ msgid ""
+#~ "Bringing HOPE To Whoever Needs It Most: podcast on secure data and risk-"
+#~ "informed cash transfers."
+#~ msgstr ""
+#~ "Llevando ESPERANZA a quien más la necesita: podcast sobre datos seguros y "
+#~ "transferencias de efectivo basadas en riesgos."
+
+#~ msgid "Listen now"
+#~ msgstr "Escucha ahora"

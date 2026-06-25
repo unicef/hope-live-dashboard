@@ -16,6 +16,7 @@ DJANGO_ADMIN_URL = env("DJANGO_ADMIN_URL")
 DEBUG = env("DEBUG")
 
 ALLOWED_HOSTS = env("ALLOWED_HOSTS")
+ENABLE_WEBSOCKETS = env("ENABLE_WEBSOCKETS")
 
 
 # Application definition
@@ -61,6 +62,7 @@ MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
+    "django.middleware.locale.LocaleMiddleware",
     "django.middleware.common.CommonMiddleware",
     "csp.middleware.CSPMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -87,6 +89,7 @@ TEMPLATES = [
                 "django.contrib.messages.context_processors.messages",
                 "hope_live.analysis.context_processors.available_years",
                 "unicef_security.context_processors.current_state",
+                "hope_live.apps.settings_context",
             ],
         },
     },
@@ -95,16 +98,12 @@ TEMPLATES = [
 WSGI_APPLICATION = "hope_live.config.wsgi.application"
 
 ASGI_APPLICATION = "hope_live.config.asgi.application"
+_redis_url = env("CHANNEL_BROKER") or env("REDIS_URL") or "redis://127.0.0.1:6379/1"
 CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
         "CONFIG": {
-            "hosts": [
-                {
-                    "address": env("CHANNEL_BROKER") or env("REDIS_URL"),
-                    "health_check_interval": 5,
-                }
-            ],
+            "hosts": [_redis_url.replace("localhost", "127.0.0.1") + "?protocol=2"],
         },
     },
 }
@@ -119,6 +118,9 @@ DATABASES = {
 }
 
 CACHE_URL = env("CACHE_URL")
+CACHES = {
+    "default": env.cache("CACHE_URL", default="locmemcache://"),
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
@@ -149,13 +151,15 @@ AUTHENTICATION_BACKENDS = (
 # Internationalization
 # https://docs.djangoproject.com/en/5.2/topics/i18n/
 
-LANGUAGE_CODE = "en-us"
+LANGUAGE_CODE = "en"
 ugettext = lambda s: s  # noqa E731
 LANGUAGES = (
     ("es", ugettext("Spanish")),  # type: ignore[no-untyped-call]
     ("fr", ugettext("French")),  # type: ignore[no-untyped-call]
     ("en", ugettext("English")),  # type: ignore[no-untyped-call]
     ("ar", ugettext("Arabic")),  # type: ignore[no-untyped-call]
+    ("ru", ugettext("Russian")),  # type: ignore[no-untyped-call]
+    ("zh-hans", ugettext("Chinese")),  # type: ignore[no-untyped-call]
 )
 
 TIME_ZONE = "UTC"
@@ -165,7 +169,7 @@ USE_I18N = True
 USE_TZ = True
 
 LOCALE_PATHS = [
-    DEVELOPMENT_DIR / "locale",
+    PACKAGE_DIR / "locale",
 ]
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#site-id
