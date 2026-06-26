@@ -11,6 +11,7 @@
     <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/topojson-client@3/dist/topojson-client.min.js"></script>
     <script src="{% static 'js/theme.min.js' %}"></script>
+    <script src="{% url 'javascript-catalog' %}"></script>
     {% if ENABLE_WEBSOCKETS %}
     <script src="{% static 'js/ws.js' %}"></script>
     {% endif %}

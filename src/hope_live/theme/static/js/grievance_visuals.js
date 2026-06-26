@@ -2,65 +2,62 @@ document.addEventListener('DOMContentLoaded', function () {
     const tabsContainer = document.getElementById('tabs-container');
     if (!tabsContainer) return;
 
-    const isFr = document.documentElement.lang && document.documentElement.lang.startsWith('fr');
-    const t = (en, fr) => isFr ? fr : en;
-
     const statusMap = {
-        "1": t("New", "Nouveau"),
-        "2": t("Assigned", "Assigné"),
-        "3": t("In Progress", "En cours"),
-        "4": t("On Hold", "En attente"),
-        "5": t("For Approval", "Pour approbation"),
-        "6": t("Closed", "Clôturé")
+        "1": gettext("New"),
+        "2": gettext("Assigned"),
+        "3": gettext("In Progress"),
+        "4": gettext("On Hold"),
+        "5": gettext("For Approval"),
+        "6": gettext("Closed")
     };
 
     const categoryMap = {
-        "1": t("Payment Verification", "Vérification des paiements"),
-        "2": t("Data Change", "Modification de données"),
-        "3": t("Sensitive Grievance", "Grief sensible"),
-        "4": t("Grievance Complaint", "Plainte de grief"),
-        "5": t("Negative Feedback", "Commentaire négatif"),
-        "6": t("Referral", "Référence"),
-        "7": t("Positive Feedback", "Commentaire positif"),
-        "8": t("Needs Adjudication", "Nécessite une décision"),
-        "9": t("System Flagging", "Signalement système"),
-        "10": t("Beneficiary", "Bénéficiaire")
+        "1": gettext("Payment Verification"),
+        "2": gettext("Data Change"),
+        "3": gettext("Sensitive Grievance"),
+        "4": gettext("Grievance Complaint"),
+        "5": gettext("Negative Feedback"),
+        "6": gettext("Referral"),
+        "7": gettext("Positive Feedback"),
+        "8": gettext("Needs Adjudication"),
+        "9": gettext("System Flagging"),
+        "10": gettext("Beneficiary")
     };
 
     const priorityMap = {
-        "0": t("Not Set", "Non défini"),
-        "1": t("High", "Haute"),
-        "2": t("Medium", "Moyenne"),
-        "3": t("Low", "Basse")
+        "0": gettext("Not Set"),
+        "1": gettext("High"),
+        "2": gettext("Medium"),
+        "3": gettext("Low")
     };
 
     const issueTypeMap = {
-        "1": t("Data breach", "Violation de données"),
-        "2": t("Bribery, corruption or kickback", "Pot-de-vin, corruption ou ristourne"),
-        "3": t("Fraud and forgery", "Fraude et falsification"),
-        "4": t("Fraud involving misuse of programme funds by third party", "Fraude impliquant le détournement de fonds du programme par un tiers"),
-        "5": t("Harassment and abuse of authority", "Harcèlement et abus de pouvoir"),
-        "6": t("Inappropriate staff conduct", "Conduite inappropriée du personnel"),
-        "7": t("Unauthorized use, misuse or waste of UNICEF property or funds", "Utilisation non autorisée, détournement ou gaspillage de biens ou de fonds de l'UNICEF"),
-        "8": t("Conflict of interest", "Conflit d'intérêts"),
-        "9": t("Gross mismanagement", "Mauvaise gestion flagrante"),
-        "10": t("Personal disputes", "Différends personnels"),
-        "11": t("Sexual harassment and sexual exploitation", "Harcèlement sexuel et exploitation sexuelle"),
-        "12": t("Miscellaneous", "Divers"),
-        "13": t("Household Data Update", "Mise à jour des données du ménage"),
-        "14": t("Individual Data Update", "Mise à jour des données individuelles"),
-        "15": t("Withdraw Individual", "Retrait individuel"),
-        "16": t("Add Individual", "Ajouter un individu"),
-        "17": t("Withdraw Household", "Retrait de ménage"),
-        "18": t("Payment Related Complaint", "Plainte liée aux paiements"),
-        "19": t("FSP Related Complaint", "Plainte liée au PSF"),
-        "20": t("Registration Related Complaint", "Plainte liée à l'enregistrement"),
-        "21": t("Other Complaint", "Autre plainte"),
-        "22": t("Partner Related Complaint", "Plainte liée au partenaire"),
-        "23": t("Unique Identifiers Similarity", "Similitude des identifiants uniques"),
-        "24": t("Biographical Data Similarity", "Similitude des données biographiques"),
-        "25": t("Biometrics Similarity", "Similitude de la biométrie"),
-        "26": t("Update Delegate", "Mise à jour du délégué")
+        "1": gettext("Data breach"),
+        "2": gettext("Bribery, corruption or kickback"),
+        "3": gettext("Fraud and forgery"),
+        "4": gettext("Fraud involving misuse of programme funds by third party"),
+        "5": gettext("Harassment and abuse of authority"),
+        "6": gettext("Inappropriate staff conduct"),
+        "7": gettext("Unauthorized use, misuse or waste of UNICEF property or funds"),
+        "8": gettext("Conflict of interest"),
+        "9": gettext("Gross mismanagement"),
+        "10": gettext("Personal disputes"),
+        "11": gettext("Sexual harassment and sexual exploitation"),
+        "12": gettext("Miscellaneous"),
+        "13": gettext("Household Data Update"),
+        "14": gettext("Individual Data Update"),
+        "15": gettext("Withdraw Individual"),
+        "16": gettext("Add Individual"),
+        "17": gettext("Withdraw Household"),
+        "18": gettext("Payment Related Complaint"),
+        "19": gettext("FSP Related Complaint"),
+        "20": gettext("Registration Related Complaint"),
+        "21": gettext("Other Complaint"),
+        "22": gettext("Partner Related Complaint"),
+        "23": gettext("Unique Identifiers Similarity"),
+        "24": gettext("Biographical Data Similarity"),
+        "25": gettext("Biometrics Similarity"),
+        "26": gettext("Update Delegate")
     };
 
     const colorPalette = [
@@ -208,13 +205,13 @@ document.addEventListener('DOMContentLoaded', function () {
                     const formattedDate = d3.timeFormat("%B %d, %Y")(date);
                     let tooltipHtml = `${formattedDate}<br/>`;
                     params.forEach(p => {
-                        tooltipHtml += `${p.marker} ${p.seriesName}: <b>${d3.format(",")(p.value[1])}</b> ${t('tickets', 'tickets')}<br/>`;
+                        tooltipHtml += `${p.marker} ${p.seriesName}: <b>${d3.format(",")(p.value[1])}</b> ${gettext('tickets')}<br/>`;
                     });
                     return tooltipHtml;
                 }
             },
             legend: {
-                data: [t('Resolved & Closed', 'Résolu et Clôturé'), t('Open & Active', 'Ouvert et Actif')],
+                data: [gettext('Resolved & Closed'), gettext('Open & Active')],
                 bottom: 0,
                 icon: 'roundRect'
             },
@@ -233,7 +230,7 @@ document.addEventListener('DOMContentLoaded', function () {
             },
             series: [
                 {
-                    name: t('Resolved & Closed', 'Résolu et Clôturé'),
+                    name: gettext('Resolved & Closed'),
                     type: 'line',
                     stack: 'total',
                     smooth: true,
@@ -248,7 +245,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     data: timelineDataResolved
                 },
                 {
-                    name: t('Open & Active', 'Ouvert et Actif'),
+                    name: gettext('Open & Active'),
                     type: 'line',
                     stack: 'total',
                     smooth: true,
@@ -424,13 +421,13 @@ document.addEventListener('DOMContentLoaded', function () {
                 formatter: function (params) {
                     let tooltipHtml = `${params[0].name}<br/>`;
                     params.forEach(p => {
-                        tooltipHtml += `${p.marker} ${p.seriesName}: <b>${d3.format(",")(p.value)}</b> ${t('tickets', 'tickets')}<br/>`;
+                        tooltipHtml += `${p.marker} ${p.seriesName}: <b>${d3.format(",")(p.value)}</b> ${gettext('tickets')}<br/>`;
                     });
                     return tooltipHtml;
                 }
             },
             legend: {
-                data: [t('Resolved & Closed', 'Résolu et Clôturé'), t('Open & Active', 'Ouvert et Actif')],
+                data: [gettext('Resolved & Closed'), gettext('Open & Active')],
                 top: 0,
                 right: 20
             },
@@ -447,7 +444,7 @@ document.addEventListener('DOMContentLoaded', function () {
             },
             series: [
                 {
-                    name: t('Resolved & Closed', 'Résolu et Clôturé'),
+                    name: gettext('Resolved & Closed'),
                     type: 'bar',
                     stack: 'status',
                     barMaxWidth: 30,
@@ -455,7 +452,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     itemStyle: { borderRadius: [0, 0, 0, 0] }
                 },
                 {
-                    name: t('Open & Active', 'Ouvert et Actif'),
+                    name: gettext('Open & Active'),
                     type: 'bar',
                     stack: 'status',
                     barMaxWidth: 30,

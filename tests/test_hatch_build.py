@@ -45,7 +45,7 @@ def test_custom_build_hook_initialize_compiles_po(mock_path_cls, mock_polib):
     )
 
     mock_mo_path = MagicMock()
-    mock_po_file.with_name.return_value = mock_mo_path
+    mock_po_file.with_suffix.return_value = mock_mo_path
 
     mock_po_object = MagicMock()
     mock_polib.pofile.return_value = mock_po_object
