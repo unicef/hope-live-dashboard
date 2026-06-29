@@ -3,12 +3,11 @@
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-26 14:57+0000\n"
+"POT-Creation-Date: 2026-06-29 06:32+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,324 +15,325 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
-"&& n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
 
 #: src/hope_live/theme/static/js/completion_visuals.js:169
 #: src/hope_live/theme/static/js/completion_visuals.js:172
 #, javascript-format
-msgid "%s% out of %s total"
-msgstr ""
+#| msgid "%s% out of %s total"
+msgid "%s out of %s total"
+msgstr "%s من إجمالي %s"
 
 #: src/hope_live/theme/static/js/completion_visuals.js:216
 msgid "payments"
-msgstr ""
+msgstr "المدفوعات"
 
 #: src/hope_live/theme/static/js/completion_visuals.js:242
 #: src/hope_live/theme/static/js/completion_visuals.js:266
 #: src/hope_live/theme/static/js/completion_visuals.js:342
 #: src/hope_live/theme/static/js/completion_visuals.js:367
 msgid "Reconciled"
-msgstr ""
+msgstr "مسواة"
 
 #: src/hope_live/theme/static/js/completion_visuals.js:242
 #: src/hope_live/theme/static/js/completion_visuals.js:274
 #: src/hope_live/theme/static/js/completion_visuals.js:342
 #: src/hope_live/theme/static/js/completion_visuals.js:375
 msgid "Still Opened"
-msgstr ""
+msgstr "لا يزال مفتوحا"
 
 #: src/hope_live/theme/static/js/completion_visuals.js:435
 msgid "Reconciled Amount (USD)"
-msgstr ""
+msgstr "المبلغ المسوّى (بالدولار الأمريكي)"
 
 #: src/hope_live/theme/static/js/completion_visuals.js:436
 msgid "Still Opened Amount (USD)"
-msgstr ""
+msgstr "المبلغ المتبقي مفتوحاً (بالدولار الأمريكي)"
 
 #: src/hope_live/theme/static/js/completion_visuals.js:437
 msgid "Reconciliation Timeline (USD)"
-msgstr ""
+msgstr "الخط الزمني للتسوية (بالدولار الأمريكي)"
 
 #: src/hope_live/theme/static/js/completion_visuals.js:438
 msgid "Reconciliation Status by Country (USD)"
-msgstr ""
+msgstr "حالة التسوية حسب البلد (بالدولار الأمريكي)"
 
 #: src/hope_live/theme/static/js/completion_visuals.js:440
 msgid "Reconciled Payments"
-msgstr ""
+msgstr "المدفوعات التوفيقية"
 
 #: src/hope_live/theme/static/js/completion_visuals.js:441
 msgid "Still Opened Payments"
-msgstr ""
+msgstr "المدفوعات التي ما زالت مفتوحة"
 
 #: src/hope_live/theme/static/js/completion_visuals.js:442
 msgid "Reconciliation Timeline"
-msgstr ""
+msgstr "الجدول الزمني للمصالحة"
 
 #: src/hope_live/theme/static/js/completion_visuals.js:443
 msgid "Reconciliation Status by Country"
-msgstr ""
+msgstr "حالة المطابقة حسب البلد"
 
 #: src/hope_live/theme/static/js/dashboard_visuals.js:245
 msgid "Spending"
-msgstr ""
+msgstr "الإنفاق"
 
 #: src/hope_live/theme/static/js/dashboard_visuals.js:245
 msgid "Quantity"
-msgstr ""
+msgstr "الكمية"
 
 #: src/hope_live/theme/static/js/dashboard_visuals.js:245
 msgid "Payments"
-msgstr ""
+msgstr "المدفوعات"
 
 #: src/hope_live/theme/static/js/dashboard_visuals.js:513
 msgid "Spending Timeline"
-msgstr ""
+msgstr "الجدول الزمني للإنفاق"
 
 #: src/hope_live/theme/static/js/dashboard_visuals.js:514
 msgid "Quantity Distribution Timeline"
-msgstr ""
+msgstr "الخط الزمني لتوزيع الكميات"
 
 #: src/hope_live/theme/static/js/dashboard_visuals.js:515
 msgid "Payments Timeline"
-msgstr ""
+msgstr "الخط الزمني للمدفوعات"
 
 #: src/hope_live/theme/static/js/demographic_visuals.js:15
 msgid "Individuals Reached"
-msgstr ""
+msgstr "الأفراد الذين تم الوصول إليهم"
 
 #: src/hope_live/theme/static/js/demographic_visuals.js:16
 msgid "Households Reached"
-msgstr ""
+msgstr "وصلت الأسر"
 
 #: src/hope_live/theme/static/js/demographic_visuals.js:17
 msgid "Children Reached"
-msgstr ""
+msgstr "وصل الأطفال"
 
 #: src/hope_live/theme/static/js/demographic_visuals.js:18
 msgid "PWD Reached"
-msgstr ""
+msgstr "الأشخاص ذوو الإعاقة الذين تم الوصول إليهم"
 
 #: src/hope_live/theme/static/js/demographic_visuals.js:241
 #: src/hope_live/theme/static/js/demographic_visuals.js:335
 msgid "Individuals"
-msgstr ""
+msgstr "الأفراد"
 
 #: src/hope_live/theme/static/js/demographic_visuals.js:241
 #: src/hope_live/theme/static/js/demographic_visuals.js:335
 msgid "Households"
-msgstr ""
+msgstr "الأسر"
 
 #: src/hope_live/theme/static/js/demographic_visuals.js:241
 #: src/hope_live/theme/static/js/demographic_visuals.js:335
 msgid "Children"
-msgstr ""
+msgstr "الأطفال"
 
 #: src/hope_live/theme/static/js/demographic_visuals.js:241
 #: src/hope_live/theme/static/js/demographic_visuals.js:335
 msgid "PWD"
-msgstr ""
+msgstr "الأشخاص ذوو الإعاقة"
 
 #: src/hope_live/theme/static/js/grievance_visuals.js:6
 msgid "New"
-msgstr ""
+msgstr "جديد"
 
 #: src/hope_live/theme/static/js/grievance_visuals.js:7
 msgid "Assigned"
-msgstr ""
+msgstr "مُسنَد"
 
 #: src/hope_live/theme/static/js/grievance_visuals.js:8
 msgid "In Progress"
-msgstr ""
+msgstr "قيد المعالجة"
 
 #: src/hope_live/theme/static/js/grievance_visuals.js:9
 msgid "On Hold"
-msgstr ""
+msgstr "معلَّق"
 
 #: src/hope_live/theme/static/js/grievance_visuals.js:10
 msgid "For Approval"
-msgstr ""
+msgstr "للموافقة"
 
 #: src/hope_live/theme/static/js/grievance_visuals.js:11
 msgid "Closed"
-msgstr ""
+msgstr "مغلق"
 
 #: src/hope_live/theme/static/js/grievance_visuals.js:15
 msgid "Payment Verification"
-msgstr ""
+msgstr "التحقق من الدفع"
 
 #: src/hope_live/theme/static/js/grievance_visuals.js:16
 msgid "Data Change"
-msgstr ""
+msgstr "تغيير البيانات"
 
 #: src/hope_live/theme/static/js/grievance_visuals.js:17
 msgid "Sensitive Grievance"
-msgstr ""
+msgstr "شكوى حساسة"
 
 #: src/hope_live/theme/static/js/grievance_visuals.js:18
 msgid "Grievance Complaint"
-msgstr ""
+msgstr "شكوى"
 
 #: src/hope_live/theme/static/js/grievance_visuals.js:19
 msgid "Negative Feedback"
-msgstr ""
+msgstr "ملاحظات سلبية"
 
 #: src/hope_live/theme/static/js/grievance_visuals.js:20
 msgid "Referral"
-msgstr ""
+msgstr "إحالة"
 
 #: src/hope_live/theme/static/js/grievance_visuals.js:21
 msgid "Positive Feedback"
-msgstr ""
+msgstr "ملاحظات إيجابية"
 
 #: src/hope_live/theme/static/js/grievance_visuals.js:22
 msgid "Needs Adjudication"
-msgstr ""
+msgstr "يتطلب الفصل فيه"
 
 #: src/hope_live/theme/static/js/grievance_visuals.js:23
 msgid "System Flagging"
-msgstr ""
+msgstr "تنبيه من النظام"
 
 #: src/hope_live/theme/static/js/grievance_visuals.js:24
 msgid "Beneficiary"
-msgstr ""
+msgstr "المستفيد"
 
 #: src/hope_live/theme/static/js/grievance_visuals.js:28
 msgid "Not Set"
-msgstr ""
+msgstr "غير محدد"
 
 #: src/hope_live/theme/static/js/grievance_visuals.js:29
 msgid "High"
-msgstr ""
+msgstr "مرتفع"
 
 #: src/hope_live/theme/static/js/grievance_visuals.js:30
 msgid "Medium"
-msgstr ""
+msgstr "متوسط"
 
 #: src/hope_live/theme/static/js/grievance_visuals.js:31
 msgid "Low"
-msgstr ""
+msgstr "منخفض"
 
 #: src/hope_live/theme/static/js/grievance_visuals.js:35
 msgid "Data breach"
-msgstr ""
+msgstr "خرق البيانات"
 
 #: src/hope_live/theme/static/js/grievance_visuals.js:36
 msgid "Bribery, corruption or kickback"
-msgstr ""
+msgstr "الرشوة أو الفساد أو العمولات غير القانونية"
 
 #: src/hope_live/theme/static/js/grievance_visuals.js:37
 msgid "Fraud and forgery"
-msgstr ""
+msgstr "الاحتيال والتزوير"
 
 #: src/hope_live/theme/static/js/grievance_visuals.js:38
 msgid "Fraud involving misuse of programme funds by third party"
-msgstr ""
+msgstr "احتيال ينطوي على إساءة استخدام أموال البرنامج من قبل طرف ثالث"
 
 #: src/hope_live/theme/static/js/grievance_visuals.js:39
 msgid "Harassment and abuse of authority"
-msgstr ""
+msgstr "التحرش وإساءة استخدام السلطة"
 
 #: src/hope_live/theme/static/js/grievance_visuals.js:40
 msgid "Inappropriate staff conduct"
-msgstr ""
+msgstr "سلوك غير لائق من الموظفين"
 
 #: src/hope_live/theme/static/js/grievance_visuals.js:41
 msgid "Unauthorized use, misuse or waste of UNICEF property or funds"
 msgstr ""
+"الاستخدام غير المصرح به أو إساءة استخدام أو هدر ممتلكات أو أموال اليونيسف"
 
 #: src/hope_live/theme/static/js/grievance_visuals.js:42
 msgid "Conflict of interest"
-msgstr ""
+msgstr "تضارب المصالح"
 
 #: src/hope_live/theme/static/js/grievance_visuals.js:43
 msgid "Gross mismanagement"
-msgstr ""
+msgstr "سوء إدارة جسيم"
 
 #: src/hope_live/theme/static/js/grievance_visuals.js:44
 msgid "Personal disputes"
-msgstr ""
+msgstr "نزاعات شخصية"
 
 #: src/hope_live/theme/static/js/grievance_visuals.js:45
 msgid "Sexual harassment and sexual exploitation"
-msgstr ""
+msgstr "التحرش الجنسي والاستغلال الجنسي"
 
 #: src/hope_live/theme/static/js/grievance_visuals.js:46
 msgid "Miscellaneous"
-msgstr ""
+msgstr "متنوعات"
 
 #: src/hope_live/theme/static/js/grievance_visuals.js:47
 msgid "Household Data Update"
-msgstr ""
+msgstr "تحديث بيانات الأسرة"
 
 #: src/hope_live/theme/static/js/grievance_visuals.js:48
 msgid "Individual Data Update"
-msgstr ""
+msgstr "تحديث بيانات الأفراد"
 
 #: src/hope_live/theme/static/js/grievance_visuals.js:49
 msgid "Withdraw Individual"
-msgstr ""
+msgstr "سحب فرد"
 
 #: src/hope_live/theme/static/js/grievance_visuals.js:50
 msgid "Add Individual"
-msgstr ""
+msgstr "إضافة فرد"
 
 #: src/hope_live/theme/static/js/grievance_visuals.js:51
 msgid "Withdraw Household"
-msgstr ""
+msgstr "سحب أسرة"
 
 #: src/hope_live/theme/static/js/grievance_visuals.js:52
 msgid "Payment Related Complaint"
-msgstr ""
+msgstr "شكوى متعلقة بالدفع"
 
 #: src/hope_live/theme/static/js/grievance_visuals.js:53
 msgid "FSP Related Complaint"
-msgstr ""
+msgstr "شكوى متعلقة بمزود خدمة الدفع"
 
 #: src/hope_live/theme/static/js/grievance_visuals.js:54
 msgid "Registration Related Complaint"
-msgstr ""
+msgstr "شكوى متعلقة بالتسجيل"
 
 #: src/hope_live/theme/static/js/grievance_visuals.js:55
 msgid "Other Complaint"
-msgstr ""
+msgstr "شكوى أخرى"
 
 #: src/hope_live/theme/static/js/grievance_visuals.js:56
 msgid "Partner Related Complaint"
-msgstr ""
+msgstr "شكوى متعلقة بالشريك"
 
 #: src/hope_live/theme/static/js/grievance_visuals.js:57
 msgid "Unique Identifiers Similarity"
-msgstr ""
+msgstr "تشابه المعرفات الفريدة"
 
 #: src/hope_live/theme/static/js/grievance_visuals.js:58
 msgid "Biographical Data Similarity"
-msgstr ""
+msgstr "تشابه البيانات الشخصية"
 
 #: src/hope_live/theme/static/js/grievance_visuals.js:59
 msgid "Biometrics Similarity"
-msgstr ""
+msgstr "تشابه البيانات البيومترية"
 
 #: src/hope_live/theme/static/js/grievance_visuals.js:60
 msgid "Update Delegate"
-msgstr ""
+msgstr "تحديث المفوض"
 
 #: src/hope_live/theme/static/js/grievance_visuals.js:208
 #: src/hope_live/theme/static/js/grievance_visuals.js:424
 msgid "tickets"
-msgstr ""
+msgstr "تذاكر"
 
 #: src/hope_live/theme/static/js/grievance_visuals.js:214
 #: src/hope_live/theme/static/js/grievance_visuals.js:233
 #: src/hope_live/theme/static/js/grievance_visuals.js:430
 #: src/hope_live/theme/static/js/grievance_visuals.js:447
 msgid "Resolved & Closed"
-msgstr ""
+msgstr "تم حلها وإغلاقها"
 
 #: src/hope_live/theme/static/js/grievance_visuals.js:214
 #: src/hope_live/theme/static/js/grievance_visuals.js:248
 #: src/hope_live/theme/static/js/grievance_visuals.js:430
 #: src/hope_live/theme/static/js/grievance_visuals.js:455
 msgid "Open & Active"
-msgstr ""
+msgstr "مفتوحة ونشطة"

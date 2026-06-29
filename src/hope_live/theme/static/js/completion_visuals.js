@@ -166,10 +166,10 @@ document.addEventListener('DOMContentLoaded', function () {
         const openedPct = total > 0 ? (totalOpened / total * 100).toFixed(1) : 0;
         const completionRate = total > 0 ? (totalReconciled / total * 100) : 0;
 
-        const outOfReconciled = interpolate(gettext('%s% out of %s total'), [reconciledPct, formatFullVal(total)]);
+        const outOfReconciled = interpolate(gettext('%s out of %s total'), [reconciledPct + '%', formatFullVal(total)]);
         document.getElementById('total-reconciled').textContent = `${formatFullVal(totalReconciled)} (${outOfReconciled})`;
 
-        const outOfOpened = interpolate(gettext('%s% out of %s total'), [openedPct, formatFullVal(total)]);
+        const outOfOpened = interpolate(gettext('%s out of %s total'), [openedPct + '%', formatFullVal(total)]);
         document.getElementById('total-opened').textContent = `${formatFullVal(totalOpened)} (${outOfOpened})`;
         document.getElementById('completion-rate-text').textContent = `${completionRate.toFixed(1)}%`;
 
