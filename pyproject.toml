@@ -125,6 +125,7 @@ version.source = "vcs"
 build.hooks.custom = {}
 build.hooks.vcs.version-file = "src/hope_live/version.py"
 build.targets.wheel.packages = [ "src/hope_live" ]
+build.targets.wheel.artifacts = [ "src/hope_live/locale/**/*.mo" ]
 build.targets.sdist.ignore-vcs = true
 build.targets.sdist.only-include = [ "src/hope_live" ]
 raw-options = { root = "../.." }
