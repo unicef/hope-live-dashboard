@@ -6,17 +6,18 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-06-21 14:44+0000\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"PO-Revision-Date: 2026-06-26 16:19+0200\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Poedit 3.9\n"
 
 #: src/hope_live/config/settings.py:157
 msgid "Spanish"
@@ -148,6 +149,9 @@ msgid ""
 "beneficiaries and frontline workers to deliver humanitarian cash transfers "
 "safely"
 msgstr ""
+"HOPE est la solution de l’UNICEF pour collecter et traiter les données des "
+"bénéficiaires vulnérables et des travailleurs de première ligne, afin "
+"d’effectuer des transferts monétaires humanitaires en toute sécurité"
 
 #: src/hope_live/templates/pages/completion.html:8
 msgid "Completion Rate Dashboard"
@@ -262,52 +266,42 @@ msgid "Financial Service Providers (FSP)"
 msgstr "Prestataires de services financiers (PSF)"
 
 #: src/hope_live/templates/pages/demographic.html:8
-#, fuzzy
-#| msgid "Demographics"
 msgid "Demographic Dashboard"
-msgstr "Données démographiques"
+msgstr "Tableau de bord démographique"
 
 #: src/hope_live/templates/pages/demographic.html:9
 msgid "Breakdown of Individuals, Children, and PWD Reached"
-msgstr ""
+msgstr "Répartition des personnes, des enfants et des PMR assistés"
 
 #: src/hope_live/templates/pages/demographic.html:32
-#, fuzzy
-#| msgid "View Dashboard Metrics by:"
 msgid "View Demographic Metrics by:"
-msgstr "Afficher les mesures du tableau de bord par :"
+msgstr "Afficher les mesures démographiques par :"
 
 #: src/hope_live/templates/pages/demographic.html:35
 msgid "Individuals"
-msgstr ""
+msgstr "Individus"
 
 #: src/hope_live/templates/pages/demographic.html:38
-#, fuzzy
-#| msgid "Households Reached"
 msgid "Households"
-msgstr "Ménages touchés"
+msgstr "Ménages"
 
 #: src/hope_live/templates/pages/demographic.html:41
 #: src/hope_live/templates/pages/demographic.html:69
-#, fuzzy
-#| msgid "Children Reached"
 msgid "Children"
-msgstr "Enfants atteints"
+msgstr "Enfants"
 
 #: src/hope_live/templates/pages/demographic.html:44
 #: src/hope_live/templates/pages/demographic.html:74
 msgid "PWD Reached"
-msgstr ""
+msgstr "Personnes à mobilité réduite atteintes"
 
 #: src/hope_live/templates/pages/demographic.html:51
-#, fuzzy
-#| msgid "Tickets Timeline"
 msgid "Reach Timeline"
-msgstr "Chronologie des billets"
+msgstr "Chronologie"
 
 #: src/hope_live/templates/pages/demographic.html:61
 msgid "Individuals Reached"
-msgstr ""
+msgstr "Personnes assistées"
 
 #: src/hope_live/templates/pages/demographic.html:65
 #: src/hope_live/templates/pages/landing.html:118
@@ -320,6 +314,9 @@ msgid ""
 "Note: For programmes (like DCT) not collecting children data, numbers are "
 "estimated by multiplying Household numbers by fertility rates."
 msgstr ""
+"Remarque : Pour les programmes (tels que le DCT) qui ne collectent pas de "
+"données sur les enfants, les effectifs sont estimés en multipliant le nombre "
+"de ménages par les taux de fécondité."
 
 #: src/hope_live/templates/pages/demographic.html:76
 msgid ""
@@ -327,22 +324,25 @@ msgid ""
 "(e.g., Pepukai) do not collect this data, so this figure is likely under-"
 "represented."
 msgstr ""
+"Remarque : ce chiffre reflète le nombre de personnes en situation de "
+"handicap avéré. Certains programmes (par exemple, Pepukai) ne recueillent "
+"pas ces données ; ce chiffre est donc probablement sous-estimé."
 
 #: src/hope_live/templates/pages/demographic.html:83
 msgid "Demographic Breakdown by Sector"
-msgstr ""
+msgstr "Répartition démographique par secteur"
 
 #: src/hope_live/templates/pages/demographic.html:87
 msgid "Sector Share of Reached Population"
-msgstr ""
+msgstr "Répartition de la population atteinte par Secteur"
 
 #: src/hope_live/templates/pages/demographic.html:96
 msgid "Demographic Breakdown by Country"
-msgstr ""
+msgstr "Répartition démographique par pays"
 
 #: src/hope_live/templates/pages/demographic.html:100
 msgid "Country Share of Reached Population"
-msgstr ""
+msgstr "Part de la population atteinte par pays"
 
 #: src/hope_live/templates/pages/grievance.html:8
 msgid "Grievance Dashboard"
@@ -613,42 +613,38 @@ msgstr ""
 "Échec du chargement de la visualisation de la carte. Veuillez actualiser."
 
 #: src/hope_live/templates/pages/login.html:16
-#, fuzzy
-#| msgid "HOPE Dashboard"
 msgid "HOPE Live Dashboard"
-msgstr "Tableau de bord HOPE"
+msgstr "Tableau de bord de HOPE"
 
 #: src/hope_live/templates/pages/login.html:24
 msgid "SSO Login"
-msgstr ""
+msgstr "Connexion SSO"
 
 #: src/hope_live/templates/pages/login.html:30
 msgid "Debug Login"
-msgstr ""
+msgstr "Connexion de débogage"
 
 #: src/hope_live/templates/pages/login.html:33
 msgid "Username"
-msgstr ""
+msgstr "Nom d'utilisateur"
 
 #: src/hope_live/templates/pages/login.html:34
 msgid "Password"
-msgstr ""
+msgstr "Mot de passe"
 
 #: src/hope_live/templates/pages/login.html:35
-#, fuzzy
-#| msgid "Sign Out"
 msgid "Sign In"
-msgstr "Se déconnecter"
+msgstr "Se connecter"
 
 #: src/hope_live/templates/pages/login.html:45
 #, python-format
 msgid "Hope Country Report dev - %(year)s - %(version)s"
-msgstr ""
+msgstr "Rapport pays Hope – développement – ​​%(year)s – %(version)s"
 
 #: src/hope_live/templates/unfold/helpers/header_back_button.html:7
 #: src/hope_live/templates/unfold/helpers/header_back_button.html:15
 msgid " Go back"
-msgstr "Retourner"
+msgstr " Retourner"
 
 #: src/hope_live/templates/unfold/helpers/site_branding.html:3
 #: src/hope_live/templates/unfold/helpers/site_branding.html:6

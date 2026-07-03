@@ -10,8 +10,8 @@ class CustomBuildHook(BuildHookInterface):
         if not locale_dir.exists():
             return
 
-        po_files = list(locale_dir.glob("**/django.po"))
+        po_files = list(locale_dir.glob("**/*.po"))
         for po_path in po_files:
-            mo_path = po_path.with_name("django.mo")
+            mo_path = po_path.with_suffix(".mo")
             po = polib.pofile(str(po_path))
             po.save_as_mofile(str(mo_path))

@@ -11,14 +11,11 @@ document.addEventListener('DOMContentLoaded', function () {
         pwd: 'pwd'
     };
 
-    const isFr = document.documentElement.lang && document.documentElement.lang.startsWith('fr');
-    const t = (en, fr) => isFr ? fr : en;
-
     const labelMap = {
-        individuals: t('Individuals Reached', 'Individus atteints'),
-        households: t('Households Reached', 'Ménages atteints'),
-        children: t('Children Reached', 'Enfants atteints'),
-        pwd: t('PWD Reached', 'Personnes handicapées atteintes')
+        individuals: gettext('Individuals Reached'),
+        households: gettext('Households Reached'),
+        children: gettext('Children Reached'),
+        pwd: gettext('PWD Reached')
     };
 
     const colorPalette = [
@@ -241,7 +238,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 axisPointer: { type: 'shadow' }
             },
             legend: {
-                data: [t('Individuals', 'Individus'), t('Households', 'Ménages'), t('Children', 'Enfants'), t('PWD', 'Personnes handicapées')],
+                data: [gettext('Individuals'), gettext('Households'), gettext('Children'), gettext('PWD')],
                 bottom: 0,
                 textStyle: { color: '#64748b' }
             },
@@ -335,7 +332,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 axisPointer: { type: 'shadow' }
             },
             legend: {
-                data: [t('Individuals', 'Individus'), t('Households', 'Ménages'), t('Children', 'Enfants'), t('PWD', 'Personnes handicapées')],
+                data: [gettext('Individuals'), gettext('Households'), gettext('Children'), gettext('PWD')],
                 bottom: 0,
                 textStyle: { color: '#64748b' }
             },

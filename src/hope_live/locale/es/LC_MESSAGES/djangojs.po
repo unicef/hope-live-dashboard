@@ -1,0 +1,338 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-06-29 06:32+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: src/hope_live/theme/static/js/completion_visuals.js:169
+#: src/hope_live/theme/static/js/completion_visuals.js:172
+#, javascript-format
+msgid "%s out of %s total"
+msgstr "%s de %s en total"
+
+#: src/hope_live/theme/static/js/completion_visuals.js:216
+msgid "payments"
+msgstr "pagos"
+
+#: src/hope_live/theme/static/js/completion_visuals.js:242
+#: src/hope_live/theme/static/js/completion_visuals.js:266
+#: src/hope_live/theme/static/js/completion_visuals.js:342
+#: src/hope_live/theme/static/js/completion_visuals.js:367
+msgid "Reconciled"
+msgstr "Conciliado"
+
+#: src/hope_live/theme/static/js/completion_visuals.js:242
+#: src/hope_live/theme/static/js/completion_visuals.js:274
+#: src/hope_live/theme/static/js/completion_visuals.js:342
+#: src/hope_live/theme/static/js/completion_visuals.js:375
+msgid "Still Opened"
+msgstr "Aún abierto"
+
+#: src/hope_live/theme/static/js/completion_visuals.js:435
+msgid "Reconciled Amount (USD)"
+msgstr "Monto conciliado (USD)"
+
+#: src/hope_live/theme/static/js/completion_visuals.js:436
+msgid "Still Opened Amount (USD)"
+msgstr "Monto aún abierto (USD)"
+
+#: src/hope_live/theme/static/js/completion_visuals.js:437
+msgid "Reconciliation Timeline (USD)"
+msgstr "Cronología de conciliación (USD)"
+
+#: src/hope_live/theme/static/js/completion_visuals.js:438
+msgid "Reconciliation Status by Country (USD)"
+msgstr "Estado de conciliación por país (USD)"
+
+#: src/hope_live/theme/static/js/completion_visuals.js:440
+msgid "Reconciled Payments"
+msgstr "Pagos conciliados"
+
+#: src/hope_live/theme/static/js/completion_visuals.js:441
+msgid "Still Opened Payments"
+msgstr "Pagos aún abiertos"
+
+#: src/hope_live/theme/static/js/completion_visuals.js:442
+msgid "Reconciliation Timeline"
+msgstr "Cronología de la reconciliación"
+
+#: src/hope_live/theme/static/js/completion_visuals.js:443
+msgid "Reconciliation Status by Country"
+msgstr "Estado de conciliación por país"
+
+#: src/hope_live/theme/static/js/dashboard_visuals.js:245
+msgid "Spending"
+msgstr "Gastos"
+
+#: src/hope_live/theme/static/js/dashboard_visuals.js:245
+msgid "Quantity"
+msgstr "Cantidad"
+
+#: src/hope_live/theme/static/js/dashboard_visuals.js:245
+msgid "Payments"
+msgstr "Pagos"
+
+#: src/hope_live/theme/static/js/dashboard_visuals.js:513
+msgid "Spending Timeline"
+msgstr "Cronograma de gastos"
+
+#: src/hope_live/theme/static/js/dashboard_visuals.js:514
+msgid "Quantity Distribution Timeline"
+msgstr "Cronología de distribución de cantidad"
+
+#: src/hope_live/theme/static/js/dashboard_visuals.js:515
+msgid "Payments Timeline"
+msgstr "Cronología de pagos"
+
+#: src/hope_live/theme/static/js/demographic_visuals.js:15
+msgid "Individuals Reached"
+msgstr "Personas alcanzadas"
+
+#: src/hope_live/theme/static/js/demographic_visuals.js:16
+msgid "Households Reached"
+msgstr "Hogares alcanzados"
+
+#: src/hope_live/theme/static/js/demographic_visuals.js:17
+msgid "Children Reached"
+msgstr "Niños alcanzados"
+
+#: src/hope_live/theme/static/js/demographic_visuals.js:18
+msgid "PWD Reached"
+msgstr "Personas con discapacidad alcanzadas"
+
+#: src/hope_live/theme/static/js/demographic_visuals.js:241
+#: src/hope_live/theme/static/js/demographic_visuals.js:335
+msgid "Individuals"
+msgstr "Personas"
+
+#: src/hope_live/theme/static/js/demographic_visuals.js:241
+#: src/hope_live/theme/static/js/demographic_visuals.js:335
+msgid "Households"
+msgstr "Hogares"
+
+#: src/hope_live/theme/static/js/demographic_visuals.js:241
+#: src/hope_live/theme/static/js/demographic_visuals.js:335
+msgid "Children"
+msgstr "Niños"
+
+#: src/hope_live/theme/static/js/demographic_visuals.js:241
+#: src/hope_live/theme/static/js/demographic_visuals.js:335
+msgid "PWD"
+msgstr "Personas con discapacidad"
+
+#: src/hope_live/theme/static/js/grievance_visuals.js:6
+msgid "New"
+msgstr "Nuevo"
+
+#: src/hope_live/theme/static/js/grievance_visuals.js:7
+msgid "Assigned"
+msgstr "Asignado"
+
+#: src/hope_live/theme/static/js/grievance_visuals.js:8
+msgid "In Progress"
+msgstr "En progreso"
+
+#: src/hope_live/theme/static/js/grievance_visuals.js:9
+msgid "On Hold"
+msgstr "En espera"
+
+#: src/hope_live/theme/static/js/grievance_visuals.js:10
+msgid "For Approval"
+msgstr "Para aprobación"
+
+#: src/hope_live/theme/static/js/grievance_visuals.js:11
+msgid "Closed"
+msgstr "Cerrado"
+
+#: src/hope_live/theme/static/js/grievance_visuals.js:15
+msgid "Payment Verification"
+msgstr "Verificación de pago"
+
+#: src/hope_live/theme/static/js/grievance_visuals.js:16
+msgid "Data Change"
+msgstr "Cambio de datos"
+
+#: src/hope_live/theme/static/js/grievance_visuals.js:17
+msgid "Sensitive Grievance"
+msgstr "Queja sensible"
+
+#: src/hope_live/theme/static/js/grievance_visuals.js:18
+msgid "Grievance Complaint"
+msgstr "Queja"
+
+#: src/hope_live/theme/static/js/grievance_visuals.js:19
+msgid "Negative Feedback"
+msgstr "Comentarios negativos"
+
+#: src/hope_live/theme/static/js/grievance_visuals.js:20
+msgid "Referral"
+msgstr "Remisión"
+
+#: src/hope_live/theme/static/js/grievance_visuals.js:21
+msgid "Positive Feedback"
+msgstr "Comentarios positivos"
+
+#: src/hope_live/theme/static/js/grievance_visuals.js:22
+msgid "Needs Adjudication"
+msgstr "Requiere adjudicación"
+
+#: src/hope_live/theme/static/js/grievance_visuals.js:23
+msgid "System Flagging"
+msgstr "Alerta del sistema"
+
+#: src/hope_live/theme/static/js/grievance_visuals.js:24
+msgid "Beneficiary"
+msgstr "Beneficiario"
+
+#: src/hope_live/theme/static/js/grievance_visuals.js:28
+msgid "Not Set"
+msgstr "No establecido"
+
+#: src/hope_live/theme/static/js/grievance_visuals.js:29
+msgid "High"
+msgstr "Alto"
+
+#: src/hope_live/theme/static/js/grievance_visuals.js:30
+msgid "Medium"
+msgstr "Medio"
+
+#: src/hope_live/theme/static/js/grievance_visuals.js:31
+msgid "Low"
+msgstr "Bajo"
+
+#: src/hope_live/theme/static/js/grievance_visuals.js:35
+msgid "Data breach"
+msgstr "Fuga de datos"
+
+#: src/hope_live/theme/static/js/grievance_visuals.js:36
+msgid "Bribery, corruption or kickback"
+msgstr "Soborno, corrupción o comisión ilícita"
+
+#: src/hope_live/theme/static/js/grievance_visuals.js:37
+msgid "Fraud and forgery"
+msgstr "Fraude y falsificación"
+
+#: src/hope_live/theme/static/js/grievance_visuals.js:38
+msgid "Fraud involving misuse of programme funds by third party"
+msgstr ""
+"Fraude que involucra el mal uso de fondos del programa por parte de terceros"
+
+#: src/hope_live/theme/static/js/grievance_visuals.js:39
+msgid "Harassment and abuse of authority"
+msgstr "Acoso y abuso de autoridad"
+
+#: src/hope_live/theme/static/js/grievance_visuals.js:40
+msgid "Inappropriate staff conduct"
+msgstr "Conducta inapropiada del personal"
+
+#: src/hope_live/theme/static/js/grievance_visuals.js:41
+msgid "Unauthorized use, misuse or waste of UNICEF property or funds"
+msgstr "Uso no autorizado, mal uso o desperdicio de bienes o fondos de UNICEF"
+
+#: src/hope_live/theme/static/js/grievance_visuals.js:42
+msgid "Conflict of interest"
+msgstr "Conflicto de intereses"
+
+#: src/hope_live/theme/static/js/grievance_visuals.js:43
+msgid "Gross mismanagement"
+msgstr "Mala gestión flagrante"
+
+#: src/hope_live/theme/static/js/grievance_visuals.js:44
+msgid "Personal disputes"
+msgstr "Disputas personales"
+
+#: src/hope_live/theme/static/js/grievance_visuals.js:45
+msgid "Sexual harassment and sexual exploitation"
+msgstr "Acoso sexual y explotación sexual"
+
+#: src/hope_live/theme/static/js/grievance_visuals.js:46
+msgid "Miscellaneous"
+msgstr "Varios"
+
+#: src/hope_live/theme/static/js/grievance_visuals.js:47
+msgid "Household Data Update"
+msgstr "Actualización de datos del hogar"
+
+#: src/hope_live/theme/static/js/grievance_visuals.js:48
+msgid "Individual Data Update"
+msgstr "Actualización de datos individuales"
+
+#: src/hope_live/theme/static/js/grievance_visuals.js:49
+msgid "Withdraw Individual"
+msgstr "Retirar individuo"
+
+#: src/hope_live/theme/static/js/grievance_visuals.js:50
+msgid "Add Individual"
+msgstr "Añadir individuo"
+
+#: src/hope_live/theme/static/js/grievance_visuals.js:51
+msgid "Withdraw Household"
+msgstr "Retirar hogar"
+
+#: src/hope_live/theme/static/js/grievance_visuals.js:52
+msgid "Payment Related Complaint"
+msgstr "Queja relacionada con el pago"
+
+#: src/hope_live/theme/static/js/grievance_visuals.js:53
+msgid "FSP Related Complaint"
+msgstr "Queja relacionada con el PSF"
+
+#: src/hope_live/theme/static/js/grievance_visuals.js:54
+msgid "Registration Related Complaint"
+msgstr "Queja relacionada con el registro"
+
+#: src/hope_live/theme/static/js/grievance_visuals.js:55
+msgid "Other Complaint"
+msgstr "Otra queja"
+
+#: src/hope_live/theme/static/js/grievance_visuals.js:56
+msgid "Partner Related Complaint"
+msgstr "Queja relacionada con el socio"
+
+#: src/hope_live/theme/static/js/grievance_visuals.js:57
+msgid "Unique Identifiers Similarity"
+msgstr "Similitude de identificadores únicos"
+
+#: src/hope_live/theme/static/js/grievance_visuals.js:58
+msgid "Biographical Data Similarity"
+msgstr "Similitud de datos biográficos"
+
+#: src/hope_live/theme/static/js/grievance_visuals.js:59
+msgid "Biometrics Similarity"
+msgstr "Similitud de datos biométricos"
+
+#: src/hope_live/theme/static/js/grievance_visuals.js:60
+msgid "Update Delegate"
+msgstr "Actualizar delegado"
+
+#: src/hope_live/theme/static/js/grievance_visuals.js:208
+#: src/hope_live/theme/static/js/grievance_visuals.js:424
+msgid "tickets"
+msgstr "casos"
+
+#: src/hope_live/theme/static/js/grievance_visuals.js:214
+#: src/hope_live/theme/static/js/grievance_visuals.js:233
+#: src/hope_live/theme/static/js/grievance_visuals.js:430
+#: src/hope_live/theme/static/js/grievance_visuals.js:447
+msgid "Resolved & Closed"
+msgstr "Resuelto y cerrado"
+
+#: src/hope_live/theme/static/js/grievance_visuals.js:214
+#: src/hope_live/theme/static/js/grievance_visuals.js:248
+#: src/hope_live/theme/static/js/grievance_visuals.js:430
+#: src/hope_live/theme/static/js/grievance_visuals.js:455
+msgid "Open & Active"
+msgstr "Abierto y activo"

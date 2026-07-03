@@ -3,9 +3,11 @@ from django.conf import settings
 from django.conf.urls.i18n import i18n_patterns
 from django.contrib import admin
 from django.urls import include, path
+from django.views.i18n import JavaScriptCatalog
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 
 urlpatterns = [
+    path("jsi18n/", JavaScriptCatalog.as_view(), name="javascript-catalog"),
     # 2. API endpoints (grouped together)
     path("api/analysis/", include("hope_live.analysis.api.urls")),
     path("api/schema/", SpectacularAPIView.as_view(), name="schema"),
