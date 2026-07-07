@@ -312,12 +312,34 @@ def _calculate_demographic_children(rows: list[dict[str, Any]], default_year: in
                 item["total_children"] = int(item.get("total_children") or 0) + dct_children_map[key]
 
 
+def _transform_completion_rows(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    transformed: list[dict[str, Any]] = []
+    for item in rows:
+        dim_type = str(item.get("dimension_type", "")).strip().lower()
+
+        if dim_type == "verification_status" or dim_type.startswith("pp_"):
+            continue
+
+        if dim_type == "status":
+            continue
+
+        if dim_type == "reconciliation_status":
+            item["dimension_type"] = "status"
+            dv = str(item.get("dimension_value", "")).strip().upper()
+            item["dimension_value"] = "Reconciled" if dv == "RECONCILED" else "Open"
+
+        transformed.append(item)
+    return transformed
+
+
 @shared_task(name="hope_live.analysis.tasks.save_aggregates")  # type: ignore[untyped-decorator]
 def save_aggregates(rows: list[dict[str, Any]], year: int, model_name: str, update_fields: list[str]) -> None:
     ModelClass = apps.get_model("analysis", model_name)
 
     if model_name == "DemographicAggregate":
         _calculate_demographic_children(rows, year)
+    elif model_name == "CompletionAggregate":
+        rows = _transform_completion_rows(rows)
 
     # Deduplicate rows by unique fields to prevent "ON CONFLICT DO UPDATE command cannot affect row a second time"
 

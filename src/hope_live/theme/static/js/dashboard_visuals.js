@@ -79,6 +79,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const regionDimension = ndx.dimension(d => d.region);
     const statusDimension = ndx.dimension(d => d.dimension_type === 'status' ? d.dimension_value : '');
     const countryDimension = ndx.dimension(d => d.country_slug);
+    const beneficiaryGroupDimension = ndx.dimension(d => d.dimension_type === 'beneficiary_group' ? d.dimension_value : '');
 
     const primaryDimFilter = d => d.dimension_type === 'sector';
 
@@ -149,6 +150,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const fspGroup = fspDimension.group().reduce(reduceMetric('financial_service_provider').add, reduceMetric('financial_service_provider').remove, reduceMetric('financial_service_provider').init);
     const countryGroup = countryDimension.group().reduce(reduceMetric().add, reduceMetric().remove, reduceMetric().init);
     const regionGroup = regionDimension.group().reduce(reduceMetric().add, reduceMetric().remove, reduceMetric().init);
+    const beneficiaryGroupGroup = beneficiaryGroupDimension.group().reduce(reduceMetric('beneficiary_group').add, reduceMetric('beneficiary_group').remove, reduceMetric('beneficiary_group').init);
 
     // Active filters
     const selectedSectors = new Set();
@@ -157,6 +159,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const selectedFsps = new Set();
     const selectedRegions = new Set();
     const selectedCountries = new Set();
+    const selectedBeneficiaryGroups = new Set();
 
     // Initialize ECharts instances with macarons theme
     const timelineChart = echarts.init(document.getElementById('time-focus-chart'), 'macarons');
@@ -166,6 +169,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const fspChart = echarts.init(document.getElementById('fsp-chart'), 'macarons');
     const regionChart = echarts.init(document.getElementById('region-chart'), 'macarons');
     const countryChart = echarts.init(document.getElementById('country-chart'), 'macarons');
+    const beneficiaryGroupChart = echarts.init(document.getElementById('beneficiary-group-chart'), 'macarons');
 
     // Resize Handler
     window.addEventListener('resize', function () {
@@ -176,6 +180,7 @@ document.addEventListener('DOMContentLoaded', function () {
         fspChart.resize();
         regionChart.resize();
         countryChart.resize();
+        beneficiaryGroupChart.resize();
     });
 
     const pendingList = ["SENT TO PAYMENT GATEWAY", "SENT TO FSP", "PENDING"];
@@ -414,6 +419,7 @@ document.addEventListener('DOMContentLoaded', function () {
         updateDonutChart(deliveryChart, deliveryGroup, selectedDeliveries); // Donut for delivery types!
         updateHorizontalBarChart(fspChart, fspGroup, selectedFsps, 140, 10);
         updateHorizontalBarChart(regionChart, regionGroup, selectedRegions, 140, 100, true);
+        updateHorizontalBarChart(beneficiaryGroupChart, beneficiaryGroupGroup, selectedBeneficiaryGroups, 140);
 
         // 2. Country Chart (Vertical Bar)
         const countryData = countryGroup.all()
@@ -495,6 +501,7 @@ document.addEventListener('DOMContentLoaded', function () {
     bindFilterToggle(fspChart, selectedFsps, fspDimension);
     bindFilterToggle(regionChart, selectedRegions, regionDimension);
     bindFilterToggle(countryChart, selectedCountries, countryDimension);
+    bindFilterToggle(beneficiaryGroupChart, selectedBeneficiaryGroups, beneficiaryGroupDimension);
 
     // Metric selector tab clicks
     const metricTabs = document.querySelectorAll('.metric-tab');
@@ -568,6 +575,7 @@ document.addEventListener('DOMContentLoaded', function () {
             selectedFsps.clear();
             selectedRegions.clear();
             selectedCountries.clear();
+            selectedBeneficiaryGroups.clear();
 
             sectorDimension.filterAll();
             programDimension.filterAll();
@@ -575,6 +583,7 @@ document.addEventListener('DOMContentLoaded', function () {
             fspDimension.filterAll();
             regionDimension.filterAll();
             countryDimension.filterAll();
+            beneficiaryGroupDimension.filterAll();
             dateDimension.filterAll();
 
             ndx.remove();
