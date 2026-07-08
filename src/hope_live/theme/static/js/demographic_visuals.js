@@ -247,12 +247,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 trigger: 'axis',
                 axisPointer: { type: 'shadow' }
             },
-            legend: {
-                data: [gettext('Individuals'), gettext('Households'), gettext('Children'), gettext('PWD')],
-                bottom: 0,
-                textStyle: { color: '#64748b' }
-            },
-            grid: { top: 20, bottom: 40, left: 140, right: 30 },
+            grid: { top: 20, bottom: 10, left: 140, right: 30 },
             xAxis: {
                 type: 'value',
                 axisLabel: {
@@ -268,10 +263,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 axisLabel: { color: '#1f2937', fontWeight: 500 }
             },
             series: [
-                getSectorSeries('beneficiaries', 'Individuals', '#2ec7c9'),
-                getSectorSeries('households', 'Households', '#5ab1ef'),
-                getSectorSeries('children', 'Children', '#b6a2de'),
-                getSectorSeries('pwd', 'PWD', '#ffb980')
+                getSectorSeries(activeField, activeLabel, '#2ec7c9')
             ]
         }, { notMerge: true });
 
@@ -341,11 +333,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 trigger: 'axis',
                 axisPointer: { type: 'shadow' }
             },
-            legend: {
-                data: [gettext('Individuals'), gettext('Households'), gettext('Children'), gettext('PWD')],
-                bottom: 0,
-                textStyle: { color: '#64748b' }
-            },
             grid: { top: 30, bottom: 95, left: 75, right: 20 },
             xAxis: {
                 type: 'category',
@@ -366,10 +353,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 splitLine: { lineStyle: { color: '#f1f5f9' } }
             },
             series: [
-                getCountrySeries('beneficiaries', 'Individuals', '#2ec7c9'),
-                getCountrySeries('households', 'Households', '#5ab1ef'),
-                getCountrySeries('children', 'Children', '#b6a2de'),
-                getCountrySeries('pwd', 'PWD', '#ffb980')
+                getCountrySeries(activeField, activeLabel, '#2ec7c9')
             ]
         }, { notMerge: true });
 
@@ -536,13 +520,13 @@ document.addEventListener('DOMContentLoaded', function () {
             const activeLabel = labelMap[currentMetric];
 
             const timelineTitle = document.getElementById('timeline-title');
-            if (timelineTitle) timelineTitle.textContent = t(`${activeLabel} Timeline`, `Chronologie : ${activeLabel}`);
+            if (timelineTitle) timelineTitle.textContent = `${activeLabel} ${gettext('Timeline')}`;
 
             const sectorShareTitle = document.getElementById('sector-share-title');
-            if (sectorShareTitle) sectorShareTitle.textContent = t(`Sector Share of ${activeLabel}`, `Part sectorielle : ${activeLabel}`);
+            if (sectorShareTitle) sectorShareTitle.textContent = `${gettext('Sector Share of')} ${activeLabel}`;
 
             const countryShareTitle = document.getElementById('country-share-title');
-            if (countryShareTitle) countryShareTitle.textContent = t(`Country Share of ${activeLabel}`, `Part par pays : ${activeLabel}`);
+            if (countryShareTitle) countryShareTitle.textContent = `${gettext('Country Share of')} ${activeLabel}`;
 
             updateAll();
         });
