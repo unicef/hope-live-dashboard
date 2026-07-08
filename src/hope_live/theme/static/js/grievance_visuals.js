@@ -211,7 +211,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
             },
             legend: {
-                data: [gettext('Resolved & Closed'), gettext('Open & Active')],
+                data: [gettext('Closed'), gettext('Open & Active')],
                 bottom: 0,
                 icon: 'roundRect'
             },
@@ -230,7 +230,7 @@ document.addEventListener('DOMContentLoaded', function () {
             },
             series: [
                 {
-                    name: gettext('Resolved & Closed'),
+                    name: gettext('Closed'),
                     type: 'line',
                     stack: 'total',
                     smooth: true,
@@ -427,7 +427,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
             },
             legend: {
-                data: [gettext('Resolved & Closed'), gettext('Open & Active')],
+                data: [gettext('Closed'), gettext('Open & Active')],
                 top: 0,
                 right: 20
             },
@@ -444,7 +444,7 @@ document.addEventListener('DOMContentLoaded', function () {
             },
             series: [
                 {
-                    name: gettext('Resolved & Closed'),
+                    name: gettext('Closed'),
                     type: 'bar',
                     stack: 'status',
                     barMaxWidth: 30,
