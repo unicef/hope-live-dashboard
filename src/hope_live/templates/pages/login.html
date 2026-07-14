@@ -19,10 +19,12 @@
 <div class="flex items-center justify-center">
     <div class="w-1/4 pt-20">
         <div class="text-center mt-10">
-            <a class="px-8 py-3 btn btn-primary text-white border-none text-lg font-bold rounded shadow hover:bg-unicef-dark transition duration-200 inline-block"
-                href="{% url 'social:begin' 'azuread-tenant-oauth2' %}">
-                {% translate "SSO Login" %}
-            </a>
+            <form action="{% url 'social:begin' 'azuread-tenant-oauth2' %}" method="post" class="inline">
+                {% csrf_token %}
+                <button type="submit" class="px-8 py-3 btn btn-primary text-white border-none text-lg font-bold rounded shadow hover:bg-unicef-dark transition duration-200">
+                    {% translate "SSO Login" %}
+                </button>
+            </form>
         </div>
 
         {% if debug %}
