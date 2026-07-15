@@ -6,6 +6,8 @@ from django.urls import include, path
 from django.views.i18n import JavaScriptCatalog
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 
+from hope_live.web.views import set_language
+
 urlpatterns = [
     path("jsi18n/", JavaScriptCatalog.as_view(), name="javascript-catalog"),
     # 2. API endpoints (grouped together)
@@ -21,7 +23,7 @@ urlpatterns = [
     # 5. Other app URLs
     path("ws/", include("hope_live.ws.urls", namespace="ws")),
     path("issues/", include("issues.urls")),
-    path("i18n/", include("django.conf.urls.i18n")),
+    path("i18n/setlang/", set_language, name="set_language"),
     # 6. Debug/development URLs (always last)
     path(r"__debug__/", include(debug_toolbar.urls)),
 ]

@@ -3,13 +3,18 @@ import datetime
 import logging
 import re
 from typing import Any, cast
+from urllib.parse import urlparse
 
 import requests
 from constance import config
+from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.cache import cache
 from django.db.models import Max, Sum
+from django.http import HttpRequest, HttpResponseRedirect
+from django.utils.translation import activate, get_language_from_path
 from django.views.generic import TemplateView
+from django.views.i18n import set_language as django_set_language
 
 from hope_live.analysis.models import (
     CompletionAggregate,
@@ -295,3 +300,15 @@ class TransfersView(LoginRequiredMixin, TemplateView):
 
 class DetailsView(LoginRequiredMixin, TemplateView):
     template_name = "pages/details.html"
+
+
+def set_language(request: HttpRequest) -> HttpResponseRedirect:
+    next_url = request.POST.get("next", request.GET.get("next"))
+    if next_url:
+        path = urlparse(next_url).path
+        lang = get_language_from_path(path)
+        if lang:
+            activate(lang)
+        else:
+            activate(settings.LANGUAGE_CODE)
+    return django_set_language(request)
