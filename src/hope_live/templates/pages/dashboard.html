@@ -49,7 +49,7 @@
         <h3 id="timeline-title" class="text-lg font-semibold text-gray-900 mb-2">{% translate "Spending Timeline" %}</h3>
         <div id="time-focus-chart" class="w-full" style="min-height: 350px;"></div>
         <div id="time-range-chart" style="display: none;"></div>
-        <p class="text-xs text-gray-500 mt-2 italic">{% translate "* Use the slider handles at the bottom of the timeline or click and drag to filter dates." %}</p>
+        <p class="text-xs text-gray-500 mt-2 italic">{% translate "* Use the slider handles at the bottom of the timeline or click and drag to filter dates. Changes in the timeline automatically update all visualized statistics and charts." %}</p>
     </div>
 
     <!-- Main Metrics, Delivery, Regions, and Sector Chart Layout -->
@@ -84,13 +84,14 @@
                 <div class="bg-white rounded-lg shadow p-6">
                     <h3 class="text-lg font-semibold text-gray-900 mb-4">{% translate "Regions" %}</h3>
                     <div id="region-chart" class="w-full" style="min-height: 400px;"></div>
+                    <p class="text-xs text-gray-400 mt-2 italic">{% translate "MENAR: Middle East and North Africa · ESAR: Eastern and Southern Africa · ECAR: Europe and Central Asia · WCAR: West and Central Africa · LACR: Latin America and Caribbean · EAPR: East Asia and Pacific · SAR: South Asia" %}</p>
                 </div>
             </div>
         </div>
 
         <div class="lg:col-span-1 bg-white rounded-lg shadow p-6 flex flex-col">
             <h3 class="text-lg font-semibold text-gray-900 mb-4">{% translate "Distribution by Sector" %}</h3>
-            <div id="sector-chart" class="w-full flex-grow" style="min-height: 520px;"></div>
+            <div id="sector-chart" class="w-full flex-grow" style="min-height: 350px;"></div>
         </div>
     </div>
 

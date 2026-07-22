@@ -278,38 +278,31 @@ def get_fertility_rate(country_slug: str, year: int) -> float:
 
 
 def _calculate_demographic_children(rows: list[dict[str, Any]], default_year: int) -> None:
-    dct_children_map = {}
-    # Calculate estimated children for DCT program rows
     for item in rows:
         dim_type = str(item.get("dimension_type", "")).strip().lower()
         dim_value = str(item.get("dimension_value", "")).strip().upper()
-        if dim_type == "program" and dim_value == "DCT":
-            households = float(item.get("total_households") or 0)
-            country = str(item.get("country_slug", "")).strip().lower()
+        if dim_type != "sector" or dim_value != "MULTI_PURPOSE":
+            continue
 
-            # Extract year dynamically from date
-            item_date_str = item.get("date")
-            if isinstance(item_date_str, str):
-                item_year = int(item_date_str.split("-")[0])
-            elif item_date_str is not None and hasattr(item_date_str, "year"):
-                item_year = item_date_str.year
-            else:
-                item_year = default_year
+        children = int(item.get("total_children") or 0)
+        if children > 0:
+            continue
 
-            rate = get_fertility_rate(country, item_year)
-            est_children = int(households * rate)
-            item["total_children"] = est_children
-            dct_children_map[(str(item_date_str), country)] = est_children
+        households = float(item.get("total_households") or 0)
+        if households <= 0:
+            continue
 
-    # Add estimated children to the MULTI_PURPOSE sector row matching country & date
-    for item in rows:
-        dim_type = str(item.get("dimension_type", "")).strip().lower()
-        dim_value = str(item.get("dimension_value", "")).strip().upper()
-        if dim_type == "sector" and dim_value == "MULTI_PURPOSE":
-            country = str(item.get("country_slug", "")).strip().lower()
-            key = (str(item.get("date")), country)
-            if key in dct_children_map:
-                item["total_children"] = int(item.get("total_children") or 0) + dct_children_map[key]
+        country = str(item.get("country_slug", "")).strip().lower()
+        item_date_str = item.get("date")
+        if isinstance(item_date_str, str):
+            item_year = int(item_date_str.split("-")[0])
+        elif item_date_str is not None and hasattr(item_date_str, "year"):
+            item_year = item_date_str.year
+        else:
+            item_year = default_year
+
+        rate = get_fertility_rate(country, item_year)
+        item["total_children"] = int(households * rate)
 
 
 def _transform_completion_rows(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:

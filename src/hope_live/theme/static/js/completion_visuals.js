@@ -42,7 +42,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const dateDimension = ndx.dimension(d => d.date);
     const countryDimension = ndx.dimension(d => d.country_slug);
-    const beneficiaryGroupDimension = ndx.dimension(d => d.dimension_type === 'beneficiary_group' ? d.dimension_value : '');
 
     const primaryDimFilter = d => d.dimension_type === 'status';
 
@@ -132,40 +131,19 @@ document.addEventListener('DOMContentLoaded', function () {
         () => ({ reconciled_payments: 0, reconciled_usd: 0, opened_payments: 0, opened_usd: 0 })
     );
 
-    const beneficiaryGroupGroup = beneficiaryGroupDimension.group().reduce(
-        (p, v) => {
-            if (v.dimension_type === 'beneficiary_group') {
-                p.payments += v.payment_count;
-                p.usd += +v.total_usd;
-            }
-            return p;
-        },
-        (p, v) => {
-            if (v.dimension_type === 'beneficiary_group') {
-                p.payments -= v.payment_count;
-                p.usd -= +v.total_usd;
-            }
-            return p;
-        },
-        () => ({ payments: 0, usd: 0 })
-    );
-
     // Active filters
     const selectedCountries = new Set();
-    const selectedBeneficiaryGroups = new Set();
 
     // Initialize ECharts instances with macarons theme
     const timelineChart = echarts.init(document.getElementById('time-focus-chart'), 'macarons');
     const countryChart = echarts.init(document.getElementById('status-country-chart'), 'macarons');
     const completionGauge = echarts.init(document.getElementById('completion-gauge'), 'macarons');
-    const beneficiaryGroupChart = echarts.init(document.getElementById('beneficiary-group-chart'), 'macarons');
 
     // Resize Handler
     window.addEventListener('resize', function () {
         timelineChart.resize();
         countryChart.resize();
         completionGauge.resize();
-        beneficiaryGroupChart.resize();
     });
 
     function updateTotals() {
@@ -403,51 +381,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
             ]
         }, { notMerge: true });
-
-        // Beneficiary Group Chart
-        const bgData = beneficiaryGroupGroup.all()
-            .filter(d => d.key !== '' && d.key !== null && d.value[currentMetric] > 0)
-            .sort((a, b) => b.value[currentMetric] - a.value[currentMetric]);
-
-        const hasAnyBgSelection = selectedBeneficiaryGroups.size > 0;
-        const bgSeriesData = bgData.map(d => {
-            const stableColor = getStableColor(d.key);
-            return {
-                name: d.key,
-                value: d.value[currentMetric],
-                itemStyle: {
-                    color: selectedBeneficiaryGroups.has(d.key)
-                        ? stableColor
-                        : (hasAnyBgSelection ? '#cbd5e1' : stableColor)
-                }
-            };
-        });
-
-        beneficiaryGroupChart.setOption({
-            tooltip: {
-                trigger: 'axis',
-                axisPointer: { type: 'shadow' },
-                formatter: params => `${params[0].name}: <b>${formatFullVal(params[0].value)}</b> ${unitName}`
-            },
-            grid: { top: 20, bottom: 30, left: 140, right: 30 },
-            xAxis: {
-                type: 'value',
-                axisLabel: { formatter: val => formatMetric(val), color: '#64748b' },
-                splitLine: { lineStyle: { color: '#f1f5f9' } }
-            },
-            yAxis: {
-                type: 'category',
-                data: bgData.map(d => d.key),
-                inverse: true,
-                axisLabel: { color: '#1f2937', fontWeight: 500 }
-            },
-            series: [{
-                type: 'bar',
-                data: bgSeriesData,
-                barMaxWidth: 22,
-                itemStyle: { borderRadius: [0, 4, 4, 0] }
-            }]
-        }, { notMerge: true });
     }
 
     // --- Interaction Bindings ---
@@ -476,21 +409,6 @@ document.addEventListener('DOMContentLoaded', function () {
             countryDimension.filterAll();
         } else {
             countryDimension.filterFunction(d => selectedCountries.has(d));
-        }
-        updateAll();
-    });
-
-    beneficiaryGroupChart.on('click', function (params) {
-        const name = params.name;
-        if (selectedBeneficiaryGroups.has(name)) {
-            selectedBeneficiaryGroups.delete(name);
-        } else {
-            selectedBeneficiaryGroups.add(name);
-        }
-        if (selectedBeneficiaryGroups.size === 0) {
-            benefGroupDimension.filterAll();
-        } else {
-            beneficiaryGroupDimension.filterFunction(d => selectedBeneficiaryGroups.has(d));
         }
         updateAll();
     });
@@ -564,9 +482,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             // Clean state (clear filters FIRST, then remove old data)
             selectedCountries.clear();
-            selectedBeneficiaryGroups.clear();
             countryDimension.filterAll();
-            beneficiaryGroupDimension.filterAll();
             dateDimension.filterAll();
 
             ndx.remove();

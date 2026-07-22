@@ -67,6 +67,20 @@ document.addEventListener('DOMContentLoaded', function () {
         'yemen': 'MENAR'
     };
 
+    const REGION_NAMES = {
+        'MENAR': gettext('Middle East and North Africa (MENA)'),
+        'ESAR': gettext('Eastern and Southern Africa (ESA)'),
+        'ECAR': gettext('Europe and Central Asia (ECA)'),
+        'WCAR': gettext('West and Central Africa (WCA)'),
+        'LACR': gettext('Latin America and Caribbean (LAC)'),
+        'EAPR': gettext('East Asia and Pacific (EAP)'),
+        'SAR': gettext('South Asia (SA)'),
+    };
+
+    function getRegionName(code) {
+        return REGION_NAMES[code] || code;
+    }
+
     // Initialize empty Crossfilter
     let ndx = crossfilter([]);
 
@@ -414,11 +428,144 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         // Update Charts
-        updateHorizontalBarChart(sectorChart, sectorGroup, selectedSectors, 140);
+        // Sector Chart (compact horizontal bars with inline labels)
+        const sectorData = sectorGroup.all()
+            .filter(d => d.key !== '' && d.key !== null && d.value[currentMetric] > 0)
+            .sort((a, b) => b.value[currentMetric] - a.value[currentMetric]);
+
+        const sectorTotal = sectorData.reduce((s, d) => s + d.value[currentMetric], 0);
+        const hasAnySectorSelection = selectedSectors.size > 0;
+        sectorChart.setOption({
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: { type: 'shadow' },
+                formatter: params => `${params[0].name}: <b>${formatFullVal(params[0].value)}</b>`
+            },
+            grid: { top: 0, bottom: 10, left: 0, right: 10 },
+            xAxis: { type: 'value', show: false },
+            yAxis: {
+                type: 'category',
+                data: sectorData.map(d => d.key),
+                inverse: true,
+                axisLine: { show: false },
+                axisTick: { show: false },
+                axisLabel: { show: false }
+            },
+            series: [{
+                type: 'bar',
+                data: sectorData.map(d => {
+                    const pct = sectorTotal > 0 ? ((d.value[currentMetric] / sectorTotal) * 100).toFixed(0) : 0;
+                    const stableColor = getStableColor(d.key);
+                    return {
+                        value: d.value[currentMetric],
+                        itemStyle: {
+                            color: selectedSectors.has(d.key) ? stableColor : (hasAnySectorSelection ? '#cbd5e1' : stableColor),
+                            borderRadius: [0, 4, 4, 0]
+                        },
+                        label: {
+                            show: true,
+                            position: 'insideLeft',
+                            formatter: `${d.key}: ${formatFullVal(d.value[currentMetric])} (${pct}%)`,
+                            color: '#1f2937',
+                            fontWeight: 600,
+                            fontSize: 11
+                        }
+                    };
+                }),
+                barMaxWidth: 18
+            }]
+        }, { notMerge: true });
         updateHorizontalBarChart(programChart, programGroup, selectedPrograms, 140, 10);
-        updateDonutChart(deliveryChart, deliveryGroup, selectedDeliveries); // Donut for delivery types!
+        // Delivery Donut Chart with split legends
+        const deliveryRawData = deliveryGroup.all()
+            .map(d => ({ name: d.key, value: d.value[currentMetric] }))
+            .filter(d => d.name !== '' && d.name !== null && d.value > 0);
+
+        const hasAnyDeliverySelection = selectedDeliveries.size > 0;
+        const deliverySeriesData = deliveryRawData.map(d => {
+            const stableColor = getStableColor(d.name);
+            return {
+                name: d.name,
+                value: d.value,
+                itemStyle: {
+                    color: selectedDeliveries.has(d.name) ? stableColor : (hasAnyDeliverySelection ? '#cbd5e1' : stableColor)
+                }
+            };
+        });
+
+        const mid = Math.ceil(deliverySeriesData.length / 2);
+        deliveryChart.setOption({
+            tooltip: {
+                trigger: 'item',
+                formatter: params => `${params.name}: <b>${formatFullVal(params.value)}</b> (${params.percent}%)`
+            },
+            legend: [
+                { orient: 'vertical', left: 'left', top: 'middle', data: deliverySeriesData.slice(0, mid).map(d => d.name), textStyle: { color: '#64748b' } },
+                { orient: 'vertical', left: 'right', top: 'middle', data: deliverySeriesData.slice(mid).map(d => d.name), textStyle: { color: '#64748b' } }
+            ],
+            series: [{
+                type: 'pie',
+                radius: ['45%', '70%'],
+                center: ['50%', '50%'],
+                avoidLabelOverlap: true,
+                itemStyle: { borderRadius: 6, borderColor: '#fff', borderWidth: 2 },
+                label: { show: false, position: 'center' },
+                emphasis: {
+                    label: { show: true, fontSize: 14, fontWeight: 'bold', formatter: params => `${params.name}\n${formatMetric(params.value)}` }
+                },
+                data: deliverySeriesData
+            }]
+        }, { notMerge: true });
         updateHorizontalBarChart(fspChart, fspGroup, selectedFsps, 140, 10);
-        updateHorizontalBarChart(regionChart, regionGroup, selectedRegions, 140, 100, true);
+        // Region Chart (with full-name mapping)
+        const regionData = regionGroup.all()
+            .map(d => {
+                const valObj = d.value[activeDimType] || { usd: 0, qty: 0, payments: 0 };
+                return { key: d.key, fullName: getRegionName(d.key), value: valObj[currentMetric] };
+            })
+            .filter(d => d.key !== '' && d.key !== null && d.value > 0)
+            .sort((a, b) => b.value - a.value)
+            .slice(0, 100);
+
+        const hasAnyRegionSelection = selectedRegions.size > 0;
+        regionChart.setOption({
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: { type: 'shadow' },
+                formatter: params => `${getRegionName(params[0].name)}: <b>${formatFullVal(params[0].value)}</b>`
+            },
+            grid: { top: 20, bottom: 30, left: 140, right: 30 },
+            xAxis: {
+                type: 'value',
+                axisLabel: { formatter: val => formatMetric(val), color: '#64748b' },
+                splitLine: { lineStyle: { color: '#f1f5f9' } }
+            },
+            yAxis: {
+                type: 'category',
+                data: regionData.map(d => d.key),
+                inverse: true,
+                axisLabel: {
+                    color: '#1f2937',
+                    fontWeight: 500,
+                    formatter: val => getRegionName(val).length > 28 ? getRegionName(val).substring(0, 28) + '...' : getRegionName(val)
+                }
+            },
+            series: [{
+                type: 'bar',
+                data: regionData.map(d => {
+                    const stableColor = getStableColor(d.key);
+                    return {
+                        name: d.key,
+                        value: d.value,
+                        itemStyle: {
+                            color: selectedRegions.has(d.key) ? stableColor : (hasAnyRegionSelection ? '#cbd5e1' : stableColor)
+                        }
+                    };
+                }),
+                barMaxWidth: 22,
+                itemStyle: { borderRadius: [0, 4, 4, 0] }
+            }]
+        }, { notMerge: true });
         updateHorizontalBarChart(beneficiaryGroupChart, beneficiaryGroupGroup, selectedBeneficiaryGroups, 140);
 
         // 2. Country Chart (Vertical Bar)

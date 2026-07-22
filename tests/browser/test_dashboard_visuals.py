@@ -179,9 +179,7 @@ def test_demographic_dashboard_loads(browser, demographic_aggregates, financial_
     browser.wait_for_element_visible("#total-children")
     browser.wait_for_element_visible("#total-households")
     browser.wait_for_element_visible("#total-pwd")
-    browser.wait_for_element_visible("#sector-individuals-chart canvas")
     browser.wait_for_element_visible("#sector-children-chart canvas")
-    browser.wait_for_element_visible("#country-individuals-chart canvas")
     browser.wait_for_element_visible("#country-pwd-chart canvas")
     browser.wait_for_element_visible("#time-focus-chart canvas")
     browser.wait_for_element_visible("#beneficiary-group-chart canvas")
@@ -211,7 +209,6 @@ def test_completion_dashboard_loads(browser, completion_aggregates, financial_ag
     browser.wait_for_element_visible("#time-focus-chart canvas")
     browser.wait_for_element_visible("#status-country-chart canvas")
     browser.wait_for_element_visible("#completion-gauge canvas")
-    browser.wait_for_element_visible("#beneficiary-group-chart canvas")
 
     # Assert current year totals
     browser.assert_text("15 (100.0% out of 15 total)", "#total-reconciled")

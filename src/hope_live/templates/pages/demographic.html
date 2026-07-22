@@ -51,7 +51,7 @@
         <h3 id="timeline-title" class="text-lg font-semibold text-gray-900 mb-2">{% translate "Reach Timeline" %}</h3>
         <div id="time-focus-chart" class="w-full" style="min-height: 350px;"></div>
         <div id="time-range-chart" style="display: none;"></div>
-        <p class="text-xs text-gray-500 mt-2 italic">{% translate "* Use the slider handles at the bottom of the timeline or click and drag to filter dates." %}</p>
+        <p class="text-xs text-gray-500 mt-2 italic">{% translate "* Use the slider handles at the bottom of the timeline or click and drag to filter dates. Changes in the timeline automatically update all visualized statistics and charts." %}</p>
     </div>
 
 
@@ -79,22 +79,10 @@
 
     <!-- Main Demographic Charts -->
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-        <div class="bg-white rounded-lg shadow p-6">
-            <h3 class="text-lg font-semibold text-gray-900 mb-4">{% translate "Demographic Breakdown by Sector" %}</h3>
-            <div id="sector-individuals-chart" class="w-full" style="min-height: 350px;"></div>
-        </div>
         <div class="bg-white rounded-lg shadow p-6 flex flex-col">
             <h3 id="sector-share-title" class="text-lg font-semibold text-gray-900 mb-2">{% translate "Sector Share of Reached Population" %}</h3>
             <p class="text-xs text-gray-400 mb-4 italic">{% translate "Note: For programmes (like DCT) not collecting children data, numbers are estimated by multiplying Household numbers by fertility rates." %}</p>
             <div id="sector-children-chart" class="w-full flex-grow" style="min-height: 350px;"></div>
-        </div>
-    </div>
-
-    <!-- Geographic Breakdown -->
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        <div class="bg-white rounded-lg shadow p-6">
-            <h3 class="text-lg font-semibold text-gray-900 mb-4">{% translate "Demographic Breakdown by Country" %}</h3>
-            <div id="country-individuals-chart" class="w-full" style="min-height: 500px;"></div>
         </div>
         <div class="bg-white rounded-lg shadow p-6">
             <h3 id="country-share-title" class="text-lg font-semibold text-gray-900 mb-4">{% translate "Country Share of Reached Population" %}</h3>
