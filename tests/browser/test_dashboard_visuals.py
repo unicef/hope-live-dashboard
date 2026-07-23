@@ -46,7 +46,7 @@ def demographic_aggregates(db):
     for i in range(5):
         DemographicAggregateFactory(
             date=datetime.date(year, 1, i + 1),
-            time_grain="daily",
+            time_grain="monthly",
             country_slug=f"country-{i}",
             dimension_type="sector",
             dimension_value=f"Education-{i}",
@@ -59,7 +59,7 @@ def demographic_aggregates(db):
     for i in range(5):
         DemographicAggregateFactory(
             date=datetime.date(year - 1, 1, i + 1),
-            time_grain="daily",
+            time_grain="monthly",
             country_slug=f"country-{i}",
             dimension_type="sector",
             dimension_value=f"Education-{i}",
@@ -158,6 +158,7 @@ def test_financial_dashboard_loads(browser, financial_aggregates):
     browser.wait_for_element_visible("#region-chart canvas")
     browser.wait_for_element_visible("#program-chart canvas")
     browser.wait_for_element_visible("#fsp-chart canvas")
+    browser.wait_for_element_visible("#beneficiary-group-chart canvas")
     browser.wait_for_element_visible("#total-qty-distributed")
 
     # Assert current year totals (for loops will default to current year first)
@@ -183,6 +184,7 @@ def test_demographic_dashboard_loads(browser, demographic_aggregates, financial_
     browser.wait_for_element_visible("#country-individuals-chart canvas")
     browser.wait_for_element_visible("#country-pwd-chart canvas")
     browser.wait_for_element_visible("#time-focus-chart canvas")
+    browser.wait_for_element_visible("#beneficiary-group-chart canvas")
 
     # Assert current year totals
     browser.assert_text("1,000", "#total-individuals")
@@ -209,6 +211,7 @@ def test_completion_dashboard_loads(browser, completion_aggregates, financial_ag
     browser.wait_for_element_visible("#time-focus-chart canvas")
     browser.wait_for_element_visible("#status-country-chart canvas")
     browser.wait_for_element_visible("#completion-gauge canvas")
+    browser.wait_for_element_visible("#beneficiary-group-chart canvas")
 
     # Assert current year totals
     browser.assert_text("15 (100.0% out of 15 total)", "#total-reconciled")

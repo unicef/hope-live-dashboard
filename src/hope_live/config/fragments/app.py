@@ -1,3 +1,4 @@
 from .. import env
 
 ENVIRONMENT = env("ENVIRONMENT")
+DATA_UPLOAD_MAX_NUMBER_FIELDS = 5000
