@@ -43,6 +43,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const dateDimension = ndx.dimension(d => d.date);
     const sectorDimension = ndx.dimension(d => primaryDimFilter(d) ? d.dimension_value : '');
     const countryDimension = ndx.dimension(d => d.country_slug);
+    const beneficiaryGroupDimension = ndx.dimension(d => d.dimension_type === 'beneficiary_group' ? d.dimension_value : '');
 
     // Multi-metric custom reduction helper
     function reduceDemographics(dimType) {
@@ -70,8 +71,8 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // Groups
-    const moveDays = dateDimension.group(d3.timeDay);
-    const volumeByDayGroup = moveDays.reduce(
+    const moveMonths = dateDimension.group(d3.timeMonth);
+    const volumeByMonthGroup = moveMonths.reduce(
         (p, v) => {
             if (primaryDimFilter(v)) {
                 p.beneficiaries += +v.total_beneficiaries;
@@ -105,9 +106,16 @@ document.addEventListener('DOMContentLoaded', function () {
         reduceDemographics('sector').init
     );
 
+    const beneficiaryGroupGroup = beneficiaryGroupDimension.group().reduce(
+        reduceDemographics('beneficiary_group').add,
+        reduceDemographics('beneficiary_group').remove,
+        reduceDemographics('beneficiary_group').init
+    );
+
     // Active Filters Sets
     const selectedSectors = new Set();
     const selectedCountries = new Set();
+    const selectedBeneficiaryGroups = new Set();
 
     // Initialize ECharts instances with macarons theme
     const timelineChart = echarts.init(document.getElementById('time-focus-chart'), 'macarons');
@@ -115,6 +123,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const sectorChildChart = echarts.init(document.getElementById('sector-children-chart'), 'macarons');
     const countryIndChart = echarts.init(document.getElementById('country-individuals-chart'), 'macarons');
     const countryPwdChart = echarts.init(document.getElementById('country-pwd-chart'), 'macarons');
+    const beneficiaryGroupChart = echarts.init(document.getElementById('beneficiary-group-chart'), 'macarons');
 
     // Resize Handler
     window.addEventListener('resize', function () {
@@ -123,6 +132,7 @@ document.addEventListener('DOMContentLoaded', function () {
         sectorChildChart.resize();
         countryIndChart.resize();
         countryPwdChart.resize();
+        beneficiaryGroupChart.resize();
     });
 
     function updateTotals() {
@@ -144,7 +154,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const activeLabel = labelMap[currentMetric];
 
         // 1. Timeline Chart (Area / Time Axis with linear gradient and smooth curves)
-        const timelineData = volumeByDayGroup.all()
+        const timelineData = volumeByMonthGroup.all()
             .filter(d => d.key !== null)
             .map(d => [d.key.getTime(), d.value[activeField]]);
 
@@ -237,12 +247,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 trigger: 'axis',
                 axisPointer: { type: 'shadow' }
             },
-            legend: {
-                data: [gettext('Individuals'), gettext('Households'), gettext('Children'), gettext('PWD')],
-                bottom: 0,
-                textStyle: { color: '#64748b' }
-            },
-            grid: { top: 20, bottom: 40, left: 140, right: 30 },
+            grid: { top: 20, bottom: 10, left: 140, right: 30 },
             xAxis: {
                 type: 'value',
                 axisLabel: {
@@ -258,10 +263,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 axisLabel: { color: '#1f2937', fontWeight: 500 }
             },
             series: [
-                getSectorSeries('beneficiaries', 'Individuals', '#2ec7c9'),
-                getSectorSeries('households', 'Households', '#5ab1ef'),
-                getSectorSeries('children', 'Children', '#b6a2de'),
-                getSectorSeries('pwd', 'PWD', '#ffb980')
+                getSectorSeries(activeField, activeLabel, '#2ec7c9')
             ]
         }, { notMerge: true });
 
@@ -331,11 +333,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 trigger: 'axis',
                 axisPointer: { type: 'shadow' }
             },
-            legend: {
-                data: [gettext('Individuals'), gettext('Households'), gettext('Children'), gettext('PWD')],
-                bottom: 0,
-                textStyle: { color: '#64748b' }
-            },
             grid: { top: 30, bottom: 95, left: 75, right: 20 },
             xAxis: {
                 type: 'category',
@@ -356,10 +353,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 splitLine: { lineStyle: { color: '#f1f5f9' } }
             },
             series: [
-                getCountrySeries('beneficiaries', 'Individuals', '#2ec7c9'),
-                getCountrySeries('households', 'Households', '#5ab1ef'),
-                getCountrySeries('children', 'Children', '#b6a2de'),
-                getCountrySeries('pwd', 'PWD', '#ffb980')
+                getCountrySeries(activeField, activeLabel, '#2ec7c9')
             ]
         }, { notMerge: true });
 
@@ -392,6 +386,50 @@ document.addEventListener('DOMContentLoaded', function () {
                 label: { show: true, formatter: '{b}\n({d}%)', fontSize: 11 },
                 emphasis: { label: { show: true, fontSize: 13, fontWeight: 'bold' } },
                 data: countryDonutData
+            }]
+        }, { notMerge: true });
+
+        // 6. Beneficiary Group Chart
+        const bgData = beneficiaryGroupGroup.all()
+            .filter(d => d.key !== null && d.value.beneficiaries > 0)
+            .sort((a, b) => b.value[activeField] - a.value[activeField]);
+
+        const bgCategories = bgData.map(d => d.key);
+        const hasAnyBgSelection = selectedBeneficiaryGroups.size > 0;
+        const bgSeriesData = bgData.map(d => {
+            const stableColor = getStableColor(d.key);
+            const isSelected = selectedBeneficiaryGroups.has(d.key);
+            return {
+                value: d.value[activeField],
+                itemStyle: {
+                    color: isSelected ? stableColor : (hasAnyBgSelection ? '#cbd5e1' : stableColor)
+                }
+            };
+        });
+
+        beneficiaryGroupChart.setOption({
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: { type: 'shadow' },
+                formatter: params => `${params[0].name}: <b>${d3.format(",")(params[0].value)}</b>`
+            },
+            grid: { top: 20, bottom: 30, left: 140, right: 30 },
+            xAxis: {
+                type: 'value',
+                axisLabel: { formatter: val => d3.format(".2s")(val).replace('G', 'B'), color: '#64748b' },
+                splitLine: { lineStyle: { color: '#f1f5f9' } }
+            },
+            yAxis: {
+                type: 'category',
+                data: bgCategories,
+                inverse: true,
+                axisLabel: { color: '#1f2937', fontWeight: 500 }
+            },
+            series: [{
+                type: 'bar',
+                data: bgSeriesData,
+                barMaxWidth: 22,
+                itemStyle: { borderRadius: [0, 4, 4, 0] }
             }]
         }, { notMerge: true });
     }
@@ -452,6 +490,21 @@ document.addEventListener('DOMContentLoaded', function () {
     countryIndChart.on('click', handleCountryClick);
     countryPwdChart.on('click', handleCountryClick);
 
+    beneficiaryGroupChart.on('click', function (params) {
+        const name = params.name;
+        if (selectedBeneficiaryGroups.has(name)) {
+            selectedBeneficiaryGroups.delete(name);
+        } else {
+            selectedBeneficiaryGroups.add(name);
+        }
+        if (selectedBeneficiaryGroups.size === 0) {
+            beneficiaryGroupDimension.filterAll();
+        } else {
+            beneficiaryGroupDimension.filterFunction(d => selectedBeneficiaryGroups.has(d));
+        }
+        updateAll();
+    });
+
     // Metric Toggle Tab Selection
     const metricTabs = document.querySelectorAll('.metric-tab');
     metricTabs.forEach(btn => {
@@ -467,13 +520,13 @@ document.addEventListener('DOMContentLoaded', function () {
             const activeLabel = labelMap[currentMetric];
 
             const timelineTitle = document.getElementById('timeline-title');
-            if (timelineTitle) timelineTitle.textContent = t(`${activeLabel} Timeline`, `Chronologie : ${activeLabel}`);
+            if (timelineTitle) timelineTitle.textContent = `${activeLabel} ${gettext('Timeline')}`;
 
             const sectorShareTitle = document.getElementById('sector-share-title');
-            if (sectorShareTitle) sectorShareTitle.textContent = t(`Sector Share of ${activeLabel}`, `Part sectorielle : ${activeLabel}`);
+            if (sectorShareTitle) sectorShareTitle.textContent = `${gettext('Sector Share of')} ${activeLabel}`;
 
             const countryShareTitle = document.getElementById('country-share-title');
-            if (countryShareTitle) countryShareTitle.textContent = t(`Country Share of ${activeLabel}`, `Part par pays : ${activeLabel}`);
+            if (countryShareTitle) countryShareTitle.textContent = `${gettext('Country Share of')} ${activeLabel}`;
 
             updateAll();
         });
@@ -482,7 +535,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // --- Load Data ---
     async function loadData(year) {
         try {
-            const url = `${window.DASHBOARD_CONFIG.endpoint}?year=${year}&dashboard=${window.DASHBOARD_CONFIG.type}&time_grain=daily`;
+            const url = `${window.DASHBOARD_CONFIG.endpoint}?year=${year}&dashboard=${window.DASHBOARD_CONFIG.type}&time_grain=monthly`;
             const response = await fetch(url, {
                 credentials: 'same-origin',
                 headers: {
@@ -517,8 +570,10 @@ document.addEventListener('DOMContentLoaded', function () {
             // Clean existing state and filters (clear filters FIRST, then remove old data)
             selectedSectors.clear();
             selectedCountries.clear();
+            selectedBeneficiaryGroups.clear();
             sectorDimension.filterAll();
             countryDimension.filterAll();
+            beneficiaryGroupDimension.filterAll();
             dateDimension.filterAll();
 
             ndx.remove();

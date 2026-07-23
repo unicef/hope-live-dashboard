@@ -27,18 +27,18 @@ jobs:
           token: ${{ github.token }}
           filters: .github/file-filters.yml
 
-  test:
+  unit-tests:
     needs: [ changes ]
     if: github.event_name == 'workflow_dispatch' || needs.changes.outputs.run_tests == 'true'
     runs-on: ubuntu-latest
-    env:
+    env: &test-env
       DATABASE_URL: postgres://postgres:postgres@localhost:5432/hope_live
       CELERY_BROKER_URL: redis://localhost:6379/1
       CACHE_URL: redis://localhost:6379/2
       REDIS_URL: redis://localhost:6379/3
       CONSTANCE_REDIS_URL: redis://localhost:6379/3
       STREAMING_BROKER_URL: "rabbit://guest:guest@localhost:5672?exchange=hope_live"
-    services:
+    services: &test-services
       db:
         image: postgres:15
         env:
@@ -62,15 +62,15 @@ jobs:
           - 5672:5672
     steps:
       - uses: actions/checkout@v7
-        with:
+        with: &checkout-config
           fetch-depth: 0
 
       - name: Install gettext
-        run: sudo apt-get update && sudo apt-get install -y gettext
+        run: &gettext-step sudo apt-get update && sudo apt-get install -y gettext
 
       - name: Install the latest version of uv
-        uses: astral-sh/setup-uv@v7
-        with:
+        uses: &uv-step astral-sh/setup-uv@v7
+        with: &uv-config
           version: "latest"
           enable-cache: true
           cache-dependency-glob: |
@@ -79,24 +79,13 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Install tox
-        run: uv tool install --python-preference only-managed --python 3.14 tox --with tox-uv --with tox-gh-actions
+        run: &tox-install uv tool install --python-preference only-managed --python 3.14 tox --with tox-uv --with tox-gh-actions
 
       - name: Setup test suite
         run: tox run -vv --notest --skip-missing-interpreters false -e tests
 
-      - name: Run test unit tests
+      - name: Run unit tests
         run: tox -e tests
-
-      - name: Run test selenium tests
-        run: tox -e selenium
-
-      - name: Archive selenium results
-        uses: actions/upload-artifact@v7
-        if: failure()
-        with:
-          name: selenium-log-report
-          path: latest_logs
-          retention-days: 5
 
       - name: Upload pytest test results
         uses: actions/upload-artifact@v7
@@ -117,3 +106,37 @@ jobs:
           token: ${{ secrets.CODECOV_TOKEN }}
           name: codecov-${{env.GITHUB_REF_NAME}}
           slug: ${{ github.repository }}
+
+  selenium-tests:
+    needs: [ changes ]
+    if: github.event_name == 'workflow_dispatch' || needs.changes.outputs.run_tests == 'true'
+    runs-on: ubuntu-latest
+    env: *test-env
+    services: *test-services
+    steps:
+      - uses: actions/checkout@v7
+        with: *checkout-config
+
+      - name: Install gettext
+        run: *gettext-step
+
+      - name: Install the latest version of uv
+        uses: *uv-step
+        with: *uv-config
+
+      - name: Install tox
+        run: *tox-install
+
+      - name: Setup test suite
+        run: tox run -vv --notest --skip-missing-interpreters false -e selenium
+
+      - name: Run selenium tests
+        run: tox -e selenium
+
+      - name: Archive selenium results
+        uses: actions/upload-artifact@v7
+        if: failure()
+        with:
+          name: selenium-log-report
+          path: latest_logs
+          retention-days: 5
