@@ -211,7 +211,7 @@ document.addEventListener('DOMContentLoaded', function () {
             timelineChart.setOption(timelineOption);
         }
 
-        // 2. Sector Distribution Chart (Donut with split legends)
+        // 2. Sector Distribution Chart (Donut with outside labels)
         const sectorData = sectorGroup.all().filter(d => d.key !== '' && d.key !== null && d.value.beneficiaries > 0);
 
         const hasAnySectorSelection = selectedSectors.size > 0;
@@ -227,29 +227,25 @@ document.addEventListener('DOMContentLoaded', function () {
             };
         }).filter(d => d.value > 0);
 
-        const sectorMid = Math.ceil(sectorDonutData.length / 2);
         sectorChildChart.setOption({
             tooltip: {
                 trigger: 'item',
                 formatter: '{b}: <b>{c}</b> ({d}%)'
             },
-            legend: [
-                { orient: 'vertical', left: 'left', top: 'middle', data: sectorDonutData.slice(0, sectorMid).map(d => d.name), textStyle: { color: '#64748b' } },
-                { orient: 'vertical', left: 'right', top: 'middle', data: sectorDonutData.slice(sectorMid).map(d => d.name), textStyle: { color: '#64748b' } }
-            ],
             series: [{
                 type: 'pie',
                 radius: ['45%', '70%'],
                 center: ['50%', '50%'],
                 avoidLabelOverlap: true,
                 itemStyle: { borderRadius: 6, borderColor: '#fff', borderWidth: 2 },
-                label: { show: true, formatter: '{b}\n({d}%)', fontSize: 11 },
+                label: { show: true, position: 'outside', formatter: '{b}\n({d}%)', fontSize: 11, color: '#374151' },
+                labelLine: { show: true, length: 15, length2: 10, smooth: false },
                 emphasis: { label: { show: true, fontSize: 13, fontWeight: 'bold' } },
                 data: sectorDonutData
             }]
         }, { notMerge: true });
 
-        // 3. Country Distribution Chart (Donut with split legends)
+        // 3. Country Distribution Chart (Donut with outside labels)
         const countryData = countryGroup.all()
             .filter(d => d.key !== null && d.value.beneficiaries > 0)
             .sort((a, b) => b.value[activeField] - a.value[activeField])
@@ -268,23 +264,19 @@ document.addEventListener('DOMContentLoaded', function () {
             };
         }).filter(d => d.value > 0);
 
-        const countryMid = Math.ceil(countryDonutData.length / 2);
         countryPwdChart.setOption({
             tooltip: {
                 trigger: 'item',
                 formatter: '{b}: <b>{c}</b> ({d}%)'
             },
-            legend: [
-                { orient: 'vertical', left: 'left', top: 'middle', data: countryDonutData.slice(0, countryMid).map(d => d.name), textStyle: { color: '#64748b' } },
-                { orient: 'vertical', left: 'right', top: 'middle', data: countryDonutData.slice(countryMid).map(d => d.name), textStyle: { color: '#64748b' } }
-            ],
             series: [{
                 type: 'pie',
                 radius: ['45%', '70%'],
                 center: ['50%', '50%'],
                 avoidLabelOverlap: true,
                 itemStyle: { borderRadius: 6, borderColor: '#fff', borderWidth: 2 },
-                label: { show: true, formatter: '{b}\n({d}%)', fontSize: 11 },
+                label: { show: true, position: 'outside', formatter: '{b}\n({d}%)', fontSize: 11, color: '#374151' },
+                labelLine: { show: true, length: 15, length2: 10, smooth: false },
                 emphasis: { label: { show: true, fontSize: 13, fontWeight: 'bold' } },
                 data: countryDonutData
             }]

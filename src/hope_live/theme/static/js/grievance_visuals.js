@@ -279,9 +279,11 @@ document.addEventListener('DOMContentLoaded', function () {
             series: [{
                 type: 'pie',
                 radius: ['45%', '70%'],
+                center: ['50%', '50%'],
                 avoidLabelOverlap: true,
                 itemStyle: { borderRadius: 6, borderColor: '#fff', borderWidth: 2 },
-                label: { show: true, formatter: '{b}: {c}' },
+                label: { show: true, position: 'outside', formatter: '{b}: {c}', fontSize: 11, color: '#374151' },
+                labelLine: { show: true, length: 15, length2: 10, smooth: false },
                 emphasis: { label: { show: true, fontSize: 13, fontWeight: 'bold' } },
                 data: statusData.map(d => ({ name: d.key, value: d.value }))
             }]
@@ -294,9 +296,11 @@ document.addEventListener('DOMContentLoaded', function () {
             series: [{
                 type: 'pie',
                 radius: ['45%', '70%'],
+                center: ['50%', '50%'],
                 avoidLabelOverlap: true,
                 itemStyle: { borderRadius: 6, borderColor: '#fff', borderWidth: 2 },
-                label: { show: true, formatter: '{b}: {c}' },
+                label: { show: true, position: 'outside', formatter: '{b}: {c}', fontSize: 11, color: '#374151' },
+                labelLine: { show: true, length: 15, length2: 10, smooth: false },
                 emphasis: { label: { show: true, fontSize: 13, fontWeight: 'bold' } },
                 data: priorityData.map(d => ({ name: d.key, value: d.value }))
             }]

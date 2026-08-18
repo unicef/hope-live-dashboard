@@ -371,112 +371,56 @@ document.addEventListener('DOMContentLoaded', function () {
             }, { notMerge: true });
         }
 
-        // Helper for Pie/Donut breakdown charts (e.g. Delivery Type)
-        function updateDonutChart(chartObj, group, activeFiltersSet) {
-            const rawData = group.all()
-                .map(d => ({ name: d.key, value: d.value[currentMetric] }))
-                .filter(d => d.name !== '' && d.name !== null && d.value > 0);
-
-            const hasAnySelection = activeFiltersSet.size > 0;
-            const seriesData = rawData.map(d => {
-                const stableColor = getStableColor(d.name);
-                return {
-                    name: d.name,
-                    value: d.value,
-                    itemStyle: {
-                        color: activeFiltersSet.has(d.name)
-                            ? stableColor
-                            : (hasAnySelection ? '#cbd5e1' : stableColor)
-                    }
-                };
-            });
-
-            chartObj.setOption({
-                tooltip: {
-                    trigger: 'item',
-                    formatter: params => `${params.name}: <b>${formatFullVal(params.value)}</b> (${params.percent}%)`
-                },
-                legend: {
-                    orient: 'horizontal',
-                    bottom: 0,
-                    textStyle: { color: '#64748b' }
-                },
-                series: [{
-                    type: 'pie',
-                    radius: ['45%', '70%'],
-                    avoidLabelOverlap: true,
-                    itemStyle: {
-                        borderRadius: 6,
-                        borderColor: '#fff',
-                        borderWidth: 2
-                    },
-                    label: {
-                        show: false,
-                        position: 'center'
-                    },
-                    emphasis: {
-                        label: {
-                            show: true,
-                            fontSize: 14,
-                            fontWeight: 'bold',
-                            formatter: params => `${params.name}\n${formatMetric(params.value)}`
-                        }
-                    },
-                    data: seriesData
-                }]
-            }, { notMerge: true });
-        }
-
         // Update Charts
-        // Sector Chart (compact horizontal bars with inline labels)
+        // Sector Chart (Donut with outside labels)
         const sectorData = sectorGroup.all()
             .filter(d => d.key !== '' && d.key !== null && d.value[currentMetric] > 0)
             .sort((a, b) => b.value[currentMetric] - a.value[currentMetric]);
 
-        const sectorTotal = sectorData.reduce((s, d) => s + d.value[currentMetric], 0);
         const hasAnySectorSelection = selectedSectors.size > 0;
+        const sectorDonutData = sectorData.map(d => {
+            const stableColor = getStableColor(d.key);
+            return {
+                name: d.key,
+                value: d.value[currentMetric],
+                itemStyle: {
+                    color: selectedSectors.has(d.key) ? stableColor : (hasAnySectorSelection ? '#cbd5e1' : stableColor)
+                }
+            };
+        });
+
         sectorChart.setOption({
             tooltip: {
-                trigger: 'axis',
-                axisPointer: { type: 'shadow' },
-                formatter: params => `${params[0].name}: <b>${formatFullVal(params[0].value)}</b>`
-            },
-            grid: { top: 0, bottom: 10, left: 0, right: 10 },
-            xAxis: { type: 'value', show: false },
-            yAxis: {
-                type: 'category',
-                data: sectorData.map(d => d.key),
-                inverse: true,
-                axisLine: { show: false },
-                axisTick: { show: false },
-                axisLabel: { show: false }
+                trigger: 'item',
+                formatter: params => `${params.name}: <b>${formatFullVal(params.value)}</b> (${params.percent}%)`
             },
             series: [{
-                type: 'bar',
-                data: sectorData.map(d => {
-                    const pct = sectorTotal > 0 ? ((d.value[currentMetric] / sectorTotal) * 100).toFixed(0) : 0;
-                    const stableColor = getStableColor(d.key);
-                    return {
-                        value: d.value[currentMetric],
-                        itemStyle: {
-                            color: selectedSectors.has(d.key) ? stableColor : (hasAnySectorSelection ? '#cbd5e1' : stableColor),
-                            borderRadius: [0, 4, 4, 0]
-                        },
-                        label: {
-                            show: true,
-                            position: 'insideLeft',
-                            formatter: `${d.key}: ${formatFullVal(d.value[currentMetric])} (${pct}%)`,
-                            color: '#1f2937',
-                            fontWeight: 600,
-                            fontSize: 11
-                        }
-                    };
-                }),
-                barMaxWidth: 18
+                type: 'pie',
+                radius: ['45%', '70%'],
+                center: ['50%', '50%'],
+                avoidLabelOverlap: true,
+                itemStyle: { borderRadius: 6, borderColor: '#fff', borderWidth: 2 },
+                label: {
+                    show: true,
+                    position: 'outside',
+                    formatter: '{b}\n({d}%)',
+                    fontSize: 11,
+                    color: '#374151'
+                },
+                labelLine: {
+                    show: true,
+                    length: 15,
+                    length2: 10,
+                    smooth: false
+                },
+                emphasis: {
+                    label: { show: true, fontSize: 14, fontWeight: 'bold', formatter: params => `${params.name}\n${formatMetric(params.value)}` }
+                },
+                data: sectorDonutData
             }]
         }, { notMerge: true });
         updateHorizontalBarChart(programChart, programGroup, selectedPrograms, 140, 10);
-        // Delivery Donut Chart with split legends
+        // Delivery Donut Chart with outside labels
         const deliveryRawData = deliveryGroup.all()
             .map(d => ({ name: d.key, value: d.value[currentMetric] }))
             .filter(d => d.name !== '' && d.name !== null && d.value > 0);
@@ -493,23 +437,30 @@ document.addEventListener('DOMContentLoaded', function () {
             };
         });
 
-        const mid = Math.ceil(deliverySeriesData.length / 2);
         deliveryChart.setOption({
             tooltip: {
                 trigger: 'item',
                 formatter: params => `${params.name}: <b>${formatFullVal(params.value)}</b> (${params.percent}%)`
             },
-            legend: [
-                { orient: 'vertical', left: 'left', top: 'middle', data: deliverySeriesData.slice(0, mid).map(d => d.name), textStyle: { color: '#64748b' } },
-                { orient: 'vertical', left: 'right', top: 'middle', data: deliverySeriesData.slice(mid).map(d => d.name), textStyle: { color: '#64748b' } }
-            ],
             series: [{
                 type: 'pie',
                 radius: ['45%', '70%'],
                 center: ['50%', '50%'],
                 avoidLabelOverlap: true,
                 itemStyle: { borderRadius: 6, borderColor: '#fff', borderWidth: 2 },
-                label: { show: false, position: 'center' },
+                label: {
+                    show: true,
+                    position: 'outside',
+                    formatter: '{b}\n({d}%)',
+                    fontSize: 11,
+                    color: '#374151'
+                },
+                labelLine: {
+                    show: true,
+                    length: 15,
+                    length2: 10,
+                    smooth: false
+                },
                 emphasis: {
                     label: { show: true, fontSize: 14, fontWeight: 'bold', formatter: params => `${params.name}\n${formatMetric(params.value)}` }
                 },
@@ -568,15 +519,14 @@ document.addEventListener('DOMContentLoaded', function () {
         }, { notMerge: true });
         updateHorizontalBarChart(beneficiaryGroupChart, beneficiaryGroupGroup, selectedBeneficiaryGroups, 140);
 
-        // 2. Country Chart (Vertical Bar)
+        // 2. Country Chart (Donut with outside labels, all countries)
         const countryData = countryGroup.all()
             .map(d => {
                 const valObj = d.value[activeDimType] || { usd: 0, qty: 0, payments: 0 };
                 return { key: d.key, value: valObj[currentMetric] };
             })
             .filter(d => d.key !== '' && d.key !== null && d.value > 0)
-            .sort((a, b) => b.value - a.value)
-            .slice(0, 15);
+            .sort((a, b) => b.value - a.value);
 
         const hasAnyCountrySelection = selectedCountries.size > 0;
         const countrySeriesData = countryData.map(d => {
@@ -593,23 +543,33 @@ document.addEventListener('DOMContentLoaded', function () {
         });
 
         countryChart.setOption({
-            tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' }, formatter: params => `${params[0].name}: <b>${formatFullVal(params[0].value)}</b>` },
-            grid: { top: 30, bottom: 95, left: 75, right: 20 },
-            xAxis: {
-                type: 'category',
-                data: countryData.map(d => d.key),
-                axisLabel: { rotate: 30, interval: 0, color: '#1f2937', fontWeight: 500 }
-            },
-            yAxis: {
-                type: 'value',
-                axisLabel: { formatter: val => formatMetric(val), color: '#64748b' },
-                splitLine: { lineStyle: { color: '#f1f5f9' } }
+            tooltip: {
+                trigger: 'item',
+                formatter: params => `${params.name}: <b>${formatFullVal(params.value)}</b> (${params.percent}%)`
             },
             series: [{
-                type: 'bar',
-                data: countrySeriesData,
-                barMaxWidth: 30,
-                itemStyle: { borderRadius: [4, 4, 0, 0] }
+                type: 'pie',
+                radius: ['45%', '70%'],
+                center: ['50%', '50%'],
+                avoidLabelOverlap: true,
+                itemStyle: { borderRadius: 6, borderColor: '#fff', borderWidth: 2 },
+                label: {
+                    show: true,
+                    position: 'outside',
+                    formatter: '{b}\n({d}%)',
+                    fontSize: 11,
+                    color: '#374151'
+                },
+                labelLine: {
+                    show: true,
+                    length: 15,
+                    length2: 10,
+                    smooth: false
+                },
+                emphasis: {
+                    label: { show: true, fontSize: 14, fontWeight: 'bold', formatter: params => `${params.name}\n${formatMetric(params.value)}` }
+                },
+                data: countrySeriesData
             }]
         }, { notMerge: true });
     }
