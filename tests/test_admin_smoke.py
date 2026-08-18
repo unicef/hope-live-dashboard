@@ -9,7 +9,7 @@ from django.db.models import Model
 from django.urls import reverse
 from django.utils.safestring import mark_safe
 from django_regex.utils import RegexList as _RegexList
-from pytest_django.fixtures import SettingsWrapper
+from pytest_django.fixtures import Settings
 
 if TYPE_CHECKING:
     from _pytest.python import Metafunc
@@ -141,7 +141,7 @@ def record(db: Any, request: "pytest.FixtureRequest") -> Model:
 def app(
     django_app_factory: "MixinWithInstanceVariables",
     mocked_responses: "RequestsMock",
-    settings: SettingsWrapper,
+    settings: Settings,
 ) -> "DjangoTestApp":
     from testutils.factories.user import SuperUserFactory
 
