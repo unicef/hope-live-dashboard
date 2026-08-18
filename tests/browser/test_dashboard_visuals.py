@@ -209,6 +209,7 @@ def test_completion_dashboard_loads(browser, completion_aggregates, financial_ag
     browser.wait_for_element_visible("#time-focus-chart canvas")
     browser.wait_for_element_visible("#status-country-chart canvas")
     browser.wait_for_element_visible("#completion-gauge canvas")
+    browser.wait_for_element_visible("#beneficiary-group-chart canvas")
 
     # Assert current year totals
     browser.assert_text("15 (100.0% out of 15 total)", "#total-reconciled")
