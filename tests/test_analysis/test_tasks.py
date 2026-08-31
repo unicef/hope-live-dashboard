@@ -4,7 +4,15 @@ import pytest
 import responses
 from constance import config
 
-from hope_live.analysis.models import CompletionAggregate, DemographicAggregate, FinancialAggregate, GrievanceAggregate
+from hope_live.analysis.models import (
+    CompletionAggregate,
+    DemographicAggregate,
+    FinancialAggregate,
+    GrievanceAggregate,
+    RiskAggregate,
+    RiskSeverity,
+    RiskTrend,
+)
 from hope_live.analysis.tasks import (
     _find_dataset_id_for_year,
     clear_daily_aggregates,
@@ -16,6 +24,7 @@ from tests.extras.testutils.factories.analysis import (
     DemographicAggregateFactory,
     FinancialAggregateFactory,
     GrievanceAggregateFactory,
+    RiskAggregateFactory,
 )
 
 
@@ -208,6 +217,154 @@ def test_sync_daily_aggregates_no_data_for_year(mocked_responses):
 
     assert FinancialAggregate.objects.count() == 0
     assert "Successfully synced 0 rows" in result
+
+
+# ---- Risk aggregate tests ----
+
+
+@pytest.mark.django_db
+def test_save_aggregates_risk():
+    rows = [
+        {
+            "date": "2024-01-01",
+            "time_grain": "daily",
+            "country_slug": "test",
+            "dimension_type": "risk_module",
+            "dimension_value": "CODE_A",
+            "module": "registration",
+            "risk_code": "CODE_A",
+            "risk_name": "Risk A",
+            "issue_count": 10,
+            "percentage": 50.5,
+            "unit_label": "payments",
+            "severity": "CRITICAL",
+            "trend": "UP",
+            "threshold_info": ">=150%",
+        }
+    ]
+    save_aggregates(
+        rows,
+        2024,
+        "RiskAggregate",
+        [
+            "issue_count",
+            "percentage",
+            "module",
+            "risk_code",
+            "risk_name",
+            "unit_label",
+            "severity",
+            "trend",
+            "threshold_info",
+        ],
+    )
+
+    agg = RiskAggregate.objects.get()
+    assert agg.risk_code == "CODE_A"
+    assert agg.module == "registration"
+    assert agg.severity == RiskSeverity.CRITICAL
+    assert agg.trend == RiskTrend.UP
+    assert agg.issue_count == 10
+    assert agg.threshold_info == ">=150%"
+
+
+@pytest.mark.django_db
+def test_save_aggregates_risk_defaults_and_normalization():
+    rows = [
+        {
+            "date": "2024-01-01",
+            "time_grain": "daily",
+            "country_slug": "test",
+            "dimension_type": "risk_module",
+            "dimension_value": "code_b",
+            "module": "registration",
+            "issue_count": 3,
+        }
+    ]
+    save_aggregates(
+        rows,
+        2024,
+        "RiskAggregate",
+        [
+            "issue_count",
+            "percentage",
+            "module",
+            "risk_code",
+            "risk_name",
+            "unit_label",
+            "severity",
+            "trend",
+            "threshold_info",
+        ],
+    )
+
+    agg = RiskAggregate.objects.get()
+    assert agg.risk_code == "code_b"  # falls back to dimension_value
+    assert agg.severity == RiskSeverity.NORMAL
+    assert agg.trend == RiskTrend.NEUTRAL
+    assert agg.unit_label == "payments"
+
+
+@pytest.mark.django_db
+def test_sync_daily_aggregates_with_risk_dataset(mocked_responses):
+    """Risk dataset (query #10) is fetched and persisted into RiskAggregate."""
+    api_url = config.HOPE_COUNTRY_REPORT_API_URL
+    query_id = config.HOPE_RISK_REPORT_QUERY_ID
+
+    mocked_responses.add(
+        responses.GET,
+        f"{api_url}queries/{query_id}/dataset",
+        json={"results": [{"id": 1, "arguments": {"year": 2024}}]},
+        status=200,
+    )
+    mocked_responses.add(
+        responses.GET,
+        f"{api_url}queries/{query_id}/dataset/1/data/?page_size=1000",
+        json={
+            "results": [
+                {
+                    "date": "2024-01-01",
+                    "time_grain": "daily",
+                    "country_slug": "test",
+                    "dimension_type": "risk_module",
+                    "dimension_value": "reconciliation_gap",
+                    "module": "reconciliation",
+                    "risk_code": "reconciliation_gap",
+                    "risk_name": "Reconciliation gap",
+                    "issue_count": 5,
+                    "percentage": 80.5,
+                    "unit_label": "payments",
+                    "severity": "warning",
+                    "trend": "up",
+                }
+            ],
+            "next": None,
+        },
+        status=200,
+    )
+
+    with patch.object(sync_daily_aggregates, "update_state"):
+        result = sync_daily_aggregates(target_years=[2024])
+
+    assert RiskAggregate.objects.count() == 1
+    agg = RiskAggregate.objects.get()
+    assert agg.module == "reconciliation"
+    assert agg.risk_code == "reconciliation_gap"
+    assert agg.severity == RiskSeverity.WARNING
+    assert agg.trend == RiskTrend.UP
+    assert "Successfully synced 1 rows" in result
+
+
+@pytest.mark.django_db
+def test_clear_daily_aggregates_clears_risk(user_factory):
+    user = user_factory(is_superuser=True)
+    RiskAggregateFactory()
+    assert RiskAggregate.objects.count() == 1
+
+    result = clear_daily_aggregates(user.id)
+
+    assert RiskAggregate.objects.count() == 0
+    assert "Successfully deleted 1" in result
 
 
 # ---- Parametrized clear tests ----

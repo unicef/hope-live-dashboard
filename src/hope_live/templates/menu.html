@@ -44,6 +44,12 @@
                         <span class="ml-3 shrink-0">{% translate "Programme Quality" %}</span>
                     </a>
                 </li>
+                <li>
+                    <a href='{% url "web:risk" %}' class="flex items-center p-2 text-base font-semibold text-white rounded-lg {% if request.resolver_match.url_name == 'risk' %}bg-sky-600{% else %}hover:bg-sky-600{% endif %} group whitespace-nowrap overflow-hidden">
+                        <svg class="w-5 h-5 shrink-0 text-white transition duration-75" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" /></svg>
+                        <span class="ml-3 shrink-0">{% translate "Risk" %}</span>
+                    </a>
+                </li>
                 {% else %}
                 <li>
                     <a href='{% url "web:dashboard" %}' class="flex items-center p-2 text-base font-semibold text-white rounded-lg {% if request.resolver_match.url_name == 'dashboard' %}bg-sky-600{% else %}hover:bg-sky-600{% endif %} group whitespace-nowrap overflow-hidden">

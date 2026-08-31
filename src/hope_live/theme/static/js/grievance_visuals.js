@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', function () {
-    const tabsContainer = document.getElementById('tabs-container');
-    if (!tabsContainer) return;
+    const timeFilterContainer = document.getElementById('time-filter-container');
+    if (!timeFilterContainer) return;
 
     const statusMap = {
         "1": gettext("New"),
@@ -185,7 +185,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    function updateAll(filterSource = null) {
+    function updateAll() {
         updateTotals();
 
         // 1. Timeline Chart (Stacked Area Chart of Open vs Resolved Tickets)
@@ -262,15 +262,7 @@ document.addEventListener('DOMContentLoaded', function () {
             ]
         };
 
-        if (filterSource !== 'timeline') {
-            timelineOption.dataZoom = [
-                { type: 'inside', start: 0, end: 100 },
-                { show: true, type: 'slider', start: 0, end: 100, bottom: 25, textStyle: { color: '#64748b' } }
-            ];
-            timelineChart.setOption(timelineOption, { notMerge: true });
-        } else {
-            timelineChart.setOption(timelineOption);
-        }
+        timelineChart.setOption(timelineOption, { notMerge: true });
 
         // 2. Status Chart (Donut Pie)
         const statusData = statusGroup.all().filter(d => d.key !== '' && d.key !== null && d.value > 0);
@@ -468,19 +460,6 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // --- Interactive Filters Bindings ---
-    timelineChart.on('datazoom', function (params) {
-        const option = timelineChart.getOption();
-        const startVal = option.dataZoom[0].startValue;
-        const endVal = option.dataZoom[0].endValue;
-
-        if (startVal !== undefined && endVal !== undefined) {
-            const startDate = new Date(startVal);
-            const endDate = new Date(endVal);
-            dateDimension.filterRange([startDate, endDate]);
-            updateAll('timeline');
-        }
-    });
-
     statusChart.on('click', function (params) {
         const name = params.name;
         if (selectedStatuses.has(name)) {
@@ -542,9 +521,11 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     // --- Load Data ---
-    async function loadData(year) {
+    async function loadRange(startDate, endDate) {
         try {
-            const url = `${window.DASHBOARD_CONFIG.endpoint}?year=${year}&dashboard=grievance`;
+            const from = timeFilter.formatDateStr(startDate);
+            const to = timeFilter.formatDateStr(endDate);
+            const url = `${window.DASHBOARD_CONFIG.endpoint}?date_from=${from}&date_to=${to}&dashboard=grievance`;
             const response = await fetch(url, {
                 credentials: 'same-origin',
                 headers: {
@@ -581,10 +562,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
             });
 
-            const now = new Date();
-            now.setHours(23, 59, 59, 999);
-            const currentData = data.filter(d => d.date <= now);
-
             // Clean filters (clear FIRST, then remove old data)
             selectedStatuses.clear();
             selectedCategories.clear();
@@ -600,25 +577,26 @@ document.addEventListener('DOMContentLoaded', function () {
             dateDimension.filterAll();
 
             ndx.remove();
-            ndx.add(currentData);
+            ndx.add(data);
 
+            timeFilter.setBuffer(startDate, endDate);
             updateAll();
         } catch (error) {
             console.error('Error loading grievance data:', error);
         }
     }
 
-    tabsContainer.querySelectorAll('.year-tab').forEach(btn => {
-        btn.addEventListener('click', function() {
-            tabsContainer.querySelectorAll('.year-tab').forEach(b =>
-                b.classList.remove('bg-white', 'shadow', 'text-blue-600', 'active-tab'));
-            this.classList.add('bg-white', 'shadow', 'text-blue-600', 'active-tab');
-            loadData(this.dataset.year);
-        });
+    // --- Time Filter Controller ---
+    const timeFilter = new DashboardTimeFilter({
+        onFilterChange: (startDate, endDate) => {
+            if (timeFilter.isWithinBuffer(startDate, endDate)) {
+                dateDimension.filterRange([startDate, endDate]);
+                updateAll();
+            } else {
+                loadRange(startDate, endDate);
+            }
+        }
     });
 
-    const firstYear = tabsContainer.querySelector('.active-tab')?.dataset.year;
-    if (firstYear) {
-        loadData(firstYear);
-    }
+    loadRange(timeFilter.currentRange.start, timeFilter.currentRange.end);
 });

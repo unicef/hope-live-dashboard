@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', function () {
-    const tabsContainer = document.getElementById('tabs-container');
-    if (!tabsContainer) return;
+    const timeFilterContainer = document.getElementById('time-filter-container');
+    if (!timeFilterContainer) return;
 
     let currentMetric = 'payments'; // Default metric: payments. Can be 'payments' or 'usd'
 
@@ -232,7 +232,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }, { notMerge: true });
     }
 
-    function updateAll(filterSource = null) {
+    function updateAll() {
         updateTotals();
 
         const unitName = currentMetric === 'usd' ? 'USD' : gettext('payments');
@@ -303,15 +303,7 @@ document.addEventListener('DOMContentLoaded', function () {
             ]
         };
 
-        if (filterSource !== 'timeline') {
-            timelineOption.dataZoom = [
-                { type: 'inside', start: 0, end: 100 },
-                { show: true, type: 'slider', start: 0, end: 100, bottom: 30, textStyle: { color: '#64748b' } }
-            ];
-            timelineChart.setOption(timelineOption, { notMerge: true });
-        } else {
-            timelineChart.setOption(timelineOption);
-        }
+        timelineChart.setOption(timelineOption, { notMerge: true });
 
         // 2. Stacked Country Chart
         const countryData = countryStatusGroup.all()
@@ -451,19 +443,6 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // --- Interaction Bindings ---
-    timelineChart.on('datazoom', function (params) {
-        const option = timelineChart.getOption();
-        const startVal = option.dataZoom[0].startValue;
-        const endVal = option.dataZoom[0].endValue;
-
-        if (startVal !== undefined && endVal !== undefined) {
-            const startDate = new Date(startVal);
-            const endDate = new Date(endVal);
-            dateDimension.filterRange([startDate, endDate]);
-            updateAll('timeline');
-        }
-    });
-
     countryChart.on('click', function (params) {
         const countryName = params.name;
         if (selectedCountries.has(countryName)) {
@@ -530,9 +509,11 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     // --- Load Data ---
-    async function loadData(year) {
+    async function loadRange(startDate, endDate) {
         try {
-            const url = `${window.DASHBOARD_CONFIG.endpoint}?year=${year}&dashboard=${window.DASHBOARD_CONFIG.type}`;
+            const from = timeFilter.formatDateStr(startDate);
+            const to = timeFilter.formatDateStr(endDate);
+            const url = `${window.DASHBOARD_CONFIG.endpoint}?date_from=${from}&date_to=${to}&dashboard=${window.DASHBOARD_CONFIG.type}`;
             const response = await fetch(url, {
                 credentials: 'same-origin',
                 headers: {
@@ -558,10 +539,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 d.payment_count = +d.payment_count;
             });
 
-            const now = new Date();
-            now.setHours(23, 59, 59, 999);
-            const currentData = data.filter(d => d.date <= now);
-
             // Clean state (clear filters FIRST, then remove old data)
             selectedCountries.clear();
             selectedBeneficiaryGroups.clear();
@@ -570,25 +547,26 @@ document.addEventListener('DOMContentLoaded', function () {
             dateDimension.filterAll();
 
             ndx.remove();
-            ndx.add(currentData);
+            ndx.add(data);
 
+            timeFilter.setBuffer(startDate, endDate);
             updateAll();
         } catch (error) {
             console.error('Error loading completion data:', error);
         }
     }
 
-    tabsContainer.querySelectorAll('.year-tab').forEach(btn => {
-        btn.addEventListener('click', function() {
-            tabsContainer.querySelectorAll('.year-tab').forEach(b =>
-                b.classList.remove('bg-white', 'shadow', 'text-blue-600', 'active-tab'));
-            this.classList.add('bg-white', 'shadow', 'text-blue-600', 'active-tab');
-            loadData(this.dataset.year);
-        });
+    // --- Time Filter Controller ---
+    const timeFilter = new DashboardTimeFilter({
+        onFilterChange: (startDate, endDate) => {
+            if (timeFilter.isWithinBuffer(startDate, endDate)) {
+                dateDimension.filterRange([startDate, endDate]);
+                updateAll();
+            } else {
+                loadRange(startDate, endDate);
+            }
+        }
     });
 
-    const firstYear = tabsContainer.querySelector('.active-tab')?.dataset.year;
-    if (firstYear) {
-        loadData(firstYear);
-    }
+    loadRange(timeFilter.currentRange.start, timeFilter.currentRange.end);
 });

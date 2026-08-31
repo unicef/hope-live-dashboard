@@ -11,6 +11,7 @@ from .models import (
     DemographicAggregate,
     FinancialAggregate,
     GrievanceAggregate,
+    RiskAggregate,
     SyncDailyAggregatesJob,
 )
 from .tasks import clear_daily_aggregates
@@ -120,3 +121,20 @@ class GrievanceAggregateAdmin(ReadOnlyDeletableAdmin):
     )
     list_filter = ("time_grain", "country_slug", "dimension_type", "date")
     search_fields = ("country_slug", "dimension_type", "dimension_value")
+
+
+@admin.register(RiskAggregate)
+class RiskAggregateAdmin(ReadOnlyDeletableAdmin):
+    list_display = (
+        "date",
+        "time_grain",
+        "country_slug",
+        "module",
+        "risk_name",
+        "issue_count",
+        "percentage",
+        "severity",
+        "trend",
+    )
+    list_filter = ("time_grain", "severity", "module", "country_slug", "date")
+    search_fields = ("country_slug", "module", "risk_code", "risk_name")

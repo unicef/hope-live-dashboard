@@ -6,4 +6,5 @@ app_name = "analysis_api"
 
 urlpatterns = [
     path("daily-aggregates/", views.AggregateListView.as_view(), name="daily-aggregates-list"),
+    path("export/", views.ExportReportView.as_view(), name="export-report"),
 ]

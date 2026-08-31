@@ -1,4 +1,5 @@
 from datetime import date, timedelta
+from decimal import Decimal
 
 import pytest
 from django.db import models
@@ -9,6 +10,9 @@ from hope_live.analysis.models import (
     DemographicAggregate,
     FinancialAggregate,
     GrievanceAggregate,
+    RiskAggregate,
+    RiskSeverity,
+    RiskTrend,
     TimeGrain,
 )
 
@@ -154,3 +158,95 @@ def test_grievance_aggregate_create():
         ticket_count=25,
     )
     assert agg.ticket_count == 25
+
+
+# --------------------- RiskAggregate ---------------------
+@pytest.mark.django_db
+def test_risk_aggregate_create():
+    agg = RiskAggregate.objects.create(
+        date=date(2024, 1, 15),
+        time_grain=TimeGrain.DAILY,
+        country_slug="afghanistan",
+        dimension_type="risk_module",
+        dimension_value="reconciliation_gap",
+        module="reconciliation",
+        risk_code="reconciliation_gap",
+        risk_name="Reconciliation gap",
+        issue_count=120,
+        percentage=Decimal("95.50"),
+        severity=RiskSeverity.WARNING,
+        trend=RiskTrend.UP,
+    )
+
+    assert agg.date == date(2024, 1, 15)
+    assert agg.dimension_type == "risk_module"
+    assert agg.dimension_value == "reconciliation_gap"
+    assert agg.module == "reconciliation"
+    assert agg.risk_code == "reconciliation_gap"
+    assert agg.risk_name == "Reconciliation gap"
+    assert agg.issue_count == 120
+    assert agg.percentage == Decimal("95.50")
+    assert agg.severity == RiskSeverity.WARNING
+    assert agg.trend == RiskTrend.UP
+    # Defaults
+    assert agg.unit_label == "payments"
+    assert agg.description == ""
+    assert agg.threshold_info == ""
+    assert agg.is_visible_on_dashboard is True
+
+
+@pytest.mark.django_db
+def test_risk_aggregate_composite_unique():
+    RiskAggregate.objects.create(
+        date=date(2024, 1, 1),
+        time_grain=TimeGrain.DAILY,
+        country_slug="afghanistan",
+        dimension_type="risk_module",
+        dimension_value="code_a",
+        module="registration",
+        risk_code="code_a",
+        risk_name="Risk A",
+    )
+
+    with pytest.raises(IntegrityError):
+        RiskAggregate.objects.create(
+            date=date(2024, 1, 1),
+            time_grain=TimeGrain.DAILY,
+            country_slug="afghanistan",
+            dimension_type="risk_module",
+            dimension_value="code_a",
+            module="registration",
+            risk_code="code_a",
+            risk_name="Risk A",
+        )
+
+
+@pytest.mark.django_db
+def test_risk_aggregate_filtering():
+    RiskAggregate.objects.create(
+        date=date(2024, 1, 1),
+        time_grain=TimeGrain.DAILY,
+        country_slug="afghanistan",
+        dimension_type="risk_module",
+        dimension_value="code_1",
+        module="registration",
+        risk_code="code_1",
+        risk_name="Registration risk",
+        severity=RiskSeverity.CRITICAL,
+    )
+    RiskAggregate.objects.create(
+        date=date(2024, 1, 2),
+        time_grain=TimeGrain.DAILY,
+        country_slug="syria",
+        dimension_type="risk_module",
+        dimension_value="code_2",
+        module="payment_operations",
+        risk_code="code_2",
+        risk_name="Payment risk",
+        severity=RiskSeverity.NORMAL,
+    )
+
+    assert RiskAggregate.objects.filter(module="registration").count() == 1
+    assert RiskAggregate.objects.filter(severity=RiskSeverity.CRITICAL).count() == 1
+    assert RiskAggregate.objects.filter(country_slug="syria").count() == 1
+    assert RiskAggregate.objects.filter(risk_code="code_2").count() == 1

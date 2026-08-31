@@ -1,6 +1,6 @@
 from rest_framework import serializers  # type: ignore[import-untyped]
 
-from .models import CompletionAggregate, DemographicAggregate, FinancialAggregate, GrievanceAggregate
+from .models import CompletionAggregate, DemographicAggregate, FinancialAggregate, GrievanceAggregate, RiskAggregate
 
 
 class FinancialAggregateSerializer(serializers.ModelSerializer):  # type: ignore[misc]
@@ -58,4 +58,27 @@ class GrievanceAggregateSerializer(serializers.ModelSerializer):  # type: ignore
             "dimension_type",
             "dimension_value",
             "ticket_count",
+        ]
+
+
+class RiskAggregateSerializer(serializers.ModelSerializer):  # type: ignore[misc]
+    class Meta:
+        model = RiskAggregate
+        fields = [
+            "date",
+            "time_grain",
+            "country_slug",
+            "dimension_type",
+            "dimension_value",
+            "module",
+            "risk_code",
+            "risk_name",
+            "description",
+            "issue_count",
+            "percentage",
+            "unit_label",
+            "severity",
+            "trend",
+            "threshold_info",
+            "is_visible_on_dashboard",
         ]

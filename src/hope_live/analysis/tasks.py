@@ -7,7 +7,7 @@ from celery import shared_task  # type: ignore[import-untyped]
 from constance import config
 from django.apps import apps
 from django.contrib.auth import get_user_model
-from django.db import transaction
+from django.db import models, transaction
 from tenacity import retry, stop_after_attempt, wait_exponential
 
 from hope_live.analysis.models import (
@@ -15,6 +15,7 @@ from hope_live.analysis.models import (
     DemographicAggregate,
     FinancialAggregate,
     GrievanceAggregate,
+    RiskAggregate,
     SyncDailyAggregatesJob,
 )
 
@@ -96,6 +97,21 @@ def sync_daily_aggregates(
             ),
             (config.HOPE_COMPLETION_REPORT_QUERY_ID, "CompletionAggregate", ["payment_count", "total_usd"]),
             (config.HOPE_GRIEVANCE_REPORT_QUERY_ID, "GrievanceAggregate", ["ticket_count"]),
+            (
+                getattr(config, "HOPE_RISK_REPORT_QUERY_ID", 10),
+                "RiskAggregate",
+                [
+                    "issue_count",
+                    "percentage",
+                    "module",
+                    "risk_code",
+                    "risk_name",
+                    "unit_label",
+                    "severity",
+                    "trend",
+                    "threshold_info",
+                ],
+            ),
         ]
 
         total_rows = 0
@@ -229,12 +245,40 @@ def _transform_completion_rows(rows: list[dict[str, Any]]) -> list[dict[str, Any
     return transformed
 
 
+def _prepare_risk_rows(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    prepared: list[dict[str, Any]] = []
+    for item in rows:
+        item["risk_code"] = str(item.get("risk_code") or item.get("dimension_value") or "").strip()
+        item["module"] = str(item.get("module") or "").strip()
+        item["severity"] = str(item.get("severity") or "normal").strip().lower()
+        item["trend"] = str(item.get("trend") or "neutral").strip().lower()
+        item["risk_name"] = str(item.get("risk_name") or "").strip()
+        item["unit_label"] = str(item.get("unit_label") or "payments").strip()
+        item["threshold_info"] = str(item.get("threshold_info") or "").strip()
+        prepared.append(item)
+    return prepared
+
+
+def _field_value(model_class: Any, field: str, item: dict[str, Any]) -> Any:
+    value = item.get(field)
+    if value is None:
+        model_field = model_class._meta.get_field(field)
+        if model_field.null:
+            return None
+        if isinstance(model_field, (models.IntegerField, models.DecimalField, models.FloatField)):
+            return 0
+        return ""
+    return value
+
+
 @shared_task(name="hope_live.analysis.tasks.save_aggregates")  # type: ignore[untyped-decorator]
 def save_aggregates(rows: list[dict[str, Any]], year: int, model_name: str, update_fields: list[str]) -> None:
     ModelClass = apps.get_model("analysis", model_name)
 
     if model_name == "CompletionAggregate":
         rows = _transform_completion_rows(rows)
+    elif model_name == "RiskAggregate":
+        rows = _prepare_risk_rows(rows)
 
     # Deduplicate rows by unique fields to prevent "ON CONFLICT DO UPDATE command cannot affect row a second time"
 
@@ -269,7 +313,7 @@ def save_aggregates(rows: list[dict[str, Any]], year: int, model_name: str, upda
                 "dimension_value": key[4],
             }
             for field in update_fields:
-                kwargs[field] = item.get(field, 0) or 0
+                kwargs[field] = _field_value(ModelClass, field, item)
 
             batch.append(ModelClass(**kwargs))
 
@@ -320,7 +364,13 @@ def clear_daily_aggregates(user_id: int) -> str:
         raise PermissionError("Permission denied: Only superusers can clear daily aggregates.")
 
     count = 0
-    for model_class in [FinancialAggregate, DemographicAggregate, CompletionAggregate, GrievanceAggregate]:
+    for model_class in [
+        FinancialAggregate,
+        DemographicAggregate,
+        CompletionAggregate,
+        GrievanceAggregate,
+        RiskAggregate,
+    ]:
         c, _ = model_class.objects.all().delete()  # type: ignore[attr-defined]
         count += c
 

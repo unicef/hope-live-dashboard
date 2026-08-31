@@ -13,19 +13,8 @@
         </div>
     </div>
 
-    <!-- Year Tabs -->
-    <div id="year-tabs" class="mb-6">
-        <div id="tabs-container" class="flex space-x-2 overflow-x-auto bg-gray-100 p-2 rounded-lg">
-            {% for year in available_years %}
-                <button
-                    class="year-tab px-6 py-2 rounded-md font-medium transition-all duration-200
-                           {% if forloop.first %}bg-white shadow text-blue-600 active-tab{% else %}text-gray-500 hover:bg-gray-200{% endif %}"
-                    data-year="{{ year }}">
-                    {{ year }}
-                </button>
-            {% endfor %}
-        </div>
-    </div>
+    <!-- Time Filter -->
+    {% include "includes/time_filter.html" with granularity="daily" %}
 
     <!-- Metric Selector Pills -->
     <div class="mb-6 flex flex-wrap gap-2 items-center justify-between">
@@ -45,7 +34,6 @@
         <h3 id="timeline-title" class="text-lg font-semibold text-gray-900 mb-2">{% translate "Reconciliation Timeline" %}</h3>
         <div id="time-focus-chart" class="w-full" style="min-height: 350px;"></div>
         <div id="time-range-chart" style="display: none;"></div>
-        <p class="text-xs text-gray-500 mt-2 italic">{% translate "* Use the slider handles at the bottom of the timeline or click and drag to filter dates. Changes in the timeline automatically update all visualized statistics and charts." %}</p>
     </div>
 
     <!-- Stats Cards -->
@@ -95,5 +83,6 @@
 <script src="{% static 'js/crossfilter.min.js' %}"></script>
 <script src="{% static 'js/echarts.min.js' %}"></script>
 <script src="{% static 'js/macarons.js' %}"></script>
+<script src="{% static 'js/time_filter.js' %}"></script>
 <script src="{% static 'js/completion_visuals.js' %}"></script>
 {% endblock extra_js %}

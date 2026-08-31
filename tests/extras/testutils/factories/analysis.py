@@ -5,6 +5,7 @@ from hope_live.analysis.models import (
     DemographicAggregate,
     FinancialAggregate,
     GrievanceAggregate,
+    RiskAggregate,
     TimeGrain,
 )
 
@@ -78,3 +79,26 @@ class GrievanceAggregateFactory(AutoRegisterModelFactory):
 
     class Meta:
         model = GrievanceAggregate
+
+
+class RiskAggregateFactory(AutoRegisterModelFactory):
+    date = factory.Faker("date_this_year")
+    time_grain = TimeGrain.DAILY
+    country_slug = factory.Faker("country_code")
+    dimension_type = "risk_module"
+    dimension_value = factory.Faker("slug")
+
+    module = factory.Faker(
+        "random_element",
+        elements=["registration", "payment_operations", "reconciliation", "verification", "grievance"],
+    )
+    risk_code = factory.LazyAttribute(lambda o: o.dimension_value)
+    risk_name = factory.Faker("sentence", nb_words=3)
+    issue_count = factory.Faker("random_int", min=0, max=500)
+    percentage = factory.Faker("pydecimal", left_digits=2, right_digits=2, positive=True)
+    unit_label = "payments"
+    severity = factory.Faker("random_element", elements=["critical", "warning", "caution", "normal"])
+    trend = factory.Faker("random_element", elements=["up", "down", "neutral"])
+
+    class Meta:
+        model = RiskAggregate

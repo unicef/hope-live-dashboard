@@ -1,0 +1,45 @@
+{% load i18n %}
+
+<div id="time-filter-container" data-granularity="{{ granularity|default:'daily' }}" class="mb-6 bg-white rounded-lg shadow p-4">
+    <div class="flex flex-wrap items-center justify-between gap-4">
+        <div class="flex flex-wrap items-center gap-2">
+            <span class="text-xs font-semibold text-gray-500 uppercase tracking-wider mr-2">{% translate "Period:" %}</span>
+            <button type="button" class="time-preset-btn px-3 py-1.5 text-xs font-bold rounded-md bg-gray-100 text-gray-700 hover:bg-gray-200 transition-all duration-150" data-preset="today" data-daily-only>
+                {% translate "Today" %}
+            </button>
+            <button type="button" class="time-preset-btn px-3 py-1.5 text-xs font-bold rounded-md bg-gray-100 text-gray-700 hover:bg-gray-200 transition-all duration-150" data-preset="this_week" data-daily-only>
+                {% translate "This Week" %}
+            </button>
+            <button type="button" class="time-preset-btn px-3 py-1.5 text-xs font-bold rounded-md bg-gray-100 text-gray-700 hover:bg-gray-200 transition-all duration-150" data-preset="this_month">
+                {% translate "This Month" %}
+            </button>
+            <button type="button" class="time-preset-btn px-3 py-1.5 text-xs font-bold rounded-md bg-gray-100 text-gray-700 hover:bg-gray-200 transition-all duration-150" data-preset="last_3_months">
+                {% translate "Last 3 Months" %}
+            </button>
+            <button type="button" class="time-preset-btn px-3 py-1.5 text-xs font-bold rounded-md bg-gray-100 text-gray-700 hover:bg-gray-200 transition-all duration-150" data-preset="this_year">
+                {% translate "This Year" %}
+            </button>
+            <button type="button" class="time-preset-btn px-3 py-1.5 text-xs font-bold rounded-md bg-gray-100 text-gray-700 hover:bg-gray-200 transition-all duration-150 flex items-center gap-1" data-preset="custom">
+                <svg class="w-3.5 h-3.5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                </svg>
+                <span>{% translate "Custom Period" %}</span>
+            </button>
+        </div>
+
+        <div class="flex items-center gap-3">
+            <div id="custom-range-inputs" class="hidden items-center gap-2 bg-gray-50 p-1.5 rounded-lg border border-gray-200">
+                <label for="filter-date-from" class="text-xs text-gray-500">{% translate "From" %}</label>
+                <input type="date" id="filter-date-from" class="text-xs px-2 py-1 border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 bg-white" />
+                <label for="filter-date-to" class="text-xs text-gray-500">{% translate "To" %}</label>
+                <input type="date" id="filter-date-to" class="text-xs px-2 py-1 border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 bg-white" />
+                <button type="button" id="btn-apply-custom-range" class="px-3 py-1 text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 rounded transition-all">
+                    {% translate "Apply" %}
+                </button>
+            </div>
+            <div class="text-xs font-medium text-gray-500 flex items-center gap-1">
+                <span id="active-range-label" class="font-bold text-gray-800"></span>
+            </div>
+        </div>
+    </div>
+</div>
