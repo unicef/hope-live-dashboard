@@ -1,0 +1,134 @@
+{% extends "layout.html" %}
+{% load i18n static %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <div class="mb-8 flex justify-between items-center">
+        <div>
+            <h1 class="text-3xl font-bold text-gray-900">{% translate "Risk Dashboard" %}</h1>
+            <p class="text-gray-600">{% translate "Monitoring of risk indicators across modules" %}</p>
+        </div>
+        <div class="flex items-center">
+            <span class="bg-unicef-blue text-white text-xs font-medium mr-2 px-2.5 py-0.5 rounded">{% translate "Live Data" %}</span>
+            <button type="button" id="btn-open-export" class="px-4 py-1.5 text-xs font-bold rounded-md bg-green-600 hover:bg-green-700 text-white transition-all duration-200">
+                {% translate "Export Report" %}
+            </button>
+        </div>
+    </div>
+
+    <!-- Time Filter -->
+    {% include "includes/time_filter.html" with granularity="daily" %}
+
+    <!-- Timeline Filter -->
+    <div class="bg-white rounded-lg shadow p-6 mb-8">
+        <h3 id="timeline-title" class="text-lg font-semibold text-gray-900 mb-2">{% translate "Issues Timeline" %}</h3>
+        <div id="time-focus-chart" class="w-full" style="min-height: 350px;"></div>
+        <div id="time-range-chart" style="display: none;"></div>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-8">
+        <div class="bg-white rounded-lg shadow p-4 border-l-4 border-unicef-blue flex flex-col justify-center min-h-[110px]">
+            <h3 class="text-gray-500 text-xs font-medium uppercase">{% translate "Total Issues" %}</h3>
+            <p id="total-issues" class="text-xl lg:text-2xl font-bold text-gray-900 mt-1">0</p>
+        </div>
+        <div class="bg-white rounded-lg shadow p-4 border-l-4 border-red-500 flex flex-col justify-center min-h-[110px]">
+            <h3 class="text-gray-500 text-xs font-medium uppercase">{% translate "Critical" %}</h3>
+            <p id="total-critical" class="text-xl lg:text-2xl font-bold text-gray-900 mt-1">0</p>
+        </div>
+        <div class="bg-white rounded-lg shadow p-4 border-l-4 border-yellow-500 flex flex-col justify-center min-h-[110px]">
+            <h3 class="text-gray-500 text-xs font-medium uppercase">{% translate "Warnings" %}</h3>
+            <p id="total-warnings" class="text-xl lg:text-2xl font-bold text-gray-900 mt-1">0</p>
+        </div>
+        <div class="bg-white rounded-lg shadow p-4 border-l-4 border-purple-500 flex flex-col justify-center min-h-[110px]">
+            <h3 class="text-gray-500 text-xs font-medium uppercase">{% translate "Modules Monitored" %}</h3>
+            <p id="total-modules" class="text-xl lg:text-2xl font-bold text-gray-900 mt-1">0</p>
+        </div>
+        <div class="bg-white rounded-lg shadow p-4 border-l-4 border-green-500 flex flex-col justify-center min-h-[110px]">
+            <h3 class="text-gray-500 text-xs font-medium uppercase">{% translate "Countries Covered" %}</h3>
+            <p id="total-countries" class="text-xl lg:text-2xl font-bold text-gray-900 mt-1">0</p>
+        </div>
+    </div>
+
+    <!-- Module & Severity -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+        <div class="bg-white rounded-lg shadow p-6">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">{% translate "Issues by Module" %}</h3>
+            <div id="risk-module-chart" class="w-full" style="min-height: 400px;"></div>
+        </div>
+        <div class="bg-white rounded-lg shadow p-6">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">{% translate "Severity Distribution" %}</h3>
+            <div id="risk-severity-chart" class="w-full" style="min-height: 400px;"></div>
+        </div>
+    </div>
+
+    <!-- Trend & Country -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+        <div class="bg-white rounded-lg shadow p-6">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">{% translate "Trend" %}</h3>
+            <div id="risk-trend-chart" class="w-full" style="min-height: 400px;"></div>
+        </div>
+        <div class="bg-white rounded-lg shadow p-6">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">{% translate "Issues by Country" %}</h3>
+            <div id="risk-country-chart" class="w-full" style="min-height: 400px;"></div>
+        </div>
+    </div>
+
+    <!-- Top Risk Indicators Table Card -->
+    <div class="bg-white rounded-xl shadow-xs border border-gray-200 p-6 mb-8">
+        <div class="flex items-center justify-between mb-4">
+            <div>
+                <h3 class="text-lg font-bold text-gray-900">{% translate "Top Risk Indicators" %}</h3>
+                <p class="text-xs text-gray-500">{% translate "Highest volume operational risk issues in the selected period" %}</p>
+            </div>
+        </div>
+        <div class="overflow-x-auto rounded-lg border border-gray-200">
+            <table class="min-w-full divide-y divide-gray-200 text-sm">
+                <thead class="bg-gray-50">
+                    <tr class="text-xs font-bold uppercase tracking-wider text-gray-600">
+                        <th scope="col" class="py-3 px-4 text-left">{% translate "Risk" %}</th>
+                        <th scope="col" class="py-3 px-4 text-left">{% translate "Module" %}</th>
+                        <th scope="col" class="py-3 px-4 text-center">{% translate "Severity" %}</th>
+                        <th scope="col" class="py-3 px-4 text-center">{% translate "Trend" %}</th>
+                        <th scope="col" class="py-3 px-4 text-right">{% translate "Issues" %}</th>
+                        <th scope="col" class="py-3 px-4 text-right">{% translate "%" %}</th>
+                    </tr>
+                </thead>
+                <tbody id="risk-top-table" class="bg-white divide-y divide-gray-100"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Export Modal -->
+    <div id="export-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
+        <div class="bg-white rounded-lg shadow-xl w-full max-w-sm p-6">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">{% translate "Export Report" %}</h3>
+            <p class="text-xs text-gray-500 mb-4">{% translate "Download the currently filtered risk data." %}</p>
+            <div class="space-y-2">
+                <a id="export-csv" href="#" class="block px-4 py-2 text-sm font-semibold rounded-md bg-gray-100 text-gray-700 hover:bg-gray-200 text-center">CSV</a>
+                <a id="export-xlsx" href="#" class="block px-4 py-2 text-sm font-semibold rounded-md bg-gray-100 text-gray-700 hover:bg-gray-200 text-center">Excel (.xlsx)</a>
+                <a id="export-json" href="#" class="block px-4 py-2 text-sm font-semibold rounded-md bg-gray-100 text-gray-700 hover:bg-gray-200 text-center">JSON</a>
+            </div>
+            <button type="button" id="btn-close-export" class="mt-4 w-full px-4 py-2 text-sm font-bold rounded-md bg-blue-600 hover:bg-blue-700 text-white">
+                {% translate "Close" %}
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+    window.DASHBOARD_CONFIG = {
+        endpoint: "{% url 'analysis_api:daily-aggregates-list' %}",
+        exportEndpoint: "{% url 'analysis_api:export-report' %}",
+        type: "risk"
+    };
+</script>
+{% endblock content %}
+
+{% block extra_js %}
+<script src="{% static 'js/crossfilter.min.js' %}"></script>
+<script src="{% static 'js/echarts.min.js' %}"></script>
+<script src="{% static 'js/macarons.js' %}"></script>
+<script src="{% static 'js/time_filter.js' %}"></script>
+<script src="{% static 'js/risk_visuals.js' %}"></script>
+{% endblock extra_js %}

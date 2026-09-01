@@ -1,8 +1,5 @@
 import datetime
-import io
-import json
 import logging
-from pathlib import Path
 from typing import Any
 
 import requests
@@ -10,8 +7,7 @@ from celery import shared_task  # type: ignore[import-untyped]
 from constance import config
 from django.apps import apps
 from django.contrib.auth import get_user_model
-from django.core.management import call_command
-from django.db import transaction
+from django.db import models, transaction
 from tenacity import retry, stop_after_attempt, wait_exponential
 
 from hope_live.analysis.models import (
@@ -19,36 +15,9 @@ from hope_live.analysis.models import (
     DemographicAggregate,
     FinancialAggregate,
     GrievanceAggregate,
+    RiskAggregate,
     SyncDailyAggregatesJob,
 )
-
-ISO3_TO_SLUG = {
-    "AFG": "afghanistan",
-    "AGO": "angola",
-    "ARM": "armenia",
-    "BGD": "bangladesh",
-    "BWA": "botswana",
-    "CAF": "central-african-republic",
-    "TCD": "chad",
-    "COD": "democratic-republic-of-congo",
-    "HTI": "haiti",
-    "KEN": "kenya",
-    "MDG": "madagascar",
-    "MMR": "myanmar",
-    "NGA": "nigeria",
-    "PSE": "palestine-state-of",
-    "CMR": "republic-of-cameroon",
-    "MOZ": "republic-of-mozambique",
-    "SEN": "senegal",
-    "SLE": "sierra-leone",
-    "SOM": "somalia",
-    "SSD": "south-sudan",
-    "SDN": "sudan",
-    "SYR": "syria",
-    "UKR": "ukraine",
-    "VNM": "vietnam",
-    "YEM": "yemen",
-}
 
 logger = logging.getLogger(__name__)
 
@@ -128,6 +97,21 @@ def sync_daily_aggregates(
             ),
             (config.HOPE_COMPLETION_REPORT_QUERY_ID, "CompletionAggregate", ["payment_count", "total_usd"]),
             (config.HOPE_GRIEVANCE_REPORT_QUERY_ID, "GrievanceAggregate", ["ticket_count"]),
+            (
+                getattr(config, "HOPE_RISK_REPORT_QUERY_ID", 10),
+                "RiskAggregate",
+                [
+                    "issue_count",
+                    "percentage",
+                    "module",
+                    "risk_code",
+                    "risk_name",
+                    "unit_label",
+                    "severity",
+                    "trend",
+                    "threshold_info",
+                ],
+            ),
         ]
 
         total_rows = 0
@@ -241,77 +225,6 @@ def _fetch_all_pages(data_endpoint: str, headers: dict[str, str], job_id: str) -
     return all_rows
 
 
-def get_fertility_rate(country_slug: str, year: int) -> float:
-    file_path = Path(__file__).parent / "rates" / "fertility_rates.json"
-    if not file_path.exists():
-        return 3.0
-
-    try:
-        with open(file_path) as f:
-            rates_data = json.load(f)
-    except (OSError, ValueError):
-        return 3.0
-
-    slug_to_iso3 = {v: k for k, v in ISO3_TO_SLUG.items()}
-    target_iso3 = slug_to_iso3.get(country_slug.lower())
-    if not target_iso3:
-        return 3.0
-
-    for entry in rates_data:
-        if entry.get("Country Code") == target_iso3:
-            if str(year) in entry:
-                try:
-                    return float(entry[str(year)] or 3.0)
-                except ValueError:
-                    pass
-
-            # Fallback to the latest available year
-            year_keys = [k for k in entry if k.isdigit()]
-            if year_keys:
-                latest_year = sorted(year_keys, reverse=True)[0]
-                try:
-                    return float(entry[latest_year] or 3.0)
-                except ValueError:
-                    pass
-
-    return 3.0
-
-
-def _calculate_demographic_children(rows: list[dict[str, Any]], default_year: int) -> None:
-    dct_children_map = {}
-    # Calculate estimated children for DCT program rows
-    for item in rows:
-        dim_type = str(item.get("dimension_type", "")).strip().lower()
-        dim_value = str(item.get("dimension_value", "")).strip().upper()
-        if dim_type == "program" and dim_value == "DCT":
-            households = float(item.get("total_households") or 0)
-            country = str(item.get("country_slug", "")).strip().lower()
-
-            # Extract year dynamically from date
-            item_date_str = item.get("date")
-            if isinstance(item_date_str, str):
-                item_year = int(item_date_str.split("-")[0])
-            elif item_date_str is not None and hasattr(item_date_str, "year"):
-                item_year = item_date_str.year
-            else:
-                item_year = default_year
-
-            rate = get_fertility_rate(country, item_year)
-            est_children = int(households * rate)
-            item["total_children"] = est_children
-            dct_children_map[(str(item_date_str), country)] = est_children
-
-    # Add estimated children to the MULTI_PURPOSE sector row matching country & date
-    for item in rows:
-        dim_type = str(item.get("dimension_type", "")).strip().lower()
-        dim_value = str(item.get("dimension_value", "")).strip().upper()
-        if dim_type == "sector" and dim_value == "MULTI_PURPOSE":
-            country = str(item.get("country_slug", "")).strip().lower()
-            key = (str(item.get("date")), country)
-            if key in dct_children_map:
-                item["total_children"] = int(item.get("total_children") or 0) + dct_children_map[key]
-
-
 def _transform_completion_rows(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
     transformed: list[dict[str, Any]] = []
     for item in rows:
@@ -332,14 +245,40 @@ def _transform_completion_rows(rows: list[dict[str, Any]]) -> list[dict[str, Any
     return transformed
 
 
+def _prepare_risk_rows(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    prepared: list[dict[str, Any]] = []
+    for item in rows:
+        item["risk_code"] = str(item.get("risk_code") or item.get("dimension_value") or "").strip()
+        item["module"] = str(item.get("module") or "").strip()
+        item["severity"] = str(item.get("severity") or "normal").strip().lower()
+        item["trend"] = str(item.get("trend") or "neutral").strip().lower()
+        item["risk_name"] = str(item.get("risk_name") or "").strip()
+        item["unit_label"] = str(item.get("unit_label") or "payments").strip()
+        item["threshold_info"] = str(item.get("threshold_info") or "").strip()
+        prepared.append(item)
+    return prepared
+
+
+def _field_value(model_class: Any, field: str, item: dict[str, Any]) -> Any:
+    value = item.get(field)
+    if value is None:
+        model_field = model_class._meta.get_field(field)
+        if model_field.null:
+            return None
+        if isinstance(model_field, (models.IntegerField, models.DecimalField, models.FloatField)):
+            return 0
+        return ""
+    return value
+
+
 @shared_task(name="hope_live.analysis.tasks.save_aggregates")  # type: ignore[untyped-decorator]
 def save_aggregates(rows: list[dict[str, Any]], year: int, model_name: str, update_fields: list[str]) -> None:
     ModelClass = apps.get_model("analysis", model_name)
 
-    if model_name == "DemographicAggregate":
-        _calculate_demographic_children(rows, year)
-    elif model_name == "CompletionAggregate":
+    if model_name == "CompletionAggregate":
         rows = _transform_completion_rows(rows)
+    elif model_name == "RiskAggregate":
+        rows = _prepare_risk_rows(rows)
 
     # Deduplicate rows by unique fields to prevent "ON CONFLICT DO UPDATE command cannot affect row a second time"
 
@@ -374,7 +313,7 @@ def save_aggregates(rows: list[dict[str, Any]], year: int, model_name: str, upda
                 "dimension_value": key[4],
             }
             for field in update_fields:
-                kwargs[field] = item.get(field, 0) or 0
+                kwargs[field] = _field_value(ModelClass, field, item)
 
             batch.append(ModelClass(**kwargs))
 
@@ -425,17 +364,15 @@ def clear_daily_aggregates(user_id: int) -> str:
         raise PermissionError("Permission denied: Only superusers can clear daily aggregates.")
 
     count = 0
-    for model_class in [FinancialAggregate, DemographicAggregate, CompletionAggregate, GrievanceAggregate]:
+    for model_class in [
+        FinancialAggregate,
+        DemographicAggregate,
+        CompletionAggregate,
+        GrievanceAggregate,
+        RiskAggregate,
+    ]:
         c, _ = model_class.objects.all().delete()  # type: ignore[attr-defined]
         count += c
 
     logger.info(f"Deleted {count} aggregate records by superuser {user.username}.")
     return f"Successfully deleted {count} aggregate records."
-
-
-@shared_task(name="hope_live.analysis.tasks.update_fertility_rates")  # type: ignore[untyped-decorator]
-def update_fertility_rates() -> str:
-    """Task to run management command update_fertility_rates to update local rates."""
-    out = io.StringIO()
-    call_command("update_fertility_rates", stdout=out)
-    return out.getvalue()

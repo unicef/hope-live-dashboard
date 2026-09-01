@@ -61,6 +61,46 @@ class GrievanceAggregate(BaseAggregate):
     ticket_count = models.IntegerField(default=0)
 
 
+class RiskSeverity(models.TextChoices):
+    CRITICAL = "critical", "Critical"
+    WARNING = "warning", "Warning"
+    CAUTION = "caution", "Caution"
+    NORMAL = "normal", "Normal"
+
+
+class RiskTrend(models.TextChoices):
+    UP = "up", "Increasing"
+    DOWN = "down", "Decreasing"
+    NEUTRAL = "neutral", "Neutral"
+
+
+class RiskAggregate(BaseAggregate):
+    """Stores risk indicators aggregated across modules, countries, and time grains."""
+
+    module = models.CharField(max_length=50, db_index=True)
+    risk_code = models.CharField(max_length=100, db_index=True)
+    risk_name = models.CharField(max_length=255)
+    description = models.TextField(blank=True, default="")
+
+    issue_count = models.IntegerField(default=0)
+    percentage = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
+    unit_label = models.CharField(max_length=50, default="payments")
+
+    severity = models.CharField(max_length=20, choices=RiskSeverity.choices, default=RiskSeverity.NORMAL, db_index=True)
+    trend = models.CharField(max_length=20, choices=RiskTrend.choices, default=RiskTrend.NEUTRAL)
+    threshold_info = models.CharField(max_length=255, blank=True, default="")
+    is_visible_on_dashboard = models.BooleanField(default=True)
+
+    class Meta(BaseAggregate.Meta):
+        verbose_name = "Risk Aggregate"
+        verbose_name_plural = "Risk Aggregates"
+        indexes = [
+            *BaseAggregate.Meta.indexes,
+            models.Index(fields=["module", "severity"]),
+            models.Index(fields=["risk_code", "date"]),
+        ]
+
+
 class SyncDailyAggregatesJob(CeleryTaskModel):  # type: ignore[misc]
     default_celery_task_name = "hope_live.analysis.tasks.sync_daily_aggregates"
     celery_task_name = "hope_live.analysis.tasks.sync_daily_aggregates"

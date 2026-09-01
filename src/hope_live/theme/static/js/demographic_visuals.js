@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', function () {
-    const tabsContainer = document.getElementById('tabs-container');
-    if (!tabsContainer) return;
+    const timeFilterContainer = document.getElementById('time-filter-container');
+    if (!timeFilterContainer) return;
 
     let currentMetric = 'individuals'; // Default metric: individuals. Can be: 'individuals', 'households', 'children', 'pwd'
 
@@ -119,18 +119,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Initialize ECharts instances with macarons theme
     const timelineChart = echarts.init(document.getElementById('time-focus-chart'), 'macarons');
-    const sectorIndChart = echarts.init(document.getElementById('sector-individuals-chart'), 'macarons');
     const sectorChildChart = echarts.init(document.getElementById('sector-children-chart'), 'macarons');
-    const countryIndChart = echarts.init(document.getElementById('country-individuals-chart'), 'macarons');
     const countryPwdChart = echarts.init(document.getElementById('country-pwd-chart'), 'macarons');
     const beneficiaryGroupChart = echarts.init(document.getElementById('beneficiary-group-chart'), 'macarons');
 
     // Resize Handler
     window.addEventListener('resize', function () {
         timelineChart.resize();
-        sectorIndChart.resize();
         sectorChildChart.resize();
-        countryIndChart.resize();
         countryPwdChart.resize();
         beneficiaryGroupChart.resize();
     });
@@ -147,7 +143,7 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('total-households').textContent = d3.format(',')(totalHouseholds);
     }
 
-    function updateAll(filterSource = null) {
+    function updateAll() {
         updateTotals();
 
         const activeField = fieldMap[currentMetric];
@@ -205,69 +201,12 @@ document.addEventListener('DOMContentLoaded', function () {
             }]
         };
 
-        if (filterSource !== 'timeline') {
-            timelineOption.dataZoom = [
-                { type: 'inside', start: 0, end: 100 },
-                { show: true, type: 'slider', start: 0, end: 100, bottom: 10, textStyle: { color: '#64748b' } }
-            ];
-            timelineChart.setOption(timelineOption, { notMerge: true });
-        } else {
-            timelineChart.setOption(timelineOption);
-        }
+        timelineChart.setOption(timelineOption, { notMerge: true });
 
-        // 2. Sector Breakdown Chart (Grouped Horizontal Bars)
+        // 2. Sector Distribution Chart (Donut with outside labels)
         const sectorData = sectorGroup.all().filter(d => d.key !== '' && d.key !== null && d.value.beneficiaries > 0);
-        sectorData.sort((a, b) => b.value[activeField] - a.value[activeField]);
 
-        const categories = sectorData.map(d => d.key);
         const hasAnySectorSelection = selectedSectors.size > 0;
-
-        function getSectorSeries(metricKey, displayName, colorVal) {
-            return {
-                name: displayName,
-                type: 'bar',
-                barMaxWidth: 10,
-                data: sectorData.map(d => {
-                    const isSelected = selectedSectors.has(d.key);
-                    const opacity = isSelected ? 1 : (hasAnySectorSelection ? 0.35 : 1);
-                    return {
-                        value: d.value[metricKey],
-                        itemStyle: {
-                            color: colorVal,
-                            opacity: opacity
-                        }
-                    };
-                }),
-                itemStyle: { borderRadius: [0, 2, 2, 0] }
-            };
-        }
-
-        sectorIndChart.setOption({
-            tooltip: {
-                trigger: 'axis',
-                axisPointer: { type: 'shadow' }
-            },
-            grid: { top: 20, bottom: 10, left: 140, right: 30 },
-            xAxis: {
-                type: 'value',
-                axisLabel: {
-                    formatter: val => d3.format(".2s")(val).replace('G', 'B'),
-                    color: '#64748b'
-                },
-                splitLine: { lineStyle: { color: '#f1f5f9' } }
-            },
-            yAxis: {
-                type: 'category',
-                data: categories,
-                inverse: true,
-                axisLabel: { color: '#1f2937', fontWeight: 500 }
-            },
-            series: [
-                getSectorSeries(activeField, activeLabel, '#2ec7c9')
-            ]
-        }, { notMerge: true });
-
-        // 3. Sector Distribution Chart (Donut Chart showing sector shares of selected metric)
         const sectorDonutData = sectorData.map(d => {
             const stableColor = getStableColor(d.key);
             const isSelected = selectedSectors.has(d.key);
@@ -285,79 +224,26 @@ document.addEventListener('DOMContentLoaded', function () {
                 trigger: 'item',
                 formatter: '{b}: <b>{c}</b> ({d}%)'
             },
-            legend: {
-                show: false
-            },
             series: [{
                 type: 'pie',
                 radius: ['45%', '70%'],
+                center: ['50%', '50%'],
                 avoidLabelOverlap: true,
                 itemStyle: { borderRadius: 6, borderColor: '#fff', borderWidth: 2 },
-                label: { show: true, formatter: '{b}\n({d}%)', fontSize: 11 },
+                label: { show: true, position: 'outside', formatter: '{b}\n({d}%)', fontSize: 11, color: '#374151' },
+                labelLine: { show: true, length: 15, length2: 10, smooth: false },
                 emphasis: { label: { show: true, fontSize: 13, fontWeight: 'bold' } },
                 data: sectorDonutData
             }]
         }, { notMerge: true });
 
-        // 4. Country Breakdown Chart (Grouped Vertical Bars)
+        // 3. Country Distribution Chart (Donut with outside labels)
         const countryData = countryGroup.all()
             .filter(d => d.key !== null && d.value.beneficiaries > 0)
             .sort((a, b) => b.value[activeField] - a.value[activeField])
             .slice(0, 10);
 
-        const countryNames = countryData.map(d => d.key);
         const hasAnyCountrySelection = selectedCountries.size > 0;
-
-        function getCountrySeries(metricKey, displayName, colorVal) {
-            return {
-                name: displayName,
-                type: 'bar',
-                barMaxWidth: 10,
-                data: countryData.map(d => {
-                    const isSelected = selectedCountries.has(d.key);
-                    const opacity = isSelected ? 1 : (hasAnyCountrySelection ? 0.35 : 1);
-                    return {
-                        value: d.value[metricKey],
-                        itemStyle: {
-                            color: colorVal,
-                            opacity: opacity
-                        }
-                    };
-                }),
-                itemStyle: { borderRadius: [2, 2, 0, 0] }
-            };
-        }
-
-        countryIndChart.setOption({
-            tooltip: {
-                trigger: 'axis',
-                axisPointer: { type: 'shadow' }
-            },
-            grid: { top: 30, bottom: 95, left: 75, right: 20 },
-            xAxis: {
-                type: 'category',
-                data: countryNames,
-                axisLabel: {
-                    rotate: 30,
-                    interval: 0,
-                    color: '#1f2937',
-                    fontWeight: 500
-                }
-            },
-            yAxis: {
-                type: 'value',
-                axisLabel: {
-                    formatter: val => d3.format(".2s")(val).replace('G', 'B'),
-                    color: '#64748b'
-                },
-                splitLine: { lineStyle: { color: '#f1f5f9' } }
-            },
-            series: [
-                getCountrySeries(activeField, activeLabel, '#2ec7c9')
-            ]
-        }, { notMerge: true });
-
-        // 5. Country Distribution Chart (Donut chart showing country shares of selected metric)
         const countryDonutData = countryData.map(d => {
             const stableColor = getStableColor(d.key);
             const isSelected = selectedCountries.has(d.key);
@@ -375,15 +261,14 @@ document.addEventListener('DOMContentLoaded', function () {
                 trigger: 'item',
                 formatter: '{b}: <b>{c}</b> ({d}%)'
             },
-            legend: {
-                show: false
-            },
             series: [{
                 type: 'pie',
                 radius: ['45%', '70%'],
+                center: ['50%', '50%'],
                 avoidLabelOverlap: true,
                 itemStyle: { borderRadius: 6, borderColor: '#fff', borderWidth: 2 },
-                label: { show: true, formatter: '{b}\n({d}%)', fontSize: 11 },
+                label: { show: true, position: 'outside', formatter: '{b}\n({d}%)', fontSize: 11, color: '#374151' },
+                labelLine: { show: true, length: 15, length2: 10, smooth: false },
                 emphasis: { label: { show: true, fontSize: 13, fontWeight: 'bold' } },
                 data: countryDonutData
             }]
@@ -437,19 +322,6 @@ document.addEventListener('DOMContentLoaded', function () {
     // --- Interactive Filters Bindings ---
 
     // Timeline Zoom
-    timelineChart.on('datazoom', function (params) {
-        const option = timelineChart.getOption();
-        const startVal = option.dataZoom[0].startValue;
-        const endVal = option.dataZoom[0].endValue;
-
-        if (startVal !== undefined && endVal !== undefined) {
-            const startDate = new Date(startVal);
-            const endDate = new Date(endVal);
-            dateDimension.filterRange([startDate, endDate]);
-            updateAll('timeline');
-        }
-    });
-
     // Sector Filter Selection Toggle
     const handleSectorClick = function (params) {
         const sectorName = params.name;
@@ -467,7 +339,6 @@ document.addEventListener('DOMContentLoaded', function () {
         updateAll();
     };
 
-    sectorIndChart.on('click', handleSectorClick);
     sectorChildChart.on('click', handleSectorClick);
 
     // Country Filter Selection Toggle
@@ -487,7 +358,6 @@ document.addEventListener('DOMContentLoaded', function () {
         updateAll();
     };
 
-    countryIndChart.on('click', handleCountryClick);
     countryPwdChart.on('click', handleCountryClick);
 
     beneficiaryGroupChart.on('click', function (params) {
@@ -533,9 +403,11 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     // --- Load Data ---
-    async function loadData(year) {
+    async function loadRange(startDate, endDate) {
         try {
-            const url = `${window.DASHBOARD_CONFIG.endpoint}?year=${year}&dashboard=${window.DASHBOARD_CONFIG.type}&time_grain=monthly`;
+            const from = timeFilter.formatDateStr(startDate);
+            const to = timeFilter.formatDateStr(endDate);
+            const url = `${window.DASHBOARD_CONFIG.endpoint}?date_from=${from}&date_to=${to}&dashboard=${window.DASHBOARD_CONFIG.type}&time_grain=monthly`;
             const response = await fetch(url, {
                 credentials: 'same-origin',
                 headers: {
@@ -563,10 +435,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 d.total_households = +d.total_households || 0;
             });
 
-            const now = new Date();
-            now.setHours(23, 59, 59, 999);
-            const currentData = data.filter(d => d.date <= now);
-
             // Clean existing state and filters (clear filters FIRST, then remove old data)
             selectedSectors.clear();
             selectedCountries.clear();
@@ -577,25 +445,26 @@ document.addEventListener('DOMContentLoaded', function () {
             dateDimension.filterAll();
 
             ndx.remove();
-            ndx.add(currentData);
+            ndx.add(data);
 
+            timeFilter.setBuffer(startDate, endDate);
             updateAll();
         } catch (error) {
             console.error('Error loading demographic data:', error);
         }
     }
 
-    tabsContainer.querySelectorAll('.year-tab').forEach(btn => {
-        btn.addEventListener('click', function() {
-            tabsContainer.querySelectorAll('.year-tab').forEach(b =>
-                b.classList.remove('bg-white', 'shadow', 'text-blue-600', 'active-tab'));
-            this.classList.add('bg-white', 'shadow', 'text-blue-600', 'active-tab');
-            loadData(this.dataset.year);
-        });
+    // --- Time Filter Controller ---
+    const timeFilter = new DashboardTimeFilter({
+        onFilterChange: (startDate, endDate) => {
+            if (timeFilter.isWithinBuffer(startDate, endDate)) {
+                dateDimension.filterRange([startDate, endDate]);
+                updateAll();
+            } else {
+                loadRange(startDate, endDate);
+            }
+        }
     });
 
-    const firstYear = tabsContainer.querySelector('.active-tab')?.dataset.year;
-    if (firstYear) {
-        loadData(firstYear);
-    }
+    loadRange(timeFilter.currentRange.start, timeFilter.currentRange.end);
 });
