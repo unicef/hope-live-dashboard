@@ -88,6 +88,19 @@ class DashboardTimeFilter {
         const dateToInput = document.getElementById('filter-date-to');
         const applyBtn = document.getElementById('btn-apply-custom-range');
 
+        [dateFromInput, dateToInput].forEach(input => {
+            if (!input) return;
+            input.addEventListener('click', () => {
+                if (typeof input.showPicker === 'function') {
+                    try {
+                        input.showPicker();
+                    } catch (e) {
+                        // Ignore context/security errors; fall back to native behavior.
+                    }
+                }
+            });
+        });
+
         presetBtns.forEach(btn => {
             btn.addEventListener('click', () => {
                 const preset = btn.dataset.preset;

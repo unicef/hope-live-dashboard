@@ -86,6 +86,26 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('total-countries').textContent = formatCount(countDistinct(countryGroup));
     }
 
+    function renderSeverityBadge(sev) {
+        const badges = {
+            critical: '<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-red-600 text-white shadow-xs">Critical</span>',
+            warning: '<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-500 text-white shadow-xs">Warning</span>',
+            caution: '<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-yellow-400 text-yellow-950 shadow-xs">Caution</span>',
+            normal: '<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-600 text-white shadow-xs">Normal</span>'
+        };
+        return badges[sev] || `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-gray-200 text-gray-800">${sev}</span>`;
+    }
+
+    function renderTrendBadge(trend) {
+        if (trend === 'up') {
+            return '<span class="inline-flex items-center gap-1 text-xs font-semibold text-red-600"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg> Increasing</span>';
+        }
+        if (trend === 'down') {
+            return '<span class="inline-flex items-center gap-1 text-xs font-semibold text-emerald-600"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6"></path></svg> Decreasing</span>';
+        }
+        return '<span class="inline-flex items-center gap-1 text-xs font-medium text-gray-500"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg> Neutral</span>';
+    }
+
     function updateAll() {
         updateKPIs();
 
@@ -240,13 +260,13 @@ document.addEventListener('DOMContentLoaded', function () {
             tableBody.innerHTML = topRisks.map(d => {
                 const v = d.value;
                 const pct = v.percentage !== null && v.percentage !== undefined ? `${v.percentage}%` : '—';
-                return `<tr class="border-b border-gray-100">
-                    <td class="py-2 px-3 font-medium text-gray-900">${v.risk_name || d.key}</td>
-                    <td class="py-2 px-3 text-gray-600">${v.module}</td>
-                    <td class="py-2 px-3"><span class="px-2 py-0.5 rounded text-xs font-semibold text-white" style="background-color:${severityColors[v.severity] || '#999'}">${severityLabels[v.severity] || v.severity}</span></td>
-                    <td class="py-2 px-3 text-gray-600">${trendLabels[v.trend] || v.trend}</td>
-                    <td class="py-2 px-3 text-right font-semibold">${formatCount(v.issue_count)}</td>
-                    <td class="py-2 px-3 text-right text-gray-600">${pct}</td>
+                return `<tr class="hover:bg-slate-50/80 transition-colors">
+                    <td class="py-3 px-4 font-semibold text-gray-900 text-sm">${v.risk_name || d.key}</td>
+                    <td class="py-3 px-4 text-gray-600 text-xs font-medium">${v.module}</td>
+                    <td class="py-3 px-4 text-center">${renderSeverityBadge(v.severity)}</td>
+                    <td class="py-3 px-4 text-center">${renderTrendBadge(v.trend)}</td>
+                    <td class="py-3 px-4 text-right font-bold text-gray-900 text-sm tabular-nums">${formatCount(v.issue_count)}</td>
+                    <td class="py-3 px-4 text-right font-semibold text-gray-700 text-sm tabular-nums">${pct}</td>
                 </tr>`;
             }).join('');
         }

@@ -74,22 +74,27 @@
         </div>
     </div>
 
-    <!-- Top Risk Codes -->
-    <div class="bg-white rounded-lg shadow p-6 mb-8">
-        <h3 class="text-lg font-semibold text-gray-900 mb-4">{% translate "Top Risk Indicators" %}</h3>
-        <div class="overflow-x-auto">
-            <table class="min-w-full text-sm">
-                <thead>
-                    <tr class="text-left text-xs font-semibold uppercase tracking-wider text-gray-500 border-b">
-                        <th class="py-2 px-3">{% translate "Risk" %}</th>
-                        <th class="py-2 px-3">{% translate "Module" %}</th>
-                        <th class="py-2 px-3">{% translate "Severity" %}</th>
-                        <th class="py-2 px-3">{% translate "Trend" %}</th>
-                        <th class="py-2 px-3 text-right">{% translate "Issues" %}</th>
-                        <th class="py-2 px-3 text-right">{% translate "%" %}</th>
+    <!-- Top Risk Indicators Table Card -->
+    <div class="bg-white rounded-xl shadow-xs border border-gray-200 p-6 mb-8">
+        <div class="flex items-center justify-between mb-4">
+            <div>
+                <h3 class="text-lg font-bold text-gray-900">{% translate "Top Risk Indicators" %}</h3>
+                <p class="text-xs text-gray-500">{% translate "Highest volume operational risk issues in the selected period" %}</p>
+            </div>
+        </div>
+        <div class="overflow-x-auto rounded-lg border border-gray-200">
+            <table class="min-w-full divide-y divide-gray-200 text-sm">
+                <thead class="bg-gray-50">
+                    <tr class="text-xs font-bold uppercase tracking-wider text-gray-600">
+                        <th scope="col" class="py-3 px-4 text-left">{% translate "Risk" %}</th>
+                        <th scope="col" class="py-3 px-4 text-left">{% translate "Module" %}</th>
+                        <th scope="col" class="py-3 px-4 text-center">{% translate "Severity" %}</th>
+                        <th scope="col" class="py-3 px-4 text-center">{% translate "Trend" %}</th>
+                        <th scope="col" class="py-3 px-4 text-right">{% translate "Issues" %}</th>
+                        <th scope="col" class="py-3 px-4 text-right">{% translate "%" %}</th>
                     </tr>
                 </thead>
-                <tbody id="risk-top-table"></tbody>
+                <tbody id="risk-top-table" class="bg-white divide-y divide-gray-100"></tbody>
             </table>
         </div>
     </div>
