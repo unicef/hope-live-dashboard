@@ -21,6 +21,9 @@ document.addEventListener('DOMContentLoaded', function () {
     };
     const severityOrder = ['critical', 'warning', 'caution', 'normal'];
 
+    let currentCategory = 'all';
+    let currentProgram = 'all';
+
     let ndx = crossfilter([]);
 
     const dateDimension = ndx.dimension(d => d.date);
@@ -29,6 +32,8 @@ document.addEventListener('DOMContentLoaded', function () {
     const trendDimension = ndx.dimension(d => d.trend);
     const countryDimension = ndx.dimension(d => d.country_slug);
     const riskCodeDimension = ndx.dimension(d => d.risk_code);
+    const categoryDimension = ndx.dimension(d => d.category || '');
+    const programDimension = ndx.dimension(d => d.program_name || '');
 
     const volumeByDayGroup = dateDimension.group(d3.timeDay).reduceSum(d => d.issue_count);
     const moduleGroup = moduleDimension.group().reduceSum(d => d.issue_count);
@@ -40,6 +45,7 @@ document.addEventListener('DOMContentLoaded', function () {
             p.issue_count += v.issue_count;
             p.risk_name = v.risk_name || p.risk_name;
             p.module = v.module || p.module;
+            p.program_name = v.program_name || p.program_name;
             p.severity = v.severity || p.severity;
             p.trend = v.trend || p.trend;
             p.percentage = v.percentage;
@@ -49,7 +55,7 @@ document.addEventListener('DOMContentLoaded', function () {
             p.issue_count -= v.issue_count;
             return p;
         },
-        () => ({ issue_count: 0, risk_name: '', module: '', severity: '', trend: '', percentage: null })
+        () => ({ issue_count: 0, risk_name: '', module: '', program_name: '', severity: '', trend: '', percentage: null })
     );
 
     const totalIssues = ndx.groupAll().reduceSum(d => d.issue_count);
@@ -263,6 +269,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 return `<tr class="hover:bg-slate-50/80 transition-colors">
                     <td class="py-3 px-4 font-semibold text-gray-900 text-sm">${v.risk_name || d.key}</td>
                     <td class="py-3 px-4 text-gray-600 text-xs font-medium">${v.module}</td>
+                    <td class="py-3 px-4 text-gray-600 text-xs font-medium">${v.program_name || '—'}</td>
                     <td class="py-3 px-4 text-center">${renderSeverityBadge(v.severity)}</td>
                     <td class="py-3 px-4 text-center">${renderTrendBadge(v.trend)}</td>
                     <td class="py-3 px-4 text-right font-bold text-gray-900 text-sm tabular-nums">${formatCount(v.issue_count)}</td>
@@ -304,6 +311,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 d.severity = d.severity || 'normal';
                 d.trend = d.trend || 'neutral';
                 d.module = d.module || '';
+                d.program_name = d.program_name || '';
+                d.category = d.category || '';
                 d.risk_code = d.risk_code || d.dimension_value || '';
             });
 
@@ -314,6 +323,7 @@ document.addEventListener('DOMContentLoaded', function () {
             timeFilter.setBuffer(startDate, endDate);
             updateExportLinks(startDate, endDate);
             updateAll();
+            populateProgramFilter();
         } catch (error) {
             console.error('Error loading risk data:', error);
         }
@@ -354,6 +364,49 @@ document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('btn-close-export').addEventListener('click', function () {
         exportModal.classList.add('hidden');
         exportModal.classList.remove('flex');
+    });
+
+    // --- Category Tabs ---
+    const categoryTabs = document.querySelectorAll('.risk-category-tab');
+    categoryTabs.forEach(btn => {
+        btn.addEventListener('click', function () {
+            currentCategory = this.dataset.category;
+            categoryTabs.forEach(b => {
+                b.classList.remove('bg-blue-50', 'text-blue-800', 'border-blue-200', 'active-category');
+                b.classList.add('bg-gray-100', 'text-gray-700');
+            });
+            this.classList.add('bg-blue-50', 'text-blue-800', 'border-blue-200', 'active-category');
+            this.classList.remove('bg-gray-100', 'text-gray-700');
+
+            if (currentCategory === 'all') {
+                categoryDimension.filterAll();
+            } else {
+                categoryDimension.filter(currentCategory);
+            }
+            updateAll();
+        });
+    });
+
+    // --- Programme Filter ---
+    const programSelect = document.getElementById('program-filter');
+    function populateProgramFilter() {
+        const names = programDimension.group().all()
+            .map(d => d.key)
+            .filter(name => name)
+            .sort();
+        const current = programSelect.value;
+        programSelect.innerHTML = '<option value="all">' + gettext('All programmes') + '</option>' +
+            names.map(n => `<option value="${n}">${n}</option>`).join('');
+        programSelect.value = current === 'all' || !names.includes(current) ? 'all' : current;
+    }
+    programSelect.addEventListener('change', function () {
+        currentProgram = this.value;
+        if (currentProgram === 'all') {
+            programDimension.filterAll();
+        } else {
+            programDimension.filter(currentProgram);
+        }
+        updateAll();
     });
 
     loadRange(timeFilter.currentRange.start, timeFilter.currentRange.end);

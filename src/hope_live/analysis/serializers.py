@@ -73,6 +73,8 @@ class RiskAggregateSerializer(serializers.ModelSerializer):  # type: ignore[misc
             "module",
             "risk_code",
             "risk_name",
+            "program_name",
+            "category",
             "description",
             "issue_count",
             "percentage",

@@ -10,6 +10,8 @@ from hope_live.analysis.models import (
     FinancialAggregate,
     GrievanceAggregate,
     RiskAggregate,
+    RiskCategory,
+    RiskDefinition,
     RiskSeverity,
     RiskTrend,
 )
@@ -221,47 +223,51 @@ def test_sync_daily_aggregates_no_data_for_year(mocked_responses):
 
 # ---- Risk aggregate tests ----
 
+RISK_UPDATE_FIELDS = [
+    "issue_count",
+    "percentage",
+    "module",
+    "risk_code",
+    "risk_name",
+    "category",
+    "unit_label",
+    "severity",
+    "trend",
+    "threshold_info",
+]
+
+
+def _risk_row(**overrides):
+    row = {
+        "date": "2024-01-01",
+        "time_grain": "daily",
+        "country_slug": "test",
+        "dimension_type": "risk_code",
+        "dimension_value": "CODE_A",
+        "module": "registration",
+        "risk_code": "CODE_A",
+        "risk_name": "Risk A",
+        "program_name": "Program X",
+        "issue_count": 10,
+        "percentage": 50.5,
+        "unit_label": "payments",
+        "severity": "CRITICAL",
+        "trend": "UP",
+        "threshold_info": ">=150%",
+    }
+    row.update(overrides)
+    return row
+
 
 @pytest.mark.django_db
 def test_save_aggregates_risk():
-    rows = [
-        {
-            "date": "2024-01-01",
-            "time_grain": "daily",
-            "country_slug": "test",
-            "dimension_type": "risk_module",
-            "dimension_value": "CODE_A",
-            "module": "registration",
-            "risk_code": "CODE_A",
-            "risk_name": "Risk A",
-            "issue_count": 10,
-            "percentage": 50.5,
-            "unit_label": "payments",
-            "severity": "CRITICAL",
-            "trend": "UP",
-            "threshold_info": ">=150%",
-        }
-    ]
-    save_aggregates(
-        rows,
-        2024,
-        "RiskAggregate",
-        [
-            "issue_count",
-            "percentage",
-            "module",
-            "risk_code",
-            "risk_name",
-            "unit_label",
-            "severity",
-            "trend",
-            "threshold_info",
-        ],
-    )
+    save_aggregates([_risk_row(category="compliance")], 2024, "RiskAggregate", RISK_UPDATE_FIELDS)
 
     agg = RiskAggregate.objects.get()
     assert agg.risk_code == "CODE_A"
     assert agg.module == "registration"
+    assert agg.program_name == "Program X"
+    assert agg.category == "compliance"
     assert agg.severity == RiskSeverity.CRITICAL
     assert agg.trend == RiskTrend.UP
     assert agg.issue_count == 10
@@ -270,39 +276,41 @@ def test_save_aggregates_risk():
 
 @pytest.mark.django_db
 def test_save_aggregates_risk_defaults_and_normalization():
-    rows = [
-        {
-            "date": "2024-01-01",
-            "time_grain": "daily",
-            "country_slug": "test",
-            "dimension_type": "risk_module",
-            "dimension_value": "code_b",
-            "module": "registration",
-            "issue_count": 3,
-        }
-    ]
     save_aggregates(
-        rows,
+        [_risk_row(risk_code="code_b", program_name="", severity="", trend="")],
         2024,
         "RiskAggregate",
-        [
-            "issue_count",
-            "percentage",
-            "module",
-            "risk_code",
-            "risk_name",
-            "unit_label",
-            "severity",
-            "trend",
-            "threshold_info",
-        ],
+        RISK_UPDATE_FIELDS,
     )
 
     agg = RiskAggregate.objects.get()
-    assert agg.risk_code == "code_b"  # falls back to dimension_value
+    assert agg.risk_code == "code_b"
+    assert agg.program_name == ""
     assert agg.severity == RiskSeverity.NORMAL
     assert agg.trend == RiskTrend.NEUTRAL
     assert agg.unit_label == "payments"
+
+
+@pytest.mark.django_db
+def test_save_aggregates_risk_program_grouping():
+    rows = [
+        _risk_row(dimension_value="CODE_A", program_name="Program X", issue_count=1),
+        _risk_row(dimension_value="CODE_A", program_name="Program Y", issue_count=2),
+    ]
+    save_aggregates(rows, 2024, "RiskAggregate", RISK_UPDATE_FIELDS)
+
+    assert RiskAggregate.objects.count() == 2
+    assert RiskAggregate.objects.filter(program_name="Program X").count() == 1
+    assert RiskAggregate.objects.filter(program_name="Program Y").count() == 1
+
+
+@pytest.mark.django_db
+def test_save_aggregates_risk_category_resolution():
+    RiskDefinition.objects.create(risk_code="CODE_A", name="Risk A", category=RiskCategory.FIDUCIARY)
+    save_aggregates([_risk_row()], 2024, "RiskAggregate", RISK_UPDATE_FIELDS)
+
+    agg = RiskAggregate.objects.get()
+    assert agg.category == RiskCategory.FIDUCIARY
 
 
 @pytest.mark.django_db
@@ -331,6 +339,7 @@ def test_sync_daily_aggregates_with_risk_dataset(mocked_responses):
                     "module": "reconciliation",
                     "risk_code": "reconciliation_gap",
                     "risk_name": "Reconciliation gap",
+                    "program_name": "Program X",
                     "issue_count": 5,
                     "percentage": 80.5,
                     "unit_label": "payments",
@@ -350,6 +359,7 @@ def test_sync_daily_aggregates_with_risk_dataset(mocked_responses):
     agg = RiskAggregate.objects.get()
     assert agg.module == "reconciliation"
     assert agg.risk_code == "reconciliation_gap"
+    assert agg.program_name == "Program X"
     assert agg.severity == RiskSeverity.WARNING
     assert agg.trend == RiskTrend.UP
     assert "Successfully synced 1 rows" in result

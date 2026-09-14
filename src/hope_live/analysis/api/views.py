@@ -79,6 +79,14 @@ def _apply_risk_filters(queryset: models.QuerySet, params: Any) -> models.QueryS
     if risk_code:
         queryset = queryset.filter(risk_code=risk_code)
 
+    category = params.get("category")
+    if category:
+        queryset = queryset.filter(category=category)
+
+    program_name = params.get("program_name")
+    if program_name:
+        queryset = queryset.filter(program_name=program_name)
+
     return queryset
 
 
@@ -153,6 +161,18 @@ class AggregateListView(generics.ListAPIView):  # type: ignore[misc]
             OpenApiParameter(
                 name="risk_code",
                 description="Filter by risk code (risk dashboard only)",
+                required=False,
+                type=str,
+            ),
+            OpenApiParameter(
+                name="category",
+                description="Filter by risk category (risk dashboard only)",
+                required=False,
+                type=str,
+            ),
+            OpenApiParameter(
+                name="program_name",
+                description="Filter by programme name (risk dashboard only)",
                 required=False,
                 type=str,
             ),

@@ -74,13 +74,30 @@ class RiskTrend(models.TextChoices):
     NEUTRAL = "neutral", "Neutral"
 
 
+class RiskCategory(models.TextChoices):
+    FIDUCIARY = "fiduciary", "Fiduciary"
+    SAFEGUARDING = "safeguarding", "Safeguarding"
+    PROGRAMMATIC = "programmatic", "Programmatic"
+    OPERATIONAL = "operational", "Operational"
+    COMPLIANCE = "compliance", "Compliance"
+
+
+class RiskScope(models.TextChoices):
+    GLOBAL = "global", "Global"
+    COUNTRY = "country", "Country"
+    BOTH = "both", "Both"
+
+
 class RiskAggregate(BaseAggregate):
-    """Stores risk indicators aggregated across modules, countries, and time grains."""
+    """Stores risk indicators aggregated across modules, countries, programmes, and time grains."""
 
     module = models.CharField(max_length=50, db_index=True)
     risk_code = models.CharField(max_length=100, db_index=True)
     risk_name = models.CharField(max_length=255)
     description = models.TextField(blank=True, default="")
+
+    program_name = models.CharField(max_length=255, db_index=True, default="")
+    category = models.CharField(max_length=20, choices=RiskCategory.choices, blank=True, default="", db_index=True)
 
     issue_count = models.IntegerField(default=0)
     percentage = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
@@ -94,11 +111,42 @@ class RiskAggregate(BaseAggregate):
     class Meta(BaseAggregate.Meta):
         verbose_name = "Risk Aggregate"
         verbose_name_plural = "Risk Aggregates"
+        unique_together = ("date", "time_grain", "country_slug", "dimension_type", "dimension_value", "program_name")
         indexes = [
             *BaseAggregate.Meta.indexes,
             models.Index(fields=["module", "severity"]),
             models.Index(fields=["risk_code", "date"]),
+            models.Index(fields=["program_name", "date"]),
+            models.Index(fields=["category", "date"]),
         ]
+
+
+class RiskDefinition(models.Model):
+    """Catalog of risk indicators (metadata) referenced by RiskAggregate via risk_code."""
+
+    risk_code = models.CharField(max_length=100, unique=True)
+    module = models.CharField(max_length=50, blank=True, default="")
+    name = models.CharField(max_length=255)
+    description = models.TextField(blank=True, default="")
+    metric = models.TextField(blank=True, default="")
+    entity = models.CharField(max_length=100, blank=True, default="")
+    threshold = models.CharField(max_length=255, blank=True, default="")
+    action = models.TextField(blank=True, default="")
+    source_system = models.CharField(max_length=50, blank=True, default="")
+    category = models.CharField(
+        max_length=20, choices=RiskCategory.choices, default=RiskCategory.OPERATIONAL, db_index=True
+    )
+    default_severity = models.CharField(max_length=20, choices=RiskSeverity.choices, default=RiskSeverity.NORMAL)
+    scope = models.CharField(max_length=20, choices=RiskScope.choices, default=RiskScope.BOTH)
+    active = models.BooleanField(default=True)
+
+    class Meta:
+        verbose_name = "Risk Definition"
+        verbose_name_plural = "Risk Definitions"
+        ordering = ("module", "risk_code")
+
+    def __str__(self) -> str:
+        return f"{self.risk_code} - {self.name}"
 
 
 class SyncDailyAggregatesJob(CeleryTaskModel):  # type: ignore[misc]

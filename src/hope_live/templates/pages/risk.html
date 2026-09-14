@@ -19,6 +19,36 @@
     <!-- Time Filter -->
     {% include "includes/time_filter.html" with granularity="daily" %}
 
+    <!-- Category Tabs & Programme Filter -->
+    <div class="mb-6 flex flex-wrap items-center justify-between gap-4">
+        <div id="risk-category-tabs" class="flex flex-wrap items-center gap-2">
+            <button type="button" class="risk-category-tab px-4 py-1.5 text-xs font-bold rounded-md bg-blue-50 text-blue-800 border border-blue-200 active-category" data-category="all">
+                {% translate "All" %}
+            </button>
+            <button type="button" class="risk-category-tab px-4 py-1.5 text-xs font-bold rounded-md bg-gray-100 text-gray-700 hover:bg-gray-200" data-category="fiduciary">
+                {% translate "Fiduciary" %}
+            </button>
+            <button type="button" class="risk-category-tab px-4 py-1.5 text-xs font-bold rounded-md bg-gray-100 text-gray-700 hover:bg-gray-200" data-category="safeguarding">
+                {% translate "Safeguarding" %}
+            </button>
+            <button type="button" class="risk-category-tab px-4 py-1.5 text-xs font-bold rounded-md bg-gray-100 text-gray-700 hover:bg-gray-200" data-category="programmatic">
+                {% translate "Programmatic" %}
+            </button>
+            <button type="button" class="risk-category-tab px-4 py-1.5 text-xs font-bold rounded-md bg-gray-100 text-gray-700 hover:bg-gray-200" data-category="operational">
+                {% translate "Operational" %}
+            </button>
+            <button type="button" class="risk-category-tab px-4 py-1.5 text-xs font-bold rounded-md bg-gray-100 text-gray-700 hover:bg-gray-200" data-category="compliance">
+                {% translate "Compliance" %}
+            </button>
+        </div>
+        <div class="flex items-center gap-2">
+            <label for="program-filter" class="text-xs font-semibold text-gray-600">{% translate "Programme:" %}</label>
+            <select id="program-filter" class="text-xs font-semibold text-gray-900 bg-white border border-gray-300 rounded-md px-2 py-1.5 focus:outline-hidden focus:ring-2 focus:ring-blue-500">
+                <option value="all">{% translate "All programmes" %}</option>
+            </select>
+        </div>
+    </div>
+
     <!-- Timeline Filter -->
     <div class="bg-white rounded-lg shadow p-6 mb-8">
         <h3 id="timeline-title" class="text-lg font-semibold text-gray-900 mb-2">{% translate "Issues Timeline" %}</h3>
@@ -88,6 +118,7 @@
                     <tr class="text-xs font-bold uppercase tracking-wider text-gray-600">
                         <th scope="col" class="py-3 px-4 text-left">{% translate "Risk" %}</th>
                         <th scope="col" class="py-3 px-4 text-left">{% translate "Module" %}</th>
+                        <th scope="col" class="py-3 px-4 text-left">{% translate "Programme" %}</th>
                         <th scope="col" class="py-3 px-4 text-center">{% translate "Severity" %}</th>
                         <th scope="col" class="py-3 px-4 text-center">{% translate "Trend" %}</th>
                         <th scope="col" class="py-3 px-4 text-right">{% translate "Issues" %}</th>

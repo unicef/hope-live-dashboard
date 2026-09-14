@@ -16,6 +16,7 @@ from hope_live.analysis.models import (
     FinancialAggregate,
     GrievanceAggregate,
     RiskAggregate,
+    RiskDefinition,
     SyncDailyAggregatesJob,
 )
 
@@ -106,6 +107,7 @@ def sync_daily_aggregates(
                     "module",
                     "risk_code",
                     "risk_name",
+                    "category",
                     "unit_label",
                     "severity",
                     "trend",
@@ -246,15 +248,19 @@ def _transform_completion_rows(rows: list[dict[str, Any]]) -> list[dict[str, Any
 
 
 def _prepare_risk_rows(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    category_map = {d.risk_code: d.category for d in RiskDefinition.objects.all()}
     prepared: list[dict[str, Any]] = []
     for item in rows:
-        item["risk_code"] = str(item.get("risk_code") or item.get("dimension_value") or "").strip()
+        risk_code = str(item.get("risk_code") or item.get("dimension_value") or "").strip()
+        item["risk_code"] = risk_code
         item["module"] = str(item.get("module") or "").strip()
+        item["program_name"] = str(item.get("program_name") or "").strip()
         item["severity"] = str(item.get("severity") or "normal").strip().lower()
         item["trend"] = str(item.get("trend") or "neutral").strip().lower()
         item["risk_name"] = str(item.get("risk_name") or "").strip()
         item["unit_label"] = str(item.get("unit_label") or "payments").strip()
         item["threshold_info"] = str(item.get("threshold_info") or "").strip()
+        item["category"] = str(item.get("category") or category_map.get(risk_code, "") or "").strip()
         prepared.append(item)
     return prepared
 
@@ -271,6 +277,9 @@ def _field_value(model_class: Any, field: str, item: dict[str, Any]) -> Any:
     return value
 
 
+BASE_UNIQUE_FIELDS = ("date", "time_grain", "country_slug", "dimension_type", "dimension_value")
+
+
 @shared_task(name="hope_live.analysis.tasks.save_aggregates")  # type: ignore[untyped-decorator]
 def save_aggregates(rows: list[dict[str, Any]], year: int, model_name: str, update_fields: list[str]) -> None:
     ModelClass = apps.get_model("analysis", model_name)
@@ -281,6 +290,9 @@ def save_aggregates(rows: list[dict[str, Any]], year: int, model_name: str, upda
         rows = _prepare_risk_rows(rows)
 
     # Deduplicate rows by unique fields to prevent "ON CONFLICT DO UPDATE command cannot affect row a second time"
+
+    unique_fields = list(ModelClass._meta.unique_together[0])
+    extra_fields = [f for f in unique_fields if f not in BASE_UNIQUE_FIELDS]
 
     unique_rows = {}
     default_grain = "monthly" if model_name == "DemographicAggregate" else "daily"
@@ -293,25 +305,22 @@ def save_aggregates(rows: list[dict[str, Any]], year: int, model_name: str, upda
 
         time_grain = item.get("time_grain") or default_grain
 
-        key = (
+        base_key = (
             str(item_date),
             time_grain,
             item.get("country_slug", "unknown"),
             item.get("dimension_type", "unknown"),
             dim_val.strip().upper(),
         )
+        key = base_key + tuple(str(item.get(f) or "").strip() for f in extra_fields)
         unique_rows[key] = item
 
     with transaction.atomic():
         batch = []
         for key, item in unique_rows.items():
-            kwargs = {
-                "date": key[0],
-                "time_grain": key[1],
-                "country_slug": key[2],
-                "dimension_type": key[3],
-                "dimension_value": key[4],
-            }
+            kwargs = {f: key[i] for i, f in enumerate(BASE_UNIQUE_FIELDS)}
+            for i, f in enumerate(extra_fields):
+                kwargs[f] = key[len(BASE_UNIQUE_FIELDS) + i]
             for field in update_fields:
                 kwargs[field] = _field_value(ModelClass, field, item)
 
@@ -321,7 +330,7 @@ def save_aggregates(rows: list[dict[str, Any]], year: int, model_name: str, upda
                 ModelClass.objects.bulk_create(
                     batch,
                     update_conflicts=True,
-                    unique_fields=["date", "time_grain", "country_slug", "dimension_type", "dimension_value"],
+                    unique_fields=unique_fields,
                     update_fields=update_fields,
                 )
                 batch = []
@@ -330,7 +339,7 @@ def save_aggregates(rows: list[dict[str, Any]], year: int, model_name: str, upda
             ModelClass.objects.bulk_create(
                 batch,
                 update_conflicts=True,
-                unique_fields=["date", "time_grain", "country_slug", "dimension_type", "dimension_value"],
+                unique_fields=unique_fields,
                 update_fields=update_fields,
             )
 

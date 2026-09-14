@@ -11,6 +11,9 @@ from hope_live.analysis.models import (
     FinancialAggregate,
     GrievanceAggregate,
     RiskAggregate,
+    RiskCategory,
+    RiskDefinition,
+    RiskScope,
     RiskSeverity,
     RiskTrend,
     TimeGrain,
@@ -250,3 +253,41 @@ def test_risk_aggregate_filtering():
     assert RiskAggregate.objects.filter(severity=RiskSeverity.CRITICAL).count() == 1
     assert RiskAggregate.objects.filter(country_slug="syria").count() == 1
     assert RiskAggregate.objects.filter(risk_code="code_2").count() == 1
+
+
+@pytest.mark.django_db
+def test_risk_aggregate_program_dimension():
+    base = {
+        "date": date(2024, 1, 1),
+        "time_grain": TimeGrain.DAILY,
+        "country_slug": "afghanistan",
+        "dimension_type": "risk_module",
+        "dimension_value": "code_a",
+        "module": "registration",
+        "risk_code": "code_a",
+        "risk_name": "Risk A",
+    }
+    RiskAggregate.objects.create(**base, program_name="Program X")
+    RiskAggregate.objects.create(**base, program_name="Program Y")
+
+    assert RiskAggregate.objects.filter(risk_code="code_a").count() == 2
+    assert RiskAggregate.objects.filter(program_name="Program X").count() == 1
+    assert RiskAggregate.objects.filter(program_name="Program Y").count() == 1
+
+
+# --------------------- RiskDefinition ---------------------
+@pytest.mark.django_db
+def test_risk_definition_create():
+    definition = RiskDefinition.objects.create(
+        risk_code="NO_FC_ASSIGNED",
+        module="Payment Operations",
+        name="No FC Assigned",
+        category=RiskCategory.FIDUCIARY,
+        default_severity=RiskSeverity.CRITICAL,
+    )
+
+    assert definition.risk_code == "NO_FC_ASSIGNED"
+    assert definition.category == RiskCategory.FIDUCIARY
+    assert definition.default_severity == RiskSeverity.CRITICAL
+    assert definition.scope == RiskScope.BOTH
+    assert definition.active is True

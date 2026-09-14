@@ -25,6 +25,8 @@ def test_aggregate_list_risk_dashboard(api_client):
     assert "module" in response.data[0]
     assert "severity" in response.data[0]
     assert "risk_code" in response.data[0]
+    assert "category" in response.data[0]
+    assert "program_name" in response.data[0]
 
 
 @pytest.mark.django_db
@@ -41,6 +43,22 @@ def test_aggregate_list_risk_filter_module_and_severity(api_client):
     assert len(response.data) == 1
     assert response.data[0]["module"] == "payment_operations"
     assert response.data[0]["severity"] == "critical"
+
+
+@pytest.mark.django_db
+def test_aggregate_list_risk_filter_category_and_program(api_client):
+    RiskAggregateFactory(category="fiduciary", program_name="Program X")
+    RiskAggregateFactory(category="compliance", program_name="Program Y")
+
+    response = api_client.get(
+        "/api/analysis/daily-aggregates/",
+        {"dashboard": "risk", "category": "fiduciary", "program_name": "Program X"},
+    )
+
+    assert response.status_code == 200
+    assert len(response.data) == 1
+    assert response.data[0]["category"] == "fiduciary"
+    assert response.data[0]["program_name"] == "Program X"
 
 
 @pytest.mark.django_db
