@@ -67,6 +67,20 @@ document.addEventListener('DOMContentLoaded', function () {
         'yemen': 'MENAR'
     };
 
+    const REGION_NAMES = {
+        'MENAR': gettext('Middle East and North Africa (MENA)'),
+        'ESAR': gettext('Eastern and Southern Africa (ESA)'),
+        'ECAR': gettext('Europe and Central Asia (ECA)'),
+        'WCAR': gettext('West and Central Africa (WCA)'),
+        'LACR': gettext('Latin America and Caribbean (LAC)'),
+        'EAPR': gettext('East Asia and Pacific (EAP)'),
+        'SAR': gettext('South Asia (SA)'),
+    };
+
+    function getRegionName(code) {
+        return REGION_NAMES[code] || code;
+    }
+
     // Initialize empty Crossfilter
     let ndx = crossfilter([]);
 
@@ -357,79 +371,162 @@ document.addEventListener('DOMContentLoaded', function () {
             }, { notMerge: true });
         }
 
-        // Helper for Pie/Donut breakdown charts (e.g. Delivery Type)
-        function updateDonutChart(chartObj, group, activeFiltersSet) {
-            const rawData = group.all()
-                .map(d => ({ name: d.key, value: d.value[currentMetric] }))
-                .filter(d => d.name !== '' && d.name !== null && d.value > 0);
-
-            const hasAnySelection = activeFiltersSet.size > 0;
-            const seriesData = rawData.map(d => {
-                const stableColor = getStableColor(d.name);
-                return {
-                    name: d.name,
-                    value: d.value,
-                    itemStyle: {
-                        color: activeFiltersSet.has(d.name)
-                            ? stableColor
-                            : (hasAnySelection ? '#cbd5e1' : stableColor)
-                    }
-                };
-            });
-
-            chartObj.setOption({
-                tooltip: {
-                    trigger: 'item',
-                    formatter: params => `${params.name}: <b>${formatFullVal(params.value)}</b> (${params.percent}%)`
-                },
-                legend: {
-                    orient: 'horizontal',
-                    bottom: 0,
-                    textStyle: { color: '#64748b' }
-                },
-                series: [{
-                    type: 'pie',
-                    radius: ['45%', '70%'],
-                    avoidLabelOverlap: true,
-                    itemStyle: {
-                        borderRadius: 6,
-                        borderColor: '#fff',
-                        borderWidth: 2
-                    },
-                    label: {
-                        show: false,
-                        position: 'center'
-                    },
-                    emphasis: {
-                        label: {
-                            show: true,
-                            fontSize: 14,
-                            fontWeight: 'bold',
-                            formatter: params => `${params.name}\n${formatMetric(params.value)}`
-                        }
-                    },
-                    data: seriesData
-                }]
-            }, { notMerge: true });
-        }
-
         // Update Charts
-        updateHorizontalBarChart(sectorChart, sectorGroup, selectedSectors, 140);
+        // Sector Chart (Donut with outside labels)
+        const sectorData = sectorGroup.all()
+            .filter(d => d.key !== '' && d.key !== null && d.value[currentMetric] > 0)
+            .sort((a, b) => b.value[currentMetric] - a.value[currentMetric]);
+
+        const hasAnySectorSelection = selectedSectors.size > 0;
+        const sectorDonutData = sectorData.map(d => {
+            const stableColor = getStableColor(d.key);
+            return {
+                name: d.key,
+                value: d.value[currentMetric],
+                itemStyle: {
+                    color: selectedSectors.has(d.key) ? stableColor : (hasAnySectorSelection ? '#cbd5e1' : stableColor)
+                }
+            };
+        });
+
+        sectorChart.setOption({
+            tooltip: {
+                trigger: 'item',
+                formatter: params => `${params.name}: <b>${formatFullVal(params.value)}</b> (${params.percent}%)`
+            },
+            series: [{
+                type: 'pie',
+                radius: ['45%', '70%'],
+                center: ['50%', '50%'],
+                avoidLabelOverlap: true,
+                itemStyle: { borderRadius: 6, borderColor: '#fff', borderWidth: 2 },
+                label: {
+                    show: true,
+                    position: 'outside',
+                    formatter: '{b}\n({d}%)',
+                    fontSize: 11,
+                    color: '#374151'
+                },
+                labelLine: {
+                    show: true,
+                    length: 15,
+                    length2: 10,
+                    smooth: false
+                },
+                emphasis: {
+                    label: { show: true, fontSize: 14, fontWeight: 'bold', formatter: params => `${params.name}\n${formatMetric(params.value)}` }
+                },
+                data: sectorDonutData
+            }]
+        }, { notMerge: true });
         updateHorizontalBarChart(programChart, programGroup, selectedPrograms, 140, 10);
-        updateDonutChart(deliveryChart, deliveryGroup, selectedDeliveries); // Donut for delivery types!
+        // Delivery Donut Chart with outside labels
+        const deliveryRawData = deliveryGroup.all()
+            .map(d => ({ name: d.key, value: d.value[currentMetric] }))
+            .filter(d => d.name !== '' && d.name !== null && d.value > 0);
+
+        const hasAnyDeliverySelection = selectedDeliveries.size > 0;
+        const deliverySeriesData = deliveryRawData.map(d => {
+            const stableColor = getStableColor(d.name);
+            return {
+                name: d.name,
+                value: d.value,
+                itemStyle: {
+                    color: selectedDeliveries.has(d.name) ? stableColor : (hasAnyDeliverySelection ? '#cbd5e1' : stableColor)
+                }
+            };
+        });
+
+        deliveryChart.setOption({
+            tooltip: {
+                trigger: 'item',
+                formatter: params => `${params.name}: <b>${formatFullVal(params.value)}</b> (${params.percent}%)`
+            },
+            series: [{
+                type: 'pie',
+                radius: ['45%', '70%'],
+                center: ['50%', '50%'],
+                avoidLabelOverlap: true,
+                itemStyle: { borderRadius: 6, borderColor: '#fff', borderWidth: 2 },
+                label: {
+                    show: true,
+                    position: 'outside',
+                    formatter: '{b}\n({d}%)',
+                    fontSize: 11,
+                    color: '#374151'
+                },
+                labelLine: {
+                    show: true,
+                    length: 15,
+                    length2: 10,
+                    smooth: false
+                },
+                emphasis: {
+                    label: { show: true, fontSize: 14, fontWeight: 'bold', formatter: params => `${params.name}\n${formatMetric(params.value)}` }
+                },
+                data: deliverySeriesData
+            }]
+        }, { notMerge: true });
         updateHorizontalBarChart(fspChart, fspGroup, selectedFsps, 140, 10);
-        updateHorizontalBarChart(regionChart, regionGroup, selectedRegions, 140, 100, true);
+        // Region Chart (with full-name mapping)
+        const regionData = regionGroup.all()
+            .map(d => {
+                const valObj = d.value[activeDimType] || { usd: 0, qty: 0, payments: 0 };
+                return { key: d.key, fullName: getRegionName(d.key), value: valObj[currentMetric] };
+            })
+            .filter(d => d.key !== '' && d.key !== null && d.value > 0)
+            .sort((a, b) => b.value - a.value)
+            .slice(0, 100);
+
+        const hasAnyRegionSelection = selectedRegions.size > 0;
+        regionChart.setOption({
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: { type: 'shadow' },
+                formatter: params => `${getRegionName(params[0].name)}: <b>${formatFullVal(params[0].value)}</b>`
+            },
+            grid: { top: 20, bottom: 30, left: 140, right: 30 },
+            xAxis: {
+                type: 'value',
+                axisLabel: { formatter: val => formatMetric(val), color: '#64748b' },
+                splitLine: { lineStyle: { color: '#f1f5f9' } }
+            },
+            yAxis: {
+                type: 'category',
+                data: regionData.map(d => d.key),
+                inverse: true,
+                axisLabel: {
+                    color: '#1f2937',
+                    fontWeight: 500,
+                    formatter: val => getRegionName(val).length > 28 ? getRegionName(val).substring(0, 28) + '...' : getRegionName(val)
+                }
+            },
+            series: [{
+                type: 'bar',
+                data: regionData.map(d => {
+                    const stableColor = getStableColor(d.key);
+                    return {
+                        name: d.key,
+                        value: d.value,
+                        itemStyle: {
+                            color: selectedRegions.has(d.key) ? stableColor : (hasAnyRegionSelection ? '#cbd5e1' : stableColor)
+                        }
+                    };
+                }),
+                barMaxWidth: 22,
+                itemStyle: { borderRadius: [0, 4, 4, 0] }
+            }]
+        }, { notMerge: true });
         updateHorizontalBarChart(beneficiaryGroupChart, beneficiaryGroupGroup, selectedBeneficiaryGroups, 140);
 
-        // 2. Country Chart (Vertical Bar)
+        // 2. Country Chart (Donut with outside labels, all countries)
         const countryData = countryGroup.all()
             .map(d => {
                 const valObj = d.value[activeDimType] || { usd: 0, qty: 0, payments: 0 };
                 return { key: d.key, value: valObj[currentMetric] };
             })
             .filter(d => d.key !== '' && d.key !== null && d.value > 0)
-            .sort((a, b) => b.value - a.value)
-            .slice(0, 15);
+            .sort((a, b) => b.value - a.value);
 
         const hasAnyCountrySelection = selectedCountries.size > 0;
         const countrySeriesData = countryData.map(d => {
@@ -446,23 +543,33 @@ document.addEventListener('DOMContentLoaded', function () {
         });
 
         countryChart.setOption({
-            tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' }, formatter: params => `${params[0].name}: <b>${formatFullVal(params[0].value)}</b>` },
-            grid: { top: 30, bottom: 95, left: 75, right: 20 },
-            xAxis: {
-                type: 'category',
-                data: countryData.map(d => d.key),
-                axisLabel: { rotate: 30, interval: 0, color: '#1f2937', fontWeight: 500 }
-            },
-            yAxis: {
-                type: 'value',
-                axisLabel: { formatter: val => formatMetric(val), color: '#64748b' },
-                splitLine: { lineStyle: { color: '#f1f5f9' } }
+            tooltip: {
+                trigger: 'item',
+                formatter: params => `${params.name}: <b>${formatFullVal(params.value)}</b> (${params.percent}%)`
             },
             series: [{
-                type: 'bar',
-                data: countrySeriesData,
-                barMaxWidth: 30,
-                itemStyle: { borderRadius: [4, 4, 0, 0] }
+                type: 'pie',
+                radius: ['45%', '70%'],
+                center: ['50%', '50%'],
+                avoidLabelOverlap: true,
+                itemStyle: { borderRadius: 6, borderColor: '#fff', borderWidth: 2 },
+                label: {
+                    show: true,
+                    position: 'outside',
+                    formatter: '{b}\n({d}%)',
+                    fontSize: 11,
+                    color: '#374151'
+                },
+                labelLine: {
+                    show: true,
+                    length: 15,
+                    length2: 10,
+                    smooth: false
+                },
+                emphasis: {
+                    label: { show: true, fontSize: 14, fontWeight: 'bold', formatter: params => `${params.name}\n${formatMetric(params.value)}` }
+                },
+                data: countrySeriesData
             }]
         }, { notMerge: true });
     }

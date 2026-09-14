@@ -119,18 +119,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Initialize ECharts instances with macarons theme
     const timelineChart = echarts.init(document.getElementById('time-focus-chart'), 'macarons');
-    const sectorIndChart = echarts.init(document.getElementById('sector-individuals-chart'), 'macarons');
     const sectorChildChart = echarts.init(document.getElementById('sector-children-chart'), 'macarons');
-    const countryIndChart = echarts.init(document.getElementById('country-individuals-chart'), 'macarons');
     const countryPwdChart = echarts.init(document.getElementById('country-pwd-chart'), 'macarons');
     const beneficiaryGroupChart = echarts.init(document.getElementById('beneficiary-group-chart'), 'macarons');
 
     // Resize Handler
     window.addEventListener('resize', function () {
         timelineChart.resize();
-        sectorIndChart.resize();
         sectorChildChart.resize();
-        countryIndChart.resize();
         countryPwdChart.resize();
         beneficiaryGroupChart.resize();
     });
@@ -215,59 +211,10 @@ document.addEventListener('DOMContentLoaded', function () {
             timelineChart.setOption(timelineOption);
         }
 
-        // 2. Sector Breakdown Chart (Grouped Horizontal Bars)
+        // 2. Sector Distribution Chart (Donut with outside labels)
         const sectorData = sectorGroup.all().filter(d => d.key !== '' && d.key !== null && d.value.beneficiaries > 0);
-        sectorData.sort((a, b) => b.value[activeField] - a.value[activeField]);
 
-        const categories = sectorData.map(d => d.key);
         const hasAnySectorSelection = selectedSectors.size > 0;
-
-        function getSectorSeries(metricKey, displayName, colorVal) {
-            return {
-                name: displayName,
-                type: 'bar',
-                barMaxWidth: 10,
-                data: sectorData.map(d => {
-                    const isSelected = selectedSectors.has(d.key);
-                    const opacity = isSelected ? 1 : (hasAnySectorSelection ? 0.35 : 1);
-                    return {
-                        value: d.value[metricKey],
-                        itemStyle: {
-                            color: colorVal,
-                            opacity: opacity
-                        }
-                    };
-                }),
-                itemStyle: { borderRadius: [0, 2, 2, 0] }
-            };
-        }
-
-        sectorIndChart.setOption({
-            tooltip: {
-                trigger: 'axis',
-                axisPointer: { type: 'shadow' }
-            },
-            grid: { top: 20, bottom: 10, left: 140, right: 30 },
-            xAxis: {
-                type: 'value',
-                axisLabel: {
-                    formatter: val => d3.format(".2s")(val).replace('G', 'B'),
-                    color: '#64748b'
-                },
-                splitLine: { lineStyle: { color: '#f1f5f9' } }
-            },
-            yAxis: {
-                type: 'category',
-                data: categories,
-                inverse: true,
-                axisLabel: { color: '#1f2937', fontWeight: 500 }
-            },
-            series: [
-                getSectorSeries(activeField, activeLabel, '#2ec7c9')
-            ]
-        }, { notMerge: true });
-
-        // 3. Sector Distribution Chart (Donut Chart showing sector shares of selected metric)
         const sectorDonutData = sectorData.map(d => {
             const stableColor = getStableColor(d.key);
             const isSelected = selectedSectors.has(d.key);
@@ -285,79 +232,26 @@ document.addEventListener('DOMContentLoaded', function () {
                 trigger: 'item',
                 formatter: '{b}: <b>{c}</b> ({d}%)'
             },
-            legend: {
-                show: false
-            },
             series: [{
                 type: 'pie',
                 radius: ['45%', '70%'],
+                center: ['50%', '50%'],
                 avoidLabelOverlap: true,
                 itemStyle: { borderRadius: 6, borderColor: '#fff', borderWidth: 2 },
-                label: { show: true, formatter: '{b}\n({d}%)', fontSize: 11 },
+                label: { show: true, position: 'outside', formatter: '{b}\n({d}%)', fontSize: 11, color: '#374151' },
+                labelLine: { show: true, length: 15, length2: 10, smooth: false },
                 emphasis: { label: { show: true, fontSize: 13, fontWeight: 'bold' } },
                 data: sectorDonutData
             }]
         }, { notMerge: true });
 
-        // 4. Country Breakdown Chart (Grouped Vertical Bars)
+        // 3. Country Distribution Chart (Donut with outside labels)
         const countryData = countryGroup.all()
             .filter(d => d.key !== null && d.value.beneficiaries > 0)
             .sort((a, b) => b.value[activeField] - a.value[activeField])
             .slice(0, 10);
 
-        const countryNames = countryData.map(d => d.key);
         const hasAnyCountrySelection = selectedCountries.size > 0;
-
-        function getCountrySeries(metricKey, displayName, colorVal) {
-            return {
-                name: displayName,
-                type: 'bar',
-                barMaxWidth: 10,
-                data: countryData.map(d => {
-                    const isSelected = selectedCountries.has(d.key);
-                    const opacity = isSelected ? 1 : (hasAnyCountrySelection ? 0.35 : 1);
-                    return {
-                        value: d.value[metricKey],
-                        itemStyle: {
-                            color: colorVal,
-                            opacity: opacity
-                        }
-                    };
-                }),
-                itemStyle: { borderRadius: [2, 2, 0, 0] }
-            };
-        }
-
-        countryIndChart.setOption({
-            tooltip: {
-                trigger: 'axis',
-                axisPointer: { type: 'shadow' }
-            },
-            grid: { top: 30, bottom: 95, left: 75, right: 20 },
-            xAxis: {
-                type: 'category',
-                data: countryNames,
-                axisLabel: {
-                    rotate: 30,
-                    interval: 0,
-                    color: '#1f2937',
-                    fontWeight: 500
-                }
-            },
-            yAxis: {
-                type: 'value',
-                axisLabel: {
-                    formatter: val => d3.format(".2s")(val).replace('G', 'B'),
-                    color: '#64748b'
-                },
-                splitLine: { lineStyle: { color: '#f1f5f9' } }
-            },
-            series: [
-                getCountrySeries(activeField, activeLabel, '#2ec7c9')
-            ]
-        }, { notMerge: true });
-
-        // 5. Country Distribution Chart (Donut chart showing country shares of selected metric)
         const countryDonutData = countryData.map(d => {
             const stableColor = getStableColor(d.key);
             const isSelected = selectedCountries.has(d.key);
@@ -375,15 +269,14 @@ document.addEventListener('DOMContentLoaded', function () {
                 trigger: 'item',
                 formatter: '{b}: <b>{c}</b> ({d}%)'
             },
-            legend: {
-                show: false
-            },
             series: [{
                 type: 'pie',
                 radius: ['45%', '70%'],
+                center: ['50%', '50%'],
                 avoidLabelOverlap: true,
                 itemStyle: { borderRadius: 6, borderColor: '#fff', borderWidth: 2 },
-                label: { show: true, formatter: '{b}\n({d}%)', fontSize: 11 },
+                label: { show: true, position: 'outside', formatter: '{b}\n({d}%)', fontSize: 11, color: '#374151' },
+                labelLine: { show: true, length: 15, length2: 10, smooth: false },
                 emphasis: { label: { show: true, fontSize: 13, fontWeight: 'bold' } },
                 data: countryDonutData
             }]
@@ -467,7 +360,6 @@ document.addEventListener('DOMContentLoaded', function () {
         updateAll();
     };
 
-    sectorIndChart.on('click', handleSectorClick);
     sectorChildChart.on('click', handleSectorClick);
 
     // Country Filter Selection Toggle
@@ -487,7 +379,6 @@ document.addEventListener('DOMContentLoaded', function () {
         updateAll();
     };
 
-    countryIndChart.on('click', handleCountryClick);
     countryPwdChart.on('click', handleCountryClick);
 
     beneficiaryGroupChart.on('click', function (params) {
