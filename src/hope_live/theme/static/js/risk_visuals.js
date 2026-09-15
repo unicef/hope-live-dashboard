@@ -2,12 +2,6 @@ document.addEventListener('DOMContentLoaded', function () {
     const timeFilterContainer = document.getElementById('time-filter-container');
     if (!timeFilterContainer) return;
 
-    const severityColors = {
-        critical: '#d64545',
-        warning: '#e5a13b',
-        caution: '#e5cf0d',
-        normal: '#97b552'
-    };
     const severityLabels = {
         critical: gettext('Critical'),
         warning: gettext('Warning'),
@@ -19,10 +13,69 @@ document.addEventListener('DOMContentLoaded', function () {
         down: gettext('Decreasing'),
         neutral: gettext('Neutral')
     };
-    const severityOrder = ['critical', 'warning', 'caution', 'normal'];
+
+    const moduleMeta = {
+        payment: {
+            label: gettext('Payment Operations'),
+            subtitle: gettext('Payment, Reconciliation & Verification bottlenecks'),
+            icon: '💳',
+            barColor: '#10b981',
+            badgeBg: 'bg-emerald-100 text-emerald-800'
+        },
+        payments: {
+            label: gettext('Payment Operations'),
+            subtitle: gettext('Payment, Reconciliation & Verification bottlenecks'),
+            icon: '💳',
+            barColor: '#10b981',
+            badgeBg: 'bg-emerald-100 text-emerald-800'
+        },
+        registration: {
+            label: gettext('Registration & Population'),
+            subtitle: gettext('KYC, Identity documents & Geographic verification'),
+            icon: '📝',
+            barColor: '#3b82f6',
+            badgeBg: 'bg-blue-100 text-blue-800'
+        },
+        deduplication: {
+            label: gettext('Deduplication & Adjudication'),
+            subtitle: gettext('Biometric, Needs-Adjudication & Cross-channel duplicate issues'),
+            icon: '🔍',
+            barColor: '#a855f7',
+            badgeBg: 'bg-purple-100 text-purple-800'
+        },
+        verification: {
+            label: gettext('Payment Verification'),
+            subtitle: gettext('PVP execution, overdue tickets & high failure rates'),
+            icon: '✅',
+            barColor: '#f97316',
+            badgeBg: 'bg-orange-100 text-orange-800'
+        },
+        grievance: {
+            label: gettext('Grievances & Safeguarding'),
+            subtitle: gettext('Sensitive complaints, zero-reporting & FSP concentrations'),
+            icon: '📣',
+            barColor: '#ef4444',
+            badgeBg: 'bg-red-100 text-red-800'
+        },
+        grievances: {
+            label: gettext('Grievances & Safeguarding'),
+            subtitle: gettext('Sensitive complaints, zero-reporting & FSP concentrations'),
+            icon: '📣',
+            barColor: '#ef4444',
+            badgeBg: 'bg-red-100 text-red-800'
+        },
+        targeting: {
+            label: gettext('Targeting & Eligibility'),
+            subtitle: gettext('Vulnerability criteria & payment readiness anomalies'),
+            icon: '🎯',
+            barColor: '#f59e0b',
+            badgeBg: 'bg-amber-100 text-amber-800'
+        }
+    };
 
     let currentCategory = 'all';
     let currentProgram = 'all';
+    let selectedModule = null;
 
     let ndx = crossfilter([]);
 
@@ -40,6 +93,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const severityGroup = severityDimension.group().reduceSum(d => d.issue_count);
     const trendGroup = trendDimension.group().reduceSum(d => d.issue_count);
     const countryGroup = countryDimension.group().reduceSum(d => d.issue_count);
+
     const riskCodeGroup = riskCodeDimension.group().reduce(
         (p, v) => {
             p.issue_count += v.issue_count;
@@ -48,218 +102,239 @@ document.addEventListener('DOMContentLoaded', function () {
             p.program_name = v.program_name || p.program_name;
             p.severity = v.severity || p.severity;
             p.trend = v.trend || p.trend;
-            p.percentage = v.percentage;
+            p.percentage = v.percentage !== null && v.percentage !== undefined ? v.percentage : p.percentage;
+            p.unit_label = v.unit_label || p.unit_label;
+            p.description = v.description || p.description;
             return p;
         },
         (p, v) => {
             p.issue_count -= v.issue_count;
             return p;
         },
-        () => ({ issue_count: 0, risk_name: '', module: '', program_name: '', severity: '', trend: '', percentage: null })
+        () => ({
+            issue_count: 0,
+            risk_name: '',
+            module: '',
+            program_name: '',
+            severity: '',
+            trend: '',
+            percentage: null,
+            unit_label: '',
+            description: ''
+        })
     );
 
     const totalIssues = ndx.groupAll().reduceSum(d => d.issue_count);
     const criticalIssues = ndx.groupAll().reduceSum(d => (d.severity === 'critical' ? d.issue_count : 0));
-    const warningIssues = ndx.groupAll().reduceSum(d => (d.severity === 'warning' ? d.issue_count : 0));
 
-    const timelineChart = echarts.init(document.getElementById('time-focus-chart'), 'macarons');
-    const moduleChart = echarts.init(document.getElementById('risk-module-chart'), 'macarons');
-    const severityChart = echarts.init(document.getElementById('risk-severity-chart'), 'macarons');
-    const trendChart = echarts.init(document.getElementById('risk-trend-chart'), 'macarons');
-    const countryChart = echarts.init(document.getElementById('risk-country-chart'), 'macarons');
+    // Initialize Timeline ECharts
+    const timelineElement = document.getElementById('time-focus-chart');
+    const timelineChart = timelineElement ? echarts.init(timelineElement, 'macarons') : null;
 
     window.addEventListener('resize', function () {
-        timelineChart.resize();
-        moduleChart.resize();
-        severityChart.resize();
-        trendChart.resize();
-        countryChart.resize();
+        if (timelineChart) timelineChart.resize();
     });
 
     function formatCount(val) {
-        return d3.format(',')(val);
-    }
-
-    function countDistinct(group) {
-        return group.all().filter(d => d.value > 0).length;
+        return d3.format(',')(val || 0);
     }
 
     function updateKPIs() {
-        document.getElementById('total-issues').textContent = formatCount(totalIssues.value());
-        document.getElementById('total-critical').textContent = formatCount(criticalIssues.value());
-        document.getElementById('total-warnings').textContent = formatCount(warningIssues.value());
-        document.getElementById('total-modules').textContent = formatCount(countDistinct(moduleGroup));
-        document.getElementById('total-countries').textContent = formatCount(countDistinct(countryGroup));
+        const totalEl = document.getElementById('total-issues');
+        const critEl = document.getElementById('total-critical');
+        if (totalEl) totalEl.textContent = formatCount(totalIssues.value());
+        if (critEl) critEl.textContent = formatCount(criticalIssues.value());
     }
 
     function renderSeverityBadge(sev) {
         const badges = {
-            critical: '<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-red-600 text-white shadow-xs">Critical</span>',
-            warning: '<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-500 text-white shadow-xs">Warning</span>',
-            caution: '<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-yellow-400 text-yellow-950 shadow-xs">Caution</span>',
-            normal: '<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-600 text-white shadow-xs">Normal</span>'
+            critical: '<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-red-600 text-white shadow-xs">Critical</span>',
+            warning: '<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-500 text-white shadow-xs">Warning</span>',
+            caution: '<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-yellow-400 text-yellow-950 shadow-xs">Caution</span>',
+            normal: '<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-600 text-white shadow-xs">Normal</span>'
         };
-        return badges[sev] || `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-gray-200 text-gray-800">${sev}</span>`;
+        return badges[sev] || `<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-gray-200 text-gray-800">${sev}</span>`;
     }
 
     function renderTrendBadge(trend) {
         if (trend === 'up') {
-            return '<span class="inline-flex items-center gap-1 text-xs font-semibold text-red-600"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg> Increasing</span>';
+            return '<span class="inline-flex items-center gap-0.5 text-xs font-bold text-red-600" title="' + gettext('Increasing') + '"><span class="text-sm">↗</span> ' + gettext('Up') + '</span>';
         }
         if (trend === 'down') {
-            return '<span class="inline-flex items-center gap-1 text-xs font-semibold text-emerald-600"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6"></path></svg> Decreasing</span>';
+            return '<span class="inline-flex items-center gap-0.5 text-xs font-bold text-emerald-600" title="' + gettext('Decreasing') + '"><span class="text-sm">↘</span> ' + gettext('Down') + '</span>';
         }
-        return '<span class="inline-flex items-center gap-1 text-xs font-medium text-gray-500"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg> Neutral</span>';
+        return '<span class="inline-flex items-center gap-0.5 text-xs font-semibold text-gray-400" title="' + gettext('Neutral') + '"><span class="text-sm">—</span> ' + gettext('Stable') + '</span>';
     }
 
-    function updateAll() {
-        updateKPIs();
+    function updateModuleBars() {
+        const container = document.getElementById('module-distribution-list');
+        const countBadge = document.getElementById('modules-monitored-count');
+        if (!container) return;
 
-        // 1. Timeline (bar)
-        const timelineData = volumeByDayGroup.all()
-            .filter(d => d.key !== null)
-            .map(d => [d.key.getTime(), d.value]);
-
-        timelineChart.setOption({
-            tooltip: {
-                trigger: 'axis',
-                formatter: function (params) {
-                    const date = new Date(params[0].value[0]);
-                    return `${d3.timeFormat('%B %d, %Y')(date)}<br/><b>${formatCount(params[0].value[1])}</b> ${gettext('issues')}`;
-                }
-            },
-            grid: { top: 15, bottom: 25, left: 55, right: 20 },
-            xAxis: { type: 'time', axisLabel: { color: '#64748b' } },
-            yAxis: {
-                type: 'value',
-                axisLabel: { color: '#64748b' },
-                splitLine: { lineStyle: { type: 'dashed', color: '#f1f5f9' } }
-            },
-            series: [{
-                name: gettext('Issues'),
-                type: 'bar',
-                data: timelineData,
-                itemStyle: { color: '#5ab1ef' },
-                barMaxWidth: 20
-            }]
-        }, { notMerge: true });
-
-        // 2. Module bar
-        const moduleData = moduleGroup.all()
+        const total = totalIssues.value();
+        const modData = moduleGroup.all()
             .filter(d => d.key && d.value > 0)
             .sort((a, b) => b.value - a.value);
 
-        moduleChart.setOption({
-            tooltip: {
-                trigger: 'axis',
-                axisPointer: { type: 'shadow' },
-                formatter: params => `${params[0].name}: <b>${formatCount(params[0].value)}</b>`
-            },
-            grid: { top: 20, bottom: 30, left: 140, right: 30 },
-            xAxis: {
-                type: 'value',
-                axisLabel: { color: '#64748b' },
-                splitLine: { lineStyle: { color: '#f1f5f9' } }
-            },
-            yAxis: {
-                type: 'category',
-                data: moduleData.map(d => d.key),
-                inverse: true,
-                axisLabel: {
-                    color: '#1f2937',
-                    fontWeight: 500,
-                    formatter: val => (val.length > 22 ? val.substring(0, 22) + '...' : val)
+        if (countBadge) {
+            countBadge.textContent = `${modData.length} ${gettext('modules')}`;
+        }
+
+        if (modData.length === 0) {
+            container.innerHTML = `<div class="text-xs text-gray-400 py-3 text-center italic">${gettext('No active module issues')}</div>`;
+            return;
+        }
+
+        container.innerHTML = modData.map(d => {
+            const meta = moduleMeta[d.key.toLowerCase()] || {
+                label: d.key.charAt(0).toUpperCase() + d.key.slice(1),
+                barColor: '#3b82f6',
+                icon: '📁'
+            };
+            const pct = total > 0 ? ((d.value / total) * 100).toFixed(1) : '0.0';
+            const isSelected = selectedModule === d.key;
+            const selectedClass = isSelected
+                ? 'ring-2 ring-blue-500 bg-blue-50/70 shadow-xs'
+                : 'hover:bg-gray-50';
+
+            return `
+            <div class="p-2.5 rounded-lg cursor-pointer transition-all border border-gray-200/80 ${selectedClass} module-bar-item" data-module="${d.key}">
+                <div class="flex items-center justify-between text-xs mb-1.5">
+                    <div class="flex items-center gap-1.5 font-bold text-gray-800">
+                        <span>${meta.icon}</span>
+                        <span>${meta.label}</span>
+                    </div>
+                    <div class="text-gray-700 font-bold tabular-nums">
+                        <span>${formatCount(d.value)}</span>
+                        <span class="text-[10px] font-normal text-gray-400 ml-1">(${pct}%)</span>
+                    </div>
+                </div>
+                <div class="w-full bg-gray-100 rounded-full h-1.5 overflow-hidden">
+                    <div class="h-full rounded-full transition-all duration-300" style="width: ${pct}%; background-color: ${meta.barColor}"></div>
+                </div>
+            </div>`;
+        }).join('');
+
+        container.querySelectorAll('.module-bar-item').forEach(el => {
+            el.addEventListener('click', function () {
+                const mod = this.dataset.module;
+                if (selectedModule === mod) {
+                    selectedModule = null;
+                    moduleDimension.filterAll();
+                } else {
+                    selectedModule = mod;
+                    moduleDimension.filter(mod);
                 }
-            },
-            series: [{
-                type: 'bar',
-                data: moduleData.map(d => d.value),
-                barMaxWidth: 22,
-                itemStyle: { color: '#5ab1ef', borderRadius: [0, 4, 4, 0] }
-            }]
-        }, { notMerge: true });
+                updateAll();
+            });
+        });
+    }
 
-        // 3. Severity donut
-        const severityData = severityOrder
-            .map(sev => {
-                const row = severityGroup.all().find(d => d.key === sev);
-                return { name: severityLabels[sev], value: row ? row.value : 0, severity: sev };
-            })
-            .filter(d => d.value > 0);
+    function updateOperationalCards() {
+        const container = document.getElementById('operational-modules-container');
+        if (!container) return;
 
-        severityChart.setOption({
-            tooltip: { trigger: 'item', formatter: '{b}: <b>{c}</b> ({d}%)' },
-            series: [{
-                type: 'pie',
-                radius: ['45%', '70%'],
-                center: ['50%', '50%'],
-                avoidLabelOverlap: true,
-                itemStyle: { borderRadius: 6, borderColor: '#fff', borderWidth: 2 },
-                label: { show: true, position: 'outside', formatter: '{b}\n({d}%)', fontSize: 11, color: '#374151' },
-                labelLine: { show: true, length: 15, length2: 10, smooth: false },
-                emphasis: { label: { show: true, fontSize: 13, fontWeight: 'bold' } },
-                data: severityData.map(d => ({ name: d.name, value: d.value, itemStyle: { color: severityColors[d.severity] } }))
-            }]
-        }, { notMerge: true });
+        const activeRisks = riskCodeGroup.all().filter(d => d.key && d.value.issue_count > 0);
 
-        // 4. Trend donut
-        const trendData = trendGroup.all().filter(d => d.key && d.value > 0);
-        trendChart.setOption({
-            tooltip: { trigger: 'item', formatter: '{b}: <b>{c}</b> ({d}%)' },
-            series: [{
-                type: 'pie',
-                radius: ['45%', '70%'],
-                center: ['50%', '50%'],
-                avoidLabelOverlap: true,
-                itemStyle: { borderRadius: 6, borderColor: '#fff', borderWidth: 2 },
-                label: { show: true, position: 'outside', formatter: '{b}\n({d}%)', fontSize: 11, color: '#374151' },
-                labelLine: { show: true, length: 15, length2: 10, smooth: false },
-                emphasis: { label: { show: true, fontSize: 13, fontWeight: 'bold' } },
-                data: trendData.map(d => ({ name: trendLabels[d.key] || d.key, value: d.value }))
-            }]
-        }, { notMerge: true });
+        if (activeRisks.length === 0) {
+            container.innerHTML = `
+            <div class="bg-white rounded-xl shadow-2xs border border-gray-200 p-8 text-center">
+                <div class="text-2xl mb-2">🎉</div>
+                <h4 class="text-sm font-bold text-gray-900">${gettext('No Operational Risk Anomalies')}</h4>
+                <p class="text-xs text-gray-500 mt-1">${gettext('All operational thresholds are within normal tolerances for the selected filters.')}</p>
+            </div>`;
+            return;
+        }
 
-        // 5. Country bar
-        const countryData = countryGroup.all()
-            .filter(d => d.key && d.value > 0)
-            .sort((a, b) => b.value - a.value)
-            .slice(0, 15);
+        // Group risks by module
+        const byModule = {};
+        activeRisks.forEach(item => {
+            const modKey = (item.value.module || 'other').toLowerCase();
+            if (!byModule[modKey]) byModule[modKey] = [];
+            byModule[modKey].push(item);
+        });
 
-        countryChart.setOption({
-            tooltip: {
-                trigger: 'axis',
-                axisPointer: { type: 'shadow' },
-                formatter: params => `${params[0].name}: <b>${formatCount(params[0].value)}</b>`
-            },
-            grid: { top: 20, bottom: 30, left: 140, right: 30 },
-            xAxis: {
-                type: 'value',
-                axisLabel: { color: '#64748b' },
-                splitLine: { lineStyle: { color: '#f1f5f9' } }
-            },
-            yAxis: {
-                type: 'category',
-                data: countryData.map(d => d.key),
-                inverse: true,
-                axisLabel: {
-                    color: '#1f2937',
-                    fontWeight: 500,
-                    formatter: val => (val.length > 22 ? val.substring(0, 22) + '...' : val)
+        const html = Object.keys(byModule).map(modKey => {
+            const meta = moduleMeta[modKey] || {
+                label: modKey.toUpperCase(),
+                subtitle: gettext('Operational metrics and bottlenecks'),
+                icon: '📁',
+                barColor: '#3b82f6',
+                badgeBg: 'bg-blue-100 text-blue-800'
+            };
+            const items = byModule[modKey].sort((a, b) => {
+                const rank = { critical: 4, warning: 3, caution: 2, normal: 1 };
+                return (rank[b.value.severity] || 0) - (rank[a.value.severity] || 0);
+            });
+            const moduleTotal = items.reduce((acc, cur) => acc + cur.value.issue_count, 0);
+
+            const cardsHtml = items.map(item => {
+                const v = item.value;
+                const sev = v.severity || 'normal';
+                const sevStyles = {
+                    critical: 'bg-red-50/80 border-red-500 text-red-700',
+                    warning: 'bg-amber-50/80 border-amber-500 text-amber-700',
+                    caution: 'bg-yellow-50/80 border-yellow-400 text-yellow-800',
+                    normal: 'bg-emerald-50/80 border-emerald-500 text-emerald-700'
+                };
+                const styleClass = sevStyles[sev] || sevStyles.normal;
+
+                let trendIcon = '<span class="text-gray-400 font-black text-sm" title="' + gettext('Stable') + '">—</span>';
+                if (v.trend === 'up') {
+                    trendIcon = '<span class="text-red-600 font-black text-sm" title="' + gettext('Increasing') + '">↗</span>';
+                } else if (v.trend === 'down') {
+                    trendIcon = '<span class="text-emerald-600 font-black text-sm" title="' + gettext('Decreasing') + '">↘</span>';
                 }
-            },
-            series: [{
-                type: 'bar',
-                data: countryData.map(d => d.value),
-                barMaxWidth: 22,
-                itemStyle: { color: '#5ab1ef', borderRadius: [0, 4, 4, 0] }
-            }]
-        }, { notMerge: true });
 
-        // 6. Top risk codes table
+                const unit = v.unit_label || gettext('issues');
+                const valDisplay = v.percentage !== null && v.percentage !== undefined
+                    ? `${v.percentage}% <span class="text-[11px] font-normal text-gray-500">(${formatCount(v.issue_count)})</span>`
+                    : `${formatCount(v.issue_count)} <span class="text-[11px] font-normal text-gray-500">${unit}</span>`;
+
+                return `
+                <div class="rounded-xl border p-3 border-l-4 transition-all shadow-2xs ${styleClass} flex flex-col justify-between">
+                    <div class="flex items-start justify-between gap-2 mb-1.5">
+                        <h5 class="text-xs font-bold text-gray-900 leading-snug">${v.risk_name || item.key}</h5>
+                        <div class="flex items-center gap-1 shrink-0">
+                            ${trendIcon}
+                        </div>
+                    </div>
+                    <div class="text-lg font-black leading-none mb-1 tabular-nums">
+                        ${valDisplay}
+                    </div>
+                    <div class="text-[10px] text-gray-600 line-clamp-2 leading-tight">
+                        ${v.description || ''}
+                    </div>
+                </div>`;
+            }).join('');
+
+            return `
+            <div class="bg-white rounded-xl shadow-2xs border border-gray-200 p-3.5 transition-all">
+                <div class="flex flex-wrap items-center justify-between gap-2 pb-2.5 mb-3 border-b border-gray-100">
+                    <div class="flex items-center gap-2">
+                        <span class="text-lg">${meta.icon}</span>
+                        <div>
+                            <h4 class="text-xs font-bold uppercase tracking-wider text-gray-900 leading-tight">${meta.label}</h4>
+                            <p class="text-[10px] text-gray-500">${meta.subtitle}</p>
+                        </div>
+                    </div>
+                    <span class="text-[11px] font-bold px-2.5 py-0.5 rounded-full ${meta.badgeBg}">
+                        ${formatCount(moduleTotal)} ${gettext('Issues')}
+                    </span>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5">
+                    ${cardsHtml}
+                </div>
+            </div>`;
+        }).join('');
+
+        container.innerHTML = html;
+    }
+
+    function updateTopTable() {
         const topRisks = riskCodeGroup.all()
             .filter(d => d.key && d.value.issue_count > 0)
-            .sort((a, b) => b.value.issue_count - a.value.issue_count)
-            .slice(0, 10);
+            .sort((a, b) => b.value.issue_count - a.value.issue_count);
 
         const tableBody = document.getElementById('risk-top-table');
         if (tableBody) {
@@ -267,15 +342,67 @@ document.addEventListener('DOMContentLoaded', function () {
                 const v = d.value;
                 const pct = v.percentage !== null && v.percentage !== undefined ? `${v.percentage}%` : '—';
                 return `<tr class="hover:bg-slate-50/80 transition-colors">
-                    <td class="py-3 px-4 font-semibold text-gray-900 text-sm">${v.risk_name || d.key}</td>
-                    <td class="py-3 px-4 text-gray-600 text-xs font-medium">${v.module}</td>
-                    <td class="py-3 px-4 text-gray-600 text-xs font-medium">${v.program_name || '—'}</td>
-                    <td class="py-3 px-4 text-center">${renderSeverityBadge(v.severity)}</td>
-                    <td class="py-3 px-4 text-center">${renderTrendBadge(v.trend)}</td>
-                    <td class="py-3 px-4 text-right font-bold text-gray-900 text-sm tabular-nums">${formatCount(v.issue_count)}</td>
-                    <td class="py-3 px-4 text-right font-semibold text-gray-700 text-sm tabular-nums">${pct}</td>
+                    <td class="py-2.5 px-3 font-semibold text-gray-900 text-xs">${v.risk_name || d.key}</td>
+                    <td class="py-2.5 px-3 text-gray-600 text-xs">${v.module}</td>
+                    <td class="py-2.5 px-3 text-gray-600 text-xs">${v.program_name || '—'}</td>
+                    <td class="py-2.5 px-3 text-center">${renderSeverityBadge(v.severity)}</td>
+                    <td class="py-2.5 px-3 text-center">${renderTrendBadge(v.trend)}</td>
+                    <td class="py-2.5 px-3 text-right font-bold text-gray-900 text-xs tabular-nums">${formatCount(v.issue_count)}</td>
+                    <td class="py-2.5 px-3 text-right font-semibold text-gray-700 text-xs tabular-nums">${pct}</td>
                 </tr>`;
             }).join('');
+        }
+    }
+
+    function updateAll() {
+        updateKPIs();
+        updateModuleBars();
+        updateOperationalCards();
+        updateTopTable();
+
+        // Issues Timeline Chart
+        if (timelineChart) {
+            const timelineData = volumeByDayGroup.all()
+                .filter(d => d.key !== null)
+                .map(d => [d.key.getTime(), d.value]);
+
+            timelineChart.setOption({
+                tooltip: {
+                    trigger: 'axis',
+                    formatter: function (params) {
+                        const date = new Date(params[0].value[0]);
+                        return `${d3.timeFormat('%B %d, %Y')(date)}<br/><b>${formatCount(params[0].value[1])}</b> ${gettext('issues')}`;
+                    }
+                },
+                toolbox: {
+                    show: true,
+                    right: 10,
+                    top: 0,
+                    feature: {
+                        saveAsImage: {
+                            show: true,
+                            title: gettext('Download PNG'),
+                            name: 'risk_timeline',
+                            pixelRatio: 2,
+                            backgroundColor: '#ffffff'
+                        }
+                    }
+                },
+                grid: { top: 15, bottom: 25, left: 45, right: 15 },
+                xAxis: { type: 'time', axisLabel: { color: '#64748b', fontSize: 10 } },
+                yAxis: {
+                    type: 'value',
+                    axisLabel: { color: '#64748b', fontSize: 10 },
+                    splitLine: { lineStyle: { type: 'dashed', color: '#f1f5f9' } }
+                },
+                series: [{
+                    name: gettext('Issues'),
+                    type: 'bar',
+                    data: timelineData,
+                    itemStyle: { color: '#00adef', borderRadius: [2, 2, 0, 0] },
+                    barMaxWidth: 16
+                }]
+            }, { notMerge: true });
         }
     }
 
@@ -314,6 +441,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 d.program_name = d.program_name || '';
                 d.category = d.category || '';
                 d.risk_code = d.risk_code || d.dimension_value || '';
+                d.description = d.description || '';
+                d.unit_label = d.unit_label || '';
             });
 
             dateDimension.filterAll();
@@ -337,9 +466,14 @@ document.addEventListener('DOMContentLoaded', function () {
         const csv = document.getElementById('export-csv');
         const xlsx = document.getElementById('export-xlsx');
         const json = document.getElementById('export-json');
+        const contextInfo = document.getElementById('export-context-info');
+
         if (csv) csv.href = `${base}?format=csv&${params}`;
         if (xlsx) xlsx.href = `${base}?format=xlsx&${params}`;
         if (json) json.href = `${base}?format=json&${params}`;
+        if (contextInfo) {
+            contextInfo.textContent = `${gettext('Period:')} ${from} → ${to}`;
+        }
     }
 
     // --- Time Filter Controller ---
@@ -355,16 +489,68 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    // --- Export Modal ---
+    // --- Export Modal Controller ---
     const exportModal = document.getElementById('export-modal');
-    document.getElementById('btn-open-export').addEventListener('click', function () {
-        exportModal.classList.remove('hidden');
-        exportModal.classList.add('flex');
-    });
-    document.getElementById('btn-close-export').addEventListener('click', function () {
-        exportModal.classList.add('hidden');
-        exportModal.classList.remove('flex');
-    });
+    const openExportBtn = document.getElementById('btn-open-export');
+    const closeExportBtn = document.getElementById('btn-close-export');
+    const cancelExportBtn = document.getElementById('btn-cancel-export');
+    const printReportBtn = document.getElementById('btn-print-report');
+
+    if (openExportBtn && exportModal) {
+        openExportBtn.addEventListener('click', function () {
+            if (typeof exportModal.showModal === 'function') {
+                exportModal.showModal();
+            } else {
+                exportModal.classList.remove('hidden');
+            }
+        });
+    }
+
+    function closeModal() {
+        if (!exportModal) return;
+        if (typeof exportModal.close === 'function') {
+            exportModal.close();
+        } else {
+            exportModal.classList.add('hidden');
+        }
+    }
+
+    if (closeExportBtn) closeExportBtn.addEventListener('click', closeModal);
+    if (cancelExportBtn) cancelExportBtn.addEventListener('click', closeModal);
+
+    if (printReportBtn) {
+        printReportBtn.addEventListener('click', function () {
+            closeModal();
+            setTimeout(() => {
+                window.print();
+            }, 300);
+        });
+    }
+
+    // --- Table CSV Export (Micro Element Export) ---
+    const exportTableCsvBtn = document.getElementById('btn-export-table-csv');
+    if (exportTableCsvBtn) {
+        exportTableCsvBtn.addEventListener('click', function () {
+            const topRisks = riskCodeGroup.all().filter(d => d.key && d.value.issue_count > 0);
+            let csv = 'Risk Indicator,Module,Programme,Severity,Trend,Issues,Percentage\n';
+            topRisks.forEach(d => {
+                const v = d.value;
+                const name = (v.risk_name || d.key).replace(/"/g, '""');
+                const prog = (v.program_name || '').replace(/"/g, '""');
+                const pct = v.percentage !== null && v.percentage !== undefined ? `${v.percentage}%` : '';
+                csv += `"${name}","${v.module}","${prog}","${v.severity}","${v.trend}",${v.issue_count},"${pct}"\n`;
+            });
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'hope_risk_indicators.csv';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        });
+    }
 
     // --- Category Tabs ---
     const categoryTabs = document.querySelectorAll('.risk-category-tab');
@@ -390,6 +576,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // --- Programme Filter ---
     const programSelect = document.getElementById('program-filter');
     function populateProgramFilter() {
+        if (!programSelect) return;
         const names = programDimension.group().all()
             .map(d => d.key)
             .filter(name => name)
@@ -399,15 +586,17 @@ document.addEventListener('DOMContentLoaded', function () {
             names.map(n => `<option value="${n}">${n}</option>`).join('');
         programSelect.value = current === 'all' || !names.includes(current) ? 'all' : current;
     }
-    programSelect.addEventListener('change', function () {
-        currentProgram = this.value;
-        if (currentProgram === 'all') {
-            programDimension.filterAll();
-        } else {
-            programDimension.filter(currentProgram);
-        }
-        updateAll();
-    });
+    if (programSelect) {
+        programSelect.addEventListener('change', function () {
+            currentProgram = this.value;
+            if (currentProgram === 'all') {
+                programDimension.filterAll();
+            } else {
+                programDimension.filter(currentProgram);
+            }
+            updateAll();
+        });
+    }
 
     loadRange(timeFilter.currentRange.start, timeFilter.currentRange.end);
 });
