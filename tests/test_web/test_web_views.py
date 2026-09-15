@@ -2,7 +2,7 @@ import pytest
 from django.test import RequestFactory
 
 from hope_live.analysis.models import FinancialAggregate, TimeGrain
-from hope_live.web.views import CompletionView, DashboardView, DemographicView
+from hope_live.web.views import CompletionView, DashboardView, DemographicView, RiskView
 
 
 @pytest.mark.django_db
@@ -44,5 +44,16 @@ def test_completion_view(user_factory):
     request.user = user
 
     view = CompletionView.as_view()
+    response = view(request)
+    assert response.status_code == 200
+
+
+@pytest.mark.django_db
+def test_risk_view(user_factory):
+    user = user_factory()
+    request = RequestFactory().get("/")
+    request.user = user
+
+    view = RiskView.as_view()
     response = view(request)
     assert response.status_code == 200

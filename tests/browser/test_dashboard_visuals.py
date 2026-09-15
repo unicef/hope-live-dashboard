@@ -146,9 +146,20 @@ def grievance_status_aggregates(db):
         )
 
 
+def _apply_custom_range(browser, start: str, end: str) -> None:
+    browser.click('button.time-preset-btn[data-preset="custom"]')
+    browser.wait_for_element_visible("#custom-range-inputs")
+    browser.execute_script(
+        f"document.getElementById('filter-date-from').value = '{start}';"
+        f"document.getElementById('filter-date-to').value = '{end}';"
+    )
+    browser.click("#btn-apply-custom-range")
+
+
 def test_financial_dashboard_loads(browser, financial_aggregates):
     browser.login_as_user()
     browser.open("/dashboard/")
+    browser.wait_for_element_visible("#time-filter-container")
     browser.wait_for_element_visible("#time-focus-chart canvas")
     browser.wait_for_element_visible("#sector-chart canvas")
     browser.wait_for_element_visible("#country-chart canvas")
@@ -161,12 +172,12 @@ def test_financial_dashboard_loads(browser, financial_aggregates):
     browser.wait_for_element_visible("#beneficiary-group-chart canvas")
     browser.wait_for_element_visible("#total-qty-distributed")
 
-    # Assert current year totals (for loops will default to current year first)
+    # Assert current year totals (default "This Year" preset)
     browser.assert_text("25", "#total-payments")
 
-    # Click the previous year tab
+    # Apply a custom period covering the previous year
     prev_year = datetime.datetime.now().year - 1
-    browser.click(f'button.year-tab[data-year="{prev_year}"]')
+    _apply_custom_range(browser, f"{prev_year}-01-01", f"{prev_year}-12-31")
 
     # Wait and assert updated previous year totals
     browser.wait_for_text_visible("50", "#total-payments")
@@ -175,6 +186,7 @@ def test_financial_dashboard_loads(browser, financial_aggregates):
 def test_demographic_dashboard_loads(browser, demographic_aggregates, financial_aggregates):
     browser.login_as_user()
     browser.open("/demographic/")
+    browser.wait_for_element_visible("#time-filter-container")
     browser.wait_for_element_visible("#total-individuals")
     browser.wait_for_element_visible("#total-children")
     browser.wait_for_element_visible("#total-households")
@@ -190,9 +202,9 @@ def test_demographic_dashboard_loads(browser, demographic_aggregates, financial_
     browser.assert_text("750", "#total-households")
     browser.assert_text("50", "#total-pwd")
 
-    # Click the previous year tab
+    # Apply a custom period covering the previous year
     prev_year = datetime.datetime.now().year - 1
-    browser.click(f'button.year-tab[data-year="{prev_year}"]')
+    _apply_custom_range(browser, f"{prev_year}-01-01", f"{prev_year}-12-31")
 
     # Wait and assert updated previous year totals
     browser.wait_for_text_visible("2,000", "#total-individuals")
@@ -204,6 +216,7 @@ def test_demographic_dashboard_loads(browser, demographic_aggregates, financial_
 def test_completion_dashboard_loads(browser, completion_aggregates, financial_aggregates):
     browser.login_as_user()
     browser.open("/completion/")
+    browser.wait_for_element_visible("#time-filter-container")
     browser.wait_for_element_visible("#total-reconciled")
     browser.wait_for_element_visible("#total-opened")
     browser.wait_for_element_visible("#time-focus-chart canvas")
@@ -214,9 +227,9 @@ def test_completion_dashboard_loads(browser, completion_aggregates, financial_ag
     # Assert current year totals
     browser.assert_text("15 (100.0% out of 15 total)", "#total-reconciled")
 
-    # Click the previous year tab
+    # Apply a custom period covering the previous year
     prev_year = datetime.datetime.now().year - 1
-    browser.click(f'button.year-tab[data-year="{prev_year}"]')
+    _apply_custom_range(browser, f"{prev_year}-01-01", f"{prev_year}-12-31")
 
     # Wait and assert updated previous year totals
     browser.wait_for_text_visible("30 (100.0% out of 30 total)", "#total-reconciled")
@@ -226,7 +239,7 @@ def test_grievance_dashboard_loads(browser, grievance_aggregates, grievance_stat
     browser.login_as_user()
     browser.open("/grievance/")
     browser.wait_for_element_visible("#total-tickets")
-    browser.wait_for_element_visible("#year-tabs")
+    browser.wait_for_element_visible("#time-filter-container")
     browser.wait_for_text_visible("Status")
     browser.wait_for_text_visible("Priority")
     browser.wait_for_text_visible("Category")
@@ -242,9 +255,9 @@ def test_grievance_dashboard_loads(browser, grievance_aggregates, grievance_stat
     # Assert current year totals
     browser.assert_text("50", "#total-tickets")
 
-    # Click the previous year tab
+    # Apply a custom period covering the previous year
     prev_year = datetime.datetime.now().year - 1
-    browser.click(f'button.year-tab[data-year="{prev_year}"]')
+    _apply_custom_range(browser, f"{prev_year}-01-01", f"{prev_year}-12-31")
 
     # Wait and assert updated previous year totals
     browser.wait_for_text_visible("100", "#total-tickets")
