@@ -266,10 +266,10 @@ document.addEventListener('DOMContentLoaded', function () {
                 icon: 'roundRect'
             },
             grid: {
-                top: 20,
-                bottom: 80,
-                left: 70,
-                right: 30
+                top: 15,
+                bottom: 30,
+                left: 60,
+                right: 20
             },
             xAxis: {
                 type: 'time',
@@ -357,7 +357,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 top: 0,
                 right: 20
             },
-            grid: { top: 35, bottom: 95, left: 75, right: 20 },
+            grid: { top: 30, bottom: 55, left: 60, right: 20 },
             xAxis: {
                 type: 'category',
                 data: countryData.map(d => d.key),

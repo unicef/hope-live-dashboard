@@ -128,7 +128,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     return `${d3.timeFormat('%B %d, %Y')(date)}<br/><b>${formatCount(params[0].value[1])}</b> ${gettext('issues')}`;
                 }
             },
-            grid: { top: 20, bottom: 60, left: 60, right: 20 },
+            grid: { top: 15, bottom: 25, left: 55, right: 20 },
             xAxis: { type: 'time', axisLabel: { color: '#64748b' } },
             yAxis: {
                 type: 'value',

@@ -272,7 +272,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     return `${formattedDate}<br/><b>${formattedValue}</b> ${metricName.toLowerCase()}`;
                 }
             },
-            grid: { top: 20, bottom: 80, left: 70, right: 30 },
+            grid: { top: 15, bottom: 25, left: 60, right: 20 },
             xAxis: {
                 type: 'time',
                 axisLabel: { color: '#64748b' }

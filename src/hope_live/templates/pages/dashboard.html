@@ -2,15 +2,14 @@
 {% load i18n static %}
 
 {% block content %}
-<div class="container mx-auto px-4 py-8">
-    <div class="mb-8 flex justify-between items-center">
+<div class="container mx-auto px-4 lg:px-6 py-4 lg:py-5">
+    <div class="mb-3 flex flex-wrap justify-between items-center gap-2">
         <div>
-            <h1 class="text-3xl font-bold text-gray-900">{% translate "Financial Dashboard" %}</h1>
-            <p class="text-gray-600">{% translate "Overview of Financial info" %}</p>
+            <h1 class="text-xl lg:text-2xl font-black text-gray-900 leading-tight">{% translate "Financial Dashboard" %}</h1>
+            <p class="text-xs text-gray-500">{% translate "Overview of Financial info" %}</p>
         </div>
         <div>
-            <!-- Date Filter could go here -->
-            <span class="bg-unicef-blue text-white text-xs font-medium mr-2 px-2.5 py-0.5 rounded">{% translate "Live Data" %}</span>
+            <span class="bg-unicef-blue text-white text-[11px] font-bold px-2 py-0.5 rounded">{% translate "Live Data" %}</span>
         </div>
     </div>
 
@@ -18,89 +17,92 @@
     {% include "includes/time_filter.html" with granularity="daily" %}
 
     <!-- Metric Selector Pills -->
-    <div class="mb-6 flex flex-wrap gap-2 items-center justify-between">
-        <div class="text-sm font-semibold text-gray-700">{% translate "View Dashboard Metrics by:" %}</div>
-        <div class="flex bg-gray-100 p-1 rounded-lg space-x-1 border border-gray-200">
-            <button id="btn-usd" class="metric-tab px-4 py-1.5 text-xs font-bold rounded-md bg-white shadow text-blue-800 transition-all duration-200 active-metric" data-metric="usd">
+    <div class="mb-3 flex flex-wrap gap-2 items-center justify-between">
+        <div class="text-xs font-bold text-gray-500 uppercase tracking-wider">{% translate "View Dashboard Metrics by:" %}</div>
+        <div class="flex bg-gray-100 p-0.5 rounded-lg space-x-1 border border-gray-200">
+            <button id="btn-usd" class="metric-tab px-3 py-1 text-xs font-bold rounded-md bg-white shadow text-blue-800 transition-all duration-200 active-metric cursor-pointer" data-metric="usd">
                 {% translate "Amount (USD)" %}
             </button>
-            <button id="btn-qty" class="metric-tab px-4 py-1.5 text-xs font-bold rounded-md text-gray-600 hover:text-gray-900 transition-all duration-200" data-metric="qty">
+            <button id="btn-qty" class="metric-tab px-3 py-1 text-xs font-bold rounded-md text-gray-600 hover:text-gray-900 transition-all duration-200 cursor-pointer" data-metric="qty">
                 {% translate "Quantity (QTY)" %}
             </button>
-            <button id="btn-payments" class="metric-tab px-4 py-1.5 text-xs font-bold rounded-md text-gray-600 hover:text-gray-900 transition-all duration-200" data-metric="payments">
+            <button id="btn-payments" class="metric-tab px-3 py-1 text-xs font-bold rounded-md text-gray-600 hover:text-gray-900 transition-all duration-200 cursor-pointer" data-metric="payments">
                 {% translate "Payments Count" %}
             </button>
         </div>
     </div>
 
+    <!-- Main Metrics (Headline KPIs - Above Timeline!) -->
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-3.5">
+        <div class="bg-white rounded-xl shadow-2xs border border-gray-200 p-3 border-l-4 border-green-500 flex flex-col justify-center min-h-[84px]">
+            <h3 class="text-gray-500 text-[10px] sm:text-[11px] font-bold uppercase tracking-wider">{% translate "Total Amount Paid" %}</h3>
+            <p id="total-amount-paid" class="text-xl sm:text-2xl font-black text-emerald-600 mt-0.5 leading-none">$0.00</p>
+        </div>
+        <div class="bg-white rounded-xl shadow-2xs border border-gray-200 p-3 border-l-4 border-blue-500 flex flex-col justify-center min-h-[84px]">
+            <h3 class="text-gray-500 text-[10px] sm:text-[11px] font-bold uppercase tracking-wider">{% translate "Number of Payments" %}</h3>
+            <p id="total-payments" class="text-xl sm:text-2xl font-black text-blue-700 mt-0.5 leading-none">0</p>
+        </div>
+        <div class="bg-white rounded-xl shadow-2xs border border-gray-200 p-3 border-l-4 border-purple-500 flex flex-col justify-center min-h-[84px]">
+            <h3 class="text-gray-500 text-[10px] sm:text-[11px] font-bold uppercase tracking-wider">{% translate "Total Quantity Distributed" %}</h3>
+            <p id="total-qty-distributed" class="text-xl sm:text-2xl font-black text-purple-700 mt-0.5 leading-none">0</p>
+        </div>
+        <div class="bg-white rounded-xl shadow-2xs border border-gray-200 p-3 border-l-4 border-yellow-500 flex flex-col justify-center min-h-[84px]">
+            <h3 class="text-gray-500 text-[10px] sm:text-[11px] font-bold uppercase tracking-wider">{% translate "Outstanding Payment" %}</h3>
+            <p id="outstanding-payments" class="text-xl sm:text-2xl font-black text-amber-600 mt-0.5 leading-none">$0.00</p>
+        </div>
+    </div>
+
     <!-- Timeline Filter (Full Width, Top) -->
-    <div class="bg-white rounded-lg shadow p-6 mb-8">
-        <h3 id="timeline-title" class="text-lg font-semibold text-gray-900 mb-2">{% translate "Spending Timeline" %}</h3>
-        <div id="time-focus-chart" class="w-full" style="min-height: 350px;"></div>
+    <div class="bg-white rounded-xl shadow-2xs border border-gray-200 p-3.5 mb-4">
+        <h3 id="timeline-title" class="text-sm font-bold text-gray-900 mb-1">{% translate "Spending Timeline" %}</h3>
+        <div id="time-focus-chart" class="w-full h-[220px]"></div>
         <div id="time-range-chart" style="display: none;"></div>
     </div>
 
-    <!-- Main Metrics -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-        <div class="bg-white rounded-lg shadow p-4 border-l-4 border-green-500 flex flex-col justify-center min-h-[120px]">
-            <h3 class="text-gray-500 text-xs font-medium uppercase">{% translate "Total Amount Paid" %}</h3>
-            <p id="total-amount-paid" class="text-xl lg:text-2xl font-bold text-gray-900 mt-1">$0.00</p>
+    <!-- Delivery Types and Sector -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
+        <div class="bg-white rounded-xl shadow-2xs border border-gray-200 p-3.5">
+            <h3 class="text-sm font-bold text-gray-900 mb-2">{% translate "Delivery Types" %}</h3>
+            <div id="delivery-chart" class="w-full h-[240px]"></div>
         </div>
-        <div class="bg-white rounded-lg shadow p-4 border-l-4 border-blue-500 flex flex-col justify-center min-h-[120px]">
-            <h3 class="text-gray-500 text-xs font-medium uppercase">{% translate "Number of Payments" %}</h3>
-            <p id="total-payments" class="text-xl lg:text-2xl font-bold text-gray-900 mt-1">0</p>
-        </div>
-        <div class="bg-white rounded-lg shadow p-4 border-l-4 border-purple-500 flex flex-col justify-center min-h-[120px]">
-            <h3 class="text-gray-500 text-xs font-medium uppercase">{% translate "Total Quantity Distributed" %}</h3>
-            <p id="total-qty-distributed" class="text-xl lg:text-2xl font-bold text-gray-900 mt-1">0</p>
-        </div>
-        <div class="bg-white rounded-lg shadow p-4 border-l-4 border-yellow-500 flex flex-col justify-center min-h-[120px]">
-            <h3 class="text-gray-500 text-xs font-medium uppercase">{% translate "Outstanding Payment" %}</h3>
-            <p id="outstanding-payments" class="text-xl lg:text-2xl font-bold text-gray-900 mt-1">$0.00</p>
+        <div class="bg-white rounded-xl shadow-2xs border border-gray-200 p-3.5">
+            <h3 class="text-sm font-bold text-gray-900 mb-2">{% translate "Distribution by Sector" %}</h3>
+            <div id="sector-chart" class="w-full h-[240px]"></div>
         </div>
     </div>
 
-    <!-- Delivery Types and Sector (Donut Charts with split legends) -->
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-        <div class="bg-white rounded-lg shadow p-6">
-            <h3 class="text-lg font-semibold text-gray-900 mb-4">{% translate "Delivery Types" %}</h3>
-            <div id="delivery-chart" class="w-full" style="min-height: 400px;"></div>
+    <!-- Regions and Countries -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
+        <div class="bg-white rounded-xl shadow-2xs border border-gray-200 p-3.5 flex flex-col justify-between">
+            <div>
+                <h3 class="text-sm font-bold text-gray-900 mb-1">{% translate "Regions" %}</h3>
+                <div id="region-chart" class="w-full h-[260px]"></div>
+            </div>
+            <p class="text-[10px] text-gray-400 mt-1 italic leading-tight">{% translate "MENAR: Middle East & North Africa · ESAR: Eastern & Southern Africa · ECAR: Europe & Central Asia · WCAR: West & Central Africa · LACR: Latin America & Caribbean · EAPR: East Asia & Pacific · SAR: South Asia" %}</p>
         </div>
-        <div class="bg-white rounded-lg shadow p-6">
-            <h3 class="text-lg font-semibold text-gray-900 mb-4">{% translate "Distribution by Sector" %}</h3>
-            <div id="sector-chart" class="w-full" style="min-height: 400px;"></div>
+        <div class="bg-white rounded-xl shadow-2xs border border-gray-200 p-3.5">
+            <h3 class="text-sm font-bold text-gray-900 mb-1">{% translate "Countries" %}</h3>
+            <div id="country-chart" class="w-full h-[260px]"></div>
         </div>
-    </div>
-
-    <!-- Regions (Full Width) -->
-    <div class="bg-white rounded-lg shadow p-6 mb-8">
-        <h3 class="text-lg font-semibold text-gray-900 mb-4">{% translate "Regions" %}</h3>
-        <div id="region-chart" class="w-full" style="min-height: 400px;"></div>
-        <p class="text-xs text-gray-400 mt-2 italic">{% translate "MENAR: Middle East and North Africa · ESAR: Eastern and Southern Africa · ECAR: Europe and Central Asia · WCAR: West and Central Africa · LACR: Latin America and Caribbean · EAPR: East Asia and Pacific · SAR: South Asia" %}</p>
-    </div>
-
-    <!-- Countries (Full Width) -->
-    <div class="bg-white rounded-lg shadow p-6 mb-8">
-        <h3 class="text-lg font-semibold text-gray-900 mb-4">{% translate "Countries" %}</h3>
-        <div id="country-chart" class="w-full" style="min-height: 500px;"></div>
     </div>
 
     <!-- Additional Segments (Program, FSP) -->
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-        <div class="bg-white rounded-lg shadow p-6">
-            <h3 class="text-lg font-semibold text-gray-900 mb-4">{% translate "Distribution by Program" %}</h3>
-            <div id="program-chart" class="w-full" style="min-height: 850px;"></div>
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
+        <div class="bg-white rounded-xl shadow-2xs border border-gray-200 p-3.5">
+            <h3 class="text-sm font-bold text-gray-900 mb-2">{% translate "Distribution by Program" %}</h3>
+            <div id="program-chart" class="w-full h-[320px]"></div>
         </div>
-        <div class="bg-white rounded-lg shadow p-6">
-            <h3 class="text-lg font-semibold text-gray-900 mb-4">{% translate "Financial Service Providers (FSP)" %}</h3>
-            <div id="fsp-chart" class="w-full" style="min-height: 850px;"></div>
+        <div class="bg-white rounded-xl shadow-2xs border border-gray-200 p-3.5">
+            <h3 class="text-sm font-bold text-gray-900 mb-2">{% translate "Financial Service Providers (FSP)" %}</h3>
+            <div id="fsp-chart" class="w-full h-[320px]"></div>
         </div>
     </div>
+
     <!-- Beneficiary Group Breakdown -->
-    <div class="grid grid-cols-1 gap-8 mt-8">
-        <div class="bg-white rounded-lg shadow p-6">
-            <h3 class="text-lg font-semibold text-gray-900 mb-4">{% translate "By Beneficiary Group" %}</h3>
-            <div id="beneficiary-group-chart" class="w-full" style="min-height: 400px;"></div>
+    <div class="grid grid-cols-1 gap-4 mb-6">
+        <div class="bg-white rounded-xl shadow-2xs border border-gray-200 p-3.5">
+            <h3 class="text-sm font-bold text-gray-900 mb-2">{% translate "By Beneficiary Group" %}</h3>
+            <div id="beneficiary-group-chart" class="w-full h-[220px]"></div>
         </div>
     </div>
 </div>

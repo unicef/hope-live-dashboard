@@ -165,10 +165,10 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
             },
             grid: {
-                top: 20,
-                bottom: 80,
-                left: 70,
-                right: 30
+                top: 15,
+                bottom: 25,
+                left: 60,
+                right: 20
             },
             xAxis: {
                 type: 'time',

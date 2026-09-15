@@ -3,277 +3,349 @@
 
 {% block content %}
 <!-- 1. Hero Section -->
-<div class="grid grid-cols-12 bg-white border-b">
+<div class="grid grid-cols-12 bg-white border-b border-gray-200">
 
-    <!-- Unified Hero Banner (Spans 10 columns) -->
-    <div class="col-span-12 lg:col-span-10 relative bg-sky-50 min-h-[400px] flex items-center overflow-hidden">
+    <!-- Unified Hero Banner (Spans 9 columns on lg) -->
+    <div class="col-span-12 lg:col-span-9 relative bg-sky-50 min-h-[330px] lg:min-h-[340px] flex items-center overflow-hidden">
 
-        <!-- Background Portrait Image & Blend Overlay -->
-        <div class="absolute inset-y-0 right-0 w-full lg:w-1/2 z-0 opacity-20 lg:opacity-100 transition-opacity">
+        <!-- Background Portrait Image & Blend Overlay: Pulled leftward to fill center void and position child naturally -->
+        <div class="absolute inset-y-0 right-0 w-full lg:w-[58%] xl:w-[62%] z-0 opacity-25 lg:opacity-100 transition-opacity pointer-events-none">
             <img
                 src="{% static 'images/background.png' %}"
-                class="w-full h-full object-cover object-right"
+                class="w-full h-full object-cover"
+                style="object-position: 80% 15%;"
                 alt="Child"
             >
             <!-- Feathered fade overlay to blend the image seamlessly into the bg-sky-50 card background -->
-            <div class="absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-sky-50 via-sky-50/70 to-transparent hidden lg:block"></div>
+            <div class="absolute inset-y-0 left-0 w-36 bg-gradient-to-r from-sky-50 via-sky-50/80 to-transparent hidden lg:block"></div>
         </div>
 
         <!-- Left Content: Title, Description, and CTAs -->
-        <div class="relative z-10 max-w-xl p-10 lg:pl-12 flex flex-col justify-center">
-            <div class="flex items-center gap-6 mb-6">
-                <h1 class="text-7xl lg:text-8xl font-black text-[#00adef] tracking-tight">HOPE</h1>
-                <h2 class="text-xl lg:text-2xl font-medium text-[#00adef] leading-snug border-l-2 border-[#00adef] pl-6">
+        <div class="relative z-10 max-w-lg p-6 lg:py-8 lg:pl-10 flex flex-col justify-center">
+            <div class="flex items-center gap-4 mb-4">
+                <h1 class="text-5xl lg:text-6xl font-black text-[#00adef] tracking-tight">HOPE</h1>
+                <h2 class="text-base lg:text-lg font-semibold text-[#00adef] leading-snug border-l-2 border-[#00adef] pl-4">
                     {% translate "Humanitarian cash" %}<br>
                     {% translate "Operations and Programme" %}<br>
                     {% translate "Ecosystem" %}
                 </h2>
             </div>
 
-            <p class="text-lg text-gray-750 mb-8 max-w-md">
+            <p class="text-xs lg:text-sm text-gray-600 mb-6 max-w-md leading-relaxed">
                 {% translate "Data and evidence to deliver humanitarian cash transfers safely." %}
             </p>
 
-            <div class="flex items-center gap-4">
-                <a href="{% url 'web:dashboard' %}" class="bg-[#00adef] text-white px-6 py-3 rounded-lg font-bold text-sm shadow hover:bg-sky-600 transition-colors flex items-center gap-2">
+            <div class="flex items-center gap-3">
+                <a href="{% url 'web:dashboard' %}" class="bg-[#00adef] text-white px-5 py-2.5 rounded-lg font-bold text-xs shadow-2xs hover:bg-sky-600 transition-colors flex items-center gap-2">
                     {% translate "Explore the data" %}
-                    <svg class="w-4 h-4 rtl:rotate-180" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+                    <svg class="w-3.5 h-3.5 rtl:rotate-180" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
                 </a>
-                <a href="#" class="text-[#00adef] font-semibold text-sm hover:underline flex items-center gap-1">
+                <a href="{% url 'web:about' %}" class="text-[#00adef] font-semibold text-xs hover:underline flex items-center gap-1">
                     {% translate "About HOPE" %}
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                 </a>
             </div>
         </div>
     </div>
 
-    <!-- Right: Stats / HOPE at a Glance -->
-    <div class="col-span-12 md:col-span-6 lg:col-span-2 bg-white p-8 border-l flex flex-col justify-center min-h-[300px] lg:min-h-0">
-        <h3 class="font-bold text-gray-900 mb-6 text-lg">{% translate "HOPE at a glance" %}</h3>
+    <!-- Right: Stats / HOPE at a Glance (Spans 3 columns on lg) -->
+    <div class="col-span-12 md:col-span-6 lg:col-span-3 bg-white p-6 border-l border-gray-200 flex flex-col justify-center min-h-[330px] lg:min-h-[340px]">
+        <h3 class="font-bold text-gray-900 mb-3 text-xs uppercase tracking-wider text-slate-500">{% translate "HOPE at a glance" %}</h3>
 
-        <ul class="space-y-6">
-            <li class="flex items-start gap-4">
-                <div class="w-10 h-10 rounded-full bg-sky-100 flex items-center justify-center shrink-0 text-[#00adef]">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        <ul class="space-y-3">
+            <li class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-lg bg-sky-100 flex items-center justify-center shrink-0 text-[#00adef]">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                 </div>
                 <div>
-                    <div class="font-bold text-gray-900 text-lg leading-none mb-1">{{ total_countries_glance }}+</div>
-                    <div class="text-xs text-gray-500">{% translate "Countries & territories" %}</div>
+                    <div class="font-bold text-gray-900 text-sm leading-none mb-0.5">{{ total_countries_glance }}+</div>
+                    <div class="text-[11px] text-gray-500">{% translate "Countries & territories" %}</div>
                 </div>
             </li>
 
-            <li class="flex items-start gap-4">
-                <div class="w-10 h-10 rounded-full bg-sky-100 flex items-center justify-center shrink-0 text-[#00adef]">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16 8v8m-4-5v5m-4-2v2m-2 4h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+            <li class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-lg bg-sky-100 flex items-center justify-center shrink-0 text-[#00adef]">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16 8v8m-4-5v5m-4-2v2m-2 4h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
                 </div>
                 <div>
-                    <div class="font-bold text-gray-900 text-lg leading-none mb-1">{{ total_programs_glance }}+</div>
-                    <div class="text-xs text-gray-500">{% translate "Programs" %}</div>
+                    <div class="font-bold text-gray-900 text-sm leading-none mb-0.5">{{ total_programs_glance }}+</div>
+                    <div class="text-[11px] text-gray-500">{% translate "Programs" %}</div>
                 </div>
             </li>
 
-            <li class="flex items-start gap-4">
-                <div class="w-10 h-10 rounded-full bg-sky-100 flex items-center justify-center shrink-0 text-[#00adef]">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4"/></svg>
+            <li class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-lg bg-sky-100 flex items-center justify-center shrink-0 text-[#00adef]">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4"/></svg>
                 </div>
                 <div>
-                    <div class="font-bold text-gray-900 text-lg leading-none mb-1">{{ total_sources_glance }}</div>
-                    <div class="text-xs text-gray-500">{% translate "Data source" %}</div>
+                    <div class="font-bold text-gray-900 text-sm leading-none mb-0.5">{{ total_sources_glance }}</div>
+                    <div class="text-[11px] text-gray-500">{% translate "Data sources" %}</div>
                 </div>
             </li>
 
-            <li class="flex items-start gap-4 pt-4 border-t border-gray-200">
-                <div class="w-10 h-10 rounded-full bg-sky-100 flex items-center justify-center shrink-0 text-[#00adef]">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+            <li class="flex items-center gap-3 pt-2.5 border-t border-gray-100">
+                <div class="w-8 h-8 rounded-lg bg-sky-100 flex items-center justify-center shrink-0 text-[#00adef]">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
                 </div>
                 <div>
-                    <div class="font-bold text-gray-900 text-sm leading-none mb-1">{% translate "Updated regularly" %}</div>
-                    <div class="text-xs text-gray-500">{% translate "Latest data:" %} {{ latest_data_str }}</div>
+                    <div class="font-bold text-gray-900 text-xs leading-none mb-0.5">{% translate "Updated regularly" %}</div>
+                    <div class="text-[10px] text-gray-400">{% translate "Latest:" %} {{ latest_data_str }}</div>
                 </div>
             </li>
         </ul>
     </div>
 </div>
 
-<div class="bg-gray-50 py-12 border-t border-gray-200">
-    <div class="max-w-7xl mx-auto px-6">
+<div class="bg-gray-50 py-6 lg:py-8 border-t border-gray-200">
+    <div class="max-w-7xl mx-auto px-4 lg:px-6">
 
-        <!-- 2. Global KPI Strip -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-12">
+        <!-- 2. Global KPI Strip (Compact) -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 mb-8">
             <!-- Card 1 -->
-            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
+            <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-2xs flex items-center justify-between">
                 <div>
-                    <div class="text-[11px] text-slate-500 uppercase tracking-wider font-bold mb-2">{% translate "Children Reached" %}</div>
-                    <div class="text-3xl font-black text-[#00adef] mb-1">{{ total_children|default:"47M" }}</div>
-                    <div class="text-[11px] text-slate-400 font-semibold">{% translate "Across" %} {{ total_countries|default:"32" }} {% translate "countries" %}</div>
+                    <div class="text-[10px] text-slate-500 uppercase tracking-wider font-bold mb-1">{% translate "Children Reached" %}</div>
+                    <div class="text-2xl font-black text-[#00adef] mb-0.5 leading-tight">{{ total_children|default:"47M" }}</div>
+                    <div class="text-[10px] text-slate-400 font-semibold">{% translate "Across" %} {{ total_countries|default:"32" }} {% translate "countries" %}</div>
                 </div>
-                <div class="w-12 h-12 rounded-xl bg-sky-50 flex items-center justify-center shrink-0">
-                    <svg class="w-6 h-6 text-[#00adef]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+                <div class="w-10 h-10 rounded-lg bg-sky-50 flex items-center justify-center shrink-0">
+                    <svg class="w-5 h-5 text-[#00adef]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
                 </div>
             </div>
 
             <!-- Card 2 -->
-            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
+            <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-2xs flex items-center justify-between">
                 <div>
-                    <div class="text-[11px] text-slate-500 uppercase tracking-wider font-bold mb-2">{% translate "Households Reached" %}</div>
-                    <div class="text-3xl font-black text-[#00adef] mb-1">{{ total_households|default:"15M" }}</div>
-                    <div class="text-[11px] text-slate-400 font-semibold">{% translate "Humanitarian assistance" %}</div>
+                    <div class="text-[10px] text-slate-500 uppercase tracking-wider font-bold mb-1">{% translate "Households Reached" %}</div>
+                    <div class="text-2xl font-black text-[#00adef] mb-0.5 leading-tight">{{ total_households|default:"15M" }}</div>
+                    <div class="text-[10px] text-slate-400 font-semibold">{% translate "Humanitarian assistance" %}</div>
                 </div>
-                <div class="w-12 h-12 rounded-xl bg-sky-50 flex items-center justify-center shrink-0">
-                    <svg class="w-6 h-6 text-[#00adef]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" /></svg>
+                <div class="w-10 h-10 rounded-lg bg-sky-50 flex items-center justify-center shrink-0">
+                    <svg class="w-5 h-5 text-[#00adef]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" /></svg>
                 </div>
             </div>
 
             <!-- Card 3 -->
-            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
+            <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-2xs flex items-center justify-between">
                 <div>
-                    <div class="text-[11px] text-slate-500 uppercase tracking-wider font-bold mb-2">{% translate "Active Countries" %}</div>
-                    <div class="text-3xl font-black text-[#00adef] mb-1">{{ total_countries|default:"32" }}</div>
-                    <div class="text-[11px] text-slate-400 font-semibold">{% translate "Global cash operations" %}</div>
+                    <div class="text-[10px] text-slate-500 uppercase tracking-wider font-bold mb-1">{% translate "Active Countries" %}</div>
+                    <div class="text-2xl font-black text-[#00adef] mb-0.5 leading-tight">{{ total_countries|default:"32" }}</div>
+                    <div class="text-[10px] text-slate-400 font-semibold">{% translate "Global cash operations" %}</div>
                 </div>
-                <div class="w-12 h-12 rounded-xl bg-sky-50 flex items-center justify-center shrink-0">
-                    <svg class="w-6 h-6 text-[#00adef]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                <div class="w-10 h-10 rounded-lg bg-sky-50 flex items-center justify-center shrink-0">
+                    <svg class="w-5 h-5 text-[#00adef]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
                 </div>
             </div>
 
             <!-- Card 4 -->
-            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
+            <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-2xs flex items-center justify-between">
                 <div>
-                    <div class="text-[11px] text-slate-500 uppercase tracking-wider font-bold mb-2">{% translate "Assistance Delivered" %}</div>
-                    <div class="text-3xl font-black text-[#00adef] mb-1">${{ total_cash_disbursed|default:"520M" }}</div>
-                    <div class="text-[11px] text-slate-400 font-semibold">{% translate "Direct cash transfers" %}</div>
+                    <div class="text-[10px] text-slate-500 uppercase tracking-wider font-bold mb-1">{% translate "Assistance Delivered" %}</div>
+                    <div class="text-2xl font-black text-[#00adef] mb-0.5 leading-tight">${{ total_cash_disbursed|default:"520M" }}</div>
+                    <div class="text-[10px] text-slate-400 font-semibold">{% translate "Direct cash transfers" %}</div>
                 </div>
-                <div class="w-12 h-12 rounded-xl bg-sky-50 flex items-center justify-center shrink-0">
-                    <svg class="w-6 h-6 text-[#00adef]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                <div class="w-10 h-10 rounded-lg bg-sky-50 flex items-center justify-center shrink-0">
+                    <svg class="w-5 h-5 text-[#00adef]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
                 </div>
             </div>
 
             <!-- Card 5 -->
-            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
+            <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-2xs flex items-center justify-between">
                 <div>
-                    <div class="text-[11px] text-slate-500 uppercase tracking-wider font-bold mb-2">{% translate "Verified Transactions" %}</div>
-                    <div class="text-3xl font-black text-[#00adef] mb-1">{{ verification_success_rate|default:"98.7" }}%</div>
-                    <div class="text-[11px] text-slate-400 font-semibold">{% translate "Verification success rate" %}</div>
+                    <div class="text-[10px] text-slate-500 uppercase tracking-wider font-bold mb-1">{% translate "Verified Transactions" %}</div>
+                    <div class="text-2xl font-black text-[#00adef] mb-0.5 leading-tight">{{ verification_success_rate|default:"98.7" }}%</div>
+                    <div class="text-[10px] text-slate-400 font-semibold">{% translate "Verification success rate" %}</div>
                 </div>
-                <div class="w-12 h-12 rounded-xl bg-sky-50 flex items-center justify-center shrink-0">
-                    <svg class="w-6 h-6 text-[#00adef]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>
+                <div class="w-10 h-10 rounded-lg bg-sky-50 flex items-center justify-center shrink-0">
+                    <svg class="w-5 h-5 text-[#00adef]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>
                 </div>
             </div>
         </div>
 
-        <!-- 3. Map + Updates -->
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
+        <!-- 3. Interactive World Map + Trends Over Time (Side-by-Side on Same Level) -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-8 items-stretch">
 
-            <!-- Interactive World Map (Spans 2 columns) -->
-            <div class="lg:col-span-2 bg-white rounded-xl border border-gray-200 shadow-sm p-6 flex flex-col relative">
-                <div class="flex justify-between items-center mb-2">
-                    <h3 class="text-lg font-bold text-gray-900">{% translate "Where children need help the most" %}</h3>
-                    <a href="{% url 'web:dashboard' %}" class="text-sm text-[#00adef] font-semibold hover:underline flex items-center gap-1">
-                        <span>{% translate "Explore map" %}</span>
-                        <svg class="w-3.5 h-3.5 rtl:rotate-180" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/></svg>
-                    </a>
+            <!-- Interactive World Map (7 cols) -->
+            <div class="lg:col-span-7 bg-white rounded-xl border border-gray-200 shadow-2xs flex flex-col justify-between overflow-hidden">
+                <div class="p-5 pb-2">
+                    <div class="flex justify-between items-center mb-1">
+                        <div>
+                            <h3 class="text-base font-bold text-gray-900">{% translate "Where children need help the most" %}</h3>
+                            <p class="text-xs text-gray-400">{% translate "Children in Need of Humanitarian Assistance (2026)" %}</p>
+                        </div>
+                        <a href="{% url 'web:dashboard' %}" class="text-xs text-[#00adef] font-semibold hover:underline flex items-center gap-1">
+                            <span>{% translate "Explore map" %}</span>
+                            <svg class="w-3.5 h-3.5 rtl:rotate-180" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/></svg>
+                        </a>
+                    </div>
                 </div>
-                <div class="text-xs text-gray-400 mb-4">{% translate "Children in Need of Humanitarian Assistance (2026)" %}</div>
-                <div class="relative flex-grow min-h-[400px]">
+
+                <div class="relative flex-grow h-[350px] px-5">
                     <!-- Map Chart Element -->
-                    <div id="world-map-chart" class="w-full h-full" style="min-height: 400px;"></div>
+                    <div id="world-map-chart" class="w-full h-full"></div>
                     <!-- Zoom Overlay -->
-                    <div class="absolute left-4 top-4 flex flex-col gap-1 z-10">
-                        <button id="map-zoom-home" class="w-8 h-8 bg-white border border-slate-200 rounded-lg shadow-sm hover:bg-slate-50 flex items-center justify-center text-slate-600 focus:outline-none" title="Reset view">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+                    <div class="absolute left-7 top-2 flex flex-col gap-1 z-20">
+                        <button id="map-zoom-home" class="w-7 h-7 bg-white/95 backdrop-blur border border-slate-200 rounded-md shadow-2xs hover:bg-slate-50 flex items-center justify-center text-slate-600 focus:outline-none" title="Reset view">
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
                         </button>
-                        <button id="map-zoom-in" class="w-8 h-8 bg-white border border-slate-200 rounded-lg shadow-sm hover:bg-slate-50 flex items-center justify-center text-slate-600 focus:outline-none" title="Zoom in">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
+                        <button id="map-zoom-in" class="w-7 h-7 bg-white/95 backdrop-blur border border-slate-200 rounded-md shadow-2xs hover:bg-slate-50 flex items-center justify-center text-slate-600 focus:outline-none" title="Zoom in">
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
                         </button>
-                        <button id="map-zoom-out" class="w-8 h-8 bg-white border border-slate-200 rounded-lg shadow-sm hover:bg-slate-50 flex items-center justify-center text-slate-600 focus:outline-none" title="Zoom out">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M20 12H4"/></svg>
+                        <button id="map-zoom-out" class="w-7 h-7 bg-white/95 backdrop-blur border border-slate-200 rounded-md shadow-2xs hover:bg-slate-50 flex items-center justify-center text-slate-600 focus:outline-none" title="Zoom out">
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M20 12H4"/></svg>
                         </button>
+                    </div>
+                </div>
+
+                <!-- Structured Map Legend Bar -->
+                <div class="px-5 py-2.5 bg-slate-50 border-t border-slate-100 flex flex-wrap items-center justify-between gap-2 text-xs text-slate-600 rounded-b-xl">
+                    <span class="font-bold text-[10px] text-slate-500 uppercase tracking-wider">{% translate "Reach scale" %}:</span>
+                    <div class="flex flex-wrap items-center gap-3">
+                        <span class="inline-flex items-center gap-1.5 text-[11px] font-medium"><span class="w-3 h-3 rounded-xs bg-[#084081]"></span> ≥ 10M</span>
+                        <span class="inline-flex items-center gap-1.5 text-[11px] font-medium"><span class="w-3 h-3 rounded-xs bg-[#0868ac]"></span> 5M–10M</span>
+                        <span class="inline-flex items-center gap-1.5 text-[11px] font-medium"><span class="w-3 h-3 rounded-xs bg-[#2b8cbe]"></span> 1M–5M</span>
+                        <span class="inline-flex items-center gap-1.5 text-[11px] font-medium"><span class="w-3 h-3 rounded-xs bg-[#7bccc4]"></span> 100K–1M</span>
+                        <span class="inline-flex items-center gap-1.5 text-[11px] font-medium"><span class="w-3 h-3 rounded-xs bg-[#bae4bc]"></span> &lt; 100K</span>
+                        <span class="inline-flex items-center gap-1.5 text-[11px] font-medium"><span class="w-3 h-3 rounded-xs bg-[#f1f5f9] border border-slate-300"></span> {% translate "No data" %}</span>
                     </div>
                 </div>
             </div>
 
-            <!-- Latest Updates & Alerts (1 column) -->
-            <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 flex flex-col">
-                <div class="flex justify-between items-center mb-6">
+            <!-- Trends Over Time (5 cols - Same Level!) -->
+            <div class="lg:col-span-5 bg-white rounded-xl border border-gray-200 shadow-2xs p-5 flex flex-col justify-between">
+                <div>
+                    <div class="flex justify-between items-center mb-1">
+                        <div>
+                            <h3 class="text-base font-bold text-gray-900">{% translate "Trends over time" %}</h3>
+                            <p class="text-xs text-gray-400">{% translate "Selected indicators (global delivery)" %}</p>
+                        </div>
+                        <select id="trends-timeframe" class="text-xs border-gray-300 rounded-md text-gray-700 py-1 pl-2.5 pr-7 focus:ring-[#00adef] focus:border-[#00adef] shadow-2xs font-semibold">
+                            <option value="5y">{% translate "5 years" %}</option>
+                            <option value="1y">{% translate "1 year" %}</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="flex-grow h-[350px] mt-2">
+                    <div id="trends-chart" class="w-full h-full"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 4. Dashboards Grid + Updates Row -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-8">
+
+            <!-- Dashboards Grid (7 cols) -->
+            <div class="lg:col-span-7">
+                <h3 class="text-base font-bold text-gray-900 mb-3">{% translate "Explore Dashboards" %}</h3>
+                <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                    <a href="{% url 'web:dashboard' %}" class="bg-white p-4 rounded-xl border border-gray-200 shadow-2xs hover:border-[#00adef] hover:shadow-xs transition-all group">
+                        <h4 class="font-bold text-gray-800 text-sm group-hover:text-[#00adef]">{% translate "Financial" %}</h4>
+                        <p class="text-xs text-gray-500 mt-1">{% translate "Transfer values & logistics" %}</p>
+                    </a>
+                    <a href="{% url 'web:demographic' %}" class="bg-white p-4 rounded-xl border border-gray-200 shadow-2xs hover:border-[#00adef] hover:shadow-xs transition-all group">
+                        <h4 class="font-bold text-gray-800 text-sm group-hover:text-[#00adef]">{% translate "Demographics" %}</h4>
+                        <p class="text-xs text-gray-500 mt-1">{% translate "Population & reach" %}</p>
+                    </a>
+                    <a href="{% url 'web:grievance' %}" class="bg-white p-4 rounded-xl border border-gray-200 shadow-2xs hover:border-[#00adef] hover:shadow-xs transition-all group">
+                        <h4 class="font-bold text-gray-800 text-sm group-hover:text-[#00adef]">{% translate "Accountability" %}</h4>
+                        <p class="text-xs text-gray-500 mt-1">{% translate "Feedback & grievances" %}</p>
+                    </a>
+                    <a href="{% url 'web:completion' %}" class="bg-white p-4 rounded-xl border border-gray-200 shadow-2xs hover:border-[#00adef] hover:shadow-xs transition-all group">
+                        <h4 class="font-bold text-gray-800 text-sm group-hover:text-[#00adef]">{% translate "Quality" %}</h4>
+                        <p class="text-xs text-gray-500 mt-1">{% translate "Reconciliation & metrics" %}</p>
+                    </a>
+                    <a href="{% url 'web:risk' %}" class="bg-white p-4 rounded-xl border border-gray-200 shadow-2xs hover:border-amber-500 hover:shadow-xs transition-all group col-span-2 sm:col-span-1">
+                        <h4 class="font-bold text-gray-800 text-sm group-hover:text-amber-600 flex items-center gap-1.5">
+                            <span class="inline-block w-2 h-2 rounded-full bg-amber-500"></span>
+                            {% translate "Risk Monitor" %}
+                        </h4>
+                        <p class="text-xs text-gray-500 mt-1">{% translate "Operational exceptions" %}</p>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Latest Updates & Alerts (5 cols) -->
+            <div class="lg:col-span-5 bg-white rounded-xl border border-gray-200 shadow-2xs p-5 flex flex-col">
+                <div class="flex justify-between items-center mb-3">
                     <h3 class="text-base font-bold text-slate-900">{% translate "Latest updates & alerts" %}</h3>
                     <a href="https://www.unicef.org/hope-hct/" target="_blank" class="text-xs text-[#00adef] font-semibold hover:underline flex items-center gap-1">
                         <span>{% translate "View all" %}</span>
                         <svg class="w-3 h-3 rtl:rotate-180" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/></svg>
                     </a>
                 </div>
-                <div class="space-y-6 flex-grow">
+                <div class="space-y-3.5 flex-grow">
                     {% if hope_updates %}
                         {% for update in hope_updates %}
-                        <div class="flex gap-4">
-                            <div class="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center shrink-0 text-[#00adef]">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                        <div class="flex gap-3">
+                            <div class="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center shrink-0 text-[#00adef]">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
                             </div>
                             <div>
-                                <div class="flex items-center gap-2 mb-1">
-                                    <span class="bg-blue-100 text-blue-700 text-[10px] font-bold px-2 py-0.5 rounded">{{ update.version }}</span>
+                                <div class="flex items-center gap-2 mb-0.5">
+                                    <span class="bg-blue-100 text-blue-700 text-[10px] font-bold px-1.5 py-0.5 rounded">{{ update.version }}</span>
                                     {% if update.date %}
-                                    <span class="text-xs text-gray-400">{{ update.date|date:"F j, Y" }}</span>
+                                    <span class="text-[11px] text-gray-400">{{ update.date|date:"F j, Y" }}</span>
                                     {% endif %}
                                 </div>
-                                <p class="text-sm text-slate-700 font-medium leading-tight">{{ update.snippet }}</p>
-                                <a href="https://www.unicef.org/hope-hct/" target="_blank" class="text-xs text-[#00adef] hover:underline font-semibold mt-1 inline-flex items-center gap-1">
+                                <p class="text-xs text-slate-700 font-medium leading-snug">{{ update.snippet }}</p>
+                                <a href="https://www.unicef.org/hope-hct/" target="_blank" class="text-[11px] text-[#00adef] hover:underline font-semibold mt-0.5 inline-flex items-center gap-1">
                                     <span>{% translate "Read details" %}</span>
-                                    <svg class="w-3 h-3 rtl:rotate-180" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/></svg>
+                                    <svg class="w-2.5 h-2.5 rtl:rotate-180" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/></svg>
                                 </a>
                             </div>
                         </div>
                         {% endfor %}
                     {% else %}
                         <!-- Update 1: HOPE v2025.4.15.0 -->
-                        <div class="flex gap-4">
-                            <div class="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center shrink-0 text-[#00adef]">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                        <div class="flex gap-3">
+                            <div class="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center shrink-0 text-[#00adef]">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
                             </div>
                             <div>
-                                <div class="flex items-center gap-2 mb-1">
-                                    <span class="bg-blue-100 text-blue-700 text-[10px] font-bold px-2 py-0.5 rounded">HOPE v2025.4.15.0</span>
-                                    <span class="text-xs text-gray-400">{% translate "May 19, 2026" %}</span>
+                                <div class="flex items-center gap-2 mb-0.5">
+                                    <span class="bg-blue-100 text-blue-700 text-[10px] font-bold px-1.5 py-0.5 rounded">HOPE v2025.4.15.0</span>
+                                    <span class="text-[11px] text-gray-400">{% translate "May 19, 2026" %}</span>
                                 </div>
-                                <p class="text-sm text-slate-700 font-medium leading-tight">{% translate "New features and enhancements 1. Added the Facility Workers beneficiary group to the programme setup page, enabling visualization..." %}</p>
-                                <a href="https://www.unicef.org/hope-hct/" target="_blank" class="text-xs text-[#00adef] hover:underline font-semibold mt-1 inline-flex items-center gap-1">
+                                <p class="text-xs text-slate-700 font-medium leading-snug">{% translate "New features and enhancements 1. Added the Facility Workers beneficiary group to the programme setup page, enabling visualization..." %}</p>
+                                <a href="https://www.unicef.org/hope-hct/" target="_blank" class="text-[11px] text-[#00adef] hover:underline font-semibold mt-0.5 inline-flex items-center gap-1">
                                     <span>{% translate "Read details" %}</span>
-                                    <svg class="w-3 h-3 rtl:rotate-180" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/></svg>
+                                    <svg class="w-2.5 h-2.5 rtl:rotate-180" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/></svg>
                                 </a>
                             </div>
                         </div>
 
                         <!-- Update 2: HOPE v2025.4.13.0 -->
-                        <div class="flex gap-4">
-                            <div class="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center shrink-0 text-[#00adef]">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                        <div class="flex gap-3">
+                            <div class="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center shrink-0 text-[#00adef]">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
                             </div>
                             <div>
-                                <div class="flex items-center gap-2 mb-1">
-                                    <span class="bg-blue-100 text-blue-700 text-[10px] font-bold px-2 py-0.5 rounded">HOPE v2025.4.13.0</span>
-                                    <span class="text-xs text-gray-400">{% translate "April 8, 2026" %}</span>
+                                <div class="flex items-center gap-2 mb-0.5">
+                                    <span class="bg-blue-100 text-blue-700 text-[10px] font-bold px-1.5 py-0.5 rounded">HOPE v2025.4.13.0</span>
+                                    <span class="text-[11px] text-gray-400">{% translate "April 8, 2026" %}</span>
                                 </div>
-                                <p class="text-sm text-slate-700 font-medium leading-tight">{% translate "New features and enhancements 1. Added a new filter to select Household or Individual IDs for alternate collectors receiving p..." %}</p>
-                                <a href="https://www.unicef.org/hope-hct/" target="_blank" class="text-xs text-[#00adef] hover:underline font-semibold mt-1 inline-flex items-center gap-1">
+                                <p class="text-xs text-slate-700 font-medium leading-snug">{% translate "New features and enhancements 1. Added a new filter to select Household or Individual IDs for alternate collectors receiving p..." %}</p>
+                                <a href="https://www.unicef.org/hope-hct/" target="_blank" class="text-[11px] text-[#00adef] hover:underline font-semibold mt-0.5 inline-flex items-center gap-1">
                                     <span>{% translate "Read details" %}</span>
-                                    <svg class="w-3 h-3 rtl:rotate-180" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/></svg>
+                                    <svg class="w-2.5 h-2.5 rtl:rotate-180" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/></svg>
                                 </a>
                             </div>
                         </div>
 
                         <!-- Update 3: HOPE v2025.4.12.0 -->
-                        <div class="flex gap-4">
-                            <div class="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center shrink-0 text-[#00adef]">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                        <div class="flex gap-3">
+                            <div class="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center shrink-0 text-[#00adef]">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
                             </div>
                             <div>
-                                <div class="flex items-center gap-2 mb-1">
-                                    <span class="bg-blue-100 text-blue-700 text-[10px] font-bold px-2 py-0.5 rounded">HOPE v2025.4.12.0</span>
-                                    <span class="text-xs text-gray-400">{% translate "March 16, 2026" %}</span>
+                                <div class="flex items-center gap-2 mb-0.5">
+                                    <span class="bg-blue-100 text-blue-700 text-[10px] font-bold px-1.5 py-0.5 rounded">HOPE v2025.4.12.0</span>
+                                    <span class="text-[11px] text-gray-400">{% translate "March 16, 2026" %}</span>
                                 </div>
-                                <p class="text-sm text-slate-700 font-medium leading-tight">{% translate "New features and enhancements 1. Added a Currency Conversion section to the payment plan module, allowing users to override the UN..." %}</p>
-                                <a href="https://www.unicef.org/hope-hct/" target="_blank" class="text-xs text-[#00adef] hover:underline font-semibold mt-1 inline-flex items-center gap-1">
+                                <p class="text-xs text-slate-700 font-medium leading-snug">{% translate "New features and enhancements 1. Added a Currency Conversion section to the payment plan module, allowing users to override the UN..." %}</p>
+                                <a href="https://www.unicef.org/hope-hct/" target="_blank" class="text-[11px] text-[#00adef] hover:underline font-semibold mt-0.5 inline-flex items-center gap-1">
                                     <span>{% translate "Read details" %}</span>
-                                    <svg class="w-3 h-3 rtl:rotate-180" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/></svg>
+                                    <svg class="w-2.5 h-2.5 rtl:rotate-180" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/></svg>
                                 </a>
                             </div>
                         </div>
@@ -282,84 +354,42 @@
             </div>
         </div>
 
-        <!-- 4. Dashboards + Trends -->
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
-
-            <!-- Dashboards Grid -->
-            <div>
-                <h3 class="text-lg font-bold text-gray-900 mb-4">{% translate "Explore Dashboards" %}</h3>
-                <div class="grid grid-cols-2 gap-6">
-                    <a href="{% url 'web:dashboard' %}" class="bg-white p-6 h-24 flex flex-col justify-center rounded-xl border border-gray-200 shadow-sm hover:border-[#00adef] hover:shadow-md transition-all group">
-                        <h4 class="font-bold text-gray-800 group-hover:text-[#00adef]">{% translate "Financial Dashboard" %}</h4>
-                        <p class="text-xs text-gray-500 mt-1">{% translate "Transfer values & logistics" %}</p>
-                    </a>
-                    <a href="{% url 'web:demographic' %}" class="bg-white p-6 h-24 flex flex-col justify-center rounded-xl border border-gray-200 shadow-sm hover:border-[#00adef] hover:shadow-md transition-all group">
-                        <h4 class="font-bold text-gray-800 group-hover:text-[#00adef]">{% translate "Demographics" %}</h4>
-                        <p class="text-xs text-gray-500 mt-1">{% translate "Population & households" %}</p>
-                    </a>
-                    <a href="{% url 'web:grievance' %}" class="bg-white p-6 h-24 flex flex-col justify-center rounded-xl border border-gray-200 shadow-sm hover:border-[#00adef] hover:shadow-md transition-all group">
-                        <h4 class="font-bold text-gray-800 group-hover:text-[#00adef]">{% translate "Accountability" %}</h4>
-                        <p class="text-xs text-gray-500 mt-1">{% translate "Feedback & grievances" %}</p>
-                    </a>
-                    <a href="{% url 'web:completion' %}" class="bg-white p-6 h-24 flex flex-col justify-center rounded-xl border border-gray-200 shadow-sm hover:border-[#00adef] hover:shadow-md transition-all group">
-                        <h4 class="font-bold text-gray-800 group-hover:text-[#00adef]">{% translate "Programme Quality" %}</h4>
-                        <p class="text-xs text-gray-500 mt-1">{% translate "Completion rates & metrics" %}</p>
-                    </a>
-                </div>
-            </div>
-
-            <!-- Global Trends -->
-            <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6 flex flex-col">
-                <div class="flex justify-between items-center mb-2">
-                    <h3 class="text-lg font-bold text-gray-900">{% translate "Trends over time" %}</h3>
-                    <select id="trends-timeframe" class="text-sm border-gray-300 rounded-md text-gray-600 py-1 pl-2 pr-8 focus:ring-[#00adef] focus:border-[#00adef]">
-                        <option value="5y">{% translate "5 years" %}</option>
-                        <option value="1y">{% translate "1 year" %}</option>
-                    </select>
-                </div>
-                <div class="text-xs text-gray-400 mb-4">{% translate "Selected indicators (global)" %}</div>
-                <div class="flex-grow relative min-h-[200px]">
-                    <div id="trends-chart" class="w-full h-full" style="min-height: 220px;"></div>
-                </div>
-            </div>
-        </div>
-
-        <!-- 5. Bottom 4-Card Information Strip -->
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
+        <!-- 5. Bottom 4-Card Information Strip (Compact) -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
             <!-- Card 1 -->
-            <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm flex flex-col items-start">
-                <div class="w-10 h-10 bg-sky-50 text-[#00adef] rounded-full flex items-center justify-center mb-4">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+            <div class="bg-white p-4 rounded-xl border border-gray-200 shadow-2xs flex flex-col items-start">
+                <div class="w-8 h-8 bg-sky-50 text-[#00adef] rounded-lg flex items-center justify-center mb-2.5">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
                 </div>
-                <h4 class="font-bold text-gray-800 text-sm mb-2">{% translate "Data responsibly" %}</h4>
-                <p class="text-xs text-gray-500 leading-relaxed">{% translate "We are committed to data protection, privacy and ethical use." %}</p>
+                <h4 class="font-bold text-gray-800 text-xs mb-1">{% translate "Data responsibly" %}</h4>
+                <p class="text-[11px] text-gray-500 leading-normal">{% translate "We are committed to data protection, privacy and ethical use." %}</p>
             </div>
 
             <!-- Card 2 -->
-            <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm flex flex-col items-start">
-                <div class="w-10 h-10 bg-sky-50 text-[#00adef] rounded-full flex items-center justify-center mb-4">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+            <div class="bg-white p-4 rounded-xl border border-gray-200 shadow-2xs flex flex-col items-start">
+                <div class="w-8 h-8 bg-sky-50 text-[#00adef] rounded-lg flex items-center justify-center mb-2.5">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
                 </div>
-                <h4 class="font-bold text-gray-800 text-sm mb-2">{% translate "Methodology" %}</h4>
-                <p class="text-xs text-gray-500 leading-relaxed">{% translate "Learn how HOPE data is produced and standards applied." %}</p>
+                <h4 class="font-bold text-gray-800 text-xs mb-1">{% translate "Methodology" %}</h4>
+                <p class="text-[11px] text-gray-500 leading-normal">{% translate "Learn how HOPE data is produced and standards applied." %}</p>
             </div>
 
             <!-- Card 3 -->
-            <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm flex flex-col items-start">
-                <div class="w-10 h-10 bg-sky-50 text-[#00adef] rounded-full flex items-center justify-center mb-4">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"/></svg>
+            <div class="bg-white p-4 rounded-xl border border-gray-200 shadow-2xs flex flex-col items-start">
+                <div class="w-8 h-8 bg-sky-50 text-[#00adef] rounded-lg flex items-center justify-center mb-2.5">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"/></svg>
                 </div>
-                <h4 class="font-bold text-gray-800 text-sm mb-2">{% translate "Give feedback" %}</h4>
-                <p class="text-xs text-gray-500 leading-relaxed">{% translate "Help us improve HOPE by sharing your feedback." %}</p>
+                <h4 class="font-bold text-gray-800 text-xs mb-1">{% translate "Give feedback" %}</h4>
+                <p class="text-[11px] text-gray-500 leading-normal">{% translate "Help us improve HOPE by sharing your feedback." %}</p>
             </div>
 
             <!-- Card 4 -->
-            <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm flex flex-col items-start">
-                <div class="w-10 h-10 bg-sky-50 text-[#00adef] rounded-full flex items-center justify-center mb-4">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+            <div class="bg-white p-4 rounded-xl border border-gray-200 shadow-2xs flex flex-col items-start">
+                <div class="w-8 h-8 bg-sky-50 text-[#00adef] rounded-lg flex items-center justify-center mb-2.5">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
                 </div>
-                <h4 class="font-bold text-gray-800 text-sm mb-2">{% translate "Stay connected" %}</h4>
-                <p class="text-xs text-gray-500 leading-relaxed">{% translate "Subscribe to updates and new data releases." %}</p>
+                <h4 class="font-bold text-gray-800 text-xs mb-1">{% translate "Stay connected" %}</h4>
+                <p class="text-[11px] text-gray-500 leading-normal">{% translate "Subscribe to updates and new data releases." %}</p>
             </div>
         </div>
 
@@ -703,10 +733,10 @@
                         }
                     },
                     grid: {
-                        top: 30,
-                        bottom: 60,
-                        left: 20,
-                        right: 20,
+                        top: 25,
+                        bottom: 50,
+                        left: 10,
+                        right: 15,
                         containLabel: true
                     },
                     xAxis: {
@@ -835,6 +865,7 @@
                     }
                 },
                 visualMap: {
+                    show: false,
                     type: 'piecewise',
                     orient: 'horizontal',
                     left: 'center',
