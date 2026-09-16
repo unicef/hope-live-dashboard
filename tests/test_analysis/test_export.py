@@ -14,7 +14,15 @@ def api_client():
 
 
 @pytest.mark.django_db
-def test_export_json_format(api_client):
+def test_export_unauthenticated_forbidden(api_client):
+    response = api_client.get("/api/analysis/export/", {"format": "json"})
+    assert response.status_code == 403
+
+
+@pytest.mark.django_db
+def test_export_json_format(api_client, user_factory):
+    user = user_factory()
+    api_client.force_authenticate(user=user)
     RiskAggregateFactory.create_batch(2)
 
     response = api_client.get("/api/analysis/export/", {"format": "json"})
@@ -29,7 +37,9 @@ def test_export_json_format(api_client):
 
 
 @pytest.mark.django_db
-def test_export_csv_format(api_client):
+def test_export_csv_format(api_client, user_factory):
+    user = user_factory()
+    api_client.force_authenticate(user=user)
     RiskAggregateFactory(module="registration", severity="critical")
 
     response = api_client.get("/api/analysis/export/", {"format": "csv"})
@@ -47,7 +57,9 @@ def test_export_csv_format(api_client):
 
 
 @pytest.mark.django_db
-def test_export_xlsx_format(api_client):
+def test_export_xlsx_format(api_client, user_factory):
+    user = user_factory()
+    api_client.force_authenticate(user=user)
     RiskAggregateFactory.create_batch(2)
 
     response = api_client.get("/api/analysis/export/", {"format": "xlsx"})

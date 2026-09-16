@@ -13,7 +13,7 @@ from rest_framework import (  # type: ignore[import-untyped]
     generics,
     serializers,
 )
-from rest_framework.permissions import AllowAny  # type: ignore[import-untyped]
+from rest_framework.permissions import AllowAny, IsAuthenticated  # type: ignore[import-untyped]
 from rest_framework.renderers import JSONRenderer  # type: ignore[import-untyped]
 from rest_framework.request import Request  # type: ignore[import-untyped]
 from rest_framework.response import Response  # type: ignore[import-untyped]
@@ -205,6 +205,8 @@ class AggregateListView(generics.ListAPIView):  # type: ignore[misc]
         elif dash_type == "grievance":
             queryset = GrievanceAggregate.objects.all()
         elif dash_type == "risk":
+            if not self.request.user.is_authenticated:
+                return RiskAggregate.objects.none()
             queryset = RiskAggregate.objects.all()
         else:
             queryset = FinancialAggregate.objects.exclude(dimension_type="currency")
@@ -220,7 +222,7 @@ class AggregateListView(generics.ListAPIView):  # type: ignore[misc]
 class ExportReportView(APIView):  # type: ignore[misc]
     """Export Risk Aggregate records in multiple formats (csv, json, xlsx)."""
 
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
     renderer_classes = [JSONRenderer]
 
     def perform_content_negotiation(self, request: Request, force: bool = False) -> tuple[Any, str]:

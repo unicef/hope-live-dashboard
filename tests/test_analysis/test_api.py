@@ -15,7 +15,17 @@ def api_client():
 
 
 @pytest.mark.django_db
-def test_aggregate_list_risk_dashboard(api_client):
+def test_aggregate_list_risk_unauthenticated_empty(api_client):
+    RiskAggregateFactory.create_batch(2)
+    response = api_client.get("/api/analysis/daily-aggregates/", {"dashboard": "risk"})
+    assert response.status_code == 200
+    assert response.data == []
+
+
+@pytest.mark.django_db
+def test_aggregate_list_risk_dashboard(api_client, user_factory):
+    user = user_factory()
+    api_client.force_authenticate(user=user)
     RiskAggregateFactory.create_batch(3)
 
     response = api_client.get("/api/analysis/daily-aggregates/", {"dashboard": "risk"})
@@ -30,7 +40,9 @@ def test_aggregate_list_risk_dashboard(api_client):
 
 
 @pytest.mark.django_db
-def test_aggregate_list_risk_filter_module_and_severity(api_client):
+def test_aggregate_list_risk_filter_module_and_severity(api_client, user_factory):
+    user = user_factory()
+    api_client.force_authenticate(user=user)
     RiskAggregateFactory(module="payment_operations", severity="critical")
     RiskAggregateFactory(module="registration", severity="normal")
 
@@ -46,7 +58,9 @@ def test_aggregate_list_risk_filter_module_and_severity(api_client):
 
 
 @pytest.mark.django_db
-def test_aggregate_list_risk_filter_category_and_program(api_client):
+def test_aggregate_list_risk_filter_category_and_program(api_client, user_factory):
+    user = user_factory()
+    api_client.force_authenticate(user=user)
     RiskAggregateFactory(category="fiduciary", program_name="Program X")
     RiskAggregateFactory(category="compliance", program_name="Program Y")
 
@@ -62,7 +76,9 @@ def test_aggregate_list_risk_filter_category_and_program(api_client):
 
 
 @pytest.mark.django_db
-def test_aggregate_list_date_range_filter(api_client):
+def test_aggregate_list_date_range_filter(api_client, user_factory):
+    user = user_factory()
+    api_client.force_authenticate(user=user)
     RiskAggregateFactory(date=date(2024, 1, 1))
     RiskAggregateFactory(date=date(2024, 6, 1))
     RiskAggregateFactory(date=date(2025, 1, 1))

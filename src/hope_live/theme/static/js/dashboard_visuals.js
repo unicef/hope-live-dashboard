@@ -338,27 +338,38 @@ document.addEventListener('DOMContentLoaded', function () {
                     axisPointer: { type: 'shadow' },
                     formatter: params => `${params[0].name}: <b>${formatFullVal(params[0].value)}</b>`
                 },
-                grid: { top: 20, bottom: 30, left: leftMargin, right: 30 },
+                grid: { top: 15, bottom: 25, left: 15, right: 25 },
                 xAxis: {
                     type: 'value',
-                    axisLabel: { formatter: val => formatMetric(val), color: '#64748b' },
+                    axisLabel: { formatter: val => formatMetric(val), color: '#64748b', fontSize: 10 },
                     splitLine: { lineStyle: { color: '#f1f5f9' } }
                 },
                 yAxis: {
                     type: 'category',
                     data: rawData.map(d => d.key),
                     inverse: true,
-                    axisLabel: {
-                        color: '#1f2937',
-                        fontWeight: 500,
-                        formatter: val => val.length > 22 ? val.substring(0, 22) + '...' : val
-                    }
+                    axisTick: { show: false },
+                    axisLine: { show: false },
+                    axisLabel: { show: false }
                 },
                 series: [{
                     type: 'bar',
                     data: seriesData,
-                    barMaxWidth: 22,
-                    itemStyle: { borderRadius: [0, 4, 4, 0] }
+                    barMaxWidth: 24,
+                    showBackground: true,
+                    backgroundStyle: { color: 'rgba(241, 245, 249, 0.75)', borderRadius: [0, 4, 4, 0] },
+                    itemStyle: { borderRadius: [0, 4, 4, 0] },
+                    label: {
+                        show: true,
+                        position: 'insideLeft',
+                        distance: 8,
+                        formatter: params => `${params.name}  •  ${formatMetric(params.value)}`,
+                        color: '#0f172a',
+                        fontWeight: 600,
+                        fontSize: 11,
+                        textBorderColor: '#ffffff',
+                        textBorderWidth: 2.5
+                    }
                 }]
             }, { notMerge: true });
         }
@@ -477,21 +488,19 @@ document.addEventListener('DOMContentLoaded', function () {
                 axisPointer: { type: 'shadow' },
                 formatter: params => `${getRegionName(params[0].name)}: <b>${formatFullVal(params[0].value)}</b>`
             },
-            grid: { top: 20, bottom: 30, left: 140, right: 30 },
+            grid: { top: 15, bottom: 25, left: 15, right: 25 },
             xAxis: {
                 type: 'value',
-                axisLabel: { formatter: val => formatMetric(val), color: '#64748b' },
+                axisLabel: { formatter: val => formatMetric(val), color: '#64748b', fontSize: 10 },
                 splitLine: { lineStyle: { color: '#f1f5f9' } }
             },
             yAxis: {
                 type: 'category',
                 data: regionData.map(d => d.key),
                 inverse: true,
-                axisLabel: {
-                    color: '#1f2937',
-                    fontWeight: 500,
-                    formatter: val => getRegionName(val).length > 28 ? getRegionName(val).substring(0, 28) + '...' : getRegionName(val)
-                }
+                axisTick: { show: false },
+                axisLine: { show: false },
+                axisLabel: { show: false }
             },
             series: [{
                 type: 'bar',
@@ -505,8 +514,21 @@ document.addEventListener('DOMContentLoaded', function () {
                         }
                     };
                 }),
-                barMaxWidth: 22,
-                itemStyle: { borderRadius: [0, 4, 4, 0] }
+                barMaxWidth: 24,
+                showBackground: true,
+                backgroundStyle: { color: 'rgba(241, 245, 249, 0.75)', borderRadius: [0, 4, 4, 0] },
+                itemStyle: { borderRadius: [0, 4, 4, 0] },
+                label: {
+                    show: true,
+                    position: 'insideLeft',
+                    distance: 8,
+                    formatter: params => `${getRegionName(params.name)}  •  ${formatMetric(params.value)}`,
+                    color: '#0f172a',
+                    fontWeight: 600,
+                    fontSize: 11,
+                    textBorderColor: '#ffffff',
+                    textBorderWidth: 2.5
+                }
             }]
         }, { notMerge: true });
         updateHorizontalBarChart(beneficiaryGroupChart, beneficiaryGroupGroup, selectedBeneficiaryGroups, 140);

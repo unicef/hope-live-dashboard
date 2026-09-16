@@ -298,23 +298,38 @@ document.addEventListener('DOMContentLoaded', function () {
                 axisPointer: { type: 'shadow' },
                 formatter: params => `${params[0].name}: <b>${d3.format(",")(params[0].value)}</b>`
             },
-            grid: { top: 20, bottom: 30, left: 140, right: 30 },
+            grid: { top: 15, bottom: 25, left: 15, right: 25 },
             xAxis: {
                 type: 'value',
-                axisLabel: { formatter: val => d3.format(".2s")(val).replace('G', 'B'), color: '#64748b' },
+                axisLabel: { formatter: val => d3.format(".2s")(val).replace('G', 'B'), color: '#64748b', fontSize: 10 },
                 splitLine: { lineStyle: { color: '#f1f5f9' } }
             },
             yAxis: {
                 type: 'category',
                 data: bgCategories,
                 inverse: true,
-                axisLabel: { color: '#1f2937', fontWeight: 500 }
+                axisTick: { show: false },
+                axisLine: { show: false },
+                axisLabel: { show: false }
             },
             series: [{
                 type: 'bar',
                 data: bgSeriesData,
-                barMaxWidth: 22,
-                itemStyle: { borderRadius: [0, 4, 4, 0] }
+                barMaxWidth: 24,
+                showBackground: true,
+                backgroundStyle: { color: 'rgba(241, 245, 249, 0.75)', borderRadius: [0, 4, 4, 0] },
+                itemStyle: { borderRadius: [0, 4, 4, 0] },
+                label: {
+                    show: true,
+                    position: 'insideLeft',
+                    distance: 8,
+                    formatter: params => `${params.name}  •  ${d3.format(".2s")(params.value).replace('G', 'B')}`,
+                    color: '#0f172a',
+                    fontWeight: 600,
+                    fontSize: 11,
+                    textBorderColor: '#ffffff',
+                    textBorderWidth: 2.5
+                }
             }]
         }, { notMerge: true });
     }
