@@ -432,7 +432,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 data: bgData.map(d => d.key),
                 inverse: true,
                 axisTick: { show: false },
-                axisLine: { show: false },
+                axisLine: { show: true, lineStyle: { color: '#f1f5f9' } },
                 axisLabel: { show: false }
             },
             series: [{

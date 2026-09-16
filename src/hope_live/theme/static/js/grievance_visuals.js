@@ -329,7 +329,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 data: categoryData.map(d => d.key),
                 inverse: true,
                 axisTick: { show: false },
-                axisLine: { show: false },
+                axisLine: { show: true, lineStyle: { color: '#f1f5f9' } },
                 axisLabel: { show: false }
             },
             series: [{
@@ -384,7 +384,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 data: issueTypeData.map(d => d.key),
                 inverse: true,
                 axisTick: { show: false },
-                axisLine: { show: false },
+                axisLine: { show: true, lineStyle: { color: '#f1f5f9' } },
                 axisLabel: { show: false }
             },
             series: [{

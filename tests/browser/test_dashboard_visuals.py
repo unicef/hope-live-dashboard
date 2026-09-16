@@ -15,39 +15,67 @@ pytestmark = [pytest.mark.selenium, pytest.mark.django_db]
 @pytest.fixture
 def financial_aggregates(db):
     year = datetime.datetime.now().year
-    # Current year
-    for i in range(5):
+    countries = ["kenya", "somalia", "nigeria", "ukraine", "bangladesh"]
+    # Current year sector
+    for i, country in enumerate(countries):
         FinancialAggregateFactory(
             date=datetime.date(year, 1, i + 1),
             time_grain="daily",
-            country_slug=f"country-{i}",
+            country_slug=country,
             dimension_type="sector",
             dimension_value=f"Health-{i}",
             total_usd=10000,
             payment_count=5,
         )
-    # Previous year
-    for i in range(5):
+    # Previous year sector
+    for i, country in enumerate(countries):
         FinancialAggregateFactory(
             date=datetime.date(year - 1, 1, i + 1),
             time_grain="daily",
-            country_slug=f"country-{i}",
+            country_slug=country,
             dimension_type="sector",
             dimension_value=f"Health-{i}",
             total_usd=20000,
             payment_count=10,
         )
+    # Additional dimensions (program, delivery_type, financial_service_provider, beneficiary_group)
+    for dim_type, prefix in [
+        ("program", "Program"),
+        ("delivery_type", "Delivery"),
+        ("financial_service_provider", "FSP"),
+        ("beneficiary_group", "Group"),
+    ]:
+        for i, country in enumerate(countries[:3]):
+            FinancialAggregateFactory(
+                date=datetime.date(year, 1, i + 1),
+                time_grain="daily",
+                country_slug=country,
+                dimension_type=dim_type,
+                dimension_value=f"{prefix}-{i}",
+                total_usd=5000,
+                payment_count=2,
+            )
+            FinancialAggregateFactory(
+                date=datetime.date(year - 1, 1, i + 1),
+                time_grain="daily",
+                country_slug=country,
+                dimension_type=dim_type,
+                dimension_value=f"{prefix}-{i}",
+                total_usd=5000,
+                payment_count=2,
+            )
 
 
 @pytest.fixture
 def demographic_aggregates(db):
     year = datetime.datetime.now().year
+    countries = ["kenya", "somalia", "nigeria", "ukraine", "bangladesh"]
     # Current year
-    for i in range(5):
+    for i, country in enumerate(countries):
         DemographicAggregateFactory(
             date=datetime.date(year, 1, i + 1),
             time_grain="monthly",
-            country_slug=f"country-{i}",
+            country_slug=country,
             dimension_type="sector",
             dimension_value=f"Education-{i}",
             total_beneficiaries=200,
@@ -56,11 +84,11 @@ def demographic_aggregates(db):
             total_households=150,
         )
     # Previous year
-    for i in range(5):
+    for i, country in enumerate(countries):
         DemographicAggregateFactory(
             date=datetime.date(year - 1, 1, i + 1),
             time_grain="monthly",
-            country_slug=f"country-{i}",
+            country_slug=country,
             dimension_type="sector",
             dimension_value=f"Education-{i}",
             total_beneficiaries=400,
@@ -68,39 +96,84 @@ def demographic_aggregates(db):
             total_pwd=20,
             total_households=300,
         )
+    # Beneficiary groups
+    for i, country in enumerate(countries[:3]):
+        DemographicAggregateFactory(
+            date=datetime.date(year, 1, i + 1),
+            time_grain="monthly",
+            country_slug=country,
+            dimension_type="beneficiary_group",
+            dimension_value=f"Group-{i}",
+            total_beneficiaries=50,
+            total_children=25,
+            total_pwd=5,
+            total_households=40,
+        )
+        DemographicAggregateFactory(
+            date=datetime.date(year - 1, 1, i + 1),
+            time_grain="monthly",
+            country_slug=country,
+            dimension_type="beneficiary_group",
+            dimension_value=f"Group-{i}",
+            total_beneficiaries=100,
+            total_children=50,
+            total_pwd=10,
+            total_households=80,
+        )
 
 
 @pytest.fixture
 def completion_aggregates(db):
     year = datetime.datetime.now().year
+    countries = ["kenya", "somalia", "nigeria", "ukraine", "bangladesh"]
     # Current year
-    for i in range(5):
+    for i, country in enumerate(countries):
         CompletionAggregateFactory(
             date=datetime.date(year, 1, i + 1),
             time_grain="daily",
-            country_slug=f"country-{i}",
+            country_slug=country,
             dimension_type="status",
             dimension_value=f"RECONCILED-{i}",
             payment_count=3,
             total_usd=5000,
         )
     # Previous year
-    for i in range(5):
+    for i, country in enumerate(countries):
         CompletionAggregateFactory(
             date=datetime.date(year - 1, 1, i + 1),
             time_grain="daily",
-            country_slug=f"country-{i}",
+            country_slug=country,
             dimension_type="status",
             dimension_value=f"RECONCILED-{i}",
             payment_count=6,
             total_usd=10000,
+        )
+    # Beneficiary groups
+    for i, country in enumerate(countries[:3]):
+        CompletionAggregateFactory(
+            date=datetime.date(year, 1, i + 1),
+            time_grain="daily",
+            country_slug=country,
+            dimension_type="beneficiary_group",
+            dimension_value=f"Group-{i}",
+            payment_count=2,
+            total_usd=2000,
+        )
+        CompletionAggregateFactory(
+            date=datetime.date(year - 1, 1, i + 1),
+            time_grain="daily",
+            country_slug=country,
+            dimension_type="beneficiary_group",
+            dimension_value=f"Group-{i}",
+            payment_count=4,
+            total_usd=4000,
         )
 
 
 @pytest.fixture
 def grievance_aggregates(db):
     year = datetime.datetime.now().year
-    # Current year
+    # Current year category
     for i in range(5):
         GrievanceAggregateFactory(
             date=datetime.date(year, 1, i + 1),
@@ -110,7 +183,7 @@ def grievance_aggregates(db):
             dimension_value=f"Feedback-{i}",
             ticket_count=10,
         )
-    # Previous year
+    # Previous year category
     for i in range(5):
         GrievanceAggregateFactory(
             date=datetime.date(year - 1, 1, i + 1),
@@ -119,6 +192,42 @@ def grievance_aggregates(db):
             dimension_type="category",
             dimension_value=f"Feedback-{i}",
             ticket_count=20,
+        )
+    # Priority
+    for i in range(3):
+        GrievanceAggregateFactory(
+            date=datetime.date(year, 1, i + 1),
+            time_grain="daily",
+            country_slug="country-test",
+            dimension_type="priority",
+            dimension_value=f"Priority-{i}",
+            ticket_count=5,
+        )
+        GrievanceAggregateFactory(
+            date=datetime.date(year - 1, 1, i + 1),
+            time_grain="daily",
+            country_slug="country-test",
+            dimension_type="priority",
+            dimension_value=f"Priority-{i}",
+            ticket_count=10,
+        )
+    # Issue Type
+    for i in range(3):
+        GrievanceAggregateFactory(
+            date=datetime.date(year, 1, i + 1),
+            time_grain="daily",
+            country_slug="country-test",
+            dimension_type="issue_type",
+            dimension_value=f"Issue-{i}",
+            ticket_count=5,
+        )
+        GrievanceAggregateFactory(
+            date=datetime.date(year - 1, 1, i + 1),
+            time_grain="daily",
+            country_slug="country-test",
+            dimension_type="issue_type",
+            dimension_value=f"Issue-{i}",
+            ticket_count=10,
         )
 
 
