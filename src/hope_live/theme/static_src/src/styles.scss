@@ -111,3 +111,37 @@ aside {
     }
   }
 }
+
+@media print {
+  header,
+  nav,
+  aside,
+  #sidebar,
+  .time-filter-wrapper,
+  #time-filter-container,
+  #btn-open-export,
+  #export-modal,
+  .risk-category-tab,
+  #program-filter,
+  .no-print {
+    display: none !important;
+  }
+
+  body, main, .container {
+    padding: 0 !important;
+    margin: 0 !important;
+    max-width: 100% !important;
+    background: #ffffff !important;
+    color: #000000 !important;
+  }
+
+  .shadow-2xs, .shadow-md, .shadow-xl {
+    box-shadow: none !important;
+    border: 1px solid #e5e7eb !important;
+  }
+
+  .break-inside-avoid {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+}

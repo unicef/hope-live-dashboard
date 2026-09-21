@@ -44,20 +44,13 @@
                         <span class="ml-3 shrink-0">{% translate "Programme Quality" %}</span>
                     </a>
                 </li>
-                {% else %}
                 <li>
-                    <a href='{% url "web:dashboard" %}' class="flex items-center p-2 text-base font-semibold text-white rounded-lg {% if request.resolver_match.url_name == 'dashboard' %}bg-sky-600{% else %}hover:bg-sky-600{% endif %} group whitespace-nowrap overflow-hidden">
-                        <svg class="w-5 h-5 shrink-0 text-white transition duration-75" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
-                        <span class="ml-3 shrink-0">{% translate "Dashboards" %}</span>
+                    <a href='{% url "web:risk" %}' class="flex items-center p-2 text-base font-semibold text-white rounded-lg {% if request.resolver_match.url_name == 'risk' %}bg-sky-600{% else %}hover:bg-sky-600{% endif %} group whitespace-nowrap overflow-hidden">
+                        <svg class="w-5 h-5 shrink-0 text-white transition duration-75" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" /></svg>
+                        <span class="ml-3 shrink-0">{% translate "Risk" %}</span>
                     </a>
                 </li>
                 {% endif %}
-                <li>
-                    <a href='#' class="flex items-center p-2 text-base font-semibold text-white rounded-lg hover:bg-sky-600 group whitespace-nowrap overflow-hidden">
-                        <svg class="w-5 h-5 shrink-0 text-white transition duration-75" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                        <span class="ml-3 shrink-0">{% translate "Countries" %}</span>
-                    </a>
-                </li>
                 <li>
                     <a href='https://unicef.github.io/hope-documentation/' target="_blank" class="flex items-center p-2 text-base font-semibold text-white rounded-lg hover:bg-sky-600 group whitespace-nowrap overflow-hidden">
                         <svg class="w-5 h-5 shrink-0 text-white transition duration-75" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.247 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
@@ -108,6 +101,7 @@
         </div>
 
         <!-- Bottom Menu: Admin & Sign Out -->
+        {% if request.user.is_staff or user.is_authenticated %}
         <ul class="space-y-2 pt-2 border-t border-sky-400">
             {% if request.user.is_staff %}
             <li>
@@ -119,19 +113,20 @@
                 </a>
             </li>
             {% endif %}
+            {% if user.is_authenticated %}
             <li>
-                {% if user.is_authenticated %}
                 <form action="{% url 'web:logout' %}" method="post" class="w-full">
                     {% csrf_token %}
-                    <button type="submit" class="flex items-center w-full p-2 text-base font-semibold text-white rounded-lg hover:bg-sky-600 group whitespace-nowrap overflow-hidden">
+                    <button type="submit" class="flex items-center w-full p-2 text-base font-semibold text-white rounded-lg hover:bg-sky-600 group whitespace-nowrap overflow-hidden" aria-label="{% translate 'Sign Out' %}">
                         <svg class="w-5 h-5 shrink-0 text-white transition duration-75" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-6a2.25 2.25 0 0 0-2.25 2.25v13.5A2.25 2.25 0 0 0 7.5 21h6a2.25 2.25 0 0 0 2.25-2.25V15m3 0 2.062-5M12 12h9.75" />
                         </svg>
                         <span class="ml-3 shrink-0">{% translate "Sign Out" %}</span>
                     </button>
                 </form>
-                {% endif %}
             </li>
+            {% endif %}
         </ul>
+        {% endif %}
     </div>
 </aside>

@@ -294,6 +294,13 @@ class GrievanceView(LoginRequiredMixin, TemplateView):
         return super().get_context_data(**kwargs)
 
 
+class RiskView(LoginRequiredMixin, TemplateView):
+    template_name = "pages/risk.html"
+
+    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+        return super().get_context_data(**kwargs)
+
+
 class TransfersView(LoginRequiredMixin, TemplateView):
     template_name = "pages/transfers.html"
 
