@@ -56,6 +56,8 @@ DEFAULTS = {
     "SENTRY_ENABLE_TRACING": (bool, False, False, "", ""),
     "SENTRY_URL": (str, ""),
     "SESSION_COOKIE_HTTPONLY": (bool, True),
+    "SESSION_COOKIE_AGE": (int, 86400),
+    "SESSION_EXPIRE_AT_BROWSER_CLOSE": (bool, True),
     "SESSION_COOKIE_NAME": (str, "sessionid"),
     "SECURE_HSTS_INCLUDE_SUBDOMAINS": (bool, True),
     "SECURE_HSTS_PRELOAD": (bool, True),
