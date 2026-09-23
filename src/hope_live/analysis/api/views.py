@@ -1,11 +1,6 @@
-import csv
-import io
-import json
 from typing import Any
 
-import openpyxl
 from django.db import models
-from django.http import HttpResponse
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
 from drf_spectacular.utils import OpenApiExample, OpenApiParameter, extend_schema
@@ -13,11 +8,9 @@ from rest_framework import (  # type: ignore[import-untyped]
     generics,
     serializers,
 )
-from rest_framework.permissions import AllowAny, IsAuthenticated  # type: ignore[import-untyped]
-from rest_framework.renderers import JSONRenderer  # type: ignore[import-untyped]
+from rest_framework.permissions import AllowAny  # type: ignore[import-untyped]
 from rest_framework.request import Request  # type: ignore[import-untyped]
 from rest_framework.response import Response  # type: ignore[import-untyped]
-from rest_framework.views import APIView  # type: ignore[import-untyped]
 
 from ..models import (
     CompletionAggregate,
@@ -34,8 +27,6 @@ from ..serializers import (
     GrievanceAggregateSerializer,
     RiskAggregateSerializer,
 )
-
-RISK_EXPORT_FIELDS = RiskAggregateSerializer.Meta.fields
 
 
 def _apply_common_filters(queryset: models.QuerySet, params: Any, dash_type: str | None) -> models.QuerySet:
@@ -217,68 +208,3 @@ class AggregateListView(generics.ListAPIView):  # type: ignore[misc]
             queryset = _apply_risk_filters(queryset, self.request.query_params)
 
         return queryset
-
-
-class ExportReportView(APIView):  # type: ignore[misc]
-    """Export Risk Aggregate records in multiple formats (csv, json, xlsx)."""
-
-    permission_classes = [IsAuthenticated]
-    renderer_classes = [JSONRenderer]
-
-    def perform_content_negotiation(self, request: Request, force: bool = False) -> tuple[Any, str]:
-        # The `format` query param is used to select the export format, so bypass
-        # DRF's default renderer-format override (which would 404 on csv/xlsx).
-        renderer = self.get_renderers()[0]
-        return renderer, renderer.media_type
-
-    def get(self, request: Request, *args: object, **kwargs: object) -> HttpResponse:
-        export_format = (request.query_params.get("format") or "json").lower()
-
-        queryset = RiskAggregate.objects.all()
-        queryset = _apply_common_filters(queryset, request.query_params, "risk")
-        queryset = _apply_risk_filters(queryset, request.query_params)
-        queryset = queryset.filter(is_visible_on_dashboard=True)
-
-        rows = list(RiskAggregateSerializer(queryset, many=True).data)
-
-        if export_format == "csv":
-            return self._csv_response(rows)
-        if export_format == "xlsx":
-            return self._xlsx_response(rows)
-        return self._json_response(rows)
-
-    @staticmethod
-    def _content_disposition(filename: str) -> str:
-        return f'attachment; filename="{filename}"'
-
-    def _json_response(self, rows: list[dict[str, Any]]) -> HttpResponse:
-        response = HttpResponse(json.dumps(rows), content_type="application/json")
-        response["Content-Disposition"] = self._content_disposition("risk_export.json")
-        return response
-
-    def _csv_response(self, rows: list[dict[str, Any]]) -> HttpResponse:
-        buffer = io.StringIO()
-        writer = csv.DictWriter(buffer, fieldnames=RISK_EXPORT_FIELDS)
-        writer.writeheader()
-        for row in rows:
-            writer.writerow(row)
-        response = HttpResponse(buffer.getvalue(), content_type="text/csv")
-        response["Content-Disposition"] = self._content_disposition("risk_export.csv")
-        return response
-
-    def _xlsx_response(self, rows: list[dict[str, Any]]) -> HttpResponse:
-        workbook = openpyxl.Workbook()
-        worksheet = workbook.active
-        worksheet.title = "Risk"
-        worksheet.append(list(RISK_EXPORT_FIELDS))
-        for row in rows:
-            worksheet.append([row.get(field) for field in RISK_EXPORT_FIELDS])
-
-        buffer = io.BytesIO()
-        workbook.save(buffer)
-        response = HttpResponse(
-            buffer.getvalue(),
-            content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-        )
-        response["Content-Disposition"] = self._content_disposition("risk_export.xlsx")
-        return response
