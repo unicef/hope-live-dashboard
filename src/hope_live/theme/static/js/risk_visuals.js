@@ -450,29 +450,10 @@ document.addEventListener('DOMContentLoaded', function () {
             ndx.add(data);
 
             timeFilter.setBuffer(startDate, endDate);
-            updateExportLinks(startDate, endDate);
             updateAll();
             populateProgramFilter();
         } catch (error) {
             console.error('Error loading risk data:', error);
-        }
-    }
-
-    function updateExportLinks(startDate, endDate) {
-        const base = window.DASHBOARD_CONFIG.exportEndpoint;
-        const from = timeFilter.formatDateStr(startDate);
-        const to = timeFilter.formatDateStr(endDate);
-        const params = `date_from=${from}&date_to=${to}`;
-        const csv = document.getElementById('export-csv');
-        const xlsx = document.getElementById('export-xlsx');
-        const json = document.getElementById('export-json');
-        const contextInfo = document.getElementById('export-context-info');
-
-        if (csv) csv.href = `${base}?format=csv&${params}`;
-        if (xlsx) xlsx.href = `${base}?format=xlsx&${params}`;
-        if (json) json.href = `${base}?format=json&${params}`;
-        if (contextInfo) {
-            contextInfo.textContent = `${gettext('Period:')} ${from} → ${to}`;
         }
     }
 
@@ -481,76 +462,12 @@ document.addEventListener('DOMContentLoaded', function () {
         onFilterChange: (startDate, endDate) => {
             if (timeFilter.isWithinBuffer(startDate, endDate)) {
                 dateDimension.filterRange([startDate, endDate]);
-                updateExportLinks(startDate, endDate);
                 updateAll();
             } else {
                 loadRange(startDate, endDate);
             }
         }
     });
-
-    // --- Export Modal Controller ---
-    const exportModal = document.getElementById('export-modal');
-    const openExportBtn = document.getElementById('btn-open-export');
-    const closeExportBtn = document.getElementById('btn-close-export');
-    const cancelExportBtn = document.getElementById('btn-cancel-export');
-    const printReportBtn = document.getElementById('btn-print-report');
-
-    if (openExportBtn && exportModal) {
-        openExportBtn.addEventListener('click', function () {
-            if (typeof exportModal.showModal === 'function') {
-                exportModal.showModal();
-            } else {
-                exportModal.classList.remove('hidden');
-            }
-        });
-    }
-
-    function closeModal() {
-        if (!exportModal) return;
-        if (typeof exportModal.close === 'function') {
-            exportModal.close();
-        } else {
-            exportModal.classList.add('hidden');
-        }
-    }
-
-    if (closeExportBtn) closeExportBtn.addEventListener('click', closeModal);
-    if (cancelExportBtn) cancelExportBtn.addEventListener('click', closeModal);
-
-    if (printReportBtn) {
-        printReportBtn.addEventListener('click', function () {
-            closeModal();
-            setTimeout(() => {
-                window.print();
-            }, 300);
-        });
-    }
-
-    // --- Table CSV Export (Micro Element Export) ---
-    const exportTableCsvBtn = document.getElementById('btn-export-table-csv');
-    if (exportTableCsvBtn) {
-        exportTableCsvBtn.addEventListener('click', function () {
-            const topRisks = riskCodeGroup.all().filter(d => d.key && d.value.issue_count > 0);
-            let csv = 'Risk Indicator,Module,Programme,Severity,Trend,Issues,Percentage\n';
-            topRisks.forEach(d => {
-                const v = d.value;
-                const name = (v.risk_name || d.key).replace(/"/g, '""');
-                const prog = (v.program_name || '').replace(/"/g, '""');
-                const pct = v.percentage !== null && v.percentage !== undefined ? `${v.percentage}%` : '';
-                csv += `"${name}","${v.module}","${prog}","${v.severity}","${v.trend}",${v.issue_count},"${pct}"\n`;
-            });
-            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'hope_risk_indicators.csv';
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-        });
-    }
 
     // --- Category Tabs ---
     const categoryTabs = document.querySelectorAll('.risk-category-tab');

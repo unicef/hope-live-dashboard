@@ -90,6 +90,58 @@ def _apply_risk_filters(queryset: models.QuerySet, params: Any) -> models.QueryS
     return queryset
 
 
+def _apply_common_filters(queryset: models.QuerySet, params: Any, dash_type: str | None) -> models.QuerySet:
+    time_grain = params.get("time_grain")
+    if not time_grain or time_grain not in TimeGrain.values:
+        time_grain = TimeGrain.MONTHLY if dash_type == "demographic" else TimeGrain.DAILY
+    queryset = queryset.filter(time_grain=time_grain)
+
+    year = params.get("year")
+    if year:
+        queryset = queryset.filter(date__year=int(year))
+
+    dimension_type = params.get("dimension_type")
+    if dimension_type:
+        queryset = queryset.filter(dimension_type=dimension_type)
+
+    country_slug = params.get("country_slug")
+    if country_slug:
+        queryset = queryset.filter(country_slug=country_slug)
+
+    date_from = params.get("date_from")
+    date_to = params.get("date_to")
+    if date_from:
+        queryset = queryset.filter(date__gte=date_from)
+    if date_to:
+        queryset = queryset.filter(date__lte=date_to)
+
+    return queryset
+
+
+def _apply_risk_filters(queryset: models.QuerySet, params: Any) -> models.QuerySet:
+    module = params.get("module")
+    if module:
+        queryset = queryset.filter(module=module)
+
+    severity = params.get("severity")
+    if severity:
+        queryset = queryset.filter(severity=severity)
+
+    risk_code = params.get("risk_code")
+    if risk_code:
+        queryset = queryset.filter(risk_code=risk_code)
+
+    category = params.get("category")
+    if category:
+        queryset = queryset.filter(category=category)
+
+    program_name = params.get("program_name")
+    if program_name:
+        queryset = queryset.filter(program_name=program_name)
+
+    return queryset
+
+
 @method_decorator(cache_page(60 * 60 * 6), name="dispatch")
 class AggregateListView(generics.ListAPIView):  # type: ignore[misc]
     """API endpoint for listing Aggregate records with filtering."""
