@@ -23,5 +23,8 @@ CONTENT_SECURITY_POLICY = {
             "ws:",
             "wss:",
         ],
+        "frame-src": ["'self'"],
+        "object-src": ["'none'"],
+        "base-uri": ["'self'"],
     }
 }
