@@ -2,76 +2,62 @@
 {% load i18n static %}
 
 {% block content %}
-<div class="container mx-auto px-4 py-8">
-    <div class="mb-8 flex justify-between items-center">
+<div class="container mx-auto px-4 lg:px-6 py-4 lg:py-5">
+    <div class="mb-3 flex flex-wrap justify-between items-center gap-2">
         <div>
-            <h1 class="text-3xl font-bold text-gray-900">{% translate "Grievance Dashboard" %}</h1>
-            <p class="text-gray-600">{% translate "Overview of Feedback and Grievance Tickets" %}</p>
+            <h1 class="text-xl lg:text-2xl font-black text-gray-900 leading-tight">{% translate "Grievance Dashboard" %}</h1>
+            <p class="text-xs text-gray-500">{% translate "Overview of Feedback and Grievance Tickets" %}</p>
         </div>
         <div>
-            <span class="bg-unicef-blue text-white text-xs font-medium mr-2 px-2.5 py-0.5 rounded">{% translate "Live Data" %}</span>
+            <span class="bg-unicef-blue text-white text-[11px] font-bold px-2 py-0.5 rounded">{% translate "Live Data" %}</span>
         </div>
     </div>
 
-    <!-- Year Tabs -->
-    <div id="year-tabs" class="mb-6">
-        <div id="tabs-container" class="flex space-x-2 overflow-x-auto bg-gray-100 p-2 rounded-lg">
-            {% for year in available_years %}
-                <button
-                    class="year-tab px-6 py-2 rounded-md font-bold transition-all duration-200
-                        {% if forloop.first %}bg-white shadow text-blue-800 active-tab{% else %}text-gray-700 hover:bg-gray-200{% endif %}"
-                    data-year="{{ year }}">
-                    {{ year }}
-                </button>
-            {% endfor %}
+    <!-- Time Filter -->
+    {% include "includes/time_filter.html" with granularity="daily" %}
+
+    <!-- Stats Cards (Headline KPIs - Above Timeline!) -->
+    <div class="flex flex-wrap gap-3 mb-3.5">
+        <div class="bg-white rounded-xl shadow-2xs border border-gray-200 p-3 border-l-4 border-unicef-blue flex flex-col justify-center min-h-[84px] w-full sm:w-64">
+            <h3 class="text-gray-500 text-[10px] sm:text-[11px] font-bold uppercase tracking-wider">{% translate "Total Tickets" %}</h3>
+            <p id="total-tickets" class="text-xl sm:text-2xl font-black text-blue-700 mt-0.5 leading-none">0</p>
         </div>
     </div>
 
-    <!-- Timeline Filter -->
-    <div class="bg-white rounded-lg shadow p-6 mb-8">
-        <h3 id="timeline-title" class="text-lg font-semibold text-gray-900 mb-2">{% translate "Tickets Timeline" %}</h3>
-        <div id="time-focus-chart" class="w-full" style="min-height: 350px;"></div>
+    <!-- Timeline Filter (Full Width) -->
+    <div class="bg-white rounded-xl shadow-2xs border border-gray-200 p-3.5 mb-4">
+        <h3 id="timeline-title" class="text-sm font-bold text-gray-900 mb-1">{% translate "Tickets Timeline" %}</h3>
+        <div id="time-focus-chart" class="w-full h-[220px]"></div>
         <div id="time-range-chart" style="display: none;"></div>
-        <p class="text-xs text-gray-500 mt-2 italic">{% translate "* Use the slider handles at the bottom of the timeline or click and drag to filter dates. Changes in the timeline automatically update all visualized statistics and charts." %}</p>
-    </div>
-
-    <!-- Stats Cards -->
-    <div class="grid grid-cols-1 mb-8">
-        <div class="bg-white rounded-lg shadow p-6 border-l-4 border-unicef-blue">
-            <h3 class="text-gray-500 text-sm font-medium uppercase">{% translate "Total Tickets" %}</h3>
-            <p id="total-tickets" class="text-3xl font-bold text-gray-900 mt-2">0</p>
-        </div>
     </div>
 
     <!-- Main Charts -->
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-        <div class="bg-white rounded-lg shadow p-6">
-            <h3 class="text-lg font-semibold text-gray-900 mb-4">{% translate "Status" %}</h3>
-            <div id="grievance-status-chart" class="w-full flex justify-center" style="min-height: 300px;"></div>
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
+        <div class="bg-white rounded-xl shadow-2xs border border-gray-200 p-3.5">
+            <h3 class="text-sm font-bold text-gray-900 mb-2">{% translate "Status" %}</h3>
+            <div id="grievance-status-chart" class="w-full h-[220px] flex justify-center"></div>
         </div>
-        <div class="bg-white rounded-lg shadow p-6">
-            <h3 class="text-lg font-semibold text-gray-900 mb-4">{% translate "Priority" %}</h3>
-            <div id="grievance-priority-chart" class="w-full flex justify-center" style="min-height: 300px;"></div>
+        <div class="bg-white rounded-xl shadow-2xs border border-gray-200 p-3.5">
+            <h3 class="text-sm font-bold text-gray-900 mb-2">{% translate "Priority" %}</h3>
+            <div id="grievance-priority-chart" class="w-full h-[220px] flex justify-center"></div>
         </div>
     </div>
 
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-        <div class="bg-white rounded-lg shadow p-6">
-            <h3 class="text-lg font-semibold text-gray-900 mb-4">{% translate "Category" %}</h3>
-            <div id="grievance-category-chart" class="w-full" style="min-height: 450px;"></div>
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
+        <div class="bg-white rounded-xl shadow-2xs border border-gray-200 p-3.5">
+            <h3 class="text-sm font-bold text-gray-900 mb-2">{% translate "Category" %}</h3>
+            <div id="grievance-category-chart" class="w-full h-[260px]"></div>
         </div>
-        <div class="bg-white rounded-lg shadow p-6">
-            <h3 class="text-lg font-semibold text-gray-900 mb-4">{% translate "Issue Type" %}</h3>
-            <div id="grievance-issue-type-chart" class="w-full" style="min-height: 450px;"></div>
+        <div class="bg-white rounded-xl shadow-2xs border border-gray-200 p-3.5">
+            <h3 class="text-sm font-bold text-gray-900 mb-2">{% translate "Issue Type" %}</h3>
+            <div id="grievance-issue-type-chart" class="w-full h-[260px]"></div>
         </div>
     </div>
 
     <!-- Geographic Breakdown -->
-    <div class="grid grid-cols-1 gap-8 mb-8">
-        <div class="bg-white rounded-lg shadow p-6">
-            <h3 class="text-lg font-semibold text-gray-900 mb-4">{% translate "Ticket Status by Country" %}</h3>
-            <div id="grievance-country-chart" class="w-full" style="min-height: 500px;"></div>
-        </div>
+    <div class="bg-white rounded-xl shadow-2xs border border-gray-200 p-3.5 mb-4">
+        <h3 class="text-sm font-bold text-gray-900 mb-2">{% translate "Ticket Status by Country" %}</h3>
+        <div id="grievance-country-chart" class="w-full h-[260px]"></div>
     </div>
 </div>
 
@@ -87,5 +73,6 @@
 <script src="{% static 'js/crossfilter.min.js' %}"></script>
 <script src="{% static 'js/echarts.min.js' %}"></script>
 <script src="{% static 'js/macarons.js' %}"></script>
+<script src="{% static 'js/time_filter.js' %}"></script>
 <script src="{% static 'js/grievance_visuals.js' %}"></script>
 {% endblock extra_js %}
