@@ -12,13 +12,73 @@ from rest_framework.permissions import AllowAny  # type: ignore[import-untyped]
 from rest_framework.request import Request  # type: ignore[import-untyped]
 from rest_framework.response import Response  # type: ignore[import-untyped]
 
-from ..models import CompletionAggregate, DemographicAggregate, FinancialAggregate, GrievanceAggregate, TimeGrain
+from ..models import (
+    CompletionAggregate,
+    DemographicAggregate,
+    FinancialAggregate,
+    GrievanceAggregate,
+    RiskAggregate,
+    TimeGrain,
+)
 from ..serializers import (
     CompletionAggregateSerializer,
     DemographicAggregateSerializer,
     FinancialAggregateSerializer,
     GrievanceAggregateSerializer,
+    RiskAggregateSerializer,
 )
+
+
+def _apply_common_filters(queryset: models.QuerySet, params: Any, dash_type: str | None) -> models.QuerySet:
+    time_grain = params.get("time_grain")
+    if not time_grain or time_grain not in TimeGrain.values:
+        time_grain = TimeGrain.MONTHLY if dash_type == "demographic" else TimeGrain.DAILY
+    queryset = queryset.filter(time_grain=time_grain)
+
+    year = params.get("year")
+    if year:
+        queryset = queryset.filter(date__year=int(year))
+
+    dimension_type = params.get("dimension_type")
+    if dimension_type:
+        queryset = queryset.filter(dimension_type=dimension_type)
+
+    country_slug = params.get("country_slug")
+    if country_slug:
+        queryset = queryset.filter(country_slug=country_slug)
+
+    date_from = params.get("date_from")
+    date_to = params.get("date_to")
+    if date_from:
+        queryset = queryset.filter(date__gte=date_from)
+    if date_to:
+        queryset = queryset.filter(date__lte=date_to)
+
+    return queryset
+
+
+def _apply_risk_filters(queryset: models.QuerySet, params: Any) -> models.QuerySet:
+    module = params.get("module")
+    if module:
+        queryset = queryset.filter(module=module)
+
+    severity = params.get("severity")
+    if severity:
+        queryset = queryset.filter(severity=severity)
+
+    risk_code = params.get("risk_code")
+    if risk_code:
+        queryset = queryset.filter(risk_code=risk_code)
+
+    category = params.get("category")
+    if category:
+        queryset = queryset.filter(category=category)
+
+    program_name = params.get("program_name")
+    if program_name:
+        queryset = queryset.filter(program_name=program_name)
+
+    return queryset
 
 
 @method_decorator(cache_page(60 * 60 * 6), name="dispatch")
@@ -35,6 +95,8 @@ class AggregateListView(generics.ListAPIView):  # type: ignore[misc]
             return CompletionAggregateSerializer
         if dash_type == "grievance":
             return GrievanceAggregateSerializer
+        if dash_type == "risk":
+            return RiskAggregateSerializer
         return FinancialAggregateSerializer
 
     @extend_schema(
@@ -76,14 +138,45 @@ class AggregateListView(generics.ListAPIView):  # type: ignore[misc]
                 type=str,
             ),
             OpenApiParameter(
+                name="module",
+                description="Filter by risk module (risk dashboard only)",
+                required=False,
+                type=str,
+            ),
+            OpenApiParameter(
+                name="severity",
+                description="Filter by risk severity (risk dashboard only)",
+                required=False,
+                type=str,
+            ),
+            OpenApiParameter(
+                name="risk_code",
+                description="Filter by risk code (risk dashboard only)",
+                required=False,
+                type=str,
+            ),
+            OpenApiParameter(
+                name="category",
+                description="Filter by risk category (risk dashboard only)",
+                required=False,
+                type=str,
+            ),
+            OpenApiParameter(
+                name="program_name",
+                description="Filter by programme name (risk dashboard only)",
+                required=False,
+                type=str,
+            ),
+            OpenApiParameter(
                 name="dashboard",
-                description="Filter by dashboard type (financial, demographic, completion)",
+                description="Filter by dashboard type (financial, demographic, completion, grievance, risk)",
                 required=False,
                 type=str,
                 examples=[
                     OpenApiExample("Financial", value="financial"),
                     OpenApiExample("Demographic", value="demographic"),
                     OpenApiExample("Completion", value="completion"),
+                    OpenApiExample("Risk", value="risk"),
                 ],
             ),
         ],
@@ -98,36 +191,20 @@ class AggregateListView(generics.ListAPIView):  # type: ignore[misc]
         queryset: models.QuerySet[Any]
         if dash_type == "demographic":
             queryset = DemographicAggregate.objects.all()
+        elif dash_type == "completion":
+            queryset = CompletionAggregate.objects.all()
+        elif dash_type == "grievance":
+            queryset = GrievanceAggregate.objects.all()
+        elif dash_type == "risk":
+            if not self.request.user.is_authenticated:
+                return RiskAggregate.objects.none()
+            queryset = RiskAggregate.objects.all()
         else:
             queryset = FinancialAggregate.objects.exclude(dimension_type="currency")
-            if dash_type == "completion":
-                queryset = CompletionAggregate.objects.all()
-            elif dash_type == "grievance":
-                queryset = GrievanceAggregate.objects.all()
 
-        # Filter by the correct time grain for this dashboard type
-        time_grain = self.request.query_params.get("time_grain")
-        if not time_grain or time_grain not in TimeGrain.values:
-            time_grain = TimeGrain.MONTHLY if dash_type == "demographic" else TimeGrain.DAILY
-        queryset = queryset.filter(time_grain=time_grain)
+        queryset = _apply_common_filters(queryset, self.request.query_params, dash_type)
 
-        year = self.request.query_params.get("year")
-        if year:
-            queryset = queryset.filter(date__year=int(year))
-
-        dimension_type = self.request.query_params.get("dimension_type")
-        if dimension_type:
-            queryset = queryset.filter(dimension_type=dimension_type)
-
-        country_slug = self.request.query_params.get("country_slug")
-        if country_slug:
-            queryset = queryset.filter(country_slug=country_slug)
-
-        date_from = self.request.query_params.get("date_from")
-        date_to = self.request.query_params.get("date_to")
-        if date_from:
-            queryset = queryset.filter(date__gte=date_from)
-        if date_to:
-            queryset = queryset.filter(date__lte=date_to)
+        if dash_type == "risk":
+            queryset = _apply_risk_filters(queryset, self.request.query_params)
 
         return queryset
