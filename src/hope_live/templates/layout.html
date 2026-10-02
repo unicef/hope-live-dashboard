@@ -1,4 +1,4 @@
-{% load i18n issues static tailwind_tags %}
+{% load i18n issues js static tailwind_tags %}
 {% get_current_language as LANGUAGE_CODE %}
 {% get_current_language_bidi as LANGUAGE_BIDI %}
 <!DOCTYPE html>
@@ -8,25 +8,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% translate "HOPE Dashboard" %}</title>
-    <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/topojson-client@3/dist/topojson-client.min.js"></script>
-    <script src="{% static 'js/theme.min.js' %}"></script>
+    <script src="{% static 'js/d3.min.js' %}"></script>
+    <script src="{% static 'js/topojson-client.min.js' %}"></script>
+    <script src="{% static_js 'js/theme.js' %}"></script>
     <script src="{% url 'javascript-catalog' %}"></script>
     {% if ENABLE_WEBSOCKETS %}
-    <script src="{% static 'js/ws.js' %}"></script>
+    <script src="{% static_js 'js/ws.js' %}"></script>
     {% endif %}
     {% tailwind_css %}
     {% issues_tags %}
 
     <style>
-        /* 1. Fix Chart Labels (X/Y axis) which are often too light */
-        .dc-chart .axis text {
-            fill: #1f2937 !important; /* Dark Gray (Gray-800) */
-            font-weight: 600 !important;
-            font-size: 13px !important;
-        }
-
-        /* 2. Sidebar styling overrides to match image1.png */
+        /* 1. Sidebar styling overrides to match image1.png */
         aside {
             background-color: #00adef !important;
             color: #ffffff !important;
@@ -73,33 +66,10 @@
         #nav-toggle:checked ~ aside .peer-checked\:block {
             display: flex !important;
         }
-
-        /* 3. Increase contrast for the Year Tabs */
-        .year-tab {
-            color: #374151 !important; /* Gray-700 */
-            font-weight: 700 !important;
-        }
-
-        .year-tab.active-tab {
-            color: #1e40af !important; /* Deep Blue (Blue-800) */
-            border-bottom: 3px solid #1e40af;
-        }
-
-        /* Customizing the dc.js/SVG tooltips */
-        .dc-chart g.dot title {
-            display: none; /* Hide default browser tooltip if using custom libs */
-        }
-
-        /* If you want the axis lines to be even more visible */
-        .dc-chart .axis path, .dc-chart .axis line {
-            stroke: #4b5563 !important; /* Tailwind gray-600 */
-            stroke-width: 1.2px;
-        }
     </style>
 </head>
 
-<body class="flex min-h-screen bg-gray-50" data-timeout="{{ LOGOUT_TIMEOUT_MS|default:300000 }}"
-    data-logout-url="{% url 'web:logout' %}">
+<body class="flex min-h-screen bg-gray-50">
     {% block menu %}
         {% include "menu.html" %}
     {% endblock menu %}
@@ -117,7 +87,6 @@
         {% endblock footer %}
     </div>
 
-    <script src="https://unpkg.com/flowbite@1.3.4/dist/flowbite.js"></script>
     {% block extra_js %}{% endblock %}
 </body>
 

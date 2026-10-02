@@ -15,4 +15,25 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
+    // Language dropdown (replaces Flowbite's data-dropdown-toggle behavior)
+    const langBtn = document.getElementById("language-dropdown-menu-button");
+    const langMenu = document.getElementById("language-dropdown-menu");
+    if (langBtn && langMenu) {
+        const closeLang = () => {
+            langMenu.classList.add("hidden");
+            langBtn.setAttribute("aria-expanded", "false");
+        };
+        langBtn.addEventListener("click", (e) => {
+            e.stopPropagation();
+            langMenu.classList.toggle("hidden");
+            langBtn.setAttribute("aria-expanded", langMenu.classList.contains("hidden") ? "false" : "true");
+        });
+        document.addEventListener("click", (e) => {
+            if (!langMenu.contains(e.target) && !langBtn.contains(e.target)) closeLang();
+        });
+        document.addEventListener("keydown", (e) => {
+            if (e.key === "Escape") closeLang();
+        });
+    }
+
 })

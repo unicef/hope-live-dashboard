@@ -1,15 +1,15 @@
 {% extends "layout.html" %}
-{% load i18n static %}
+{% load i18n js static %}
 
 {% block content %}
 <div class="container mx-auto px-4 lg:px-6 py-4 lg:py-5">
     <div class="mb-3 flex flex-wrap justify-between items-center gap-2">
         <div>
-            <h1 class="text-xl lg:text-2xl font-black text-gray-900 leading-tight">{% translate "Completion Rate Dashboard" %}</h1>
-            <p class="text-xs text-gray-500">{% translate "Payment Reconciliation and Completion Status Tracking" %}</p>
+            <h1 class="text-xl lg:text-2xl font-black text-gray-900 leading-tight">{% translate "Completion rate dashboard" %}</h1>
+            <p class="text-xs text-gray-500">{% translate "Payment reconciliation and completion status tracking" %}</p>
         </div>
         <div>
-            <span class="bg-unicef-blue text-white text-[11px] font-bold px-2 py-0.5 rounded">{% translate "Live Data" %}</span>
+            <span class="bg-unicef-blue text-white text-[11px] font-bold px-2 py-0.5 rounded">{% translate "Live data" %}</span>
         </div>
     </div>
 
@@ -18,10 +18,10 @@
 
     <!-- Metric Selector Pills -->
     <div class="mb-3 flex flex-wrap gap-2 items-center justify-between">
-        <div class="text-xs font-bold text-gray-500 uppercase tracking-wider">{% translate "View Reconciliation Metrics by:" %}</div>
+        <div class="text-xs font-bold text-gray-500">{% translate "View reconciliation metrics by:" %}</div>
         <div class="flex bg-gray-100 p-0.5 rounded-lg space-x-1 border border-gray-200">
             <button id="btn-count" class="metric-tab px-3 py-1 text-xs font-bold rounded-md bg-white shadow text-blue-800 transition-all duration-200 active-metric cursor-pointer" data-metric="payments">
-                {% translate "Payments Count" %}
+                {% translate "Payments count" %}
             </button>
             <button id="btn-usd" class="metric-tab px-3 py-1 text-xs font-bold rounded-md text-gray-600 hover:text-gray-900 transition-all duration-200 cursor-pointer" data-metric="usd">
                 {% translate "Amount (USD)" %}
@@ -32,17 +32,20 @@
     <!-- Stats Cards (Headline KPIs - Above Timeline!) -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-3.5">
         <div class="bg-white rounded-xl shadow-2xs border border-gray-200 p-3 border-l-4 border-unicef-blue flex flex-col justify-center min-h-[84px]">
-            <h3 id="reconciled-card-title" class="text-gray-500 text-[10px] sm:text-[11px] font-bold uppercase tracking-wider">{% translate "Reconciled Payments" %}</h3>
+            <h3 id="reconciled-card-title" class="text-gray-500 text-[10px] sm:text-[11px] font-bold">{% translate "Reconciled payments" %}</h3>
             <p id="total-reconciled" class="text-xl sm:text-2xl font-black text-blue-700 mt-0.5 leading-none">0</p>
+            {% include "includes/chart_info.html" with definition="Payments that have been reconciled." source="HOPE payments" method="Count of payments with reconciled status." %}
         </div>
         <div class="bg-white rounded-xl shadow-2xs border border-gray-200 p-3 border-l-4 border-unicef-primary flex flex-col justify-center min-h-[84px]">
-            <h3 id="opened-card-title" class="text-gray-500 text-[10px] sm:text-[11px] font-bold uppercase tracking-wider">{% translate "Still Opened" %}</h3>
+            <h3 id="opened-card-title" class="text-gray-500 text-[10px] sm:text-[11px] font-bold">{% translate "Still opened" %}</h3>
             <p id="total-opened" class="text-xl sm:text-2xl font-black text-amber-600 mt-0.5 leading-none">0</p>
+            {% include "includes/chart_info.html" with definition="Payments still open." source="HOPE payments" method="Count of payments with open status." %}
         </div>
         <div class="bg-white rounded-xl shadow-2xs border border-gray-200 p-3 border-l-4 border-green-500 flex justify-between items-center min-h-[84px]">
             <div>
-                <h3 class="text-gray-500 text-[10px] sm:text-[11px] font-bold uppercase tracking-wider">{% translate "Reconciliation Rate" %}</h3>
+                <h3 class="text-gray-500 text-[10px] sm:text-[11px] font-bold">{% translate "Reconciliation rate" %}</h3>
                 <p id="completion-rate-text" class="text-xl sm:text-2xl font-black text-emerald-600 mt-0.5 leading-none">0%</p>
+                {% include "includes/chart_info.html" with definition="Share of payments reconciled." source="HOPE payments" method="Reconciled payments divided by total payments." %}
             </div>
             <div id="completion-gauge" style="width: 100px; height: 60px;"></div>
         </div>
@@ -50,7 +53,7 @@
 
     <!-- Timeline Filter (Full Width) -->
     <div class="bg-white rounded-xl shadow-2xs border border-gray-200 p-3.5 mb-4">
-        <h3 id="timeline-title" class="text-sm font-bold text-gray-900 mb-1">{% translate "Reconciliation Timeline" %}</h3>
+        <h3 id="timeline-title" class="text-sm font-bold text-gray-900 mb-1">{% translate "Reconciliation timeline" %}</h3>
         <div id="time-focus-chart" class="w-full h-[220px]"></div>
         <div id="time-range-chart" style="display: none;"></div>
     </div>
@@ -58,11 +61,11 @@
     <!-- Country & Beneficiary Group Breakdown -->
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
         <div class="bg-white rounded-xl shadow-2xs border border-gray-200 p-3.5">
-            <h3 id="country-chart-title" class="text-sm font-bold text-gray-900 mb-2">{% translate "Reconciliation Status by Country" %}</h3>
+            <h3 id="country-chart-title" class="text-sm font-bold text-gray-900 mb-2">{% translate "Reconciliation status by country" %}</h3>
             <div id="status-country-chart" class="w-full h-[260px]"></div>
         </div>
         <div class="bg-white rounded-xl shadow-2xs border border-gray-200 p-3.5">
-            <h3 class="text-sm font-bold text-gray-900 mb-2">{% translate "By Beneficiary Group" %}</h3>
+            <h3 id="bg-title" class="text-sm font-bold text-gray-900 mb-2">{% translate "Payments by beneficiary group" %}</h3>
             <div id="beneficiary-group-chart" class="w-full h-[260px]"></div>
         </div>
     </div>
@@ -79,7 +82,7 @@
 {% block extra_js %}
 <script src="{% static 'js/crossfilter.min.js' %}"></script>
 <script src="{% static 'js/echarts.min.js' %}"></script>
-<script src="{% static 'js/macarons.js' %}"></script>
-<script src="{% static 'js/time_filter.js' %}"></script>
-<script src="{% static 'js/completion_visuals.js' %}"></script>
+<script src="{% static_js 'js/macarons.js' %}"></script>
+<script src="{% static_js 'js/time_filter.js' %}"></script>
+<script src="{% static_js 'js/completion_visuals.js' %}"></script>
 {% endblock extra_js %}

@@ -10,7 +10,7 @@
     <div class="flex items-center gap-4">
         <div class="relative">
             {% get_current_language as LANGUAGE_CODE %}
-            <button id="language-dropdown-menu-button" data-dropdown-toggle="language-dropdown-menu" class="flex items-center gap-1.5 text-gray-650 hover:text-[#00adef] p-2 px-3 rounded-full hover:bg-gray-100 focus:outline-none transition-all duration-150" type="button">
+            <button id="language-dropdown-menu-button" aria-haspopup="true" aria-expanded="false" aria-controls="language-dropdown-menu" class="flex items-center gap-1.5 text-gray-650 hover:text-[#00adef] p-2 px-3 rounded-full hover:bg-gray-100 focus:outline-none transition-all duration-150" type="button">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"></path>
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"></path>

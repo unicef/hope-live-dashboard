@@ -301,14 +301,6 @@ class RiskView(LoginRequiredMixin, TemplateView):
         return super().get_context_data(**kwargs)
 
 
-class TransfersView(LoginRequiredMixin, TemplateView):
-    template_name = "pages/transfers.html"
-
-
-class DetailsView(LoginRequiredMixin, TemplateView):
-    template_name = "pages/details.html"
-
-
 def set_language(request: HttpRequest) -> HttpResponseRedirect:
     next_url = request.POST.get("next", request.GET.get("next"))
     if next_url:
