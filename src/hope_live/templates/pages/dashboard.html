@@ -1,5 +1,5 @@
 {% extends "layout.html" %}
-{% load i18n static %}
+{% load i18n js static %}
 
 {% block content %}
 <div class="container mx-auto px-4 lg:px-6 py-4 lg:py-5">
@@ -114,7 +114,7 @@
 {% block extra_js %}
 <script src="{% static 'js/crossfilter.min.js' %}"></script>
 <script src="{% static 'js/echarts.min.js' %}"></script>
-<script src="{% static 'js/macarons.js' %}"></script>
-<script src="{% static 'js/time_filter.js' %}"></script>
-<script src="{% static 'js/dashboard_visuals.js' %}"></script>
+<script src="{% static_js 'js/macarons.js' %}"></script>
+<script src="{% static_js 'js/time_filter.js' %}"></script>
+<script src="{% static_js 'js/dashboard_visuals.js' %}"></script>
 {% endblock extra_js %}

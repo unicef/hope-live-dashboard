@@ -8,7 +8,7 @@ from hope_live.analysis.models import (
     FinancialAggregate,
     TimeGrain,
 )
-from hope_live.web.views import AboutView, ContactView, DetailsView, IndexView, TransfersView, format_large_number
+from hope_live.web.views import AboutView, ContactView, IndexView, format_large_number
 
 
 @pytest.mark.django_db
@@ -20,8 +20,6 @@ def test_simple_template_views(user_factory):
     views_to_test = [
         ContactView,
         AboutView,
-        TransfersView,
-        DetailsView,
     ]
 
     for view_class in views_to_test:

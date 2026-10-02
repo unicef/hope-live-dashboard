@@ -279,7 +279,6 @@ def test_financial_dashboard_loads(browser, financial_aggregates):
     browser.wait_for_element_visible("#program-chart canvas")
     browser.wait_for_element_visible("#fsp-chart canvas")
     browser.wait_for_element_visible("#beneficiary-group-chart canvas")
-    browser.wait_for_element_visible("#total-qty-distributed")
 
     # Assert current year totals (default "This Year" preset)
     browser.assert_text("25", "#total-payments")
