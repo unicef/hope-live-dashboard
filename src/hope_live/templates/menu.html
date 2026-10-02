@@ -23,7 +23,7 @@
                 <li>
                     <a href='{% url "web:dashboard" %}' class="flex items-center p-2 text-base font-semibold text-white rounded-lg {% if request.resolver_match.url_name == 'dashboard' %}bg-sky-600{% else %}hover:bg-sky-600{% endif %} group whitespace-nowrap overflow-hidden">
                         <svg class="w-5 h-5 shrink-0 text-white transition duration-75" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                        <span class="ml-3 shrink-0">{% translate "Financial Dashboard" %}</span>
+                        <span class="ml-3 shrink-0">{% translate "Financial dashboard" %}</span>
                     </a>
                 </li>
                 <li>
@@ -41,7 +41,7 @@
                 <li>
                     <a href='{% url "web:completion" %}' class="flex items-center p-2 text-base font-semibold text-white rounded-lg {% if request.resolver_match.url_name == 'completion' %}bg-sky-600{% else %}hover:bg-sky-600{% endif %} group whitespace-nowrap overflow-hidden">
                         <svg class="w-5 h-5 shrink-0 text-white transition duration-75" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                        <span class="ml-3 shrink-0">{% translate "Programme Quality" %}</span>
+                        <span class="ml-3 shrink-0">{% translate "Programme quality" %}</span>
                     </a>
                 </li>
                 <li>
@@ -52,9 +52,9 @@
                 </li>
                 {% endif %}
                 <li>
-                    <a href='https://unicef.github.io/hope-documentation/' target="_blank" class="flex items-center p-2 text-base font-semibold text-white rounded-lg hover:bg-sky-600 group whitespace-nowrap overflow-hidden">
+                    <a href='https://unicef.github.io/hope/guide-user/' target="_blank" class="flex items-center p-2 text-base font-semibold text-white rounded-lg hover:bg-sky-600 group whitespace-nowrap overflow-hidden">
                         <svg class="w-5 h-5 shrink-0 text-white transition duration-75" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.247 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
-                        <span class="ml-3 shrink-0">{% translate "Documentation" %}</span>
+                        <span class="ml-3 shrink-0">{% translate "User manual" %}</span>
                     </a>
                 </li>
                 <li>
@@ -100,7 +100,7 @@
             </div>
         </div>
 
-        <!-- Bottom Menu: Admin & Sign Out -->
+        <!-- Bottom Menu: Admin & Sign out -->
         {% if request.user.is_staff or user.is_authenticated %}
         <ul class="space-y-2 pt-2 border-t border-sky-400">
             {% if request.user.is_staff %}
@@ -117,11 +117,11 @@
             <li>
                 <form action="{% url 'web:logout' %}" method="post" class="w-full">
                     {% csrf_token %}
-                    <button type="submit" class="flex items-center w-full p-2 text-base font-semibold text-white rounded-lg hover:bg-sky-600 group whitespace-nowrap overflow-hidden" aria-label="{% translate 'Sign Out' %}">
+                    <button type="submit" class="flex items-center w-full p-2 text-base font-semibold text-white rounded-lg hover:bg-sky-600 group whitespace-nowrap overflow-hidden" aria-label="{% translate 'Sign out' %}">
                         <svg class="w-5 h-5 shrink-0 text-white transition duration-75" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-6a2.25 2.25 0 0 0-2.25 2.25v13.5A2.25 2.25 0 0 0 7.5 21h6a2.25 2.25 0 0 0 2.25-2.25V15m3 0 2.062-5M12 12h9.75" />
                         </svg>
-                        <span class="ml-3 shrink-0">{% translate "Sign Out" %}</span>
+                        <span class="ml-3 shrink-0">{% translate "Sign out" %}</span>
                     </button>
                 </form>
             </li>

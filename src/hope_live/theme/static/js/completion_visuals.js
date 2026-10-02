@@ -261,7 +261,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
             },
             legend: {
-                data: [gettext('Reconciled'), gettext('Still Opened')],
+                data: [gettext('Reconciled'), gettext('Still opened')],
                 bottom: 0,
                 icon: 'roundRect'
             },
@@ -273,7 +273,7 @@ document.addEventListener('DOMContentLoaded', function () {
             },
             xAxis: {
                 type: 'time',
-                axisLabel: { color: '#64748b' }
+                axisLabel: { color: '#64748b', formatter: value => d3.timeFormat('%b')(new Date(value)) }
             },
             yAxis: {
                 type: 'value',
@@ -293,7 +293,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     data: reconciledData
                 },
                 {
-                    name: gettext('Still Opened'),
+                    name: gettext('Still opened'),
                     type: 'bar',
                     stack: 'total',
                     color: '#5ab1ef',
@@ -353,7 +353,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
             },
             legend: {
-                data: [gettext('Reconciled'), gettext('Still Opened')],
+                data: [gettext('Reconciled'), gettext('Still opened')],
                 top: 0,
                 right: 20
             },
@@ -386,7 +386,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     itemStyle: { borderRadius: [0, 0, 0, 0] }
                 },
                 {
-                    name: gettext('Still Opened'),
+                    name: gettext('Still opened'),
                     type: 'bar',
                     stack: 'total',
                     barMaxWidth: 30,
@@ -403,14 +403,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
         const hasAnyBgSelection = selectedBeneficiaryGroups.size > 0;
         const bgSeriesData = bgData.map(d => {
-            const stableColor = getStableColor(d.key);
             return {
                 name: d.key,
                 value: d.value[currentMetric],
                 itemStyle: {
                     color: selectedBeneficiaryGroups.has(d.key)
-                        ? stableColor
-                        : (hasAnyBgSelection ? '#cbd5e1' : stableColor)
+                        ? getStableColor(d.key)
+                        : (hasAnyBgSelection ? '#cbd5e1' : getStableColor(d.key))
                 }
             };
         });
@@ -508,15 +507,22 @@ document.addEventListener('DOMContentLoaded', function () {
             const countryTitle = document.getElementById('country-chart-title');
 
             if (currentMetric === 'usd') {
-                if (reconciledTitle) reconciledTitle.textContent = gettext('Reconciled Amount (USD)');
-                if (openedTitle) openedTitle.textContent = gettext('Still Opened Amount (USD)');
-                if (timelineTitle) timelineTitle.textContent = gettext('Reconciliation Timeline (USD)');
-                if (countryTitle) countryTitle.textContent = gettext('Reconciliation Status by Country (USD)');
+                if (reconciledTitle) reconciledTitle.textContent = gettext('Reconciled amount (USD)');
+                if (openedTitle) openedTitle.textContent = gettext('Still opened amount (USD)');
+                if (timelineTitle) timelineTitle.textContent = gettext('Reconciliation timeline (USD)');
+                if (countryTitle) countryTitle.textContent = gettext('Reconciliation status by country (USD)');
             } else {
-                if (reconciledTitle) reconciledTitle.textContent = gettext('Reconciled Payments');
-                if (openedTitle) openedTitle.textContent = gettext('Still Opened Payments');
-                if (timelineTitle) timelineTitle.textContent = gettext('Reconciliation Timeline');
-                if (countryTitle) countryTitle.textContent = gettext('Reconciliation Status by Country');
+                if (reconciledTitle) reconciledTitle.textContent = gettext('Reconciled payments');
+                if (openedTitle) openedTitle.textContent = gettext('Still opened payments');
+                if (timelineTitle) timelineTitle.textContent = gettext('Reconciliation timeline');
+                if (countryTitle) countryTitle.textContent = gettext('Reconciliation status by country');
+            }
+
+            const bgTitle = document.getElementById('bg-title');
+            if (bgTitle) {
+                bgTitle.textContent = currentMetric === 'usd'
+                    ? gettext('Cash disbursed by beneficiary group')
+                    : gettext('Payments by beneficiary group');
             }
 
             updateAll();

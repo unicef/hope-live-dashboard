@@ -5,11 +5,11 @@
 <div class="container mx-auto px-4 lg:px-6 py-4 lg:py-5">
     <div class="mb-3 flex flex-wrap justify-between items-center gap-2">
         <div>
-            <h1 class="text-xl lg:text-2xl font-black text-gray-900 leading-tight">{% translate "Financial Dashboard" %}</h1>
-            <p class="text-xs text-gray-500">{% translate "Overview of Financial info" %}</p>
+            <h1 class="text-xl lg:text-2xl font-black text-gray-900 leading-tight">{% translate "Financial dashboard" %}</h1>
+            <p class="text-xs text-gray-500">{% translate "Overview of financial information" %}</p>
         </div>
         <div>
-            <span class="bg-unicef-blue text-white text-[11px] font-bold px-2 py-0.5 rounded">{% translate "Live Data" %}</span>
+            <span class="bg-unicef-blue text-white text-[11px] font-bold px-2 py-0.5 rounded">{% translate "Live data" %}</span>
         </div>
     </div>
 
@@ -18,43 +18,39 @@
 
     <!-- Metric Selector Pills -->
     <div class="mb-3 flex flex-wrap gap-2 items-center justify-between">
-        <div class="text-xs font-bold text-gray-500 uppercase tracking-wider">{% translate "View Dashboard Metrics by:" %}</div>
+        <div class="text-xs font-bold text-gray-500">{% translate "View dashboard metrics by:" %}</div>
         <div class="flex bg-gray-100 p-0.5 rounded-lg space-x-1 border border-gray-200">
             <button id="btn-usd" class="metric-tab px-3 py-1 text-xs font-bold rounded-md bg-white shadow text-blue-800 transition-all duration-200 active-metric cursor-pointer" data-metric="usd">
                 {% translate "Amount (USD)" %}
             </button>
-            <button id="btn-qty" class="metric-tab px-3 py-1 text-xs font-bold rounded-md text-gray-600 hover:text-gray-900 transition-all duration-200 cursor-pointer" data-metric="qty">
-                {% translate "Quantity (QTY)" %}
-            </button>
             <button id="btn-payments" class="metric-tab px-3 py-1 text-xs font-bold rounded-md text-gray-600 hover:text-gray-900 transition-all duration-200 cursor-pointer" data-metric="payments">
-                {% translate "Payments Count" %}
+                {% translate "Payments count" %}
             </button>
         </div>
     </div>
 
     <!-- Main Metrics (Headline KPIs - Above Timeline!) -->
-    <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-3.5">
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-3.5">
         <div class="bg-white rounded-xl shadow-2xs border border-gray-200 p-3 border-l-4 border-green-500 flex flex-col justify-center min-h-[84px]">
-            <h3 class="text-gray-500 text-[10px] sm:text-[11px] font-bold uppercase tracking-wider">{% translate "Total Amount Paid" %}</h3>
+            <h3 class="text-gray-500 text-[10px] sm:text-[11px] font-bold">{% translate "Total amount paid" %}</h3>
             <p id="total-amount-paid" class="text-xl sm:text-2xl font-black text-emerald-600 mt-0.5 leading-none">$0.00</p>
+            {% include "includes/chart_info.html" with definition="Cash paid out to beneficiaries." source="HOPE payments" method="Sum of delivered quantity (USD) for successful payment statuses." %}
         </div>
         <div class="bg-white rounded-xl shadow-2xs border border-gray-200 p-3 border-l-4 border-blue-500 flex flex-col justify-center min-h-[84px]">
-            <h3 class="text-gray-500 text-[10px] sm:text-[11px] font-bold uppercase tracking-wider">{% translate "Number of Payments" %}</h3>
+            <h3 class="text-gray-500 text-[10px] sm:text-[11px] font-bold">{% translate "Number of payments" %}</h3>
             <p id="total-payments" class="text-xl sm:text-2xl font-black text-blue-700 mt-0.5 leading-none">0</p>
-        </div>
-        <div class="bg-white rounded-xl shadow-2xs border border-gray-200 p-3 border-l-4 border-purple-500 flex flex-col justify-center min-h-[84px]">
-            <h3 class="text-gray-500 text-[10px] sm:text-[11px] font-bold uppercase tracking-wider">{% translate "Total Quantity Distributed" %}</h3>
-            <p id="total-qty-distributed" class="text-xl sm:text-2xl font-black text-purple-700 mt-0.5 leading-none">0</p>
+            {% include "includes/chart_info.html" with definition="Number of payments made." source="HOPE payments" method="Count of payment records for the active dimension." %}
         </div>
         <div class="bg-white rounded-xl shadow-2xs border border-gray-200 p-3 border-l-4 border-yellow-500 flex flex-col justify-center min-h-[84px]">
-            <h3 class="text-gray-500 text-[10px] sm:text-[11px] font-bold uppercase tracking-wider">{% translate "Outstanding Payment" %}</h3>
+            <h3 class="text-gray-500 text-[10px] sm:text-[11px] font-bold">{% translate "Outstanding payment" %}</h3>
             <p id="outstanding-payments" class="text-xl sm:text-2xl font-black text-amber-600 mt-0.5 leading-none">$0.00</p>
+            {% include "includes/chart_info.html" with definition="Amount not yet paid." source="HOPE payments" method="Sum of entitlement (USD) for pending statuses." %}
         </div>
     </div>
 
     <!-- Timeline Filter (Full Width, Top) -->
     <div class="bg-white rounded-xl shadow-2xs border border-gray-200 p-3.5 mb-4">
-        <h3 id="timeline-title" class="text-sm font-bold text-gray-900 mb-1">{% translate "Spending Timeline" %}</h3>
+        <h3 id="timeline-title" class="text-sm font-bold text-gray-900 mb-1">{% translate "Spending timeline" %}</h3>
         <div id="time-focus-chart" class="w-full h-[220px]"></div>
         <div id="time-range-chart" style="display: none;"></div>
     </div>
@@ -62,11 +58,11 @@
     <!-- Delivery Types and Sector -->
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
         <div class="bg-white rounded-xl shadow-2xs border border-gray-200 p-3.5">
-            <h3 class="text-sm font-bold text-gray-900 mb-2">{% translate "Delivery Types" %}</h3>
+            <h3 class="text-sm font-bold text-gray-900 mb-2">{% translate "Delivery types" %}</h3>
             <div id="delivery-chart" class="w-full h-[240px]"></div>
         </div>
         <div class="bg-white rounded-xl shadow-2xs border border-gray-200 p-3.5">
-            <h3 class="text-sm font-bold text-gray-900 mb-2">{% translate "Distribution by Sector" %}</h3>
+            <h3 class="text-sm font-bold text-gray-900 mb-2">{% translate "Distribution by sector" %}</h3>
             <div id="sector-chart" class="w-full h-[240px]"></div>
         </div>
     </div>
@@ -89,11 +85,11 @@
     <!-- Additional Segments (Program, FSP) -->
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
         <div class="bg-white rounded-xl shadow-2xs border border-gray-200 p-3.5">
-            <h3 class="text-sm font-bold text-gray-900 mb-2">{% translate "Distribution by Program" %}</h3>
+            <h3 class="text-sm font-bold text-gray-900 mb-2">{% translate "Distribution by program" %}</h3>
             <div id="program-chart" class="w-full h-[320px]"></div>
         </div>
         <div class="bg-white rounded-xl shadow-2xs border border-gray-200 p-3.5">
-            <h3 class="text-sm font-bold text-gray-900 mb-2">{% translate "Financial Service Providers (FSP)" %}</h3>
+            <h3 class="text-sm font-bold text-gray-900 mb-2">{% translate "Financial service providers (FSP)" %}</h3>
             <div id="fsp-chart" class="w-full h-[320px]"></div>
         </div>
     </div>
@@ -101,7 +97,7 @@
     <!-- Beneficiary Group Breakdown -->
     <div class="grid grid-cols-1 gap-4 mb-6">
         <div class="bg-white rounded-xl shadow-2xs border border-gray-200 p-3.5">
-            <h3 class="text-sm font-bold text-gray-900 mb-2">{% translate "By Beneficiary Group" %}</h3>
+            <h3 id="bg-title" class="text-sm font-bold text-gray-900 mb-2">{% translate "Cash disbursed by beneficiary group" %}</h3>
             <div id="beneficiary-group-chart" class="w-full h-[220px]"></div>
         </div>
     </div>

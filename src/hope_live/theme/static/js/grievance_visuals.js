@@ -218,7 +218,7 @@ document.addEventListener('DOMContentLoaded', function () {
             grid: { top: 15, bottom: 30, left: 60, right: 20 },
             xAxis: {
                 type: 'time',
-                axisLabel: { color: '#64748b' }
+                axisLabel: { color: '#64748b', formatter: value => d3.timeFormat('%b')(new Date(value)) }
             },
             yAxis: {
                 type: 'value',
@@ -304,14 +304,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
         const hasAnyCategorySelection = selectedCategories.size > 0;
         const categorySeriesData = categoryData.map(d => {
-            const stableColor = getStableColor(d.key);
             return {
                 name: d.key,
                 value: d.value,
                 itemStyle: {
                     color: selectedCategories.has(d.key)
-                        ? stableColor
-                        : (hasAnyCategorySelection ? '#cbd5e1' : stableColor)
+                        ? getStableColor(d.key)
+                        : (hasAnyCategorySelection ? '#cbd5e1' : getStableColor(d.key))
                 }
             };
         });
@@ -359,14 +358,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
         const hasAnyIssueTypeSelection = selectedIssueTypes.size > 0;
         const issueTypeSeriesData = issueTypeData.map(d => {
-            const stableColor = getStableColor(d.key);
             return {
                 name: d.key,
                 value: d.value,
                 itemStyle: {
                     color: selectedIssueTypes.has(d.key)
-                        ? stableColor
-                        : (hasAnyIssueTypeSelection ? '#cbd5e1' : stableColor)
+                        ? getStableColor(d.key)
+                        : (hasAnyIssueTypeSelection ? '#cbd5e1' : getStableColor(d.key))
                 }
             };
         });

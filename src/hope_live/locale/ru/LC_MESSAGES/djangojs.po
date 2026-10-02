@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-29 06:32+0000\n"
+"POT-Creation-Date: 2026-10-02 01:36+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -15,327 +15,589 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || "
+"(n%100>=11 && n%100<=14)? 2 : 3);\n"
 
-#: src/hope_live/theme/static/js/completion_visuals.js:169
-#: src/hope_live/theme/static/js/completion_visuals.js:172
+#: src/hope_live/theme/static/js/completion_visuals.js:191
+#: src/hope_live/theme/static/js/completion_visuals.js:194
+#: src/hope_live/theme/static/js/completion_visuals.min.js:1
 #, javascript-format
 msgid "%s out of %s total"
 msgstr "%s из %s всего"
 
-#: src/hope_live/theme/static/js/completion_visuals.js:216
+#: src/hope_live/theme/static/js/completion_visuals.js:238
+#: src/hope_live/theme/static/js/completion_visuals.min.js:1
 msgid "payments"
 msgstr "платежи"
 
-#: src/hope_live/theme/static/js/completion_visuals.js:242
-#: src/hope_live/theme/static/js/completion_visuals.js:266
-#: src/hope_live/theme/static/js/completion_visuals.js:342
-#: src/hope_live/theme/static/js/completion_visuals.js:367
-msgid "Reconciled"
-msgstr "Сверено"
+#: src/hope_live/theme/static/js/dashboard_visuals.js:71
+#: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
+msgid "Middle East and North Africa (MENA)"
+msgstr ""
 
-#: src/hope_live/theme/static/js/completion_visuals.js:242
-#: src/hope_live/theme/static/js/completion_visuals.js:274
-#: src/hope_live/theme/static/js/completion_visuals.js:342
-#: src/hope_live/theme/static/js/completion_visuals.js:375
-msgid "Still Opened"
-msgstr "Все еще открыто"
+#: src/hope_live/theme/static/js/dashboard_visuals.js:72
+#: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
+msgid "Eastern and Southern Africa (ESA)"
+msgstr ""
 
-#: src/hope_live/theme/static/js/completion_visuals.js:435
-msgid "Reconciled Amount (USD)"
-msgstr "Сверенная сумма (USD)"
+#: src/hope_live/theme/static/js/dashboard_visuals.js:73
+#: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
+msgid "Europe and Central Asia (ECA)"
+msgstr ""
 
-#: src/hope_live/theme/static/js/completion_visuals.js:436
-msgid "Still Opened Amount (USD)"
-msgstr "Все еще открытая сумма (USD)"
+#: src/hope_live/theme/static/js/dashboard_visuals.js:74
+#: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
+msgid "West and Central Africa (WCA)"
+msgstr ""
 
-#: src/hope_live/theme/static/js/completion_visuals.js:437
-msgid "Reconciliation Timeline (USD)"
-msgstr "Хронология сверки (USD)"
+#: src/hope_live/theme/static/js/dashboard_visuals.js:75
+#: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
+msgid "Latin America and Caribbean (LAC)"
+msgstr ""
 
-#: src/hope_live/theme/static/js/completion_visuals.js:438
-msgid "Reconciliation Status by Country (USD)"
-msgstr "Статус сверки по странам (USD)"
+#: src/hope_live/theme/static/js/dashboard_visuals.js:76
+#: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
+msgid "East Asia and Pacific (EAP)"
+msgstr ""
 
-#: src/hope_live/theme/static/js/completion_visuals.js:440
-msgid "Reconciled Payments"
-msgstr "Сверенные платежи"
+#: src/hope_live/theme/static/js/dashboard_visuals.js:77
+#: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
+msgid "South Asia (SA)"
+msgstr ""
 
-#: src/hope_live/theme/static/js/completion_visuals.js:441
-msgid "Still Opened Payments"
-msgstr "Все еще открытые платежи"
-
-#: src/hope_live/theme/static/js/completion_visuals.js:442
-msgid "Reconciliation Timeline"
-msgstr "График примирения"
-
-#: src/hope_live/theme/static/js/completion_visuals.js:443
-msgid "Reconciliation Status by Country"
-msgstr "Статус сверки по странам"
-
-#: src/hope_live/theme/static/js/dashboard_visuals.js:245
+#: src/hope_live/theme/static/js/dashboard_visuals.js:256
+#: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
 msgid "Spending"
 msgstr "Расходы"
 
-#: src/hope_live/theme/static/js/dashboard_visuals.js:245
-msgid "Quantity"
-msgstr "Количество"
-
-#: src/hope_live/theme/static/js/dashboard_visuals.js:245
+#: src/hope_live/theme/static/js/dashboard_visuals.js:256
+#: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
 msgid "Payments"
 msgstr "Платежи"
 
-#: src/hope_live/theme/static/js/dashboard_visuals.js:513
-msgid "Spending Timeline"
-msgstr "График расходов"
-
-#: src/hope_live/theme/static/js/dashboard_visuals.js:514
-msgid "Quantity Distribution Timeline"
-msgstr "Хронология распределения количества"
-
-#: src/hope_live/theme/static/js/dashboard_visuals.js:515
-msgid "Payments Timeline"
-msgstr "Хронология платежей"
-
 #: src/hope_live/theme/static/js/demographic_visuals.js:15
-msgid "Individuals Reached"
+#: src/hope_live/theme/static/js/demographic_visuals.min.js:1
+#, fuzzy
+#| msgid "Individuals Reached"
+msgid "Individuals reached"
 msgstr "Охвачено получателей"
 
 #: src/hope_live/theme/static/js/demographic_visuals.js:16
-msgid "Households Reached"
+#: src/hope_live/theme/static/js/demographic_visuals.min.js:1
+#, fuzzy
+#| msgid "Households Reached"
+msgid "Households reached"
 msgstr "Охваченные домохозяйства"
 
 #: src/hope_live/theme/static/js/demographic_visuals.js:17
-msgid "Children Reached"
+#: src/hope_live/theme/static/js/demographic_visuals.min.js:1
+#, fuzzy
+#| msgid "Children Reached"
+msgid "Children reached"
 msgstr "Дети достигли"
 
 #: src/hope_live/theme/static/js/demographic_visuals.js:18
-msgid "PWD Reached"
+#: src/hope_live/theme/static/js/demographic_visuals.min.js:1
+#, fuzzy
+#| msgid "PWD Reached"
+msgid "PWD reached"
 msgstr "Охвачено людей с инвалидностью"
 
-#: src/hope_live/theme/static/js/demographic_visuals.js:241
-#: src/hope_live/theme/static/js/demographic_visuals.js:335
-msgid "Individuals"
-msgstr "Физические лица"
+#: src/hope_live/theme/static/js/demographic_visuals.js:407
+#: src/hope_live/theme/static/js/demographic_visuals.min.js:1
+#, fuzzy
+#| msgid "Spending Timeline"
+msgid "Timeline"
+msgstr "График расходов"
 
-#: src/hope_live/theme/static/js/demographic_visuals.js:241
-#: src/hope_live/theme/static/js/demographic_visuals.js:335
-msgid "Households"
-msgstr "Домохозяйства"
+#: src/hope_live/theme/static/js/demographic_visuals.js:410
+#: src/hope_live/theme/static/js/demographic_visuals.min.js:1
+msgid "Sector share of"
+msgstr ""
 
-#: src/hope_live/theme/static/js/demographic_visuals.js:241
-#: src/hope_live/theme/static/js/demographic_visuals.js:335
-msgid "Children"
-msgstr "Дети"
-
-#: src/hope_live/theme/static/js/demographic_visuals.js:241
-#: src/hope_live/theme/static/js/demographic_visuals.js:335
-msgid "PWD"
-msgstr "Люди с инвалидностью"
+#: src/hope_live/theme/static/js/demographic_visuals.js:413
+#: src/hope_live/theme/static/js/demographic_visuals.min.js:1
+msgid "Country share of"
+msgstr ""
 
 #: src/hope_live/theme/static/js/grievance_visuals.js:6
+#: src/hope_live/theme/static/js/grievance_visuals.min.js:1
 msgid "New"
 msgstr "Новый"
 
 #: src/hope_live/theme/static/js/grievance_visuals.js:7
+#: src/hope_live/theme/static/js/grievance_visuals.min.js:1
 msgid "Assigned"
 msgstr "Назначен"
 
 #: src/hope_live/theme/static/js/grievance_visuals.js:8
+#: src/hope_live/theme/static/js/grievance_visuals.min.js:1
 msgid "In Progress"
 msgstr "В процессе"
 
 #: src/hope_live/theme/static/js/grievance_visuals.js:9
+#: src/hope_live/theme/static/js/grievance_visuals.min.js:1
 msgid "On Hold"
 msgstr "На удержании"
 
 #: src/hope_live/theme/static/js/grievance_visuals.js:10
+#: src/hope_live/theme/static/js/grievance_visuals.min.js:1
 msgid "For Approval"
 msgstr "На утверждении"
 
 #: src/hope_live/theme/static/js/grievance_visuals.js:11
+#: src/hope_live/theme/static/js/grievance_visuals.min.js:1
 msgid "Closed"
 msgstr "Закрыт"
 
 #: src/hope_live/theme/static/js/grievance_visuals.js:15
+#: src/hope_live/theme/static/js/grievance_visuals.min.js:1
+#: src/hope_live/theme/static/js/risk_visuals.js:47
+#: src/hope_live/theme/static/js/risk_visuals.min.js:1
 msgid "Payment Verification"
 msgstr "Верификация платежа"
 
 #: src/hope_live/theme/static/js/grievance_visuals.js:16
+#: src/hope_live/theme/static/js/grievance_visuals.min.js:1
 msgid "Data Change"
 msgstr "Изменение данных"
 
 #: src/hope_live/theme/static/js/grievance_visuals.js:17
+#: src/hope_live/theme/static/js/grievance_visuals.min.js:1
 msgid "Sensitive Grievance"
 msgstr "Конфиденциальная жалоба"
 
 #: src/hope_live/theme/static/js/grievance_visuals.js:18
+#: src/hope_live/theme/static/js/grievance_visuals.min.js:1
 msgid "Grievance Complaint"
 msgstr "Жалоба"
 
 #: src/hope_live/theme/static/js/grievance_visuals.js:19
+#: src/hope_live/theme/static/js/grievance_visuals.min.js:1
 msgid "Negative Feedback"
 msgstr "Отрицательный отзыв"
 
 #: src/hope_live/theme/static/js/grievance_visuals.js:20
+#: src/hope_live/theme/static/js/grievance_visuals.min.js:1
 msgid "Referral"
 msgstr "Направление"
 
 #: src/hope_live/theme/static/js/grievance_visuals.js:21
+#: src/hope_live/theme/static/js/grievance_visuals.min.js:1
 msgid "Positive Feedback"
 msgstr "Положительный отзыв"
 
 #: src/hope_live/theme/static/js/grievance_visuals.js:22
+#: src/hope_live/theme/static/js/grievance_visuals.min.js:1
 msgid "Needs Adjudication"
 msgstr "Требует рассмотрения"
 
 #: src/hope_live/theme/static/js/grievance_visuals.js:23
+#: src/hope_live/theme/static/js/grievance_visuals.min.js:1
 msgid "System Flagging"
 msgstr "Системное предупреждение"
 
 #: src/hope_live/theme/static/js/grievance_visuals.js:24
+#: src/hope_live/theme/static/js/grievance_visuals.min.js:1
 msgid "Beneficiary"
 msgstr "Бенефициар"
 
 #: src/hope_live/theme/static/js/grievance_visuals.js:28
+#: src/hope_live/theme/static/js/grievance_visuals.min.js:1
 msgid "Not Set"
 msgstr "Не установлено"
 
 #: src/hope_live/theme/static/js/grievance_visuals.js:29
+#: src/hope_live/theme/static/js/grievance_visuals.min.js:1
 msgid "High"
 msgstr "Высокий"
 
 #: src/hope_live/theme/static/js/grievance_visuals.js:30
+#: src/hope_live/theme/static/js/grievance_visuals.min.js:1
 msgid "Medium"
 msgstr "Средний"
 
 #: src/hope_live/theme/static/js/grievance_visuals.js:31
+#: src/hope_live/theme/static/js/grievance_visuals.min.js:1
 msgid "Low"
 msgstr "Низкий"
 
 #: src/hope_live/theme/static/js/grievance_visuals.js:35
+#: src/hope_live/theme/static/js/grievance_visuals.min.js:1
 msgid "Data breach"
 msgstr "Утечка данных"
 
 #: src/hope_live/theme/static/js/grievance_visuals.js:36
+#: src/hope_live/theme/static/js/grievance_visuals.min.js:1
 msgid "Bribery, corruption or kickback"
 msgstr "Взяточничество, коррупция или откат"
 
 #: src/hope_live/theme/static/js/grievance_visuals.js:37
+#: src/hope_live/theme/static/js/grievance_visuals.min.js:1
 msgid "Fraud and forgery"
 msgstr "Мошенничество и подделка документов"
 
 #: src/hope_live/theme/static/js/grievance_visuals.js:38
+#: src/hope_live/theme/static/js/grievance_visuals.min.js:1
 msgid "Fraud involving misuse of programme funds by third party"
 msgstr ""
 "Мошенничество, связанное с нецелевым использованием средств программы "
 "третьей стороной"
 
 #: src/hope_live/theme/static/js/grievance_visuals.js:39
+#: src/hope_live/theme/static/js/grievance_visuals.min.js:1
 msgid "Harassment and abuse of authority"
 msgstr "Домогательства и злоупотребление служебным положением"
 
 #: src/hope_live/theme/static/js/grievance_visuals.js:40
+#: src/hope_live/theme/static/js/grievance_visuals.min.js:1
 msgid "Inappropriate staff conduct"
 msgstr "Неподобающее поведение сотрудников"
 
 #: src/hope_live/theme/static/js/grievance_visuals.js:41
+#: src/hope_live/theme/static/js/grievance_visuals.min.js:1
 msgid "Unauthorized use, misuse or waste of UNICEF property or funds"
 msgstr ""
 "Несанкционированное использование, злоупотребление или растрата имущества "
 "или средств ЮНИСЕФ"
 
 #: src/hope_live/theme/static/js/grievance_visuals.js:42
+#: src/hope_live/theme/static/js/grievance_visuals.min.js:1
 msgid "Conflict of interest"
 msgstr "Конфликт интересов"
 
 #: src/hope_live/theme/static/js/grievance_visuals.js:43
+#: src/hope_live/theme/static/js/grievance_visuals.min.js:1
 msgid "Gross mismanagement"
 msgstr "Грубая бесхозяйственность"
 
 #: src/hope_live/theme/static/js/grievance_visuals.js:44
+#: src/hope_live/theme/static/js/grievance_visuals.min.js:1
 msgid "Personal disputes"
 msgstr "Личные споры"
 
 #: src/hope_live/theme/static/js/grievance_visuals.js:45
+#: src/hope_live/theme/static/js/grievance_visuals.min.js:1
 msgid "Sexual harassment and sexual exploitation"
 msgstr "Сексуальные домогательства и сексуальная эксплуатация"
 
 #: src/hope_live/theme/static/js/grievance_visuals.js:46
+#: src/hope_live/theme/static/js/grievance_visuals.min.js:1
 msgid "Miscellaneous"
 msgstr "Разное"
 
 #: src/hope_live/theme/static/js/grievance_visuals.js:47
+#: src/hope_live/theme/static/js/grievance_visuals.min.js:1
 msgid "Household Data Update"
 msgstr "Обновление данных домохозяйства"
 
 #: src/hope_live/theme/static/js/grievance_visuals.js:48
+#: src/hope_live/theme/static/js/grievance_visuals.min.js:1
 msgid "Individual Data Update"
 msgstr "Обновление персональных данных"
 
 #: src/hope_live/theme/static/js/grievance_visuals.js:49
+#: src/hope_live/theme/static/js/grievance_visuals.min.js:1
 msgid "Withdraw Individual"
 msgstr "Исключить бенефициара"
 
 #: src/hope_live/theme/static/js/grievance_visuals.js:50
+#: src/hope_live/theme/static/js/grievance_visuals.min.js:1
 msgid "Add Individual"
 msgstr "Добавить бенефициара"
 
 #: src/hope_live/theme/static/js/grievance_visuals.js:51
+#: src/hope_live/theme/static/js/grievance_visuals.min.js:1
 msgid "Withdraw Household"
 msgstr "Исключить домохозяйство"
 
 #: src/hope_live/theme/static/js/grievance_visuals.js:52
+#: src/hope_live/theme/static/js/grievance_visuals.min.js:1
 msgid "Payment Related Complaint"
 msgstr "Жалоба, связанная с выплатами"
 
 #: src/hope_live/theme/static/js/grievance_visuals.js:53
+#: src/hope_live/theme/static/js/grievance_visuals.min.js:1
 msgid "FSP Related Complaint"
 msgstr "Жалоба, связанная с поставщиком финансовых услуг"
 
 #: src/hope_live/theme/static/js/grievance_visuals.js:54
+#: src/hope_live/theme/static/js/grievance_visuals.min.js:1
 msgid "Registration Related Complaint"
 msgstr "Жалоба, связанная с регистрацией"
 
 #: src/hope_live/theme/static/js/grievance_visuals.js:55
+#: src/hope_live/theme/static/js/grievance_visuals.min.js:1
 msgid "Other Complaint"
 msgstr "Другая жалоба"
 
 #: src/hope_live/theme/static/js/grievance_visuals.js:56
+#: src/hope_live/theme/static/js/grievance_visuals.min.js:1
 msgid "Partner Related Complaint"
 msgstr "Жалоба, связанная с партнером"
 
 #: src/hope_live/theme/static/js/grievance_visuals.js:57
+#: src/hope_live/theme/static/js/grievance_visuals.min.js:1
 msgid "Unique Identifiers Similarity"
 msgstr "Сходство уникальных идентификаторов"
 
 #: src/hope_live/theme/static/js/grievance_visuals.js:58
+#: src/hope_live/theme/static/js/grievance_visuals.min.js:1
 msgid "Biographical Data Similarity"
 msgstr "Сходство биографических данных"
 
 #: src/hope_live/theme/static/js/grievance_visuals.js:59
+#: src/hope_live/theme/static/js/grievance_visuals.min.js:1
 msgid "Biometrics Similarity"
 msgstr "Сходство биометрических данных"
 
 #: src/hope_live/theme/static/js/grievance_visuals.js:60
+#: src/hope_live/theme/static/js/grievance_visuals.min.js:1
 msgid "Update Delegate"
 msgstr "Обновить представителя"
 
 #: src/hope_live/theme/static/js/grievance_visuals.js:208
-#: src/hope_live/theme/static/js/grievance_visuals.js:424
+#: src/hope_live/theme/static/js/grievance_visuals.js:448
+#: src/hope_live/theme/static/js/grievance_visuals.min.js:1
 msgid "tickets"
 msgstr "обращения"
 
-#: src/hope_live/theme/static/js/grievance_visuals.js:214
-#: src/hope_live/theme/static/js/grievance_visuals.js:233
-#: src/hope_live/theme/static/js/grievance_visuals.js:430
-#: src/hope_live/theme/static/js/grievance_visuals.js:447
-msgid "Resolved & Closed"
-msgstr "Решено и закрыто"
+#: src/hope_live/theme/static/js/risk_visuals.js:6
+#: src/hope_live/theme/static/js/risk_visuals.min.js:1
+msgid "Critical"
+msgstr ""
 
-#: src/hope_live/theme/static/js/grievance_visuals.js:214
-#: src/hope_live/theme/static/js/grievance_visuals.js:248
-#: src/hope_live/theme/static/js/grievance_visuals.js:430
-#: src/hope_live/theme/static/js/grievance_visuals.js:455
-msgid "Open & Active"
-msgstr "Открыто и активно"
+#: src/hope_live/theme/static/js/risk_visuals.js:7
+#: src/hope_live/theme/static/js/risk_visuals.min.js:1
+msgid "Warning"
+msgstr ""
+
+#: src/hope_live/theme/static/js/risk_visuals.js:8
+#: src/hope_live/theme/static/js/risk_visuals.min.js:1
+msgid "Caution"
+msgstr ""
+
+#: src/hope_live/theme/static/js/risk_visuals.js:9
+#: src/hope_live/theme/static/js/risk_visuals.min.js:1
+msgid "Normal"
+msgstr ""
+
+#: src/hope_live/theme/static/js/risk_visuals.js:12
+#: src/hope_live/theme/static/js/risk_visuals.js:161
+#: src/hope_live/theme/static/js/risk_visuals.js:284
+#: src/hope_live/theme/static/js/risk_visuals.min.js:1
+msgid "Increasing"
+msgstr ""
+
+#: src/hope_live/theme/static/js/risk_visuals.js:13
+#: src/hope_live/theme/static/js/risk_visuals.js:164
+#: src/hope_live/theme/static/js/risk_visuals.js:286
+#: src/hope_live/theme/static/js/risk_visuals.min.js:1
+msgid "Decreasing"
+msgstr ""
+
+#: src/hope_live/theme/static/js/risk_visuals.js:14
+#: src/hope_live/theme/static/js/risk_visuals.js:166
+#: src/hope_live/theme/static/js/risk_visuals.min.js:1
+msgid "Neutral"
+msgstr ""
+
+#: src/hope_live/theme/static/js/risk_visuals.js:19
+#: src/hope_live/theme/static/js/risk_visuals.js:26
+#: src/hope_live/theme/static/js/risk_visuals.min.js:1
+#, fuzzy
+#| msgid "Payment Verification"
+msgid "Payment Operations"
+msgstr "Верификация платежа"
+
+#: src/hope_live/theme/static/js/risk_visuals.js:20
+#: src/hope_live/theme/static/js/risk_visuals.js:27
+#: src/hope_live/theme/static/js/risk_visuals.min.js:1
+msgid "Payment, Reconciliation & Verification bottlenecks"
+msgstr ""
+
+#: src/hope_live/theme/static/js/risk_visuals.js:33
+#: src/hope_live/theme/static/js/risk_visuals.min.js:1
+#, fuzzy
+#| msgid "Registration Related Complaint"
+msgid "Registration & Population"
+msgstr "Жалоба, связанная с регистрацией"
+
+#: src/hope_live/theme/static/js/risk_visuals.js:34
+#: src/hope_live/theme/static/js/risk_visuals.min.js:1
+msgid "KYC, Identity documents & Geographic verification"
+msgstr ""
+
+#: src/hope_live/theme/static/js/risk_visuals.js:40
+#: src/hope_live/theme/static/js/risk_visuals.min.js:1
+#, fuzzy
+#| msgid "Needs Adjudication"
+msgid "Deduplication & Adjudication"
+msgstr "Требует рассмотрения"
+
+#: src/hope_live/theme/static/js/risk_visuals.js:41
+#: src/hope_live/theme/static/js/risk_visuals.min.js:1
+msgid "Biometric, Needs-Adjudication & Cross-channel duplicate issues"
+msgstr ""
+
+#: src/hope_live/theme/static/js/risk_visuals.js:48
+#: src/hope_live/theme/static/js/risk_visuals.min.js:1
+msgid "PVP execution, overdue tickets & high failure rates"
+msgstr ""
+
+#: src/hope_live/theme/static/js/risk_visuals.js:54
+#: src/hope_live/theme/static/js/risk_visuals.js:61
+#: src/hope_live/theme/static/js/risk_visuals.min.js:1
+msgid "Grievances & Safeguarding"
+msgstr ""
+
+#: src/hope_live/theme/static/js/risk_visuals.js:55
+#: src/hope_live/theme/static/js/risk_visuals.js:62
+#: src/hope_live/theme/static/js/risk_visuals.min.js:1
+msgid "Sensitive complaints, zero-reporting & FSP concentrations"
+msgstr ""
+
+#: src/hope_live/theme/static/js/risk_visuals.js:68
+#: src/hope_live/theme/static/js/risk_visuals.min.js:1
+msgid "Targeting & Eligibility"
+msgstr ""
+
+#: src/hope_live/theme/static/js/risk_visuals.js:69
+#: src/hope_live/theme/static/js/risk_visuals.min.js:1
+msgid "Vulnerability criteria & payment readiness anomalies"
+msgstr ""
+
+#: src/hope_live/theme/static/js/risk_visuals.js:161
+#: src/hope_live/theme/static/js/risk_visuals.min.js:1
+msgid "Up"
+msgstr ""
+
+#: src/hope_live/theme/static/js/risk_visuals.js:164
+#: src/hope_live/theme/static/js/risk_visuals.min.js:1
+msgid "Down"
+msgstr ""
+
+#: src/hope_live/theme/static/js/risk_visuals.js:166
+#: src/hope_live/theme/static/js/risk_visuals.js:282
+#: src/hope_live/theme/static/js/risk_visuals.min.js:1
+msgid "Stable"
+msgstr ""
+
+#: src/hope_live/theme/static/js/risk_visuals.js:180
+#: src/hope_live/theme/static/js/risk_visuals.min.js:1
+msgid "modules"
+msgstr ""
+
+#: src/hope_live/theme/static/js/risk_visuals.js:184
+#: src/hope_live/theme/static/js/risk_visuals.min.js:1
+msgid "No active module issues"
+msgstr ""
+
+#: src/hope_live/theme/static/js/risk_visuals.js:243
+#: src/hope_live/theme/static/js/risk_visuals.min.js:1
+msgid "No Operational Risk Anomalies"
+msgstr ""
+
+#: src/hope_live/theme/static/js/risk_visuals.js:244
+#: src/hope_live/theme/static/js/risk_visuals.min.js:1
+msgid ""
+"All operational thresholds are within normal tolerances for the selected "
+"filters."
+msgstr ""
+
+#: src/hope_live/theme/static/js/risk_visuals.js:260
+#: src/hope_live/theme/static/js/risk_visuals.min.js:1
+msgid "Operational metrics and bottlenecks"
+msgstr ""
+
+#: src/hope_live/theme/static/js/risk_visuals.js:289
+#: src/hope_live/theme/static/js/risk_visuals.js:374
+#: src/hope_live/theme/static/js/risk_visuals.min.js:1
+msgid "issues"
+msgstr ""
+
+#: src/hope_live/theme/static/js/risk_visuals.js:322
+#: src/hope_live/theme/static/js/risk_visuals.js:399
+#: src/hope_live/theme/static/js/risk_visuals.min.js:1
+msgid "Issues"
+msgstr ""
+
+#: src/hope_live/theme/static/js/risk_visuals.js:384
+#: src/hope_live/theme/static/js/risk_visuals.min.js:1
+msgid "Download PNG"
+msgstr ""
+
+#: src/hope_live/theme/static/js/risk_visuals.js:502
+#: src/hope_live/theme/static/js/risk_visuals.min.js:1
+msgid "All programmes"
+msgstr ""
+
+#~ msgid "Quantity"
+#~ msgstr "Количество"
+
+#~ msgid "Individuals Reached"
+#~ msgstr "Охвачено получателей"
+
+#~ msgid "Households Reached"
+#~ msgstr "Охваченные домохозяйства"
+
+#~ msgid "Children Reached"
+#~ msgstr "Дети достигли"
+
+#~ msgid "PWD Reached"
+#~ msgstr "Охвачено людей с инвалидностью"
+
+#~ msgid "Reconciled"
+#~ msgstr "Сверено"
+
+#~ msgid "Still Opened"
+#~ msgstr "Все еще открыто"
+
+#~ msgid "Reconciled Amount (USD)"
+#~ msgstr "Сверенная сумма (USD)"
+
+#~ msgid "Still Opened Amount (USD)"
+#~ msgstr "Все еще открытая сумма (USD)"
+
+#~ msgid "Reconciliation Timeline (USD)"
+#~ msgstr "Хронология сверки (USD)"
+
+#~ msgid "Reconciliation Status by Country (USD)"
+#~ msgstr "Статус сверки по странам (USD)"
+
+#~ msgid "Reconciled Payments"
+#~ msgstr "Сверенные платежи"
+
+#~ msgid "Still Opened Payments"
+#~ msgstr "Все еще открытые платежи"
+
+#~ msgid "Reconciliation Timeline"
+#~ msgstr "График примирения"
+
+#~ msgid "Reconciliation Status by Country"
+#~ msgstr "Статус сверки по странам"
+
+#~ msgid "Quantity Distribution Timeline"
+#~ msgstr "Хронология распределения количества"
+
+#~ msgid "Payments Timeline"
+#~ msgstr "Хронология платежей"
+
+#~ msgid "Individuals"
+#~ msgstr "Физические лица"
+
+#~ msgid "Households"
+#~ msgstr "Домохозяйства"
+
+#~ msgid "Children"
+#~ msgstr "Дети"
+
+#~ msgid "PWD"
+#~ msgstr "Люди с инвалидностью"
+
+#~ msgid "Resolved & Closed"
+#~ msgstr "Решено и закрыто"
+
+#~ msgid "Open & Active"
+#~ msgstr "Открыто и активно"

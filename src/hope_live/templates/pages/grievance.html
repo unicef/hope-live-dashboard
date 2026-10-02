@@ -5,11 +5,11 @@
 <div class="container mx-auto px-4 lg:px-6 py-4 lg:py-5">
     <div class="mb-3 flex flex-wrap justify-between items-center gap-2">
         <div>
-            <h1 class="text-xl lg:text-2xl font-black text-gray-900 leading-tight">{% translate "Grievance Dashboard" %}</h1>
-            <p class="text-xs text-gray-500">{% translate "Overview of Feedback and Grievance Tickets" %}</p>
+            <h1 class="text-xl lg:text-2xl font-black text-gray-900 leading-tight">{% translate "Grievance dashboard" %}</h1>
+            <p class="text-xs text-gray-500">{% translate "Overview of feedback and grievance tickets" %}</p>
         </div>
         <div>
-            <span class="bg-unicef-blue text-white text-[11px] font-bold px-2 py-0.5 rounded">{% translate "Live Data" %}</span>
+            <span class="bg-unicef-blue text-white text-[11px] font-bold px-2 py-0.5 rounded">{% translate "Live data" %}</span>
         </div>
     </div>
 
@@ -19,14 +19,15 @@
     <!-- Stats Cards (Headline KPIs - Above Timeline!) -->
     <div class="flex flex-wrap gap-3 mb-3.5">
         <div class="bg-white rounded-xl shadow-2xs border border-gray-200 p-3 border-l-4 border-unicef-blue flex flex-col justify-center min-h-[84px] w-full sm:w-64">
-            <h3 class="text-gray-500 text-[10px] sm:text-[11px] font-bold uppercase tracking-wider">{% translate "Total Tickets" %}</h3>
+            <h3 class="text-gray-500 text-[10px] sm:text-[11px] font-bold">{% translate "Total tickets" %}</h3>
             <p id="total-tickets" class="text-xl sm:text-2xl font-black text-blue-700 mt-0.5 leading-none">0</p>
+            {% include "includes/chart_info.html" with definition="Number of grievance tickets." source="HOPE grievances" method="Sum of ticket_count." %}
         </div>
     </div>
 
     <!-- Timeline Filter (Full Width) -->
     <div class="bg-white rounded-xl shadow-2xs border border-gray-200 p-3.5 mb-4">
-        <h3 id="timeline-title" class="text-sm font-bold text-gray-900 mb-1">{% translate "Tickets Timeline" %}</h3>
+        <h3 id="timeline-title" class="text-sm font-bold text-gray-900 mb-1">{% translate "Tickets timeline" %}</h3>
         <div id="time-focus-chart" class="w-full h-[220px]"></div>
         <div id="time-range-chart" style="display: none;"></div>
     </div>
@@ -49,14 +50,14 @@
             <div id="grievance-category-chart" class="w-full h-[260px]"></div>
         </div>
         <div class="bg-white rounded-xl shadow-2xs border border-gray-200 p-3.5">
-            <h3 class="text-sm font-bold text-gray-900 mb-2">{% translate "Issue Type" %}</h3>
+            <h3 class="text-sm font-bold text-gray-900 mb-2">{% translate "Issue type" %}</h3>
             <div id="grievance-issue-type-chart" class="w-full h-[260px]"></div>
         </div>
     </div>
 
     <!-- Geographic Breakdown -->
     <div class="bg-white rounded-xl shadow-2xs border border-gray-200 p-3.5 mb-4">
-        <h3 class="text-sm font-bold text-gray-900 mb-2">{% translate "Ticket Status by Country" %}</h3>
+        <h3 class="text-sm font-bold text-gray-900 mb-2">{% translate "Ticket status by country" %}</h3>
         <div id="grievance-country-chart" class="w-full h-[260px]"></div>
     </div>
 </div>
