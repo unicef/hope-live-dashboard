@@ -12,6 +12,20 @@ from tests.extras.testutils.factories.analysis import (
 pytestmark = [pytest.mark.selenium, pytest.mark.django_db]
 
 
+@pytest.fixture(autouse=True)
+def clear_aggregate_api_cache():
+    """The aggregates API is `cache_page`-cached in Redis for six hours.
+
+    Each dashboard now loads two aggregate feeds (e.g. the financial page also pulls
+    completion data for the pipeline funnel, and completion pulls financial data for the
+    quality quadrant). Without clearing, a test would be served a previous test's cached
+    payload — including empty payloads cached when that test had no rows for the feed.
+    """
+    from django.core.cache import cache
+
+    cache.clear()
+
+
 @pytest.fixture
 def financial_aggregates(db):
     year = datetime.datetime.now().year
@@ -413,12 +427,12 @@ def test_financial_dashboard_cohort_toggle_and_pipeline(browser, financial_aggre
     # Social-worker cohort narrows the totals and relabels the quantity card
     browser.click('.cohort-tab[data-cohort="SOCIAL"]')
     browser.wait_for_text_visible("14", "#total-payments")
-    browser.assert_text("Workers Paid", "#qty-card-title")
+    browser.assert_text("WORKERS PAID", "#qty-card-title")
 
     # Back to all cohorts
     browser.click('.cohort-tab[data-cohort="ALL"]')
     browser.wait_for_text_visible("39", "#total-payments")
-    browser.assert_text("Total Quantity Distributed", "#qty-card-title")
+    browser.assert_text("TOTAL QUANTITY DISTRIBUTED", "#qty-card-title")
 
 
 def test_demographic_dashboard_cohort_toggle(browser, demographic_aggregates, financial_aggregates):
@@ -432,13 +446,16 @@ def test_demographic_dashboard_cohort_toggle(browser, demographic_aggregates, fi
     browser.assert_element_not_visible("#card-households")
     browser.assert_element_not_visible("#card-children")
     browser.assert_element_not_visible("#card-pwd")
-    browser.assert_text("Workers Reached", "#individuals-card-title")
+    browser.assert_text("Workers", "#btn-individuals")
+    # Card titles are CSS-uppercased, so Selenium reads them in caps
+    browser.assert_text("WORKERS REACHED", "#individuals-card-title")
 
     browser.click('.cohort-tab[data-cohort="ALL"]')
     browser.assert_element_visible("#card-households")
     browser.assert_element_visible("#card-children")
     browser.assert_element_visible("#card-pwd")
-    browser.assert_text("Individuals Reached", "#individuals-card-title")
+    browser.assert_text("Individuals", "#btn-individuals")
+    browser.assert_text("INDIVIDUALS REACHED", "#individuals-card-title")
 
 
 def test_completion_quality_quadrant_loads(browser, completion_aggregates, financial_aggregates):
