@@ -15,6 +15,7 @@ from hope_live.analysis.models import (
     DemographicAggregate,
     FinancialAggregate,
     GrievanceAggregate,
+    ProgramType,
     RiskAggregate,
     RiskDefinition,
     SyncDailyAggregatesJob,
@@ -23,6 +24,25 @@ from hope_live.analysis.models import (
 logger = logging.getLogger(__name__)
 
 BATCH_SIZE = 1000
+
+# Report queries historically used a few spellings for the same cohort.
+PROGRAM_TYPE_ALIASES: dict[str, str] = {
+    "SOCIAL": ProgramType.SOCIAL,
+    "SOCIAL_WORKER": ProgramType.SOCIAL,
+    "SOCIAL_WORKERS": ProgramType.SOCIAL,
+    "SOCIAL WORKER": ProgramType.SOCIAL,
+    "SOCIAL WORKERS": ProgramType.SOCIAL,
+    "HOUSEHOLD": ProgramType.STANDARD,
+    "HOUSEHOLDS": ProgramType.STANDARD,
+    "STANDARD": ProgramType.STANDARD,
+}
+
+
+def _normalise_program_type(value: Any) -> str:
+    """Map a report cohort value onto the canonical vocabulary, defaulting to STANDARD."""
+    if value is None:
+        return ProgramType.STANDARD
+    return PROGRAM_TYPE_ALIASES.get(str(value).strip().upper(), ProgramType.STANDARD)
 
 
 @retry(stop=stop_after_attempt(3), wait=wait_exponential(multiplier=1, min=2, max=10))
@@ -300,6 +320,7 @@ def save_aggregates(rows: list[dict[str, Any]], year: int, model_name: str, upda
         item_date = item.get("date")
         if not item_date:
             continue
+        item["program_type"] = _normalise_program_type(item.get("program_type"))
         raw_dim_val = item.get("dimension_value")
         dim_val = "unknown" if raw_dim_val is None else str(raw_dim_val)
 

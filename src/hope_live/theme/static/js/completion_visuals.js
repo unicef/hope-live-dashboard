@@ -159,6 +159,8 @@ document.addEventListener('DOMContentLoaded', function () {
     const countryChart = echarts.init(document.getElementById('status-country-chart'), 'macarons');
     const completionGauge = echarts.init(document.getElementById('completion-gauge'), 'macarons');
     const beneficiaryGroupChart = echarts.init(document.getElementById('beneficiary-group-chart'), 'macarons');
+    const quadrantEl = document.getElementById('quality-quadrant-chart');
+    const quadrantChart = quadrantEl ? echarts.init(quadrantEl, 'macarons') : null;
 
     // Resize Handler
     window.addEventListener('resize', function () {
@@ -166,7 +168,19 @@ document.addEventListener('DOMContentLoaded', function () {
         countryChart.resize();
         completionGauge.resize();
         beneficiaryGroupChart.resize();
+        if (quadrantChart) quadrantChart.resize();
     });
+
+    const pendingList = ["SENT TO PAYMENT GATEWAY", "SENT TO FSP", "PENDING"];
+    const successfulList = [
+        "DISTRIBUTION SUCCESSFUL",
+        "PARTIALLY DISTRIBUTED",
+        "TRANSACTION SUCCESSFUL",
+    ].map(s => s.toUpperCase());
+
+    // Financial rows are used only for the delivery axis of the quality quadrant.
+    let financialRows = [];
+    let activeRange = null;
 
     function updateTotals() {
         const totalReconciled = ndx.groupAll().reduceSum(d => {
@@ -455,6 +469,139 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
             }]
         }, { notMerge: true });
+
+        updateQuadrant();
+    }
+
+    // Quality quadrant: reconciliation rate (completion) versus delivery success rate (financial)
+    function updateQuadrant() {
+        if (!quadrantChart) return;
+
+        const reconciliation = {};
+        countryStatusGroup.all().forEach(d => {
+            if (!d.key) return;
+            const reconciled = currentMetric === 'usd' ? d.value.reconciled_usd : d.value.reconciled_payments;
+            const opened = currentMetric === 'usd' ? d.value.opened_usd : d.value.opened_payments;
+            reconciliation[d.key] = { reconciled: reconciled, opened: opened };
+        });
+
+        const metricKey = currentMetric === 'usd' ? 'total_usd' : 'payment_count';
+        const delivery = {};
+        financialRows.forEach(r => {
+            if (r.dimension_type !== 'status') return;
+            if (activeRange && r.date && (r.date < activeRange.start || r.date > activeRange.end)) return;
+            if (selectedCountries.size > 0 && !selectedCountries.has(r.country_slug)) return;
+
+            const key = String(r.dimension_value || '').toUpperCase();
+            if (!pendingList.includes(key) && !successfulList.includes(key)) return;
+
+            if (!delivery[r.country_slug]) delivery[r.country_slug] = { delivered: 0, pending: 0 };
+            const value = +r[metricKey] || 0;
+            if (successfulList.includes(key)) delivery[r.country_slug].delivered += value;
+            else delivery[r.country_slug].pending += value;
+        });
+
+        const points = [];
+        Object.keys(reconciliation).forEach(country => {
+            const rec = reconciliation[country];
+            const totalReconciled = rec.reconciled + rec.opened;
+            const deliv = delivery[country];
+            if (!deliv || totalReconciled <= 0) return;
+            const totalDelivery = deliv.delivered + deliv.pending;
+            if (totalDelivery <= 0) return;
+
+            points.push({
+                name: country,
+                value: [
+                    (rec.reconciled / totalReconciled) * 100,
+                    (deliv.delivered / totalDelivery) * 100,
+                    totalReconciled
+                ],
+                itemStyle: { color: getStableColor(country) }
+            });
+        });
+
+        const maxVolume = points.reduce((max, p) => Math.max(max, p.value[2]), 0) || 1;
+
+        quadrantChart.setOption({
+            tooltip: {
+                trigger: 'item',
+                formatter: params => {
+                    const reconPct = params.value[0];
+                    const deliveryPct = params.value[1];
+                    const volume = params.value[2];
+                    return `<b>${params.name}</b><br/>${gettext('Reconciliation rate')}: ${reconPct.toFixed(1)}%<br/>` +
+                        `${gettext('Delivery success rate')}: ${deliveryPct.toFixed(1)}%<br/>` +
+                        `${gettext('Reconciled volume')}: ${formatFullVal(volume)}`;
+                }
+            },
+            grid: { top: 30, right: 35, bottom: 55, left: 65 },
+            xAxis: {
+                type: 'value',
+                min: 0,
+                max: 100,
+                name: gettext('Reconciliation rate (%)'),
+                nameLocation: 'middle',
+                nameGap: 32,
+                nameTextStyle: { color: '#475569', fontSize: 11 },
+                axisLabel: { formatter: '{value}%', color: '#64748b' },
+                splitLine: { lineStyle: { color: '#f1f5f9' } }
+            },
+            yAxis: {
+                type: 'value',
+                min: 0,
+                max: 100,
+                name: gettext('Delivery success rate (%)'),
+                nameLocation: 'middle',
+                nameGap: 46,
+                nameTextStyle: { color: '#475569', fontSize: 11 },
+                axisLabel: { formatter: '{value}%', color: '#64748b' },
+                splitLine: { lineStyle: { color: '#f1f5f9' } }
+            },
+            series: [{
+                type: 'scatter',
+                data: points,
+                symbolSize: value => 10 + 30 * Math.sqrt(value[2] / maxVolume),
+                label: {
+                    show: true,
+                    position: 'top',
+                    fontSize: 10,
+                    color: '#374151',
+                    formatter: params => params.name
+                },
+                markLine: {
+                    silent: true,
+                    symbol: 'none',
+                    lineStyle: { type: 'dashed', color: '#cbd5e1' },
+                    data: [{ xAxis: 80 }, { yAxis: 80 }]
+                }
+            }]
+        }, { notMerge: true });
+    }
+
+    async function loadFinancialForQuadrant(from, to) {
+        try {
+            const url = `${window.DASHBOARD_CONFIG.endpoint}?date_from=${from}&date_to=${to}&dashboard=financial`;
+            const response = await fetch(url, {
+                credentials: 'same-origin',
+                headers: {
+                    'Accept': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            });
+            if (!response.ok) return;
+
+            const rows = await response.json();
+            const dateFormat = d3.timeParse('%Y-%m-%d');
+            rows.forEach(r => {
+                r.date = dateFormat(r.date);
+                r.total_usd = +r.total_usd || 0;
+                r.payment_count = +r.payment_count || 0;
+            });
+            financialRows = rows;
+        } catch (error) {
+            console.error('Error loading financial data for the quality quadrant:', error);
+        }
     }
 
     // --- Interaction Bindings ---
@@ -482,7 +629,7 @@ document.addEventListener('DOMContentLoaded', function () {
             selectedBeneficiaryGroups.add(name);
         }
         if (selectedBeneficiaryGroups.size === 0) {
-            benefGroupDimension.filterAll();
+            beneficiaryGroupDimension.filterAll();
         } else {
             beneficiaryGroupDimension.filterFunction(d => selectedBeneficiaryGroups.has(d));
         }
@@ -546,6 +693,7 @@ document.addEventListener('DOMContentLoaded', function () {
             }
 
             const data = await response.json();
+            activeRange = { start: startDate, end: endDate };
 
             const dateFormat = d3.timeParse('%Y-%m-%d');
             data.forEach(d => {
@@ -564,6 +712,8 @@ document.addEventListener('DOMContentLoaded', function () {
             ndx.remove();
             ndx.add(data);
 
+            await loadFinancialForQuadrant(from, to);
+
             timeFilter.setBuffer(startDate, endDate);
             updateAll();
         } catch (error) {
@@ -575,6 +725,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const timeFilter = new DashboardTimeFilter({
         onFilterChange: (startDate, endDate) => {
             if (timeFilter.isWithinBuffer(startDate, endDate)) {
+                activeRange = { start: startDate, end: endDate };
                 dateDimension.filterRange([startDate, endDate]);
                 updateAll();
             } else {

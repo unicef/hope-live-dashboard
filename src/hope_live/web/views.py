@@ -21,6 +21,7 @@ from hope_live.analysis.models import (
     DemographicAggregate,
     FinancialAggregate,
     GrievanceAggregate,
+    ProgramType,
 )
 
 logger = logging.getLogger(__name__)
@@ -171,27 +172,38 @@ class IndexView(TemplateView):
             FinancialAggregate.objects.filter(dimension_type="sector").aggregate(total=Sum("total_usd"))["total"] or 0
         )
 
-        # Calculate Total Individuals Reached
-        total_beneficiaries = (
-            DemographicAggregate.objects.filter(dimension_type="sector").aggregate(total=Sum("total_beneficiaries"))[
-                "total"
-            ]
-            or 0
+        # Head-count demographics describe standard programmes only; for social-worker
+        # programmes one record is one worker, so they are reported separately below.
+        standard_demographics = DemographicAggregate.objects.filter(
+            dimension_type="sector", program_type=ProgramType.STANDARD
         )
+
+        # Calculate Total Individuals Reached
+        total_beneficiaries = standard_demographics.aggregate(total=Sum("total_beneficiaries"))["total"] or 0
 
         # Calculate Total Children Reached
-        total_children = (
-            DemographicAggregate.objects.filter(dimension_type="sector").aggregate(total=Sum("total_children"))["total"]
-            or 0
-        )
+        total_children = standard_demographics.aggregate(total=Sum("total_children"))["total"] or 0
 
         # Calculate Total Households Reached
-        total_households = (
-            DemographicAggregate.objects.filter(dimension_type="sector").aggregate(total=Sum("total_households"))[
-                "total"
-            ]
+        total_households = standard_demographics.aggregate(total=Sum("total_households"))["total"] or 0
+
+        # Calculate Social Workers Assisted. In social-worker programmes each household
+        # record represents one worker, so `total_beneficiaries` is the workforce count.
+        total_social_workers = (
+            DemographicAggregate.objects.filter(dimension_type="sector", program_type=ProgramType.SOCIAL).aggregate(
+                total=Sum("total_beneficiaries")
+            )["total"]
             or 0
         )
+        if not total_social_workers:
+            # Transitional: before the feed emitted `program_type` as a column, the cohort was
+            # exposed as its own dimension. Drop this fallback once the re-sync has run.
+            total_social_workers = (
+                DemographicAggregate.objects.filter(
+                    dimension_type="program_type", dimension_value=ProgramType.SOCIAL
+                ).aggregate(total=Sum("total_beneficiaries"))["total"]
+                or 0
+            )
 
         # Calculate Active Countries Count
         total_countries = FinancialAggregate.objects.values("country_slug").distinct().count()
@@ -231,6 +243,7 @@ class IndexView(TemplateView):
         context["total_individuals_reached"] = format_large_number(total_beneficiaries)
         context["total_children"] = format_large_number(total_children)
         context["total_households"] = format_large_number(total_households)
+        context["total_social_workers"] = format_large_number(total_social_workers)
         context["total_countries"] = total_countries
         # Calculate verification success rate from CompletionAggregate status counts
         reconciled_sum = (
