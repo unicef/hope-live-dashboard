@@ -13,10 +13,10 @@ document.addEventListener('DOMContentLoaded', function () {
     };
 
     const labelMap = {
-        individuals: gettext('Individuals Reached'),
-        households: gettext('Households Reached'),
-        children: gettext('Children Reached'),
-        pwd: gettext('PWD Reached')
+        individuals: gettext('Individuals reached'),
+        households: gettext('Households reached'),
+        children: gettext('Children reached'),
+        pwd: gettext('PWD reached')
     };
 
     const colorPalette = [
@@ -182,7 +182,7 @@ document.addEventListener('DOMContentLoaded', function () {
             },
             xAxis: {
                 type: 'time',
-                axisLabel: { color: '#64748b' }
+                axisLabel: { color: '#64748b', formatter: value => d3.timeFormat('%b')(new Date(value)) }
             },
             yAxis: {
                 type: 'value',
@@ -292,12 +292,11 @@ document.addEventListener('DOMContentLoaded', function () {
         const bgCategories = bgData.map(d => d.key);
         const hasAnyBgSelection = selectedBeneficiaryGroups.size > 0;
         const bgSeriesData = bgData.map(d => {
-            const stableColor = getStableColor(d.key);
             const isSelected = selectedBeneficiaryGroups.has(d.key);
             return {
                 value: d.value[activeField],
                 itemStyle: {
-                    color: isSelected ? stableColor : (hasAnyBgSelection ? '#cbd5e1' : stableColor)
+                    color: isSelected ? getStableColor(d.key) : (hasAnyBgSelection ? '#cbd5e1' : getStableColor(d.key))
                 }
             };
         });
@@ -422,10 +421,19 @@ document.addEventListener('DOMContentLoaded', function () {
         if (timelineTitle) timelineTitle.textContent = `${activeLabel} ${gettext('Timeline')}`;
 
         const sectorShareTitle = document.getElementById('sector-share-title');
-        if (sectorShareTitle) sectorShareTitle.textContent = `${gettext('Sector Share of')} ${activeLabel}`;
+        if (sectorShareTitle) sectorShareTitle.textContent = `${gettext('Sector share of')} ${activeLabel}`;
 
         const countryShareTitle = document.getElementById('country-share-title');
-        if (countryShareTitle) countryShareTitle.textContent = `${gettext('Country Share of')} ${activeLabel}`;
+        if (countryShareTitle) countryShareTitle.textContent = `${gettext('Country share of')} ${activeLabel}`;
+
+        const bgTitleMap = {
+            individuals: gettext('Individuals reached by beneficiary group'),
+            households: gettext('Households reached by beneficiary group'),
+            children: gettext('Children reached by beneficiary group'),
+            pwd: gettext('PWD reached by beneficiary group')
+        };
+        const bgTitle = document.getElementById('bg-title');
+        if (bgTitle) bgTitle.textContent = bgTitleMap[currentMetric];
     }
 
     metricTabs.forEach(btn => {
@@ -452,7 +460,7 @@ document.addEventListener('DOMContentLoaded', function () {
             if (card) card.style.display = isSocial ? 'none' : '';
         });
 
-        labelMap.individuals = isSocial ? gettext('Workers Reached') : gettext('Individuals Reached');
+        labelMap.individuals = isSocial ? gettext('Workers reached') : gettext('Individuals reached');
 
         const individualsTab = document.getElementById('btn-individuals');
         if (individualsTab) individualsTab.textContent = isSocial ? gettext('Workers') : gettext('Individuals');

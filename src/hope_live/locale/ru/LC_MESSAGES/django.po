@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-12 09:05+0000\n"
+"POT-Creation-Date: 2026-10-12 10:25+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -53,14 +53,27 @@ msgstr "Copyright © %(year)s - Все права защищены ЮНИСЕФ 
 msgid "Select Language"
 msgstr "Выбрать язык"
 
-#: src/hope_live/templates/header.html:55 src/hope_live/templates/menu.html:120
-#: src/hope_live/templates/menu.html:124
+#: src/hope_live/templates/header.html:55
 msgid "Sign Out"
 msgstr "Выйти"
 
 #: src/hope_live/templates/header.html:66
 msgid "Open Issue"
 msgstr "Открытый выпуск"
+
+#: src/hope_live/templates/includes/chart_info.html:3
+msgid "Information"
+msgstr ""
+
+#: src/hope_live/templates/includes/chart_info.html:8
+msgid "Source"
+msgstr ""
+
+#: src/hope_live/templates/includes/chart_info.html:9
+#, fuzzy
+#| msgid "Methodology"
+msgid "Method"
+msgstr "Методология"
 
 #: src/hope_live/templates/includes/time_filter.html:7
 msgid "Period:"
@@ -71,23 +84,25 @@ msgid "Today"
 msgstr ""
 
 #: src/hope_live/templates/includes/time_filter.html:12
-msgid "This Week"
+msgid "This week"
 msgstr ""
 
 #: src/hope_live/templates/includes/time_filter.html:15
-msgid "This Month"
+msgid "This month"
 msgstr ""
 
 #: src/hope_live/templates/includes/time_filter.html:18
-msgid "Last 3 Months"
+msgid "Last 3 months"
 msgstr ""
 
 #: src/hope_live/templates/includes/time_filter.html:21
-msgid "This Year"
-msgstr ""
+#, fuzzy
+#| msgid "1 year"
+msgid "This year"
+msgstr "1 год"
 
 #: src/hope_live/templates/includes/time_filter.html:27
-msgid "Custom Period"
+msgid "Custom period"
 msgstr ""
 
 #: src/hope_live/templates/includes/time_filter.html:36
@@ -118,7 +133,9 @@ msgstr "Главная"
 
 #: src/hope_live/templates/menu.html:26
 #: src/hope_live/templates/pages/dashboard.html:8
-msgid "Financial Dashboard"
+#, fuzzy
+#| msgid "Financial Dashboard"
+msgid "Financial dashboard"
 msgstr "Финансовая панель управления"
 
 #: src/hope_live/templates/menu.html:32
@@ -132,7 +149,9 @@ msgid "Accountability"
 msgstr "Подотчетность"
 
 #: src/hope_live/templates/menu.html:44
-msgid "Programme Quality"
+#, fuzzy
+#| msgid "Programme Quality"
+msgid "Programme quality"
 msgstr "Качество программы"
 
 #: src/hope_live/templates/menu.html:50
@@ -140,8 +159,8 @@ msgid "Risk"
 msgstr ""
 
 #: src/hope_live/templates/menu.html:57
-msgid "Documentation"
-msgstr "Документация"
+msgid "User manual"
+msgstr ""
 
 #: src/hope_live/templates/menu.html:63
 #: src/hope_live/templates/pages/landing.html:51
@@ -170,6 +189,12 @@ msgstr "Узнать больше"
 msgid "Admin"
 msgstr "Админ"
 
+#: src/hope_live/templates/menu.html:120 src/hope_live/templates/menu.html:124
+#, fuzzy
+#| msgid "Sign Out"
+msgid "Sign out"
+msgstr "Выйти"
+
 #: src/hope_live/templates/pages/about.html:15
 msgid ""
 "HOPE is UNICEF’s solution to collect and process personal data from "
@@ -178,11 +203,15 @@ msgid ""
 msgstr ""
 
 #: src/hope_live/templates/pages/completion.html:8
-msgid "Completion Rate Dashboard"
+#, fuzzy
+#| msgid "Completion Rate Dashboard"
+msgid "Completion rate dashboard"
 msgstr "Панель управления показателями завершения"
 
 #: src/hope_live/templates/pages/completion.html:9
-msgid "Payment Reconciliation and Completion Status Tracking"
+#, fuzzy
+#| msgid "Payment Reconciliation and Completion Status Tracking"
+msgid "Payment reconciliation and completion status tracking"
 msgstr "Отслеживание статуса сверки и завершения платежей"
 
 #: src/hope_live/templates/pages/completion.html:12
@@ -190,16 +219,22 @@ msgstr "Отслеживание статуса сверки и завершен
 #: src/hope_live/templates/pages/demographic.html:12
 #: src/hope_live/templates/pages/grievance.html:12
 #: src/hope_live/templates/pages/risk.html:12
-msgid "Live Data"
+#, fuzzy
+#| msgid "Live Data"
+msgid "Live data"
 msgstr "Текущие данные"
 
 #: src/hope_live/templates/pages/completion.html:21
-msgid "View Reconciliation Metrics by:"
+#, fuzzy
+#| msgid "View Reconciliation Metrics by:"
+msgid "View reconciliation metrics by:"
 msgstr "Просмотр метрик сверки по:"
 
 #: src/hope_live/templates/pages/completion.html:24
-#: src/hope_live/templates/pages/dashboard.html:30
-msgid "Payments Count"
+#: src/hope_live/templates/pages/dashboard.html:27
+#, fuzzy
+#| msgid "Payments Count"
+msgid "Payments count"
 msgstr "Количество платежей"
 
 #: src/hope_live/templates/pages/completion.html:27
@@ -208,150 +243,174 @@ msgid "Amount (USD)"
 msgstr "Сумма (USD)"
 
 #: src/hope_live/templates/pages/completion.html:35
-msgid "Reconciled Payments"
+#, fuzzy
+#| msgid "Reconciled Payments"
+msgid "Reconciled payments"
 msgstr "Сверенные платежи"
 
-#: src/hope_live/templates/pages/completion.html:39
-msgid "Still Opened"
+#: src/hope_live/templates/pages/completion.html:40
+#, fuzzy
+#| msgid "Still Opened"
+msgid "Still opened"
 msgstr "Все еще открыто"
 
-#: src/hope_live/templates/pages/completion.html:44
-msgid "Reconciliation Rate"
+#: src/hope_live/templates/pages/completion.html:46
+#, fuzzy
+#| msgid "Reconciliation Rate"
+msgid "Reconciliation rate"
 msgstr "Коэффициент сверки"
 
-#: src/hope_live/templates/pages/completion.html:53
-msgid "Reconciliation Timeline"
+#: src/hope_live/templates/pages/completion.html:56
+#, fuzzy
+#| msgid "Reconciliation Timeline"
+msgid "Reconciliation timeline"
 msgstr "График примирения"
 
-#: src/hope_live/templates/pages/completion.html:61
-msgid "Reconciliation Status by Country"
+#: src/hope_live/templates/pages/completion.html:64
+#, fuzzy
+#| msgid "Reconciliation Status by Country"
+msgid "Reconciliation status by country"
 msgstr "Статус сверки по странам"
 
-#: src/hope_live/templates/pages/completion.html:65
-#: src/hope_live/templates/pages/dashboard.html:127
-#: src/hope_live/templates/pages/demographic.html:102
-msgid "By Beneficiary Group"
+#: src/hope_live/templates/pages/completion.html:68
+msgid "Payments by beneficiary group"
 msgstr ""
 
-#: src/hope_live/templates/pages/completion.html:72
+#: src/hope_live/templates/pages/completion.html:75
 msgid "Quality Quadrant"
 msgstr ""
 
-#: src/hope_live/templates/pages/completion.html:73
+#: src/hope_live/templates/pages/completion.html:76
 msgid ""
 "Delivery success rate versus reconciliation rate, by country. Bubble size "
 "reflects reconciled volume."
 msgstr ""
 
 #: src/hope_live/templates/pages/dashboard.html:9
-msgid "Overview of Financial info"
+#, fuzzy
+#| msgid "Overview of Financial info"
+msgid "Overview of financial information"
 msgstr "Обзор финансовой информации"
 
 #: src/hope_live/templates/pages/dashboard.html:21
-msgid "View Dashboard Metrics by:"
+#, fuzzy
+#| msgid "View Dashboard Metrics by:"
+msgid "View dashboard metrics by:"
 msgstr "Просмотр метрик панели по:"
 
-#: src/hope_live/templates/pages/dashboard.html:27
-msgid "Quantity (QTY)"
-msgstr "Количество (QTY)"
-
-#: src/hope_live/templates/pages/dashboard.html:37
+#: src/hope_live/templates/pages/dashboard.html:34
 #: src/hope_live/templates/pages/demographic.html:40
 #, fuzzy
 #| msgid "Programme Quality"
 msgid "Programme cohort:"
 msgstr "Качество программы"
 
-#: src/hope_live/templates/pages/dashboard.html:40
+#: src/hope_live/templates/pages/dashboard.html:37
 #: src/hope_live/templates/pages/demographic.html:43
 msgid "All"
 msgstr ""
 
-#: src/hope_live/templates/pages/dashboard.html:43
+#: src/hope_live/templates/pages/dashboard.html:40
 #: src/hope_live/templates/pages/demographic.html:46
 msgid "Standard"
 msgstr ""
 
-#: src/hope_live/templates/pages/dashboard.html:46
+#: src/hope_live/templates/pages/dashboard.html:43
 #: src/hope_live/templates/pages/demographic.html:49
 msgid "Social workers"
 msgstr ""
 
-#: src/hope_live/templates/pages/dashboard.html:54
-msgid "Total Amount Paid"
+#: src/hope_live/templates/pages/dashboard.html:51
+#, fuzzy
+#| msgid "Total Amount Paid"
+msgid "Total amount paid"
 msgstr "Общая сумма уплачено"
 
-#: src/hope_live/templates/pages/dashboard.html:58
-msgid "Number of Payments"
+#: src/hope_live/templates/pages/dashboard.html:56
+#, fuzzy
+#| msgid "Number of Payments"
+msgid "Number of payments"
 msgstr "Количество платежей"
 
-#: src/hope_live/templates/pages/dashboard.html:62
-msgid "Total Quantity Distributed"
-msgstr "Общее количество распределенного"
-
-#: src/hope_live/templates/pages/dashboard.html:66
-msgid "Outstanding Payment"
+#: src/hope_live/templates/pages/dashboard.html:61
+#, fuzzy
+#| msgid "Outstanding Payment"
+msgid "Outstanding payment"
 msgstr "Невыплаченный платеж"
 
-#: src/hope_live/templates/pages/dashboard.html:73
-msgid "Spending Timeline"
+#: src/hope_live/templates/pages/dashboard.html:69
+#, fuzzy
+#| msgid "Spending Timeline"
+msgid "Spending timeline"
 msgstr "График расходов"
 
-#: src/hope_live/templates/pages/dashboard.html:80
+#: src/hope_live/templates/pages/dashboard.html:76
 #, fuzzy
 #| msgid "Payments Count"
 msgid "Payment Pipeline"
 msgstr "Количество платежей"
 
-#: src/hope_live/templates/pages/dashboard.html:81
+#: src/hope_live/templates/pages/dashboard.html:77
 msgid "From payments in the pipeline through to reconciled payments."
 msgstr ""
 
-#: src/hope_live/templates/pages/dashboard.html:88
-msgid "Delivery Types"
+#: src/hope_live/templates/pages/dashboard.html:84
+#, fuzzy
+#| msgid "Delivery Types"
+msgid "Delivery types"
 msgstr "Типы доставки"
 
-#: src/hope_live/templates/pages/dashboard.html:92
-msgid "Distribution by Sector"
+#: src/hope_live/templates/pages/dashboard.html:88
+#, fuzzy
+#| msgid "Distribution by Sector"
+msgid "Distribution by sector"
 msgstr "Распределение по секторам"
 
-#: src/hope_live/templates/pages/dashboard.html:101
+#: src/hope_live/templates/pages/dashboard.html:97
 msgid "Regions"
 msgstr "Регионы"
 
-#: src/hope_live/templates/pages/dashboard.html:104
+#: src/hope_live/templates/pages/dashboard.html:100
 msgid ""
 "MENAR: Middle East & North Africa · ESAR: Eastern & Southern Africa · ECAR: "
 "Europe & Central Asia · WCAR: West & Central Africa · LACR: Latin America & "
 "Caribbean · EAPR: East Asia & Pacific · SAR: South Asia"
 msgstr ""
 
-#: src/hope_live/templates/pages/dashboard.html:107
+#: src/hope_live/templates/pages/dashboard.html:103
 msgid "Countries"
 msgstr "Страны"
 
-#: src/hope_live/templates/pages/dashboard.html:115
-msgid "Distribution by Program"
+#: src/hope_live/templates/pages/dashboard.html:111
+#, fuzzy
+#| msgid "Distribution by Program"
+msgid "Distribution by program"
 msgstr "Распределение по программам"
 
-#: src/hope_live/templates/pages/dashboard.html:119
-msgid "Financial Service Providers (FSP)"
+#: src/hope_live/templates/pages/dashboard.html:115
+#, fuzzy
+#| msgid "Financial Service Providers (FSP)"
+msgid "Financial service providers (FSP)"
 msgstr "Поставщики финансовых услуг (FSP)"
+
+#: src/hope_live/templates/pages/dashboard.html:123
+msgid "Cash disbursed by beneficiary group"
+msgstr ""
 
 #: src/hope_live/templates/pages/demographic.html:8
 #, fuzzy
 #| msgid "Demographics"
-msgid "Demographic Dashboard"
+msgid "Demographic dashboard"
 msgstr "Демография"
 
 #: src/hope_live/templates/pages/demographic.html:9
-msgid "Breakdown of Individuals, Children, and PWD Reached"
+msgid "Breakdown of individuals, children, and PWD reached"
 msgstr ""
 
 #: src/hope_live/templates/pages/demographic.html:21
 #, fuzzy
 #| msgid "View Dashboard Metrics by:"
-msgid "View Demographic Metrics by:"
+msgid "View demographic metrics by:"
 msgstr "Просмотр метрик панели по:"
 
 #: src/hope_live/templates/pages/demographic.html:24
@@ -365,92 +424,97 @@ msgid "Households"
 msgstr "Охваченные домохозяйства"
 
 #: src/hope_live/templates/pages/demographic.html:30
-#: src/hope_live/templates/pages/demographic.html:66
+#: src/hope_live/templates/pages/demographic.html:67
 #, fuzzy
 #| msgid "Children Reached"
 msgid "Children"
 msgstr "Дети достигли"
 
 #: src/hope_live/templates/pages/demographic.html:33
-#: src/hope_live/templates/pages/demographic.html:73
-msgid "PWD Reached"
+#: src/hope_live/templates/pages/demographic.html:72
+msgid "PWD reached"
 msgstr ""
 
 #: src/hope_live/templates/pages/demographic.html:57
-msgid "Individuals Reached"
+msgid "Individuals reached"
 msgstr ""
 
-#: src/hope_live/templates/pages/demographic.html:61
-#: src/hope_live/templates/pages/landing.html:126
-msgid "Households Reached"
+#: src/hope_live/templates/pages/demographic.html:62
+#, fuzzy
+#| msgid "Households Reached"
+msgid "Households reached"
 msgstr "Охваченные домохозяйства"
 
-#: src/hope_live/templates/pages/demographic.html:67
-msgid ""
-"For programmes not collecting children data, figures are estimated using "
-"agreed fertility rate multipliers."
-msgstr ""
-
-#: src/hope_live/templates/pages/demographic.html:74
-msgid ""
-"Reflects confirmed persons with disabilities. Some programmes do not collect "
-"this data, so this figure may be under-represented."
-msgstr ""
-
-#: src/hope_live/templates/pages/demographic.html:82
+#: src/hope_live/templates/pages/demographic.html:80
 #, fuzzy
 #| msgid "Tickets Timeline"
-msgid "Reach Timeline"
+msgid "Reach timeline"
 msgstr "Билеты"
 
-#: src/hope_live/templates/pages/demographic.html:90
-msgid "Sector Share of Reached Population"
+#: src/hope_live/templates/pages/demographic.html:88
+msgid "Sector share of reached population"
 msgstr ""
 
-#: src/hope_live/templates/pages/demographic.html:91
+#: src/hope_live/templates/pages/demographic.html:89
 msgid ""
 "Note: Figures may use estimated multipliers where children data is not "
 "collected."
 msgstr ""
 
-#: src/hope_live/templates/pages/demographic.html:95
-msgid "Country Share of Reached Population"
+#: src/hope_live/templates/pages/demographic.html:93
+msgid "Country share of reached population"
+msgstr ""
+
+#: src/hope_live/templates/pages/demographic.html:100
+msgid "Individuals reached by beneficiary group"
 msgstr ""
 
 #: src/hope_live/templates/pages/grievance.html:8
-msgid "Grievance Dashboard"
+#, fuzzy
+#| msgid "Grievance Dashboard"
+msgid "Grievance dashboard"
 msgstr "Панель управления жалобами"
 
 #: src/hope_live/templates/pages/grievance.html:9
-msgid "Overview of Feedback and Grievance Tickets"
+#, fuzzy
+#| msgid "Overview of Feedback and Grievance Tickets"
+msgid "Overview of feedback and grievance tickets"
 msgstr "Обзор заявок на обратную связь и жалобы"
 
 #: src/hope_live/templates/pages/grievance.html:22
-msgid "Total Tickets"
+#, fuzzy
+#| msgid "Total Tickets"
+msgid "Total tickets"
 msgstr "Всего билетов"
 
-#: src/hope_live/templates/pages/grievance.html:29
-msgid "Tickets Timeline"
+#: src/hope_live/templates/pages/grievance.html:30
+#, fuzzy
+#| msgid "Tickets Timeline"
+msgid "Tickets timeline"
 msgstr "Билеты"
 
-#: src/hope_live/templates/pages/grievance.html:37
+#: src/hope_live/templates/pages/grievance.html:38
 msgid "Status"
 msgstr "Статус"
 
-#: src/hope_live/templates/pages/grievance.html:41
+#: src/hope_live/templates/pages/grievance.html:42
 msgid "Priority"
 msgstr "Приоритет"
 
-#: src/hope_live/templates/pages/grievance.html:48
+#: src/hope_live/templates/pages/grievance.html:49
 msgid "Category"
 msgstr "Категория"
 
-#: src/hope_live/templates/pages/grievance.html:52
-msgid "Issue Type"
+#: src/hope_live/templates/pages/grievance.html:53
+#, fuzzy
+#| msgid "Issue Type"
+msgid "Issue type"
 msgstr "Тип проблемы"
 
-#: src/hope_live/templates/pages/grievance.html:59
-msgid "Ticket Status by Country"
+#: src/hope_live/templates/pages/grievance.html:60
+#, fuzzy
+#| msgid "Ticket Status by Country"
+msgid "Ticket status by country"
 msgstr "Статус заявок по странам"
 
 #: src/hope_live/templates/pages/landing.html:28
@@ -522,6 +586,10 @@ msgstr "Через"
 #: src/hope_live/templates/pages/landing.html:116
 msgid "countries"
 msgstr "страны"
+
+#: src/hope_live/templates/pages/landing.html:126
+msgid "Households Reached"
+msgstr "Охваченные домохозяйства"
 
 #: src/hope_live/templates/pages/landing.html:128
 msgid "Humanitarian assistance"
@@ -817,7 +885,7 @@ msgstr ""
 #: src/hope_live/templates/pages/risk.html:8
 #, fuzzy
 #| msgid "Completion Rate Dashboard"
-msgid "Operational Risk Dashboard"
+msgid "Operational risk dashboard"
 msgstr "Панель управления показателями завершения"
 
 #: src/hope_live/templates/pages/risk.html:9
@@ -828,7 +896,7 @@ msgstr ""
 #: src/hope_live/templates/pages/risk.html:23
 #, fuzzy
 #| msgid "Category"
-msgid "All Categories"
+msgid "All categories"
 msgstr "Категория"
 
 #: src/hope_live/templates/pages/risk.html:26
@@ -865,110 +933,101 @@ msgstr "Программы"
 msgid "All programmes"
 msgstr "Программы"
 
-#: src/hope_live/templates/pages/risk.html:57
+#: src/hope_live/templates/pages/risk.html:56
 #, fuzzy
 #| msgid "Total Tickets"
-msgid "Total Risk Items"
+msgid "Total risk items"
 msgstr "Всего билетов"
 
 #: src/hope_live/templates/pages/risk.html:58
-msgid "Total count of operational risk issues across all active modules."
-msgstr ""
-
-#: src/hope_live/templates/pages/risk.html:61
 msgid "Across all operational modules"
 msgstr ""
 
-#: src/hope_live/templates/pages/risk.html:72
-msgid "Critical Risks"
+#: src/hope_live/templates/pages/risk.html:69
+msgid "Critical risks"
 msgstr ""
 
-#: src/hope_live/templates/pages/risk.html:73
-#, python-format
-msgid "Risks at or above 150%% threshold requiring immediate action."
-msgstr ""
-
-#: src/hope_live/templates/pages/risk.html:76
+#: src/hope_live/templates/pages/risk.html:71
 msgid "Requires immediate action"
 msgstr ""
 
-#: src/hope_live/templates/pages/risk.html:86
+#: src/hope_live/templates/pages/risk.html:82
 #, fuzzy
 #| msgid "Distribution by Sector"
-msgid "Risk Distribution by Module"
+msgid "Risk distribution by module"
 msgstr "Распределение по секторам"
 
-#: src/hope_live/templates/pages/risk.html:89
+#: src/hope_live/templates/pages/risk.html:85
 msgid "Click any module to filter operational cards"
 msgstr ""
 
-#: src/hope_live/templates/pages/risk.html:98
+#: src/hope_live/templates/pages/risk.html:94
 #, fuzzy
 #| msgid "Tickets Timeline"
-msgid "Issues Timeline"
+msgid "Issues timeline"
 msgstr "Билеты"
 
-#: src/hope_live/templates/pages/risk.html:99
+#: src/hope_live/templates/pages/risk.html:95
 msgid "Daily volume"
 msgstr ""
 
-#: src/hope_live/templates/pages/risk.html:110
-msgid "Risk Status Color Guide:"
+#: src/hope_live/templates/pages/risk.html:106
+msgid "Risk status color guide:"
 msgstr ""
 
-#: src/hope_live/templates/pages/risk.html:114
+#: src/hope_live/templates/pages/risk.html:110
 msgid "Critical"
 msgstr ""
 
-#: src/hope_live/templates/pages/risk.html:119
+#: src/hope_live/templates/pages/risk.html:115
 msgid "Warning"
 msgstr ""
 
-#: src/hope_live/templates/pages/risk.html:124
+#: src/hope_live/templates/pages/risk.html:120
 msgid "Caution"
 msgstr ""
 
-#: src/hope_live/templates/pages/risk.html:129
+#: src/hope_live/templates/pages/risk.html:125
 msgid "Normal"
 msgstr ""
 
-#: src/hope_live/templates/pages/risk.html:143
-msgid "All Risk Indicators"
+#: src/hope_live/templates/pages/risk.html:139
+msgid "All risk indicators"
 msgstr ""
 
-#: src/hope_live/templates/pages/risk.html:144
+#: src/hope_live/templates/pages/risk.html:140
 msgid "Itemized operational metrics by indicator and programme"
 msgstr ""
 
-#: src/hope_live/templates/pages/risk.html:150
+#: src/hope_live/templates/pages/risk.html:146
 msgid "Risk Indicator"
 msgstr ""
 
-#: src/hope_live/templates/pages/risk.html:151
+#: src/hope_live/templates/pages/risk.html:147
 msgid "Module"
 msgstr ""
 
-#: src/hope_live/templates/pages/risk.html:152
+#: src/hope_live/templates/pages/risk.html:148
 #, fuzzy
 #| msgid "Programs"
 msgid "Programme"
 msgstr "Программы"
 
-#: src/hope_live/templates/pages/risk.html:153
+#: src/hope_live/templates/pages/risk.html:149
 msgid "Severity"
 msgstr ""
 
-#: src/hope_live/templates/pages/risk.html:154
+#: src/hope_live/templates/pages/risk.html:150
 msgid "Trend"
 msgstr ""
 
-#: src/hope_live/templates/pages/risk.html:155
+#: src/hope_live/templates/pages/risk.html:151
 #, fuzzy
 #| msgid "Open Issue"
 msgid "Issues"
 msgstr "Открытый выпуск"
 
-#: src/hope_live/templates/pages/risk.html:156
+#: src/hope_live/templates/pages/risk.html:152
 #, python-format
 msgid "%%"
 msgstr ""
@@ -982,6 +1041,15 @@ msgstr "Возвращаться"
 #: src/hope_live/templates/unfold/helpers/site_branding.html:6
 msgid "Django administration"
 msgstr "Администрация Джанго"
+
+#~ msgid "Documentation"
+#~ msgstr "Документация"
+
+#~ msgid "Quantity (QTY)"
+#~ msgstr "Количество (QTY)"
+
+#~ msgid "Total Quantity Distributed"
+#~ msgstr "Общее количество распределенного"
 
 #~ msgid "Search for a country, indicator, dataset..."
 #~ msgstr "Поиск страны, показателя, набора данных..."
