@@ -8,6 +8,13 @@ class TimeGrain(models.TextChoices):
     YEARLY = "yearly", "Yearly"
 
 
+class ProgramType(models.TextChoices):
+    """Cohort a programme belongs to, derived from the data collecting type."""
+
+    STANDARD = "STANDARD", "Standard programmes"
+    SOCIAL = "SOCIAL", "Social workers"
+
+
 class BaseAggregate(models.Model):
     """
     Abstract base model for all dashboard aggregates.
@@ -25,14 +32,21 @@ class BaseAggregate(models.Model):
     country_slug = models.CharField(max_length=100, db_index=True)
     dimension_type = models.CharField(max_length=50, db_index=True)
     dimension_value = models.CharField(max_length=255, db_index=True)
+    program_type = models.CharField(
+        max_length=20,
+        choices=ProgramType.choices,
+        default=ProgramType.STANDARD,
+        db_index=True,
+    )
 
     class Meta:
         abstract = True
-        unique_together = ("date", "time_grain", "country_slug", "dimension_type", "dimension_value")
+        unique_together = ("date", "time_grain", "country_slug", "dimension_type", "dimension_value", "program_type")
         indexes = [
             models.Index(fields=["dimension_type", "date"]),
             models.Index(fields=["country_slug", "dimension_type"]),
             models.Index(fields=["dimension_type", "country_slug", "date", "time_grain"]),
+            models.Index(fields=["program_type", "dimension_type"]),
         ]
 
     def __str__(self) -> str:
@@ -111,7 +125,15 @@ class RiskAggregate(BaseAggregate):
     class Meta(BaseAggregate.Meta):
         verbose_name = "Risk Aggregate"
         verbose_name_plural = "Risk Aggregates"
-        unique_together = ("date", "time_grain", "country_slug", "dimension_type", "dimension_value", "program_name")
+        unique_together = (
+            "date",
+            "time_grain",
+            "country_slug",
+            "dimension_type",
+            "dimension_value",
+            "program_name",
+            "program_type",
+        )
         indexes = [
             *BaseAggregate.Meta.indexes,
             models.Index(fields=["module", "severity"]),

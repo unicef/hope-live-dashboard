@@ -32,6 +32,22 @@
         </div>
     </div>
 
+    <!-- Cohort Selector -->
+    <div class="mb-3 flex flex-wrap gap-2 items-center justify-between">
+        <div class="text-xs font-bold text-gray-500 uppercase tracking-wider">{% translate "Programme cohort:" %}</div>
+        <div class="flex bg-gray-100 p-0.5 rounded-lg space-x-1 border border-gray-200">
+            <button type="button" class="cohort-tab px-3 py-1 text-xs font-bold rounded-md bg-white shadow text-blue-800 transition-all duration-200 cursor-pointer" data-cohort="ALL">
+                {% translate "All" %}
+            </button>
+            <button type="button" class="cohort-tab px-3 py-1 text-xs font-bold rounded-md text-gray-600 hover:text-gray-900 transition-all duration-200 cursor-pointer" data-cohort="STANDARD">
+                {% translate "Standard" %}
+            </button>
+            <button type="button" class="cohort-tab px-3 py-1 text-xs font-bold rounded-md text-gray-600 hover:text-gray-900 transition-all duration-200 cursor-pointer" data-cohort="SOCIAL">
+                {% translate "Social workers" %}
+            </button>
+        </div>
+    </div>
+
     <!-- Main Metrics (Headline KPIs - Above Timeline!) -->
     <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-3.5">
         <div class="bg-white rounded-xl shadow-2xs border border-gray-200 p-3 border-l-4 border-green-500 flex flex-col justify-center min-h-[84px]">
@@ -43,7 +59,7 @@
             <p id="total-payments" class="text-xl sm:text-2xl font-black text-blue-700 mt-0.5 leading-none">0</p>
         </div>
         <div class="bg-white rounded-xl shadow-2xs border border-gray-200 p-3 border-l-4 border-purple-500 flex flex-col justify-center min-h-[84px]">
-            <h3 class="text-gray-500 text-[10px] sm:text-[11px] font-bold uppercase tracking-wider">{% translate "Total Quantity Distributed" %}</h3>
+            <h3 id="qty-card-title" class="text-gray-500 text-[10px] sm:text-[11px] font-bold uppercase tracking-wider">{% translate "Total Quantity Distributed" %}</h3>
             <p id="total-qty-distributed" class="text-xl sm:text-2xl font-black text-purple-700 mt-0.5 leading-none">0</p>
         </div>
         <div class="bg-white rounded-xl shadow-2xs border border-gray-200 p-3 border-l-4 border-yellow-500 flex flex-col justify-center min-h-[84px]">
@@ -57,6 +73,13 @@
         <h3 id="timeline-title" class="text-sm font-bold text-gray-900 mb-1">{% translate "Spending Timeline" %}</h3>
         <div id="time-focus-chart" class="w-full h-[220px]"></div>
         <div id="time-range-chart" style="display: none;"></div>
+    </div>
+
+    <!-- Payment Pipeline Funnel -->
+    <div class="bg-white rounded-xl shadow-2xs border border-gray-200 p-3.5 mb-4">
+        <h3 id="pipeline-title" class="text-sm font-bold text-gray-900 mb-1">{% translate "Payment Pipeline" %}</h3>
+        <p id="pipeline-note" class="text-[11px] text-gray-400 mb-2 italic">{% translate "From payments in the pipeline through to reconciled payments." %}</p>
+        <div id="pipeline-funnel-chart" class="w-full h-[300px]"></div>
     </div>
 
     <!-- Delivery Types and Sector -->

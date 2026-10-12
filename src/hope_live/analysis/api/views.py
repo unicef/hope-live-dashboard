@@ -43,6 +43,10 @@ def _apply_common_filters(queryset: models.QuerySet, params: Any, dash_type: str
     if dimension_type:
         queryset = queryset.filter(dimension_type=dimension_type)
 
+    program_type = params.get("program_type")
+    if program_type:
+        queryset = queryset.filter(program_type__iexact=program_type)
+
     country_slug = params.get("country_slug")
     if country_slug:
         queryset = queryset.filter(country_slug=country_slug)
@@ -124,6 +128,16 @@ class AggregateListView(generics.ListAPIView):  # type: ignore[misc]
                 description="Filter by country slug",
                 required=False,
                 type=str,
+            ),
+            OpenApiParameter(
+                name="program_type",
+                description="Filter by programme cohort (STANDARD or SOCIAL)",
+                required=False,
+                type=str,
+                examples=[
+                    OpenApiExample("Social workers", value="SOCIAL"),
+                    OpenApiExample("Standard programmes", value="STANDARD"),
+                ],
             ),
             OpenApiParameter(
                 name="date_from",
