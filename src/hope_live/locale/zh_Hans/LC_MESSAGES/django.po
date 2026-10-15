@@ -131,8 +131,6 @@ msgstr "首页"
 
 #: src/hope_live/templates/menu.html:26
 #: src/hope_live/templates/pages/dashboard.html:8
-#, fuzzy
-#| msgid "Financial Dashboard"
 msgid "Financial dashboard"
 msgstr "财务仪表板"
 
@@ -147,8 +145,6 @@ msgid "Accountability"
 msgstr "问责制"
 
 #: src/hope_live/templates/menu.html:44
-#, fuzzy
-#| msgid "Programme Quality"
 msgid "Programme quality"
 msgstr "节目质量"
 
@@ -186,8 +182,6 @@ msgid "Admin"
 msgstr "行政"
 
 #: src/hope_live/templates/menu.html:120 src/hope_live/templates/menu.html:124
-#, fuzzy
-#| msgid "Sign Out"
 msgid "Sign out"
 msgstr "登出"
 
@@ -199,14 +193,10 @@ msgid ""
 msgstr ""
 
 #: src/hope_live/templates/pages/completion.html:8
-#, fuzzy
-#| msgid "Completion Rate Dashboard"
 msgid "Completion rate dashboard"
 msgstr "完成率仪表板"
 
 #: src/hope_live/templates/pages/completion.html:9
-#, fuzzy
-#| msgid "Payment Reconciliation and Completion Status Tracking"
 msgid "Payment reconciliation and completion status tracking"
 msgstr "付款对账和完成状态跟踪"
 
@@ -215,21 +205,15 @@ msgstr "付款对账和完成状态跟踪"
 #: src/hope_live/templates/pages/demographic.html:12
 #: src/hope_live/templates/pages/grievance.html:12
 #: src/hope_live/templates/pages/risk.html:12
-#, fuzzy
-#| msgid "Live Data"
 msgid "Live data"
 msgstr "实时数据"
 
 #: src/hope_live/templates/pages/completion.html:21
-#, fuzzy
-#| msgid "View Reconciliation Metrics by:"
 msgid "View reconciliation metrics by:"
 msgstr "查看对账指标，按："
 
 #: src/hope_live/templates/pages/completion.html:24
 #: src/hope_live/templates/pages/dashboard.html:27
-#, fuzzy
-#| msgid "Payments Count"
 msgid "Payments count"
 msgstr "付款笔数"
 
@@ -239,32 +223,22 @@ msgid "Amount (USD)"
 msgstr "金额 (美元)"
 
 #: src/hope_live/templates/pages/completion.html:35
-#, fuzzy
-#| msgid "Reconciled Payments"
 msgid "Reconciled payments"
 msgstr "核对付款"
 
 #: src/hope_live/templates/pages/completion.html:40
-#, fuzzy
-#| msgid "Still Opened"
 msgid "Still opened"
 msgstr "仍在营业"
 
 #: src/hope_live/templates/pages/completion.html:46
-#, fuzzy
-#| msgid "Reconciliation Rate"
 msgid "Reconciliation rate"
 msgstr "对账率"
 
 #: src/hope_live/templates/pages/completion.html:56
-#, fuzzy
-#| msgid "Reconciliation Timeline"
 msgid "Reconciliation timeline"
 msgstr "和解时间表"
 
 #: src/hope_live/templates/pages/completion.html:64
-#, fuzzy
-#| msgid "Reconciliation Status by Country"
 msgid "Reconciliation status by country"
 msgstr "各国对账状态"
 
@@ -289,8 +263,6 @@ msgid "Overview of financial information"
 msgstr "财务信息概览"
 
 #: src/hope_live/templates/pages/dashboard.html:21
-#, fuzzy
-#| msgid "View Dashboard Metrics by:"
 msgid "View dashboard metrics by:"
 msgstr "查看仪表板指标，按："
 
@@ -317,26 +289,18 @@ msgid "Social workers"
 msgstr ""
 
 #: src/hope_live/templates/pages/dashboard.html:51
-#, fuzzy
-#| msgid "Total Amount Paid"
 msgid "Total amount paid"
 msgstr "支付总额"
 
 #: src/hope_live/templates/pages/dashboard.html:56
-#, fuzzy
-#| msgid "Number of Payments"
 msgid "Number of payments"
 msgstr "付款次数"
 
 #: src/hope_live/templates/pages/dashboard.html:61
-#, fuzzy
-#| msgid "Outstanding Payment"
 msgid "Outstanding payment"
 msgstr "未付款项"
 
 #: src/hope_live/templates/pages/dashboard.html:69
-#, fuzzy
-#| msgid "Spending Timeline"
 msgid "Spending timeline"
 msgstr "支出时间表"
 
@@ -351,14 +315,10 @@ msgid "From payments in the pipeline through to reconciled payments."
 msgstr ""
 
 #: src/hope_live/templates/pages/dashboard.html:84
-#, fuzzy
-#| msgid "Delivery Types"
 msgid "Delivery types"
 msgstr "交付类型"
 
 #: src/hope_live/templates/pages/dashboard.html:88
-#, fuzzy
-#| msgid "Distribution by Sector"
 msgid "Distribution by sector"
 msgstr "按行业分布"
 
@@ -378,14 +338,10 @@ msgid "Countries"
 msgstr "国家"
 
 #: src/hope_live/templates/pages/dashboard.html:111
-#, fuzzy
-#| msgid "Distribution by Program"
 msgid "Distribution by program"
 msgstr "按节目分配"
 
 #: src/hope_live/templates/pages/dashboard.html:115
-#, fuzzy
-#| msgid "Financial Service Providers (FSP)"
 msgid "Financial service providers (FSP)"
 msgstr "金融服务提供商 (FSP)"
 
@@ -436,8 +392,6 @@ msgid "Individuals reached"
 msgstr ""
 
 #: src/hope_live/templates/pages/demographic.html:62
-#, fuzzy
-#| msgid "Households Reached"
 msgid "Households reached"
 msgstr "覆盖家庭"
 
@@ -466,26 +420,18 @@ msgid "Individuals reached by beneficiary group"
 msgstr ""
 
 #: src/hope_live/templates/pages/grievance.html:8
-#, fuzzy
-#| msgid "Grievance Dashboard"
 msgid "Grievance dashboard"
 msgstr "申诉投诉仪表板"
 
 #: src/hope_live/templates/pages/grievance.html:9
-#, fuzzy
-#| msgid "Overview of Feedback and Grievance Tickets"
 msgid "Overview of feedback and grievance tickets"
 msgstr "反馈和申诉单概述"
 
 #: src/hope_live/templates/pages/grievance.html:22
-#, fuzzy
-#| msgid "Total Tickets"
 msgid "Total tickets"
 msgstr "总门票数"
 
 #: src/hope_live/templates/pages/grievance.html:30
-#, fuzzy
-#| msgid "Tickets Timeline"
 msgid "Tickets timeline"
 msgstr "门票时间表"
 
@@ -502,14 +448,10 @@ msgid "Category"
 msgstr "类别"
 
 #: src/hope_live/templates/pages/grievance.html:53
-#, fuzzy
-#| msgid "Issue Type"
 msgid "Issue type"
 msgstr "问题类型"
 
 #: src/hope_live/templates/pages/grievance.html:60
-#, fuzzy
-#| msgid "Ticket Status by Country"
 msgid "Ticket status by country"
 msgstr "各国工单状态"
 
@@ -773,9 +715,7 @@ msgstr "2026年5月19日"
 msgid ""
 "New features and enhancements 1. Added the Facility Workers beneficiary "
 "group to the programme setup page, enabling visualization..."
-msgstr ""
-"新功能和增强功能 1. 在计划设置页面中添加了设施工作人员受益人群组，从而实现了"
-"可视化..."
+msgstr "新功能和增强功能 1. 在计划设置页面中添加了设施工作人员受益人群组，从而实现了可视化..."
 
 #: src/hope_live/templates/pages/landing.html:395
 msgid "April 8, 2026"
@@ -785,9 +725,7 @@ msgstr "2026年4月8日"
 msgid ""
 "New features and enhancements 1. Added a new filter to select Household or "
 "Individual IDs for alternate collectors receiving p..."
-msgstr ""
-"新功能和增强功能 1. 添加了新过滤器，以针对接收...的备选收集器选择家庭或个人 "
-"ID"
+msgstr "新功能和增强功能 1. 添加了新过滤器，以针对接收...的备选收集器选择家庭或个人 ID"
 
 #: src/hope_live/templates/pages/landing.html:413
 msgid "March 16, 2026"
@@ -797,8 +735,7 @@ msgstr "2026年3月16日"
 msgid ""
 "New features and enhancements 1. Added a Currency Conversion section to the "
 "payment plan module, allowing users to override the UN..."
-msgstr ""
-"新功能和增强功能 1. 在付款计划模块中添加了货币换算部分，允许用户覆盖联合国..."
+msgstr "新功能和增强功能 1. 在付款计划模块中添加了货币换算部分，允许用户覆盖联合国..."
 
 #: src/hope_live/templates/pages/landing.html:434
 msgid "Data responsibly"
@@ -1049,8 +986,8 @@ msgstr "Django 管理"
 #~ msgstr "数据与应用程序接口"
 
 #~ msgid ""
-#~ "* Use the slider handles at the bottom of the timeline or click and drag "
-#~ "to filter dates."
+#~ "* Use the slider handles at the bottom of the timeline or click and drag to "
+#~ "filter dates."
 #~ msgstr "* 使用时间线底部的滑块手柄或单击并拖动来过滤日期。"
 
 #~ msgid "Completion rates & metrics"
@@ -1065,9 +1002,7 @@ msgstr "Django 管理"
 #~ msgid ""
 #~ "Lifeline of hope for families after Typhoon Yagi: UNICEF's first "
 #~ "humanitarian cash transfers in Viet Nam."
-#~ msgstr ""
-#~ "八木台风过后家庭的希望生命线：联合国儿童基金会在越南的首次人道主义现金转"
-#~ "移。"
+#~ msgstr "八木台风过后家庭的希望生命线：联合国儿童基金会在越南的首次人道主义现金转移。"
 
 #~ msgid "Read story"
 #~ msgstr "读故事"

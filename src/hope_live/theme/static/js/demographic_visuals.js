@@ -30,7 +30,7 @@ document.addEventListener('DOMContentLoaded', function () {
         if (!name) return '#5470c6';
         let hash = 0;
         for (let i = 0; i < name.length; i++) {
-            hash = name.charCodeAt(i) + ((hash << 5) - hash);
+            hash = name.charCodeAt(i) + (Math.imul(hash, 32) - hash); // == ((hash << 5) - hash); avoids a shift, which breaks gettext extraction
         }
         const index = Math.abs(hash) % colorPalette.length;
         return colorPalette[index];

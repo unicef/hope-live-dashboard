@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-12 10:25+0000\n"
+"POT-Creation-Date: 2026-10-12 10:50+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -29,6 +29,24 @@ msgstr "%s من إجمالي %s"
 msgid "payments"
 msgstr "المدفوعات"
 
+#: src/hope_live/theme/static/js/completion_visuals.js:278
+#: src/hope_live/theme/static/js/completion_visuals.js:302
+#: src/hope_live/theme/static/js/completion_visuals.js:370
+#: src/hope_live/theme/static/js/completion_visuals.js:395
+#: src/hope_live/theme/static/js/completion_visuals.min.js:1
+#: src/hope_live/theme/static/js/dashboard_visuals.js:643
+#: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
+msgid "Reconciled"
+msgstr ""
+
+#: src/hope_live/theme/static/js/completion_visuals.js:278
+#: src/hope_live/theme/static/js/completion_visuals.js:310
+#: src/hope_live/theme/static/js/completion_visuals.js:370
+#: src/hope_live/theme/static/js/completion_visuals.js:403
+#: src/hope_live/theme/static/js/completion_visuals.min.js:1
+msgid "Still opened"
+msgstr "لا يزال مفتوحا"
+
 #: src/hope_live/theme/static/js/completion_visuals.js:532
 #: src/hope_live/theme/static/js/completion_visuals.min.js:1
 #, fuzzy
@@ -47,6 +65,70 @@ msgstr ""
 #| msgid "Reconciled"
 msgid "Reconciled volume"
 msgstr "مسواة"
+
+#: src/hope_live/theme/static/js/completion_visuals.js:542
+#: src/hope_live/theme/static/js/completion_visuals.min.js:1
+msgid "Reconciliation rate (%)"
+msgstr ""
+
+#: src/hope_live/theme/static/js/completion_visuals.js:553
+#: src/hope_live/theme/static/js/completion_visuals.min.js:1
+msgid "Delivery success rate (%)"
+msgstr ""
+
+#: src/hope_live/theme/static/js/completion_visuals.js:657
+#: src/hope_live/theme/static/js/completion_visuals.min.js:1
+msgid "Reconciled amount (USD)"
+msgstr "المبلغ المسوّى (بالدولار الأمريكي)"
+
+#: src/hope_live/theme/static/js/completion_visuals.js:658
+#: src/hope_live/theme/static/js/completion_visuals.min.js:1
+msgid "Still opened amount (USD)"
+msgstr "المبلغ المتبقي مفتوحاً (بالدولار الأمريكي)"
+
+#: src/hope_live/theme/static/js/completion_visuals.js:659
+#: src/hope_live/theme/static/js/completion_visuals.min.js:1
+msgid "Reconciliation timeline (USD)"
+msgstr "الخط الزمني للتسوية (بالدولار الأمريكي)"
+
+#: src/hope_live/theme/static/js/completion_visuals.js:660
+#: src/hope_live/theme/static/js/completion_visuals.min.js:1
+msgid "Reconciliation status by country (USD)"
+msgstr "حالة التسوية حسب البلد (بالدولار الأمريكي)"
+
+#: src/hope_live/theme/static/js/completion_visuals.js:662
+#: src/hope_live/theme/static/js/completion_visuals.min.js:1
+msgid "Reconciled payments"
+msgstr "المدفوعات التوفيقية"
+
+#: src/hope_live/theme/static/js/completion_visuals.js:663
+#: src/hope_live/theme/static/js/completion_visuals.min.js:1
+msgid "Still opened payments"
+msgstr "المدفوعات التي ما زالت مفتوحة"
+
+#: src/hope_live/theme/static/js/completion_visuals.js:664
+#: src/hope_live/theme/static/js/completion_visuals.min.js:1
+msgid "Reconciliation timeline"
+msgstr ""
+
+#: src/hope_live/theme/static/js/completion_visuals.js:665
+#: src/hope_live/theme/static/js/completion_visuals.min.js:1
+msgid "Reconciliation status by country"
+msgstr "حالة المطابقة حسب البلد"
+
+#: src/hope_live/theme/static/js/completion_visuals.js:671
+#: src/hope_live/theme/static/js/completion_visuals.min.js:1
+#: src/hope_live/theme/static/js/dashboard_visuals.js:731
+#: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
+msgid "Cash disbursed by beneficiary group"
+msgstr ""
+
+#: src/hope_live/theme/static/js/completion_visuals.js:672
+#: src/hope_live/theme/static/js/completion_visuals.min.js:1
+#: src/hope_live/theme/static/js/dashboard_visuals.js:732
+#: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
+msgid "Payments by beneficiary group"
+msgstr ""
 
 #: src/hope_live/theme/static/js/dashboard_visuals.js:73
 #: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
@@ -93,6 +175,16 @@ msgstr "الإنفاق"
 msgid "Payments"
 msgstr "المدفوعات"
 
+#: src/hope_live/theme/static/js/dashboard_visuals.js:641
+#: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
+msgid "In pipeline"
+msgstr ""
+
+#: src/hope_live/theme/static/js/dashboard_visuals.js:642
+#: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
+msgid "Delivered"
+msgstr ""
+
 #: src/hope_live/theme/static/js/dashboard_visuals.js:684
 #: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
 #, fuzzy
@@ -100,31 +192,34 @@ msgstr "المدفوعات"
 msgid "Pending in pipeline"
 msgstr "الجدول الزمني للإنفاق"
 
+#: src/hope_live/theme/static/js/dashboard_visuals.js:725
+#: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
+msgid "Spending timeline"
+msgstr ""
+
+#: src/hope_live/theme/static/js/dashboard_visuals.js:726
+#: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
+msgid "Payments timeline"
+msgstr "الخط الزمني للمدفوعات"
+
 #: src/hope_live/theme/static/js/demographic_visuals.js:16
+#: src/hope_live/theme/static/js/demographic_visuals.js:463
 #: src/hope_live/theme/static/js/demographic_visuals.min.js:1
-#, fuzzy
-#| msgid "Individuals Reached"
 msgid "Individuals reached"
 msgstr "الأفراد الذين تم الوصول إليهم"
 
 #: src/hope_live/theme/static/js/demographic_visuals.js:17
 #: src/hope_live/theme/static/js/demographic_visuals.min.js:1
-#, fuzzy
-#| msgid "Households Reached"
 msgid "Households reached"
 msgstr "وصلت الأسر"
 
 #: src/hope_live/theme/static/js/demographic_visuals.js:18
 #: src/hope_live/theme/static/js/demographic_visuals.min.js:1
-#, fuzzy
-#| msgid "Children Reached"
 msgid "Children reached"
 msgstr "وصل الأطفال"
 
 #: src/hope_live/theme/static/js/demographic_visuals.js:19
 #: src/hope_live/theme/static/js/demographic_visuals.min.js:1
-#, fuzzy
-#| msgid "PWD Reached"
 msgid "PWD reached"
 msgstr "الأشخاص ذوو الإعاقة الذين تم الوصول إليهم"
 
@@ -144,6 +239,41 @@ msgstr ""
 #: src/hope_live/theme/static/js/demographic_visuals.min.js:1
 msgid "Country share of"
 msgstr ""
+
+#: src/hope_live/theme/static/js/demographic_visuals.js:430
+#: src/hope_live/theme/static/js/demographic_visuals.min.js:1
+msgid "Individuals reached by beneficiary group"
+msgstr ""
+
+#: src/hope_live/theme/static/js/demographic_visuals.js:431
+#: src/hope_live/theme/static/js/demographic_visuals.min.js:1
+msgid "Households reached by beneficiary group"
+msgstr ""
+
+#: src/hope_live/theme/static/js/demographic_visuals.js:432
+#: src/hope_live/theme/static/js/demographic_visuals.min.js:1
+msgid "Children reached by beneficiary group"
+msgstr ""
+
+#: src/hope_live/theme/static/js/demographic_visuals.js:433
+#: src/hope_live/theme/static/js/demographic_visuals.min.js:1
+msgid "PWD reached by beneficiary group"
+msgstr ""
+
+#: src/hope_live/theme/static/js/demographic_visuals.js:463
+#: src/hope_live/theme/static/js/demographic_visuals.min.js:1
+msgid "Workers reached"
+msgstr ""
+
+#: src/hope_live/theme/static/js/demographic_visuals.js:466
+#: src/hope_live/theme/static/js/demographic_visuals.min.js:1
+msgid "Workers"
+msgstr ""
+
+#: src/hope_live/theme/static/js/demographic_visuals.js:466
+#: src/hope_live/theme/static/js/demographic_visuals.min.js:1
+msgid "Individuals"
+msgstr "الأفراد"
 
 #: src/hope_live/theme/static/js/grievance_visuals.js:6
 #: src/hope_live/theme/static/js/grievance_visuals.min.js:1
@@ -171,6 +301,10 @@ msgid "For Approval"
 msgstr "للموافقة"
 
 #: src/hope_live/theme/static/js/grievance_visuals.js:11
+#: src/hope_live/theme/static/js/grievance_visuals.js:214
+#: src/hope_live/theme/static/js/grievance_visuals.js:233
+#: src/hope_live/theme/static/js/grievance_visuals.js:454
+#: src/hope_live/theme/static/js/grievance_visuals.js:471
 #: src/hope_live/theme/static/js/grievance_visuals.min.js:1
 msgid "Closed"
 msgstr "مغلق"
@@ -384,6 +518,14 @@ msgstr "تحديث المفوض"
 msgid "tickets"
 msgstr "تذاكر"
 
+#: src/hope_live/theme/static/js/grievance_visuals.js:214
+#: src/hope_live/theme/static/js/grievance_visuals.js:248
+#: src/hope_live/theme/static/js/grievance_visuals.js:454
+#: src/hope_live/theme/static/js/grievance_visuals.js:479
+#: src/hope_live/theme/static/js/grievance_visuals.min.js:1
+msgid "Open & Active"
+msgstr "مفتوحة ونشطة"
+
 #: src/hope_live/theme/static/js/risk_visuals.js:6
 #: src/hope_live/theme/static/js/risk_visuals.min.js:1
 msgid "Critical"
@@ -552,102 +694,6 @@ msgstr ""
 #: src/hope_live/theme/static/js/risk_visuals.js:502
 #: src/hope_live/theme/static/js/risk_visuals.min.js:1
 msgid "All programmes"
-msgstr ""
-
-msgid "Individuals"
-msgstr "الأفراد"
-
-msgid "Open & Active"
-msgstr "مفتوحة ونشطة"
-
-#, fuzzy
-#| msgid "Still Opened"
-msgid "Still opened"
-msgstr "لا يزال مفتوحا"
-
-#, fuzzy
-#| msgid "Reconciled Amount (USD)"
-msgid "Reconciled amount (USD)"
-msgstr "المبلغ المسوّى (بالدولار الأمريكي)"
-
-#, fuzzy
-#| msgid "Still Opened Amount (USD)"
-msgid "Still opened amount (USD)"
-msgstr "المبلغ المتبقي مفتوحاً (بالدولار الأمريكي)"
-
-#, fuzzy
-#| msgid "Reconciliation Timeline (USD)"
-msgid "Reconciliation timeline (USD)"
-msgstr "الخط الزمني للتسوية (بالدولار الأمريكي)"
-
-#, fuzzy
-#| msgid "Reconciliation Status by Country (USD)"
-msgid "Reconciliation status by country (USD)"
-msgstr "حالة التسوية حسب البلد (بالدولار الأمريكي)"
-
-#, fuzzy
-#| msgid "Reconciled Payments"
-msgid "Reconciled payments"
-msgstr "المدفوعات التوفيقية"
-
-#, fuzzy
-#| msgid "Still Opened Payments"
-msgid "Still opened payments"
-msgstr "المدفوعات التي ما زالت مفتوحة"
-
-#, fuzzy
-#| msgid "Reconciliation Status by Country"
-msgid "Reconciliation status by country"
-msgstr "حالة المطابقة حسب البلد"
-
-#, fuzzy
-#| msgid "Payments Timeline"
-msgid "Payments timeline"
-msgstr "الخط الزمني للمدفوعات"
-
-msgid "Cash disbursed by beneficiary group"
-msgstr ""
-
-msgid "Children reached by beneficiary group"
-msgstr ""
-
-msgid "Delivered"
-msgstr ""
-
-msgid "Delivery success rate (%)"
-msgstr ""
-
-msgid "Households reached by beneficiary group"
-msgstr ""
-
-msgid "In pipeline"
-msgstr ""
-
-msgid "Individuals reached by beneficiary group"
-msgstr ""
-
-msgid "PWD reached by beneficiary group"
-msgstr ""
-
-msgid "Payments by beneficiary group"
-msgstr ""
-
-msgid "Reconciled"
-msgstr ""
-
-msgid "Reconciliation rate (%)"
-msgstr ""
-
-msgid "Reconciliation timeline"
-msgstr ""
-
-msgid "Spending timeline"
-msgstr ""
-
-msgid "Workers"
-msgstr ""
-
-msgid "Workers reached"
 msgstr ""
 
 #~ msgid "Quantity"
