@@ -279,7 +279,6 @@ def test_financial_dashboard_loads(browser, financial_aggregates):
     browser.wait_for_element_visible("#program-chart canvas")
     browser.wait_for_element_visible("#fsp-chart canvas")
     browser.wait_for_element_visible("#beneficiary-group-chart canvas")
-    browser.wait_for_element_visible("#total-qty-distributed")
 
     # Assert current year totals (default "This Year" preset)
     browser.assert_text("25", "#total-payments")
@@ -352,8 +351,8 @@ def test_grievance_dashboard_loads(browser, grievance_aggregates, grievance_stat
     browser.wait_for_text_visible("Status")
     browser.wait_for_text_visible("Priority")
     browser.wait_for_text_visible("Category")
-    browser.wait_for_text_visible("Issue Type")
-    browser.wait_for_text_visible("Ticket Status by Country")
+    browser.wait_for_text_visible("Issue type")
+    browser.wait_for_text_visible("Ticket status by country")
     browser.wait_for_element_visible("#grievance-status-chart canvas")
     browser.wait_for_element_visible("#grievance-priority-chart canvas")
     browser.wait_for_element_visible("#grievance-category-chart canvas")

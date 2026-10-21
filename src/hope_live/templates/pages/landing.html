@@ -1,5 +1,5 @@
 {% extends "layout.html" %}
-{% load i18n static %}
+{% load i18n js static %}
 
 {% block content %}
 <!-- 1. Hero Section -->
@@ -469,7 +469,7 @@
 
 {% block extra_js %}
 <script src="{% static 'js/echarts.min.js' %}"></script>
-<script src="{% static 'js/macarons.js' %}"></script>
+<script src="{% static_js 'js/macarons.js' %}"></script>
 <script>
     document.addEventListener('DOMContentLoaded', async function () {
         // --- 1. Trends over time Chart ---
@@ -544,7 +544,7 @@
         try {
             // Load map geojson and aggregates in parallel
             const [mapRes, finRes, demoRes] = await Promise.all([
-                fetch('https://cdn.jsdelivr.net/npm/echarts@4.9.0/map/json/world.json'),
+                fetch("{% static 'data/world.json' %}"),
                 fetch("{% url 'analysis_api:daily-aggregates-list' %}?dashboard=financial"),
                 fetch("{% url 'analysis_api:daily-aggregates-list' %}?dashboard=demographic&time_grain=monthly")
             ]);
