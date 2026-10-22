@@ -47,7 +47,7 @@ dependencies = [
   "django-unfold",
   "django-widget-tweaks",
   "drf-spectacular>=0.29",
-  "psycopg2-binary>=2.9.10",
+  "psycopg[binary]>=3.2",
   "redis",
   "sentry-sdk",
   "social-auth-app-django",

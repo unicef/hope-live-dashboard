@@ -321,7 +321,6 @@ def test_financial_dashboard_loads(browser, financial_aggregates):
     browser.wait_for_element_visible("#program-chart canvas")
     browser.wait_for_element_visible("#fsp-chart canvas")
     browser.wait_for_element_visible("#beneficiary-group-chart canvas")
-    browser.wait_for_element_visible("#total-qty-distributed")
 
     # Assert current year totals (default "This Year" preset)
     browser.assert_text("25", "#total-payments")
@@ -394,8 +393,8 @@ def test_grievance_dashboard_loads(browser, grievance_aggregates, grievance_stat
     browser.wait_for_text_visible("Status")
     browser.wait_for_text_visible("Priority")
     browser.wait_for_text_visible("Category")
-    browser.wait_for_text_visible("Issue Type")
-    browser.wait_for_text_visible("Ticket Status by Country")
+    browser.wait_for_text_visible("Issue type")
+    browser.wait_for_text_visible("Ticket status by country")
     browser.wait_for_element_visible("#grievance-status-chart canvas")
     browser.wait_for_element_visible("#grievance-priority-chart canvas")
     browser.wait_for_element_visible("#grievance-category-chart canvas")
@@ -424,15 +423,13 @@ def test_financial_dashboard_cohort_toggle_and_pipeline(browser, financial_aggre
     # All cohorts: standard (25) plus social-worker (14) sector rows
     browser.wait_for_text_visible("39", "#total-payments")
 
-    # Social-worker cohort narrows the totals and relabels the quantity card
+    # Social-worker cohort narrows the totals (and the pipeline funnel follows it)
     browser.click('.cohort-tab[data-cohort="SOCIAL"]')
     browser.wait_for_text_visible("14", "#total-payments")
-    browser.assert_text("WORKERS PAID", "#qty-card-title")
 
     # Back to all cohorts
     browser.click('.cohort-tab[data-cohort="ALL"]')
     browser.wait_for_text_visible("39", "#total-payments")
-    browser.assert_text("TOTAL QUANTITY DISTRIBUTED", "#qty-card-title")
 
 
 def test_demographic_dashboard_cohort_toggle(browser, demographic_aggregates, financial_aggregates):
@@ -447,15 +444,14 @@ def test_demographic_dashboard_cohort_toggle(browser, demographic_aggregates, fi
     browser.assert_element_not_visible("#card-children")
     browser.assert_element_not_visible("#card-pwd")
     browser.assert_text("Workers", "#btn-individuals")
-    # Card titles are CSS-uppercased, so Selenium reads them in caps
-    browser.assert_text("WORKERS REACHED", "#individuals-card-title")
+    browser.assert_text("Workers reached", "#individuals-card-title")
 
     browser.click('.cohort-tab[data-cohort="ALL"]')
     browser.assert_element_visible("#card-households")
     browser.assert_element_visible("#card-children")
     browser.assert_element_visible("#card-pwd")
     browser.assert_text("Individuals", "#btn-individuals")
-    browser.assert_text("INDIVIDUALS REACHED", "#individuals-card-title")
+    browser.assert_text("Individuals reached", "#individuals-card-title")
 
 
 def test_completion_quality_quadrant_loads(browser, completion_aggregates, financial_aggregates):

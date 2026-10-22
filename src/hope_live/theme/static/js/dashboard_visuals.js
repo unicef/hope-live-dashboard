@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const timeFilterContainer = document.getElementById('time-filter-container');
     if (!timeFilterContainer) return;
 
-    let currentMetric = 'usd'; // Default metric: usd. Can be 'usd', 'qty', or 'payments'
+    let currentMetric = 'usd'; // Default metric: usd. Can be 'usd' or 'payments'
     let activeCohort = 'ALL'; // Programme cohort filter: 'ALL', 'STANDARD' or 'SOCIAL'
     let reconciliationRows = []; // Completion-dataset rows used for the reconciliation rate
 
@@ -35,7 +35,7 @@ document.addEventListener('DOMContentLoaded', function () {
         if (!name) return '#5470c6';
         let hash = 0;
         for (let i = 0; i < name.length; i++) {
-            hash = name.charCodeAt(i) + ((hash << 5) - hash);
+            hash = name.charCodeAt(i) + (Math.imul(hash, 32) - hash); // == ((hash << 5) - hash); avoids a shift, which breaks gettext extraction
         }
         const index = Math.abs(hash) % colorPalette.length;
         return colorPalette[index];
@@ -256,11 +256,6 @@ document.addEventListener('DOMContentLoaded', function () {
             (d.dimension_type === 'status' && successfulList.includes(String(d.dimension_value).toUpperCase())) ? d.total_usd : 0
         ).value();
 
-        // Total Quantity: Sum from active dimension rows
-        const totalQty = ndx.groupAll().reduceSum(d =>
-            d.dimension_type === activeDimType ? d.total_qty : 0
-        ).value();
-
         // Outstanding: Sum only the Status rows matching pending statuses
         const totalOutstanding = ndx.groupAll().reduceSum(d =>
             (d.dimension_type === 'status' && pendingList.includes(String(d.dimension_value).toUpperCase())) ? d.total_usd : 0
@@ -271,9 +266,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
         const paidEl = document.getElementById('total-amount-paid');
         if (paidEl) paidEl.textContent = '$' + d3.format(',.0f')(totalPaid);
-
-        const qtyEl = document.getElementById('total-qty-distributed');
-        if (qtyEl) qtyEl.textContent = d3.format(',.0f')(totalQty);
 
         const outEl = document.getElementById('outstanding-payments');
         if (outEl) outEl.textContent = '$' + d3.format(',.0f')(totalOutstanding);
@@ -296,7 +288,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 return [d.key.getTime(), valObj[currentMetric]];
             });
 
-        const metricName = currentMetric === 'usd' ? gettext('Spending') : (currentMetric === 'qty' ? gettext('Quantity') : gettext('Payments'));
+        const metricName = currentMetric === 'usd' ? gettext('Spending') : gettext('Payments');
         const timelineOption = {
             tooltip: {
                 trigger: 'axis',
@@ -310,7 +302,7 @@ document.addEventListener('DOMContentLoaded', function () {
             grid: { top: 15, bottom: 25, left: 60, right: 20 },
             xAxis: {
                 type: 'time',
-                axisLabel: { color: '#64748b' }
+                axisLabel: { color: '#64748b', formatter: value => d3.timeFormat('%b')(new Date(value)) }
             },
             yAxis: {
                 type: 'value',
@@ -355,14 +347,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
             const hasAnySelection = activeFiltersSet.size > 0;
             const seriesData = rawData.map(d => {
-                const stableColor = getStableColor(d.key);
                 return {
                     name: d.key,
                     value: d.value,
                     itemStyle: {
                         color: activeFiltersSet.has(d.key)
-                            ? stableColor
-                            : (hasAnySelection ? '#cbd5e1' : stableColor)
+                            ? getStableColor(d.key)
+                            : (hasAnySelection ? '#cbd5e1' : getStableColor(d.key))
                     }
                 };
             });
@@ -540,12 +531,11 @@ document.addEventListener('DOMContentLoaded', function () {
             series: [{
                 type: 'bar',
                 data: regionData.map(d => {
-                    const stableColor = getStableColor(d.key);
                     return {
                         name: d.key,
                         value: d.value,
                         itemStyle: {
-                            color: selectedRegions.has(d.key) ? stableColor : (hasAnyRegionSelection ? '#cbd5e1' : stableColor)
+                            color: selectedRegions.has(d.key) ? getStableColor(d.key) : (hasAnyRegionSelection ? '#cbd5e1' : getStableColor(d.key))
                         }
                     };
                 }),
@@ -732,9 +722,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
             const timelineTitle = document.getElementById('timeline-title');
             if (timelineTitle) {
-                if (currentMetric === 'usd') timelineTitle.textContent = gettext('Spending Timeline');
-                else if (currentMetric === 'qty') timelineTitle.textContent = gettext('Quantity Distribution Timeline');
-                else timelineTitle.textContent = gettext('Payments Timeline');
+                if (currentMetric === 'usd') timelineTitle.textContent = gettext('Spending timeline');
+                else timelineTitle.textContent = gettext('Payments timeline');
+            }
+
+            const bgTitle = document.getElementById('bg-title');
+            if (bgTitle) {
+                if (currentMetric === 'usd') bgTitle.textContent = gettext('Cash disbursed by beneficiary group');
+                else bgTitle.textContent = gettext('Payments by beneficiary group');
             }
 
             updateAll();
@@ -743,14 +738,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Cohort tab selection (All / Standard / Social workers)
     const cohortTabs = document.querySelectorAll('.cohort-tab');
-
-    function applyCohortLabels() {
-        const isSocial = activeCohort === 'SOCIAL';
-        const qtyTitle = document.getElementById('qty-card-title');
-        if (qtyTitle) qtyTitle.textContent = isSocial ? gettext('Workers Paid') : gettext('Total Quantity Distributed');
-        const qtyTab = document.getElementById('btn-qty');
-        if (qtyTab) qtyTab.textContent = isSocial ? gettext('Workers') : gettext('Quantity (QTY)');
-    }
 
     cohortTabs.forEach(btn => {
         btn.addEventListener('click', function () {
@@ -761,7 +748,6 @@ document.addEventListener('DOMContentLoaded', function () {
             this.classList.add('bg-white', 'shadow', 'text-blue-800');
             this.classList.remove('text-gray-600');
             activeCohort = this.dataset.cohort || 'ALL';
-            applyCohortLabels();
             applyCohortFilter();
             updateAll();
         });
