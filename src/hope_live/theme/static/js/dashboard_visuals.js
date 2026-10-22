@@ -3,6 +3,8 @@ document.addEventListener('DOMContentLoaded', function () {
     if (!timeFilterContainer) return;
 
     let currentMetric = 'usd'; // Default metric: usd. Can be 'usd' or 'payments'
+    let activeCohort = 'ALL'; // Programme cohort filter: 'ALL', 'STANDARD' or 'SOCIAL'
+    let reconciliationRows = []; // Completion-dataset rows used for the reconciliation rate
 
     const formatMetric = (val, metric = currentMetric) => {
         if (metric === 'usd') {
@@ -33,7 +35,7 @@ document.addEventListener('DOMContentLoaded', function () {
         if (!name) return '#5470c6';
         let hash = 0;
         for (let i = 0; i < name.length; i++) {
-            hash = name.charCodeAt(i) + ((hash << 5) - hash);
+            hash = name.charCodeAt(i) + (Math.imul(hash, 32) - hash); // == ((hash << 5) - hash); avoids a shift, which breaks gettext extraction
         }
         const index = Math.abs(hash) % colorPalette.length;
         return colorPalette[index];
@@ -94,8 +96,17 @@ document.addEventListener('DOMContentLoaded', function () {
     const statusDimension = ndx.dimension(d => d.dimension_type === 'status' ? d.dimension_value : '');
     const countryDimension = ndx.dimension(d => d.country_slug);
     const beneficiaryGroupDimension = ndx.dimension(d => d.dimension_type === 'beneficiary_group' ? d.dimension_value : '');
+    const programTypeDimension = ndx.dimension(d => d.program_type || 'STANDARD');
 
     const primaryDimFilter = d => d.dimension_type === 'sector';
+
+    function applyCohortFilter() {
+        if (activeCohort === 'ALL') {
+            programTypeDimension.filterAll();
+        } else {
+            programTypeDimension.filterFunction(d => d === activeCohort);
+        }
+    }
 
     // Multi-metric custom reduction helper
     function reduceMetric(dimType) {
@@ -166,6 +177,27 @@ document.addEventListener('DOMContentLoaded', function () {
     const regionGroup = regionDimension.group().reduce(reduceMetric().add, reduceMetric().remove, reduceMetric().init);
     const beneficiaryGroupGroup = beneficiaryGroupDimension.group().reduce(reduceMetric('beneficiary_group').add, reduceMetric('beneficiary_group').remove, reduceMetric('beneficiary_group').init);
 
+    // Status breakdown used by the payment pipeline funnel (respects the active drill filters)
+    const statusFunnelGroup = statusDimension.group().reduce(
+        (p, v) => {
+            if (v.dimension_type === 'status') {
+                p.usd += +v.total_usd;
+                p.qty += +v.total_qty || 0;
+                p.payments += +v.payment_count;
+            }
+            return p;
+        },
+        (p, v) => {
+            if (v.dimension_type === 'status') {
+                p.usd -= +v.total_usd;
+                p.qty -= +v.total_qty || 0;
+                p.payments -= +v.payment_count;
+            }
+            return p;
+        },
+        () => ({ usd: 0, qty: 0, payments: 0 })
+    );
+
     // Active filters
     const selectedSectors = new Set();
     const selectedPrograms = new Set();
@@ -184,6 +216,8 @@ document.addEventListener('DOMContentLoaded', function () {
     const regionChart = echarts.init(document.getElementById('region-chart'), 'macarons');
     const countryChart = echarts.init(document.getElementById('country-chart'), 'macarons');
     const beneficiaryGroupChart = echarts.init(document.getElementById('beneficiary-group-chart'), 'macarons');
+    const pipelineEl = document.getElementById('pipeline-funnel-chart');
+    const pipelineChart = pipelineEl ? echarts.init(pipelineEl, 'macarons') : null;
 
     // Resize Handler
     window.addEventListener('resize', function () {
@@ -195,6 +229,7 @@ document.addEventListener('DOMContentLoaded', function () {
         regionChart.resize();
         countryChart.resize();
         beneficiaryGroupChart.resize();
+        if (pipelineChart) pipelineChart.resize();
     });
 
     const pendingList = ["SENT TO PAYMENT GATEWAY", "SENT TO FSP", "PENDING"];
@@ -576,6 +611,78 @@ document.addEventListener('DOMContentLoaded', function () {
                 data: countrySeriesData
             }]
         }, { notMerge: true });
+
+        updatePipeline();
+    }
+
+    // Payment pipeline funnel: financial status buckets plus the reconciliation rate
+    function updatePipeline() {
+        if (!pipelineChart) return;
+
+        const total = { usd: 0, qty: 0, payments: 0 };
+        const pending = { usd: 0, qty: 0, payments: 0 };
+        const delivered = { usd: 0, qty: 0, payments: 0 };
+
+        statusFunnelGroup.all().forEach(d => {
+            if (d.key === '' || d.key === null) return;
+            const key = String(d.key).toUpperCase();
+            ['usd', 'qty', 'payments'].forEach(f => {
+                total[f] += d.value[f];
+                if (pendingList.includes(key)) pending[f] += d.value[f];
+                else if (successfulList.includes(key)) delivered[f] += d.value[f];
+            });
+        });
+
+        const field = currentMetric;
+        const rates = getReconciliationRate();
+        const rate = rates[field] !== undefined ? rates[field] : rates.payments;
+
+        const stages = [
+            { name: gettext('In pipeline'), value: total[field], color: '#5ab1ef' },
+            { name: gettext('Delivered'), value: delivered[field], color: '#2ec7c9' },
+            { name: gettext('Reconciled'), value: Math.round(delivered[field] * rate * 100) / 100, color: '#97b552' }
+        ];
+
+        pipelineChart.setOption({
+            tooltip: {
+                trigger: 'item',
+                formatter: params => `${params.name}: <b>${formatFullVal(params.value)}</b>`
+            },
+            series: [{
+                type: 'funnel',
+                left: '4%',
+                right: '4%',
+                top: 10,
+                bottom: 10,
+                minSize: '25%',
+                sort: 'descending',
+                gap: 3,
+                label: {
+                    show: true,
+                    position: 'inside',
+                    formatter: params => `${params.name}  •  ${formatMetric(params.value)}`,
+                    color: '#ffffff',
+                    fontWeight: 600,
+                    fontSize: 12,
+                    textBorderColor: 'rgba(15, 23, 42, 0.35)',
+                    textBorderWidth: 2
+                },
+                itemStyle: { borderColor: '#ffffff', borderWidth: 2 },
+                emphasis: { label: { fontSize: 14 } },
+                data: stages.map(s => ({
+                    name: s.name,
+                    value: s.value,
+                    itemStyle: { color: s.color }
+                }))
+            }]
+        }, { notMerge: true });
+
+        const noteEl = document.getElementById('pipeline-note');
+        if (noteEl) {
+            const totalValue = total[field];
+            const pendingPct = totalValue > 0 ? ((pending[field] / totalValue) * 100).toFixed(0) : '0';
+            noteEl.textContent = `${gettext('Pending in pipeline')}: ${formatFullVal(pending[field])} (${pendingPct}%)`;
+        }
     }
 
     // --- Interactive Filters Bindings ---
@@ -629,6 +736,72 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
+    // Cohort tab selection (All / Standard / Social workers)
+    const cohortTabs = document.querySelectorAll('.cohort-tab');
+
+    cohortTabs.forEach(btn => {
+        btn.addEventListener('click', function () {
+            cohortTabs.forEach(b => {
+                b.classList.remove('bg-white', 'shadow', 'text-blue-800');
+                b.classList.add('text-gray-600');
+            });
+            this.classList.add('bg-white', 'shadow', 'text-blue-800');
+            this.classList.remove('text-gray-600');
+            activeCohort = this.dataset.cohort || 'ALL';
+            applyCohortFilter();
+            updateAll();
+        });
+    });
+
+    // Reconciliation share, computed from the completion dataset for the active cohort
+    function getReconciliationRate() {
+        let reconciledPayments = 0;
+        let reconciledUsd = 0;
+        let totalPayments = 0;
+        let totalUsd = 0;
+
+        reconciliationRows.forEach(r => {
+            if (r.dimension_type !== 'status') return;
+            if (activeCohort !== 'ALL' && (r.program_type || 'STANDARD') !== activeCohort) return;
+            const key = String(r.dimension_value || '').toUpperCase();
+            if (key.includes('RECONCILED') || key.includes('PAID')) {
+                reconciledPayments += +r.payment_count || 0;
+                reconciledUsd += +r.total_usd || 0;
+            }
+            totalPayments += +r.payment_count || 0;
+            totalUsd += +r.total_usd || 0;
+        });
+
+        return {
+            payments: totalPayments > 0 ? reconciledPayments / totalPayments : 0,
+            usd: totalUsd > 0 ? reconciledUsd / totalUsd : 0
+        };
+    }
+
+    async function loadReconciliation(from, to) {
+        try {
+            const url = `${window.DASHBOARD_CONFIG.endpoint}?date_from=${from}&date_to=${to}&dashboard=completion`;
+            const response = await fetch(url, {
+                credentials: 'same-origin',
+                headers: {
+                    'Accept': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            });
+            if (!response.ok) return;
+
+            const rows = await response.json();
+            rows.forEach(r => {
+                r.program_type = r.program_type || 'STANDARD';
+                r.payment_count = +r.payment_count || 0;
+                r.total_usd = +r.total_usd || 0;
+            });
+            reconciliationRows = rows;
+        } catch (error) {
+            console.error('Error loading reconciliation data:', error);
+        }
+    }
+
     // --- Load Data ---
     async function loadRange(startDate, endDate) {
         try {
@@ -666,6 +839,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 d.total_usd = +d.total_usd;
                 d.total_qty = +d.total_qty || 0;
                 d.payment_count = +d.payment_count;
+                d.program_type = d.program_type || 'STANDARD';
                 d.region = countryToRegion[d.country_slug] || '';
             });
 
@@ -689,6 +863,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
             ndx.remove();
             ndx.add(data);
+            applyCohortFilter();
+
+            await loadReconciliation(from, to);
 
             timeFilter.setBuffer(startDate, endDate);
             updateAll();

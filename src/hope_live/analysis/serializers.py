@@ -12,6 +12,7 @@ class FinancialAggregateSerializer(serializers.ModelSerializer):  # type: ignore
             "country_slug",
             "dimension_type",
             "dimension_value",
+            "program_type",
             "total_usd",
             "total_qty",
             "payment_count",
@@ -27,6 +28,7 @@ class DemographicAggregateSerializer(serializers.ModelSerializer):  # type: igno
             "country_slug",
             "dimension_type",
             "dimension_value",
+            "program_type",
             "total_beneficiaries",
             "total_children",
             "total_pwd",
@@ -43,6 +45,7 @@ class CompletionAggregateSerializer(serializers.ModelSerializer):  # type: ignor
             "country_slug",
             "dimension_type",
             "dimension_value",
+            "program_type",
             "payment_count",
             "total_usd",
         ]
@@ -57,6 +60,7 @@ class GrievanceAggregateSerializer(serializers.ModelSerializer):  # type: ignore
             "country_slug",
             "dimension_type",
             "dimension_value",
+            "program_type",
             "ticket_count",
         ]
 
@@ -70,6 +74,7 @@ class RiskAggregateSerializer(serializers.ModelSerializer):  # type: ignore[misc
             "country_slug",
             "dimension_type",
             "dimension_value",
+            "program_type",
             "module",
             "risk_code",
             "risk_name",

@@ -6,6 +6,7 @@ from hope_live.analysis.models import (
     CompletionAggregate,
     DemographicAggregate,
     FinancialAggregate,
+    ProgramType,
     TimeGrain,
 )
 from hope_live.web.views import AboutView, ContactView, IndexView, format_large_number
@@ -38,6 +39,43 @@ def test_index_view(user_factory):
     response = view(request)
 
     assert response.status_code == 200
+
+
+@pytest.mark.django_db
+def test_index_view_social_workers_legacy_dimension_fallback(user_factory):
+    """Before the feed emits `program_type` as a column, the cohort lived in its own dimension."""
+    DemographicAggregate.objects.create(
+        date="2022-01-01",
+        time_grain=TimeGrain.MONTHLY,
+        country_slug="south-sudan",
+        dimension_type="program_type",
+        dimension_value="SOCIAL",
+        total_beneficiaries=8_284,
+        total_households=8_284,
+    )
+
+    user = user_factory()
+    request = RequestFactory().get("/")
+    request.user = user
+
+    view = IndexView()
+    view.setup(request)
+    context = view.get_context_data()
+
+    assert context["total_social_workers"] == "8.3K"
+
+
+@pytest.mark.django_db
+def test_index_view_social_workers_defaults_to_zero(user_factory):
+    user = user_factory()
+    request = RequestFactory().get("/")
+    request.user = user
+
+    view = IndexView()
+    view.setup(request)
+    context = view.get_context_data()
+
+    assert context["total_social_workers"] == "0"
 
 
 def test_format_large_number():
@@ -84,6 +122,20 @@ def test_index_view_dynamic_context(user_factory):
         total_households=10_000,
     )
 
+    # Social-worker programme: one record represents one worker
+    DemographicAggregate.objects.create(
+        date="2026-05-20",
+        time_grain=TimeGrain.DAILY,
+        country_slug="kenya",
+        dimension_type="sector",
+        dimension_value="protection",
+        total_beneficiaries=1_200,
+        total_children=0,
+        total_pwd=0,
+        total_households=1_200,
+        program_type=ProgramType.SOCIAL,
+    )
+
     CompletionAggregate.objects.create(
         date="2026-05-20",
         time_grain=TimeGrain.DAILY,
@@ -114,12 +166,24 @@ def test_index_view_dynamic_context(user_factory):
     assert context["total_individuals_reached"] == "50K"  # from sector filter
     assert context["total_children"] == "35K"
     assert context["total_households"] == "10K"
+    # Social workers are reported separately and never counted as households
+    assert context["total_social_workers"] == "1.2K"
     assert context["total_countries"] == 2  # kenya, somalia
     assert context["total_countries_glance"] == 2
     assert context["total_programs_glance"] == 1  # DCT-Somalia
     assert context["total_sources_glance"] == "HOPE Database"
     assert context["latest_data_str"] == "June 2026"
     assert context["verification_success_rate"] == 80.0
+
+
+@pytest.mark.django_db
+def test_landing_page_shows_social_workers_kpi(client, user_factory):
+    response = client.get("/")
+
+    assert response.status_code == 200
+    content = response.content.decode("utf-8")
+    assert "Social Workers Reached" in content
+    assert "Frontline workforce assisted" in content
 
 
 @pytest.mark.django_db

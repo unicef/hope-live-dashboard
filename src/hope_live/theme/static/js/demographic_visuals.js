@@ -3,6 +3,7 @@ document.addEventListener('DOMContentLoaded', function () {
     if (!timeFilterContainer) return;
 
     let currentMetric = 'individuals'; // Default metric: individuals. Can be: 'individuals', 'households', 'children', 'pwd'
+    let activeCohort = 'ALL'; // Programme cohort filter: 'ALL', 'STANDARD' or 'SOCIAL'
 
     const fieldMap = {
         individuals: 'beneficiaries',
@@ -29,7 +30,7 @@ document.addEventListener('DOMContentLoaded', function () {
         if (!name) return '#5470c6';
         let hash = 0;
         for (let i = 0; i < name.length; i++) {
-            hash = name.charCodeAt(i) + ((hash << 5) - hash);
+            hash = name.charCodeAt(i) + (Math.imul(hash, 32) - hash); // == ((hash << 5) - hash); avoids a shift, which breaks gettext extraction
         }
         const index = Math.abs(hash) % colorPalette.length;
         return colorPalette[index];
@@ -44,6 +45,15 @@ document.addEventListener('DOMContentLoaded', function () {
     const sectorDimension = ndx.dimension(d => primaryDimFilter(d) ? d.dimension_value : '');
     const countryDimension = ndx.dimension(d => d.country_slug);
     const beneficiaryGroupDimension = ndx.dimension(d => d.dimension_type === 'beneficiary_group' ? d.dimension_value : '');
+    const programTypeDimension = ndx.dimension(d => d.program_type || 'STANDARD');
+
+    function applyCohortFilter() {
+        if (activeCohort === 'ALL') {
+            programTypeDimension.filterAll();
+        } else {
+            programTypeDimension.filterFunction(d => d === activeCohort);
+        }
+    }
 
     // Multi-metric custom reduction helper
     function reduceDemographics(dimType) {
@@ -391,36 +401,91 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Metric Toggle Tab Selection
     const metricTabs = document.querySelectorAll('.metric-tab');
+
+    function setActiveMetricTab(metric) {
+        metricTabs.forEach(b => {
+            b.classList.remove('bg-white', 'shadow', 'text-blue-800', 'active-metric');
+            b.classList.add('text-gray-600');
+        });
+        const tab = document.getElementById(`btn-${metric}`);
+        if (tab) {
+            tab.classList.add('bg-white', 'shadow', 'text-blue-800', 'active-metric');
+            tab.classList.remove('text-gray-600');
+        }
+    }
+
+    function refreshMetricTitles() {
+        const activeLabel = labelMap[currentMetric];
+
+        const timelineTitle = document.getElementById('timeline-title');
+        if (timelineTitle) timelineTitle.textContent = `${activeLabel} ${gettext('Timeline')}`;
+
+        const sectorShareTitle = document.getElementById('sector-share-title');
+        if (sectorShareTitle) sectorShareTitle.textContent = `${gettext('Sector share of')} ${activeLabel}`;
+
+        const countryShareTitle = document.getElementById('country-share-title');
+        if (countryShareTitle) countryShareTitle.textContent = `${gettext('Country share of')} ${activeLabel}`;
+
+        const bgTitleMap = {
+            individuals: gettext('Individuals reached by beneficiary group'),
+            households: gettext('Households reached by beneficiary group'),
+            children: gettext('Children reached by beneficiary group'),
+            pwd: gettext('PWD reached by beneficiary group')
+        };
+        const bgTitle = document.getElementById('bg-title');
+        if (bgTitle) bgTitle.textContent = bgTitleMap[currentMetric];
+    }
+
     metricTabs.forEach(btn => {
         btn.addEventListener('click', function() {
-            metricTabs.forEach(b => {
-                b.classList.remove('bg-white', 'shadow', 'text-blue-800', 'active-metric');
+            currentMetric = this.dataset.metric;
+            setActiveMetricTab(currentMetric);
+            refreshMetricTitles();
+            updateAll();
+        });
+    });
+
+    // Cohort tab selection (All / Standard / Social workers)
+    const cohortTabs = document.querySelectorAll('.cohort-tab');
+    // Household-level demographics are not collected for social-worker programmes.
+    const SOCIAL_HIDDEN_METRICS = ['households', 'children', 'pwd'];
+
+    function applyCohortUI() {
+        const isSocial = activeCohort === 'SOCIAL';
+
+        SOCIAL_HIDDEN_METRICS.forEach(metric => {
+            const btn = document.getElementById(`btn-${metric}`);
+            if (btn) btn.style.display = isSocial ? 'none' : '';
+            const card = document.getElementById(`card-${metric}`);
+            if (card) card.style.display = isSocial ? 'none' : '';
+        });
+
+        labelMap.individuals = isSocial ? gettext('Workers reached') : gettext('Individuals reached');
+
+        const individualsTab = document.getElementById('btn-individuals');
+        if (individualsTab) individualsTab.textContent = isSocial ? gettext('Workers') : gettext('Individuals');
+
+        const cardTitle = document.getElementById('individuals-card-title');
+        if (cardTitle) cardTitle.textContent = labelMap.individuals;
+
+        if (isSocial && SOCIAL_HIDDEN_METRICS.includes(currentMetric)) {
+            currentMetric = 'individuals';
+            setActiveMetricTab(currentMetric);
+        }
+        refreshMetricTitles();
+    }
+
+    cohortTabs.forEach(btn => {
+        btn.addEventListener('click', function () {
+            cohortTabs.forEach(b => {
+                b.classList.remove('bg-white', 'shadow', 'text-blue-800');
                 b.classList.add('text-gray-600');
             });
-            this.classList.add('bg-white', 'shadow', 'text-blue-800', 'active-metric');
+            this.classList.add('bg-white', 'shadow', 'text-blue-800');
             this.classList.remove('text-gray-600');
-            currentMetric = this.dataset.metric;
-
-            const activeLabel = labelMap[currentMetric];
-
-            const timelineTitle = document.getElementById('timeline-title');
-            if (timelineTitle) timelineTitle.textContent = `${activeLabel} ${gettext('Timeline')}`;
-
-            const sectorShareTitle = document.getElementById('sector-share-title');
-            if (sectorShareTitle) sectorShareTitle.textContent = `${gettext('Sector share of')} ${activeLabel}`;
-
-            const countryShareTitle = document.getElementById('country-share-title');
-            if (countryShareTitle) countryShareTitle.textContent = `${gettext('Country share of')} ${activeLabel}`;
-
-            const bgTitleMap = {
-                individuals: gettext('Individuals reached by beneficiary group'),
-                households: gettext('Households reached by beneficiary group'),
-                children: gettext('Children reached by beneficiary group'),
-                pwd: gettext('PWD reached by beneficiary group')
-            };
-            const bgTitle = document.getElementById('bg-title');
-            if (bgTitle) bgTitle.textContent = bgTitleMap[currentMetric];
-
+            activeCohort = this.dataset.cohort || 'ALL';
+            applyCohortFilter();
+            applyCohortUI();
             updateAll();
         });
     });
@@ -456,6 +521,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 d.total_children = +d.total_children;
                 d.total_pwd = +d.total_pwd;
                 d.total_households = +d.total_households || 0;
+                d.program_type = d.program_type || 'STANDARD';
             });
 
             // Clean existing state and filters (clear filters FIRST, then remove old data)
@@ -469,6 +535,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             ndx.remove();
             ndx.add(data);
+            applyCohortFilter();
 
             timeFilter.setBuffer(startDate, endDate);
             updateAll();

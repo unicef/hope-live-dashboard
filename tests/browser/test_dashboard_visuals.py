@@ -12,6 +12,20 @@ from tests.extras.testutils.factories.analysis import (
 pytestmark = [pytest.mark.selenium, pytest.mark.django_db]
 
 
+@pytest.fixture(autouse=True)
+def clear_aggregate_api_cache():
+    """The aggregates API is `cache_page`-cached in Redis for six hours.
+
+    Each dashboard now loads two aggregate feeds (e.g. the financial page also pulls
+    completion data for the pipeline funnel, and completion pulls financial data for the
+    quality quadrant). Without clearing, a test would be served a previous test's cached
+    payload — including empty payloads cached when that test had no rows for the feed.
+    """
+    from django.core.cache import cache
+
+    cache.clear()
+
+
 @pytest.fixture
 def financial_aggregates(db):
     year = datetime.datetime.now().year
@@ -255,6 +269,34 @@ def grievance_status_aggregates(db):
         )
 
 
+@pytest.fixture
+def social_worker_aggregates(db):
+    """Social-worker cohort rows, kept separate so standard-programme totals stay unchanged."""
+    year = datetime.datetime.now().year
+    for i in range(2):
+        FinancialAggregateFactory(
+            date=datetime.date(year, 1, i + 1),
+            time_grain="daily",
+            country_slug="kenya",
+            dimension_type="sector",
+            dimension_value=f"Protection-{i}",
+            total_usd=1000,
+            payment_count=7,
+            program_type="SOCIAL",
+        )
+    for i in range(2):
+        FinancialAggregateFactory(
+            date=datetime.date(year, 1, i + 1),
+            time_grain="daily",
+            country_slug="kenya",
+            dimension_type="status",
+            dimension_value="DISTRIBUTION SUCCESSFUL",
+            total_usd=1000,
+            payment_count=7,
+            program_type="SOCIAL",
+        )
+
+
 def _apply_custom_range(browser, start: str, end: str) -> None:
     browser.click('button.time-preset-btn[data-preset="custom"]')
     browser.wait_for_element_visible("#custom-range-inputs")
@@ -369,3 +411,52 @@ def test_grievance_dashboard_loads(browser, grievance_aggregates, grievance_stat
 
     # Wait and assert updated previous year totals
     browser.wait_for_text_visible("100", "#total-tickets")
+
+
+def test_financial_dashboard_cohort_toggle_and_pipeline(browser, financial_aggregates, social_worker_aggregates):
+    browser.login_as_user()
+    browser.open("/dashboard/")
+    browser.wait_for_element_visible("#time-filter-container")
+    browser.wait_for_element_visible("#total-payments")
+    browser.wait_for_element_visible("#pipeline-funnel-chart canvas")
+
+    # All cohorts: standard (25) plus social-worker (14) sector rows
+    browser.wait_for_text_visible("39", "#total-payments")
+
+    # Social-worker cohort narrows the totals (and the pipeline funnel follows it)
+    browser.click('.cohort-tab[data-cohort="SOCIAL"]')
+    browser.wait_for_text_visible("14", "#total-payments")
+
+    # Back to all cohorts
+    browser.click('.cohort-tab[data-cohort="ALL"]')
+    browser.wait_for_text_visible("39", "#total-payments")
+
+
+def test_demographic_dashboard_cohort_toggle(browser, demographic_aggregates, financial_aggregates):
+    browser.login_as_user()
+    browser.open("/demographic/")
+    browser.wait_for_element_visible("#time-filter-container")
+    browser.wait_for_element_visible("#total-individuals")
+
+    # Social-worker programmes do not collect household-level demographics
+    browser.click('.cohort-tab[data-cohort="SOCIAL"]')
+    browser.assert_element_not_visible("#card-households")
+    browser.assert_element_not_visible("#card-children")
+    browser.assert_element_not_visible("#card-pwd")
+    browser.assert_text("Workers", "#btn-individuals")
+    browser.assert_text("Workers reached", "#individuals-card-title")
+
+    browser.click('.cohort-tab[data-cohort="ALL"]')
+    browser.assert_element_visible("#card-households")
+    browser.assert_element_visible("#card-children")
+    browser.assert_element_visible("#card-pwd")
+    browser.assert_text("Individuals", "#btn-individuals")
+    browser.assert_text("Individuals reached", "#individuals-card-title")
+
+
+def test_completion_quality_quadrant_loads(browser, completion_aggregates, financial_aggregates):
+    browser.login_as_user()
+    browser.open("/completion/")
+    browser.wait_for_element_visible("#time-filter-container")
+    browser.wait_for_element_visible("#time-focus-chart canvas")
+    browser.wait_for_element_visible("#quality-quadrant-chart canvas")
