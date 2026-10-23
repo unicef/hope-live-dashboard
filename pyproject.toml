@@ -47,6 +47,7 @@ dependencies = [
   "django-unfold",
   "django-widget-tweaks",
   "drf-spectacular>=0.29",
+  "openpyxl>=3.1.5",
   "psycopg[binary]>=3.2",
   "redis",
   "sentry-sdk",
