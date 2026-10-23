@@ -52,6 +52,10 @@ def _apply_common_filters(queryset: models.QuerySet, params: Any, dash_type: str
     if dimension_type:
         queryset = queryset.filter(dimension_type=dimension_type)
 
+    program_type = params.get("program_type")
+    if program_type:
+        queryset = queryset.filter(program_type__iexact=program_type)
+
     country_slug = params.get("country_slug")
     if country_slug:
         queryset = queryset.filter(country_slug=country_slug)
