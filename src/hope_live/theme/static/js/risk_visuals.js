@@ -75,6 +75,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     let currentCategory = 'all';
     let currentProgram = 'all';
+    let currentCountry = 'all';
     let selectedModule = null;
 
     let ndx = crossfilter([]);
@@ -84,7 +85,6 @@ document.addEventListener('DOMContentLoaded', function () {
     const severityDimension = ndx.dimension(d => d.severity);
     const trendDimension = ndx.dimension(d => d.trend);
     const countryDimension = ndx.dimension(d => d.country_slug);
-    const riskCodeDimension = ndx.dimension(d => d.risk_code);
     const categoryDimension = ndx.dimension(d => d.category || '');
     const programDimension = ndx.dimension(d => d.program_name || '');
 
@@ -92,37 +92,66 @@ document.addEventListener('DOMContentLoaded', function () {
     const moduleGroup = moduleDimension.group().reduceSum(d => d.issue_count);
     const severityGroup = severityDimension.group().reduceSum(d => d.issue_count);
     const trendGroup = trendDimension.group().reduceSum(d => d.issue_count);
-    const countryGroup = countryDimension.group().reduceSum(d => d.issue_count);
 
-    const riskCodeGroup = riskCodeDimension.group().reduce(
-        (p, v) => {
-            p.issue_count += v.issue_count;
-            p.risk_name = v.risk_name || p.risk_name;
-            p.module = v.module || p.module;
-            p.program_name = v.program_name || p.program_name;
-            p.severity = v.severity || p.severity;
-            p.trend = v.trend || p.trend;
-            p.percentage = v.percentage !== null && v.percentage !== undefined ? v.percentage : p.percentage;
-            p.unit_label = v.unit_label || p.unit_label;
-            p.description = v.description || p.description;
-            return p;
-        },
-        (p, v) => {
-            p.issue_count -= v.issue_count;
-            return p;
-        },
-        () => ({
-            issue_count: 0,
-            risk_name: '',
-            module: '',
-            program_name: '',
-            severity: '',
-            trend: '',
-            percentage: null,
-            unit_label: '',
-            description: ''
-        })
-    );
+    // Risk display data is derived from the records that pass the current filters.
+    // A crossfilter reducer is not used for this: its `remove` path cannot refresh
+    // labels, so switching country left the previous country's programme/severity/
+    // percentage on screen while only the counts were correct.
+    function recordTime(value) {
+        if (value instanceof Date) return value.getTime();
+        return Date.parse(value) || 0;
+    }
+
+    function applyLatestMetadata(target, record) {
+        const value = recordTime(record.date);
+        if (value >= target.dateValue) {
+            target.dateValue = value;
+            target.risk_name = record.risk_name;
+            target.module = record.module;
+            target.severity = record.severity;
+            target.trend = record.trend;
+            target.percentage = record.percentage;
+            target.unit_label = record.unit_label;
+            target.description = record.description;
+        }
+    }
+
+    function collectFilteredRisks() {
+        const byRisk = new Map();
+        const byRow = new Map();
+
+        ndx.allFiltered().forEach(record => {
+            if (!record.risk_code) return;
+
+            let risk = byRisk.get(record.risk_code);
+            if (!risk) {
+                risk = { risk_code: record.risk_code, issue_count: 0, dateValue: -1 };
+                byRisk.set(record.risk_code, risk);
+            }
+            risk.issue_count += record.issue_count;
+            applyLatestMetadata(risk, record);
+
+            const rowKey = JSON.stringify([record.risk_code, record.country_slug, record.program_name]);
+            let row = byRow.get(rowKey);
+            if (!row) {
+                row = {
+                    risk_code: record.risk_code,
+                    country: record.country_slug,
+                    program_name: record.program_name,
+                    issue_count: 0,
+                    dateValue: -1
+                };
+                byRow.set(rowKey, row);
+            }
+            row.issue_count += record.issue_count;
+            applyLatestMetadata(row, record);
+        });
+
+        return {
+            byRisk: Array.from(byRisk.values()).filter(r => r.issue_count > 0),
+            byRow: Array.from(byRow.values()).filter(r => r.issue_count > 0)
+        };
+    }
 
     const totalIssues = ndx.groupAll().reduceSum(d => d.issue_count);
     const criticalIssues = ndx.groupAll().reduceSum(d => (d.severity === 'critical' ? d.issue_count : 0));
@@ -234,7 +263,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const container = document.getElementById('operational-modules-container');
         if (!container) return;
 
-        const activeRisks = riskCodeGroup.all().filter(d => d.key && d.value.issue_count > 0);
+        const activeRisks = collectFilteredRisks().byRisk;
 
         if (activeRisks.length === 0) {
             container.innerHTML = `
@@ -248,10 +277,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
         // Group risks by module
         const byModule = {};
-        activeRisks.forEach(item => {
-            const modKey = (item.value.module || 'other').toLowerCase();
+        activeRisks.forEach(risk => {
+            const modKey = (risk.module || 'other').toLowerCase();
             if (!byModule[modKey]) byModule[modKey] = [];
-            byModule[modKey].push(item);
+            byModule[modKey].push(risk);
         });
 
         const html = Object.keys(byModule).map(modKey => {
@@ -264,12 +293,11 @@ document.addEventListener('DOMContentLoaded', function () {
             };
             const items = byModule[modKey].sort((a, b) => {
                 const rank = { critical: 4, warning: 3, caution: 2, normal: 1 };
-                return (rank[b.value.severity] || 0) - (rank[a.value.severity] || 0);
+                return (rank[b.severity] || 0) - (rank[a.severity] || 0);
             });
-            const moduleTotal = items.reduce((acc, cur) => acc + cur.value.issue_count, 0);
+            const moduleTotal = items.reduce((acc, cur) => acc + cur.issue_count, 0);
 
-            const cardsHtml = items.map(item => {
-                const v = item.value;
+            const cardsHtml = items.map(v => {
                 const sev = v.severity || 'normal';
                 const sevStyles = {
                     critical: 'bg-red-50/80 border-red-500 text-red-700',
@@ -294,7 +322,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 return `
                 <div class="rounded-xl border p-3 border-l-4 transition-all shadow-2xs ${styleClass} flex flex-col justify-between">
                     <div class="flex items-start justify-between gap-2 mb-1.5">
-                        <h5 class="text-xs font-bold text-gray-900 leading-snug">${v.risk_name || item.key}</h5>
+                        <h5 class="text-xs font-bold text-gray-900 leading-snug">${v.risk_name || v.risk_code}</h5>
                         <div class="flex items-center gap-1 shrink-0">
                             ${trendIcon}
                         </div>
@@ -332,26 +360,25 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function updateTopTable() {
-        const topRisks = riskCodeGroup.all()
-            .filter(d => d.key && d.value.issue_count > 0)
-            .sort((a, b) => b.value.issue_count - a.value.issue_count);
+        const rows = collectFilteredRisks().byRow
+            .sort((a, b) => b.issue_count - a.issue_count);
 
         const tableBody = document.getElementById('risk-top-table');
-        if (tableBody) {
-            tableBody.innerHTML = topRisks.map(d => {
-                const v = d.value;
-                const pct = v.percentage !== null && v.percentage !== undefined ? `${v.percentage}%` : '—';
-                return `<tr class="hover:bg-slate-50/80 transition-colors">
-                    <td class="py-2.5 px-3 font-semibold text-gray-900 text-xs">${v.risk_name || d.key}</td>
-                    <td class="py-2.5 px-3 text-gray-600 text-xs">${v.module}</td>
-                    <td class="py-2.5 px-3 text-gray-600 text-xs">${v.program_name || '—'}</td>
-                    <td class="py-2.5 px-3 text-center">${renderSeverityBadge(v.severity)}</td>
-                    <td class="py-2.5 px-3 text-center">${renderTrendBadge(v.trend)}</td>
-                    <td class="py-2.5 px-3 text-right font-bold text-gray-900 text-xs tabular-nums">${formatCount(v.issue_count)}</td>
-                    <td class="py-2.5 px-3 text-right font-semibold text-gray-700 text-xs tabular-nums">${pct}</td>
-                </tr>`;
-            }).join('');
-        }
+        if (!tableBody) return;
+
+        tableBody.innerHTML = rows.map(v => {
+            const pct = v.percentage !== null && v.percentage !== undefined ? `${v.percentage}%` : '—';
+            return `<tr class="hover:bg-slate-50/80 transition-colors">
+                <td class="py-2.5 px-3 font-semibold text-gray-900 text-xs">${escapeHtml(v.risk_name || v.risk_code)}</td>
+                <td class="py-2.5 px-3 text-gray-600 text-xs">${escapeHtml(formatCountry(v.country))}</td>
+                <td class="py-2.5 px-3 text-gray-600 text-xs">${escapeHtml(v.module)}</td>
+                <td class="py-2.5 px-3 text-gray-600 text-xs">${escapeHtml(v.program_name || '—')}</td>
+                <td class="py-2.5 px-3 text-center">${renderSeverityBadge(v.severity)}</td>
+                <td class="py-2.5 px-3 text-center">${renderTrendBadge(v.trend)}</td>
+                <td class="py-2.5 px-3 text-right font-bold text-gray-900 text-xs tabular-nums">${formatCount(v.issue_count)}</td>
+                <td class="py-2.5 px-3 text-right font-semibold text-gray-700 text-xs tabular-nums">${pct}</td>
+            </tr>`;
+        }).join('');
     }
 
     function updateAll() {
@@ -450,8 +477,8 @@ document.addEventListener('DOMContentLoaded', function () {
             ndx.add(data);
 
             timeFilter.setBuffer(startDate, endDate);
+            populateFilters(data);
             updateAll();
-            populateProgramFilter();
         } catch (error) {
             console.error('Error loading risk data:', error);
         }
@@ -490,29 +517,212 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
-    // --- Programme Filter ---
-    const programSelect = document.getElementById('program-filter');
-    function populateProgramFilter() {
-        if (!programSelect) return;
-        const names = programDimension.group().all()
-            .map(d => d.key)
-            .filter(name => name)
-            .sort();
-        const current = programSelect.value;
-        programSelect.innerHTML = '<option value="all">' + gettext('All programmes') + '</option>' +
-            names.map(n => `<option value="${n}">${n}</option>`).join('');
-        programSelect.value = current === 'all' || !names.includes(current) ? 'all' : current;
+    // --- Country / Programme filters (searchable, single-select) ---
+    function escapeHtml(value) {
+        return String(value == null ? '' : value)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;');
     }
-    if (programSelect) {
-        programSelect.addEventListener('change', function () {
-            currentProgram = this.value;
-            if (currentProgram === 'all') {
-                programDimension.filterAll();
-            } else {
-                programDimension.filter(currentProgram);
+
+    function normaliseText(value) {
+        return String(value == null ? '' : value)
+            .normalize('NFD')
+            .replace(/[\u0300-\u036f]/g, '')
+            .toLowerCase();
+    }
+
+    function formatCountry(slug) {
+        return String(slug || '')
+            .split('-')
+            .filter(Boolean)
+            .map(part => part.charAt(0).toUpperCase() + part.slice(1))
+            .join(' ');
+    }
+
+    function createCombobox(config) {
+        const { input, list, clearButton, onSelect } = config;
+        if (!input || !list) return null;
+
+        let items = [];
+        let visible = [];
+        let activeIndex = -1;
+        let selectedValue = '';
+        let selectedLabel = '';
+        let currentQuery = '';
+        let expanded = false;
+
+        function syncClearButton() {
+            if (clearButton) clearButton.style.display = selectedValue ? 'flex' : 'none';
+        }
+
+        function setExpanded(value) {
+            expanded = value;
+            input.setAttribute('aria-expanded', value ? 'true' : 'false');
+            list.classList.toggle('hidden', !value);
+        }
+
+        function render(nextQuery) {
+            if (nextQuery !== undefined) currentQuery = nextQuery;
+            const query = normaliseText(currentQuery);
+            visible = items.filter(item => !query || normaliseText(item.label).includes(query));
+
+            if (!visible.length) {
+                activeIndex = -1;
+                list.innerHTML = `<li class="px-3 py-2 text-gray-400" role="presentation">${escapeHtml(gettext('No matching results'))}</li>`;
+                input.removeAttribute('aria-activedescendant');
+                return;
             }
-            updateAll();
+
+            if (activeIndex < 0 || activeIndex >= visible.length) activeIndex = 0;
+            list.innerHTML = visible.map((item, index) => {
+                const isActive = index === activeIndex;
+                const isSelected = item.value === selectedValue;
+                return `<li id="${list.id}-option-${index}" role="option" data-index="${index}" aria-selected="${isSelected}" title="${escapeHtml(item.label)}" class="cursor-pointer truncate px-3 py-1.5 ${isActive ? 'bg-sky-50 text-[#00adef]' : 'text-gray-700'} ${isSelected ? 'font-bold' : ''}">${escapeHtml(item.label)}</li>`;
+            }).join('');
+            input.setAttribute('aria-activedescendant', `${list.id}-option-${activeIndex}`);
+        }
+
+        function scrollActiveIntoView() {
+            const option = list.querySelector(`[data-index="${activeIndex}"]`);
+            if (option && option.scrollIntoView) option.scrollIntoView({ block: 'nearest' });
+        }
+
+        function open() {
+            if (!items.length) return;
+            render('');
+            setExpanded(true);
+            scrollActiveIntoView();
+        }
+
+        function close() {
+            setExpanded(false);
+            input.value = selectedLabel;
+        }
+
+        function select(index) {
+            const item = visible[index];
+            if (!item) return;
+            selectedValue = item.value;
+            selectedLabel = item.label;
+            input.value = item.label;
+            syncClearButton();
+            setExpanded(false);
+            onSelect(item.value);
+        }
+
+        function clear() {
+            selectedValue = '';
+            selectedLabel = '';
+            input.value = '';
+            syncClearButton();
+            setExpanded(false);
+            onSelect('');
+        }
+
+        function setItems(nextItems) {
+            items = nextItems.slice();
+            const match = items.find(item => item.value === selectedValue);
+            if (match) {
+                selectedLabel = match.label;
+            } else {
+                selectedValue = '';
+                selectedLabel = '';
+            }
+            input.value = selectedLabel;
+            syncClearButton();
+        }
+
+        input.addEventListener('focus', open);
+        input.addEventListener('input', () => {
+            activeIndex = 0;
+            render(input.value);
+            setExpanded(true);
+            scrollActiveIntoView();
         });
+        input.addEventListener('keydown', event => {
+            if (event.key === 'ArrowDown') {
+                event.preventDefault();
+                if (!expanded) { open(); return; }
+                activeIndex = Math.min(activeIndex + 1, visible.length - 1);
+                render();
+                scrollActiveIntoView();
+            } else if (event.key === 'ArrowUp') {
+                event.preventDefault();
+                activeIndex = Math.max(activeIndex - 1, 0);
+                render();
+                scrollActiveIntoView();
+            } else if (event.key === 'Enter') {
+                if (expanded) { event.preventDefault(); select(activeIndex); }
+            } else if (event.key === 'Escape') {
+                if (expanded) { event.preventDefault(); close(); }
+            } else if (event.key === 'Tab') {
+                close();
+            }
+        });
+        list.addEventListener('mousedown', event => {
+            event.preventDefault();
+            const option = event.target.closest('[data-index]');
+            if (option) select(Number(option.dataset.index));
+        });
+        if (clearButton) {
+            clearButton.addEventListener('mousedown', event => event.preventDefault());
+            clearButton.addEventListener('click', event => {
+                event.preventDefault();
+                clear();
+            });
+        }
+        document.addEventListener('mousedown', event => {
+            if (expanded && !list.contains(event.target) && event.target !== input) close();
+        });
+
+        syncClearButton();
+        return { setItems };
+    }
+
+    const programCombobox = createCombobox({
+        input: document.getElementById('program-filter-input'),
+        list: document.getElementById('program-filter-list'),
+        clearButton: document.getElementById('program-filter-clear'),
+        onSelect: value => {
+            currentProgram = value || 'all';
+            if (value) programDimension.filter(value);
+            else programDimension.filterAll();
+            updateAll();
+        }
+    });
+
+    const countryCombobox = createCombobox({
+        input: document.getElementById('country-filter-input'),
+        list: document.getElementById('country-filter-list'),
+        clearButton: document.getElementById('country-filter-clear'),
+        onSelect: value => {
+            currentCountry = value || 'all';
+            if (value) countryDimension.filter(value);
+            else countryDimension.filterAll();
+            updateAll();
+        }
+    });
+
+    function populateFilters(data) {
+        const programs = Array.from(new Set(data.map(d => d.program_name).filter(Boolean)))
+            .sort((a, b) => a.localeCompare(b));
+        const countries = Array.from(new Set(data.map(d => d.country_slug).filter(Boolean)))
+            .sort((a, b) => formatCountry(a).localeCompare(formatCountry(b)));
+
+        if (currentProgram !== 'all' && !programs.includes(currentProgram)) {
+            currentProgram = 'all';
+            programDimension.filterAll();
+        }
+        if (currentCountry !== 'all' && !countries.includes(currentCountry)) {
+            currentCountry = 'all';
+            countryDimension.filterAll();
+        }
+
+        if (programCombobox) programCombobox.setItems(programs.map(name => ({ value: name, label: name })));
+        if (countryCombobox) countryCombobox.setItems(countries.map(slug => ({ value: slug, label: formatCountry(slug) })));
     }
 
     loadRange(timeFilter.currentRange.start, timeFilter.currentRange.end);

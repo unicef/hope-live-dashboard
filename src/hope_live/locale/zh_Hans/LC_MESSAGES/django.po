@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-22 08:51+0000\n"
+"POT-Creation-Date: 2026-10-26 08:23+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -55,7 +55,14 @@ msgstr "选择语言"
 msgid "Sign Out"
 msgstr "登出"
 
-#: src/hope_live/templates/header.html:66
+#: src/hope_live/templates/header.html:58
+#: src/hope_live/templates/pages/login.html:37
+#, fuzzy
+#| msgid "Sign Out"
+msgid "Sign In"
+msgstr "登出"
+
+#: src/hope_live/templates/header.html:68
 msgid "Open Issue"
 msgstr "开放问题"
 
@@ -715,7 +722,9 @@ msgstr "2026年5月19日"
 msgid ""
 "New features and enhancements 1. Added the Facility Workers beneficiary "
 "group to the programme setup page, enabling visualization..."
-msgstr "新功能和增强功能 1. 在计划设置页面中添加了设施工作人员受益人群组，从而实现了可视化..."
+msgstr ""
+"新功能和增强功能 1. 在计划设置页面中添加了设施工作人员受益人群组，从而实现了"
+"可视化..."
 
 #: src/hope_live/templates/pages/landing.html:395
 msgid "April 8, 2026"
@@ -725,7 +734,9 @@ msgstr "2026年4月8日"
 msgid ""
 "New features and enhancements 1. Added a new filter to select Household or "
 "Individual IDs for alternate collectors receiving p..."
-msgstr "新功能和增强功能 1. 添加了新过滤器，以针对接收...的备选收集器选择家庭或个人 ID"
+msgstr ""
+"新功能和增强功能 1. 添加了新过滤器，以针对接收...的备选收集器选择家庭或个人 "
+"ID"
 
 #: src/hope_live/templates/pages/landing.html:413
 msgid "March 16, 2026"
@@ -735,7 +746,8 @@ msgstr "2026年3月16日"
 msgid ""
 "New features and enhancements 1. Added a Currency Conversion section to the "
 "payment plan module, allowing users to override the UN..."
-msgstr "新功能和增强功能 1. 在付款计划模块中添加了货币换算部分，允许用户覆盖联合国..."
+msgstr ""
+"新功能和增强功能 1. 在付款计划模块中添加了货币换算部分，允许用户覆盖联合国..."
 
 #: src/hope_live/templates/pages/landing.html:434
 msgid "Data responsibly"
@@ -799,12 +811,6 @@ msgstr ""
 msgid "Password"
 msgstr ""
 
-#: src/hope_live/templates/pages/login.html:37
-#, fuzzy
-#| msgid "Sign Out"
-msgid "Sign In"
-msgstr "登出"
-
 #: src/hope_live/templates/pages/login.html:47
 #, python-format
 msgid "Hope Country Report dev - %(year)s - %(version)s"
@@ -849,113 +855,141 @@ msgstr ""
 msgid "Compliance"
 msgstr ""
 
-#: src/hope_live/templates/pages/risk.html:42
+#: src/hope_live/templates/pages/risk.html:44
+#, fuzzy
+#| msgid "Countries"
+msgid "Country:"
+msgstr "国家"
+
+#: src/hope_live/templates/pages/risk.html:48
+#, fuzzy
+#| msgid "countries"
+msgid "All countries"
+msgstr "国家"
+
+#: src/hope_live/templates/pages/risk.html:51
+msgid "Clear country filter"
+msgstr ""
+
+#: src/hope_live/templates/pages/risk.html:62
 #, fuzzy
 #| msgid "Programs"
 msgid "Programme:"
 msgstr "节目"
 
-#: src/hope_live/templates/pages/risk.html:44
+#: src/hope_live/templates/pages/risk.html:66
 #, fuzzy
 #| msgid "Programs"
 msgid "All programmes"
 msgstr "节目"
 
-#: src/hope_live/templates/pages/risk.html:56
+#: src/hope_live/templates/pages/risk.html:69
+#, fuzzy
+#| msgid "Programs"
+msgid "Clear programme filter"
+msgstr "节目"
+
+#: src/hope_live/templates/pages/risk.html:87
 #, fuzzy
 #| msgid "Total Tickets"
 msgid "Total risk items"
 msgstr "总门票数"
 
-#: src/hope_live/templates/pages/risk.html:58
+#: src/hope_live/templates/pages/risk.html:89
 msgid "Across all operational modules"
 msgstr ""
 
-#: src/hope_live/templates/pages/risk.html:69
+#: src/hope_live/templates/pages/risk.html:100
 msgid "Critical risks"
 msgstr ""
 
-#: src/hope_live/templates/pages/risk.html:71
+#: src/hope_live/templates/pages/risk.html:102
 msgid "Requires immediate action"
 msgstr ""
 
-#: src/hope_live/templates/pages/risk.html:82
+#: src/hope_live/templates/pages/risk.html:113
 #, fuzzy
 #| msgid "Distribution by Sector"
 msgid "Risk distribution by module"
 msgstr "按行业分布"
 
-#: src/hope_live/templates/pages/risk.html:85
+#: src/hope_live/templates/pages/risk.html:116
 msgid "Click any module to filter operational cards"
 msgstr ""
 
-#: src/hope_live/templates/pages/risk.html:94
+#: src/hope_live/templates/pages/risk.html:125
 #, fuzzy
 #| msgid "Tickets Timeline"
 msgid "Issues timeline"
 msgstr "门票时间表"
 
-#: src/hope_live/templates/pages/risk.html:95
+#: src/hope_live/templates/pages/risk.html:126
 msgid "Daily volume"
 msgstr ""
 
-#: src/hope_live/templates/pages/risk.html:106
+#: src/hope_live/templates/pages/risk.html:137
 msgid "Risk status color guide:"
 msgstr ""
 
-#: src/hope_live/templates/pages/risk.html:110
+#: src/hope_live/templates/pages/risk.html:141
 msgid "Critical"
 msgstr ""
 
-#: src/hope_live/templates/pages/risk.html:115
+#: src/hope_live/templates/pages/risk.html:146
 msgid "Warning"
 msgstr ""
 
-#: src/hope_live/templates/pages/risk.html:120
+#: src/hope_live/templates/pages/risk.html:151
 msgid "Caution"
 msgstr ""
 
-#: src/hope_live/templates/pages/risk.html:125
+#: src/hope_live/templates/pages/risk.html:156
 msgid "Normal"
 msgstr ""
 
-#: src/hope_live/templates/pages/risk.html:139
+#: src/hope_live/templates/pages/risk.html:170
 msgid "All risk indicators"
 msgstr ""
 
-#: src/hope_live/templates/pages/risk.html:140
+#: src/hope_live/templates/pages/risk.html:171
 msgid "Itemized operational metrics by indicator and programme"
 msgstr ""
 
-#: src/hope_live/templates/pages/risk.html:146
+#: src/hope_live/templates/pages/risk.html:177
 msgid "Risk Indicator"
 msgstr ""
 
-#: src/hope_live/templates/pages/risk.html:147
+#: src/hope_live/templates/pages/risk.html:178
+#, fuzzy
+#| msgid "Countries"
+msgid "Country"
+msgstr "国家"
+
+#: src/hope_live/templates/pages/risk.html:179
 msgid "Module"
 msgstr ""
 
-#: src/hope_live/templates/pages/risk.html:148
+#: src/hope_live/templates/pages/risk.html:180
 #, fuzzy
 #| msgid "Programs"
 msgid "Programme"
 msgstr "节目"
 
-#: src/hope_live/templates/pages/risk.html:149
+#: src/hope_live/templates/pages/risk.html:181
 msgid "Severity"
 msgstr ""
 
-#: src/hope_live/templates/pages/risk.html:150
+#: src/hope_live/templates/pages/risk.html:182
 msgid "Trend"
 msgstr ""
 
-#: src/hope_live/templates/pages/risk.html:151
+#: src/hope_live/templates/pages/risk.html:183
 #, fuzzy
 #| msgid "Open Issue"
 msgid "Issues"
 msgstr "开放问题"
 
-#: src/hope_live/templates/pages/risk.html:152
+#: src/hope_live/templates/pages/risk.html:184
 #, python-format
 msgid "%%"
 msgstr ""
@@ -986,8 +1020,8 @@ msgstr "Django 管理"
 #~ msgstr "数据与应用程序接口"
 
 #~ msgid ""
-#~ "* Use the slider handles at the bottom of the timeline or click and drag to "
-#~ "filter dates."
+#~ "* Use the slider handles at the bottom of the timeline or click and drag "
+#~ "to filter dates."
 #~ msgstr "* 使用时间线底部的滑块手柄或单击并拖动来过滤日期。"
 
 #~ msgid "Completion rates & metrics"
@@ -1002,7 +1036,9 @@ msgstr "Django 管理"
 #~ msgid ""
 #~ "Lifeline of hope for families after Typhoon Yagi: UNICEF's first "
 #~ "humanitarian cash transfers in Viet Nam."
-#~ msgstr "八木台风过后家庭的希望生命线：联合国儿童基金会在越南的首次人道主义现金转移。"
+#~ msgstr ""
+#~ "八木台风过后家庭的希望生命线：联合国儿童基金会在越南的首次人道主义现金转"
+#~ "移。"
 
 #~ msgid "Read story"
 #~ msgstr "读故事"

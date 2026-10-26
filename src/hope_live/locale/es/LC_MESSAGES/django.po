@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-22 08:51+0000\n"
+"POT-Creation-Date: 2026-10-26 08:23+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,7 +16,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? "
+"1 : 2;\n"
 
 #: src/hope_live/config/settings.py:168
 msgid "Spanish"
@@ -46,8 +47,7 @@ msgstr "Chino"
 #, python-format
 msgid "Copyright © %(year)s - All right reserved by UNICEF - %(version)s"
 msgstr ""
-"Copyright © %(year)s - Todos los derechos reservados por UNICEF - "
-"%(version)s"
+"Copyright © %(year)s - Todos los derechos reservados por UNICEF - %(version)s"
 
 #: src/hope_live/templates/header.html:26
 msgid "Select Language"
@@ -57,7 +57,14 @@ msgstr "Seleccionar idioma"
 msgid "Sign Out"
 msgstr "Cerrar sesión"
 
-#: src/hope_live/templates/header.html:66
+#: src/hope_live/templates/header.html:58
+#: src/hope_live/templates/pages/login.html:37
+#, fuzzy
+#| msgid "Sign Out"
+msgid "Sign In"
+msgstr "Cerrar sesión"
+
+#: src/hope_live/templates/header.html:68
 msgid "Open Issue"
 msgstr "Problema abierto"
 
@@ -173,8 +180,8 @@ msgid ""
 "HOPE helps countries strengthen evidence for humanitarian action for "
 "children."
 msgstr ""
-"HOPE ayuda a los países a fortalecer la evidencia para la acción humanitaria"
-" en favor de los niños."
+"HOPE ayuda a los países a fortalecer la evidencia para la acción humanitaria "
+"en favor de los niños."
 
 #: src/hope_live/templates/menu.html:76
 #: src/hope_live/templates/pages/about.html:17
@@ -767,8 +774,7 @@ msgstr "Metodología"
 #: src/hope_live/templates/pages/landing.html:444
 msgid "Learn how HOPE data is produced and standards applied."
 msgstr ""
-"Descubra cómo se producen los datos de HOPE y cómo se aplican los "
-"estándares."
+"Descubra cómo se producen los datos de HOPE y cómo se aplican los estándares."
 
 #: src/hope_live/templates/pages/landing.html:452
 msgid "Give feedback"
@@ -816,12 +822,6 @@ msgstr ""
 msgid "Password"
 msgstr ""
 
-#: src/hope_live/templates/pages/login.html:37
-#, fuzzy
-#| msgid "Sign Out"
-msgid "Sign In"
-msgstr "Cerrar sesión"
-
 #: src/hope_live/templates/pages/login.html:47
 #, python-format
 msgid "Hope Country Report dev - %(year)s - %(version)s"
@@ -866,113 +866,141 @@ msgstr ""
 msgid "Compliance"
 msgstr ""
 
-#: src/hope_live/templates/pages/risk.html:42
+#: src/hope_live/templates/pages/risk.html:44
+#, fuzzy
+#| msgid "Countries"
+msgid "Country:"
+msgstr "Países"
+
+#: src/hope_live/templates/pages/risk.html:48
+#, fuzzy
+#| msgid "countries"
+msgid "All countries"
+msgstr "países"
+
+#: src/hope_live/templates/pages/risk.html:51
+msgid "Clear country filter"
+msgstr ""
+
+#: src/hope_live/templates/pages/risk.html:62
 #, fuzzy
 #| msgid "Programs"
 msgid "Programme:"
 msgstr "Programas"
 
-#: src/hope_live/templates/pages/risk.html:44
+#: src/hope_live/templates/pages/risk.html:66
 #, fuzzy
 #| msgid "Programs"
 msgid "All programmes"
 msgstr "Programas"
 
-#: src/hope_live/templates/pages/risk.html:56
+#: src/hope_live/templates/pages/risk.html:69
+#, fuzzy
+#| msgid "Programs"
+msgid "Clear programme filter"
+msgstr "Programas"
+
+#: src/hope_live/templates/pages/risk.html:87
 #, fuzzy
 #| msgid "Total Tickets"
 msgid "Total risk items"
 msgstr "Entradas totales"
 
-#: src/hope_live/templates/pages/risk.html:58
+#: src/hope_live/templates/pages/risk.html:89
 msgid "Across all operational modules"
 msgstr ""
 
-#: src/hope_live/templates/pages/risk.html:69
+#: src/hope_live/templates/pages/risk.html:100
 msgid "Critical risks"
 msgstr ""
 
-#: src/hope_live/templates/pages/risk.html:71
+#: src/hope_live/templates/pages/risk.html:102
 msgid "Requires immediate action"
 msgstr ""
 
-#: src/hope_live/templates/pages/risk.html:82
+#: src/hope_live/templates/pages/risk.html:113
 #, fuzzy
 #| msgid "Distribution by Sector"
 msgid "Risk distribution by module"
 msgstr "Distribución por Sector"
 
-#: src/hope_live/templates/pages/risk.html:85
+#: src/hope_live/templates/pages/risk.html:116
 msgid "Click any module to filter operational cards"
 msgstr ""
 
-#: src/hope_live/templates/pages/risk.html:94
+#: src/hope_live/templates/pages/risk.html:125
 #, fuzzy
 #| msgid "Tickets Timeline"
 msgid "Issues timeline"
 msgstr "Cronología de entradas"
 
-#: src/hope_live/templates/pages/risk.html:95
+#: src/hope_live/templates/pages/risk.html:126
 msgid "Daily volume"
 msgstr ""
 
-#: src/hope_live/templates/pages/risk.html:106
+#: src/hope_live/templates/pages/risk.html:137
 msgid "Risk status color guide:"
 msgstr ""
 
-#: src/hope_live/templates/pages/risk.html:110
+#: src/hope_live/templates/pages/risk.html:141
 msgid "Critical"
 msgstr ""
 
-#: src/hope_live/templates/pages/risk.html:115
+#: src/hope_live/templates/pages/risk.html:146
 msgid "Warning"
 msgstr ""
 
-#: src/hope_live/templates/pages/risk.html:120
+#: src/hope_live/templates/pages/risk.html:151
 msgid "Caution"
 msgstr ""
 
-#: src/hope_live/templates/pages/risk.html:125
+#: src/hope_live/templates/pages/risk.html:156
 msgid "Normal"
 msgstr ""
 
-#: src/hope_live/templates/pages/risk.html:139
+#: src/hope_live/templates/pages/risk.html:170
 msgid "All risk indicators"
 msgstr ""
 
-#: src/hope_live/templates/pages/risk.html:140
+#: src/hope_live/templates/pages/risk.html:171
 msgid "Itemized operational metrics by indicator and programme"
 msgstr ""
 
-#: src/hope_live/templates/pages/risk.html:146
+#: src/hope_live/templates/pages/risk.html:177
 msgid "Risk Indicator"
 msgstr ""
 
-#: src/hope_live/templates/pages/risk.html:147
+#: src/hope_live/templates/pages/risk.html:178
+#, fuzzy
+#| msgid "Countries"
+msgid "Country"
+msgstr "Países"
+
+#: src/hope_live/templates/pages/risk.html:179
 msgid "Module"
 msgstr ""
 
-#: src/hope_live/templates/pages/risk.html:148
+#: src/hope_live/templates/pages/risk.html:180
 #, fuzzy
 #| msgid "Programs"
 msgid "Programme"
 msgstr "Programas"
 
-#: src/hope_live/templates/pages/risk.html:149
+#: src/hope_live/templates/pages/risk.html:181
 msgid "Severity"
 msgstr ""
 
-#: src/hope_live/templates/pages/risk.html:150
+#: src/hope_live/templates/pages/risk.html:182
 msgid "Trend"
 msgstr ""
 
-#: src/hope_live/templates/pages/risk.html:151
+#: src/hope_live/templates/pages/risk.html:183
 #, fuzzy
 #| msgid "Open Issue"
 msgid "Issues"
 msgstr "Problema abierto"
 
-#: src/hope_live/templates/pages/risk.html:152
+#: src/hope_live/templates/pages/risk.html:184
 #, python-format
 msgid "%%"
 msgstr ""
@@ -1003,8 +1031,8 @@ msgstr "administración de django"
 #~ msgstr "Datos y API"
 
 #~ msgid ""
-#~ "* Use the slider handles at the bottom of the timeline or click and drag to "
-#~ "filter dates."
+#~ "* Use the slider handles at the bottom of the timeline or click and drag "
+#~ "to filter dates."
 #~ msgstr ""
 #~ "* Utilice los controles deslizantes en la parte inferior de la línea de "
 #~ "tiempo o haga clic y arrastre para filtrar fechas."
@@ -1038,8 +1066,8 @@ msgstr "administración de django"
 #~ "Advancing Sustainable Funding for UNICEF Digital Public Good (HOPE) cash "
 #~ "assistance platform."
 #~ msgstr ""
-#~ "Promoción de la financiación sostenible para la plataforma de asistencia en "
-#~ "efectivo para el bien público digital (HOPE) de UNICEF."
+#~ "Promoción de la financiación sostenible para la plataforma de asistencia "
+#~ "en efectivo para el bien público digital (HOPE) de UNICEF."
 
 #~ msgid "View report"
 #~ msgstr "Ver informe"

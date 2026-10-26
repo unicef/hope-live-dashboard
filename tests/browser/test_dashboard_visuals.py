@@ -7,6 +7,7 @@ from tests.extras.testutils.factories.analysis import (
     DemographicAggregateFactory,
     FinancialAggregateFactory,
     GrievanceAggregateFactory,
+    RiskAggregateFactory,
 )
 
 pytestmark = [pytest.mark.selenium, pytest.mark.django_db]
@@ -297,6 +298,64 @@ def social_worker_aggregates(db):
         )
 
 
+@pytest.fixture
+def risk_aggregates(db):
+    """Two countries x two programmes, with predictable issue totals."""
+    year = datetime.datetime.now().year
+    rows = [
+        ("kenya", "Child Protection - THABAT", "Targeting", "critical", 10),
+        ("kenya", "Education THABAT", "Payment Operations", "warning", 5),
+        ("somalia", "Child Protection - THABAT", "Targeting", "critical", 7),
+        ("somalia", "Education THABAT", "Payment Operations", "warning", 3),
+    ]
+    for index, (country, programme, module, severity, issues) in enumerate(rows):
+        RiskAggregateFactory(
+            date=datetime.date(year, 1, index + 1),
+            time_grain="daily",
+            country_slug=country,
+            dimension_type="risk_code",
+            dimension_value=f"CODE_{index}",
+            risk_code=f"CODE_{index}",
+            risk_name=f"Risk {index}",
+            module=module,
+            program_name=programme,
+            category="operational",
+            issue_count=issues,
+            severity=severity,
+            trend="up",
+            unit_label="payments",
+            percentage=None,
+        )
+
+
+@pytest.fixture
+def risk_shared_code(db):
+    """The same risk code in two countries with different programme/severity/%."""
+    year = datetime.datetime.now().year
+    rows = [
+        ("kenya", "Kenya Programme", "critical", 10, 80),
+        ("somalia", "Somalia Programme", "warning", 7, 10),
+    ]
+    for index, (country, programme, severity, issues, percentage) in enumerate(rows):
+        RiskAggregateFactory(
+            date=datetime.date(year, 1, index + 1),
+            time_grain="daily",
+            country_slug=country,
+            dimension_type="risk_code",
+            dimension_value="MISSING_ID_DOCUMENTS",
+            risk_code="MISSING_ID_DOCUMENTS",
+            risk_name="Missing ID Documents",
+            module="Registration",
+            program_name=programme,
+            category="operational",
+            issue_count=issues,
+            severity=severity,
+            trend="up",
+            unit_label="% of individuals",
+            percentage=percentage,
+        )
+
+
 def _apply_custom_range(browser, start: str, end: str) -> None:
     browser.click('button.time-preset-btn[data-preset="custom"]')
     browser.wait_for_element_visible("#custom-range-inputs")
@@ -460,3 +519,56 @@ def test_completion_quality_quadrant_loads(browser, completion_aggregates, finan
     browser.wait_for_element_visible("#time-filter-container")
     browser.wait_for_element_visible("#time-focus-chart canvas")
     browser.wait_for_element_visible("#quality-quadrant-chart canvas")
+
+
+def test_risk_filters_are_searchable(browser, risk_aggregates):
+    browser.login_as_user()
+    browser.open("/risk/")
+    browser.wait_for_element_visible("#time-filter-container")
+    browser.wait_for_text_visible("25", "#total-issues")
+
+    # Programme combobox: search, then select the match
+    browser.click("#program-filter-input")
+    browser.type("#program-filter-input", "Child")
+    browser.wait_for_element_visible('#program-filter-list [role="option"]')
+    browser.assert_text("Child Protection - THABAT", '#program-filter-list [role="option"]')
+    browser.click('#program-filter-list [role="option"]')
+    assert browser.get_value("#program-filter-input") == "Child Protection - THABAT"
+    browser.wait_for_text_visible("17", "#total-issues")
+
+    # Country combobox: search, then select the match
+    browser.click("#country-filter-input")
+    browser.type("#country-filter-input", "Kenya")
+    browser.wait_for_element_visible('#country-filter-list [role="option"]')
+    browser.click('#country-filter-list [role="option"]')
+    assert browser.get_value("#country-filter-input") == "Kenya"
+    browser.wait_for_text_visible("10", "#total-issues")
+
+    # Clearing the programme leaves the country filter active
+    browser.click("#program-filter-clear")
+    browser.wait_for_text_visible("15", "#total-issues")
+    assert browser.get_value("#program-filter-input") == ""
+
+
+def test_risk_table_uses_the_filtered_country(browser, risk_shared_code):
+    """The table must not keep another country's programme/severity/percentage."""
+    browser.login_as_user()
+    browser.open("/risk/")
+    browser.wait_for_element_visible("#time-filter-container")
+    browser.wait_for_text_visible("17", "#total-issues")
+
+    browser.click("#country-filter-input")
+    browser.type("#country-filter-input", "Somalia")
+    browser.wait_for_element_visible('#country-filter-list [role="option"]')
+    browser.click('#country-filter-list [role="option"]')
+    browser.wait_for_text_visible("7", "#total-issues")
+
+    table = browser.get_text("#risk-top-table")
+    assert "Somalia" in table
+    assert "Somalia Programme" in table
+    assert "Warning" in table
+    assert "10%" in table
+
+    assert "Kenya Programme" not in table
+    assert "Critical" not in table
+    assert "80%" not in table

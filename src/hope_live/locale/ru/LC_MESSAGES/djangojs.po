@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-22 08:51+0000\n"
+"POT-Creation-Date: 2026-10-26 08:14+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -15,7 +15,9 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || "
+"(n%100>=11 && n%100<=14)? 2 : 3);\n"
 
 #: src/hope_live/theme/static/js/completion_visuals.js:205
 #: src/hope_live/theme/static/js/completion_visuals.js:208
@@ -33,7 +35,9 @@ msgstr "платежи"
 #: src/hope_live/theme/static/js/completion_visuals.js:302
 #: src/hope_live/theme/static/js/completion_visuals.js:370
 #: src/hope_live/theme/static/js/completion_visuals.js:395
+#: src/hope_live/theme/static/js/completion_visuals.min.js:1
 #: src/hope_live/theme/static/js/dashboard_visuals.js:643
+#: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
 msgid "Reconciled"
 msgstr "Сверено"
 
@@ -41,6 +45,7 @@ msgstr "Сверено"
 #: src/hope_live/theme/static/js/completion_visuals.js:310
 #: src/hope_live/theme/static/js/completion_visuals.js:370
 #: src/hope_live/theme/static/js/completion_visuals.js:403
+#: src/hope_live/theme/static/js/completion_visuals.min.js:1
 msgid "Still opened"
 msgstr "Все еще открыто"
 
@@ -64,56 +69,70 @@ msgid "Reconciled volume"
 msgstr "Сверено"
 
 #: src/hope_live/theme/static/js/completion_visuals.js:542
+#: src/hope_live/theme/static/js/completion_visuals.min.js:1
 #, fuzzy
 #| msgid "Reconciliation Timeline"
 msgid "Reconciliation rate (%)"
 msgstr "График примирения"
 
 #: src/hope_live/theme/static/js/completion_visuals.js:553
+#: src/hope_live/theme/static/js/completion_visuals.min.js:1
 msgid "Delivery success rate (%)"
 msgstr ""
 
 #: src/hope_live/theme/static/js/completion_visuals.js:657
+#: src/hope_live/theme/static/js/completion_visuals.min.js:1
 msgid "Reconciled amount (USD)"
 msgstr "Сверенная сумма (USD)"
 
 #: src/hope_live/theme/static/js/completion_visuals.js:658
+#: src/hope_live/theme/static/js/completion_visuals.min.js:1
 msgid "Still opened amount (USD)"
 msgstr "Все еще открытая сумма (USD)"
 
 #: src/hope_live/theme/static/js/completion_visuals.js:659
+#: src/hope_live/theme/static/js/completion_visuals.min.js:1
 msgid "Reconciliation timeline (USD)"
 msgstr "Хронология сверки (USD)"
 
 #: src/hope_live/theme/static/js/completion_visuals.js:660
+#: src/hope_live/theme/static/js/completion_visuals.min.js:1
 msgid "Reconciliation status by country (USD)"
 msgstr "Статус сверки по странам (USD)"
 
 #: src/hope_live/theme/static/js/completion_visuals.js:662
+#: src/hope_live/theme/static/js/completion_visuals.min.js:1
 msgid "Reconciled payments"
 msgstr "Сверенные платежи"
 
 #: src/hope_live/theme/static/js/completion_visuals.js:663
+#: src/hope_live/theme/static/js/completion_visuals.min.js:1
 msgid "Still opened payments"
 msgstr "Все еще открытые платежи"
 
 #: src/hope_live/theme/static/js/completion_visuals.js:664
+#: src/hope_live/theme/static/js/completion_visuals.min.js:1
 #, fuzzy
 #| msgid "Reconciliation Timeline (USD)"
 msgid "Reconciliation timeline"
 msgstr "Хронология сверки (USD)"
 
 #: src/hope_live/theme/static/js/completion_visuals.js:665
+#: src/hope_live/theme/static/js/completion_visuals.min.js:1
 msgid "Reconciliation status by country"
 msgstr "Статус сверки по странам"
 
 #: src/hope_live/theme/static/js/completion_visuals.js:671
+#: src/hope_live/theme/static/js/completion_visuals.min.js:1
 #: src/hope_live/theme/static/js/dashboard_visuals.js:731
+#: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
 msgid "Cash disbursed by beneficiary group"
 msgstr ""
 
 #: src/hope_live/theme/static/js/completion_visuals.js:672
+#: src/hope_live/theme/static/js/completion_visuals.min.js:1
 #: src/hope_live/theme/static/js/dashboard_visuals.js:732
+#: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
 msgid "Payments by beneficiary group"
 msgstr ""
 
@@ -163,12 +182,14 @@ msgid "Payments"
 msgstr "Платежи"
 
 #: src/hope_live/theme/static/js/dashboard_visuals.js:641
+#: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
 #, fuzzy
 #| msgid "Spending Timeline"
 msgid "In pipeline"
 msgstr "График расходов"
 
 #: src/hope_live/theme/static/js/dashboard_visuals.js:642
+#: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
 msgid "Delivered"
 msgstr ""
 
@@ -180,10 +201,12 @@ msgid "Pending in pipeline"
 msgstr "График расходов"
 
 #: src/hope_live/theme/static/js/dashboard_visuals.js:725
+#: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
 msgid "Spending timeline"
 msgstr "График расходов"
 
 #: src/hope_live/theme/static/js/dashboard_visuals.js:726
+#: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
 msgid "Payments timeline"
 msgstr "Хронология платежей"
 
@@ -226,34 +249,41 @@ msgid "Country share of"
 msgstr ""
 
 #: src/hope_live/theme/static/js/demographic_visuals.js:430
+#: src/hope_live/theme/static/js/demographic_visuals.min.js:1
 #, fuzzy
 #| msgid "Individuals Reached"
 msgid "Individuals reached by beneficiary group"
 msgstr "Охвачено получателей"
 
 #: src/hope_live/theme/static/js/demographic_visuals.js:431
+#: src/hope_live/theme/static/js/demographic_visuals.min.js:1
 msgid "Households reached by beneficiary group"
 msgstr ""
 
 #: src/hope_live/theme/static/js/demographic_visuals.js:432
+#: src/hope_live/theme/static/js/demographic_visuals.min.js:1
 msgid "Children reached by beneficiary group"
 msgstr ""
 
 #: src/hope_live/theme/static/js/demographic_visuals.js:433
+#: src/hope_live/theme/static/js/demographic_visuals.min.js:1
 msgid "PWD reached by beneficiary group"
 msgstr ""
 
 #: src/hope_live/theme/static/js/demographic_visuals.js:463
+#: src/hope_live/theme/static/js/demographic_visuals.min.js:1
 #, fuzzy
 #| msgid "PWD Reached"
 msgid "Workers reached"
 msgstr "Охвачено людей с инвалидностью"
 
 #: src/hope_live/theme/static/js/demographic_visuals.js:466
+#: src/hope_live/theme/static/js/demographic_visuals.min.js:1
 msgid "Workers"
 msgstr ""
 
 #: src/hope_live/theme/static/js/demographic_visuals.js:466
+#: src/hope_live/theme/static/js/demographic_visuals.min.js:1
 msgid "Individuals"
 msgstr "Физические лица"
 
@@ -507,6 +537,7 @@ msgstr "обращения"
 #: src/hope_live/theme/static/js/grievance_visuals.js:248
 #: src/hope_live/theme/static/js/grievance_visuals.js:454
 #: src/hope_live/theme/static/js/grievance_visuals.js:479
+#: src/hope_live/theme/static/js/grievance_visuals.min.js:1
 msgid "Open & Active"
 msgstr "Открыто и активно"
 
@@ -675,9 +706,9 @@ msgstr ""
 msgid "Download PNG"
 msgstr ""
 
-#: src/hope_live/theme/static/js/risk_visuals.js:502
+#: src/hope_live/theme/static/js/risk_visuals.js:547
 #: src/hope_live/theme/static/js/risk_visuals.min.js:1
-msgid "All programmes"
+msgid "No matching results"
 msgstr ""
 
 #~ msgid "Quantity"
