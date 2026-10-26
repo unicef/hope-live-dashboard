@@ -381,6 +381,13 @@ def test_financial_dashboard_loads(browser, financial_aggregates):
     browser.wait_for_element_visible("#fsp-chart canvas")
     browser.wait_for_element_visible("#beneficiary-group-chart canvas")
 
+    browser.assert_text("Cash disbursed by sector", "#sector-title")
+    browser.assert_text("Cash disbursed by delivery type", "#delivery-title")
+    browser.assert_text("Cash disbursed by region", "#region-title")
+    browser.assert_text("Cash disbursed by country", "#country-title")
+    browser.assert_text("Cash disbursed by programme", "#program-title")
+    browser.assert_text("Cash disbursed by financial service provider (FSP)", "#fsp-title")
+
     # Assert current year totals (default "This Year" preset)
     browser.assert_text("25", "#total-payments")
 
@@ -404,6 +411,9 @@ def test_demographic_dashboard_loads(browser, demographic_aggregates, financial_
     browser.wait_for_element_visible("#country-pwd-chart canvas")
     browser.wait_for_element_visible("#time-focus-chart canvas")
     browser.wait_for_element_visible("#beneficiary-group-chart canvas")
+
+    browser.assert_text("Children reached", "#card-children h3")
+    browser.assert_text("Persons with disabilities reached", "#card-pwd h3")
 
     # Assert current year totals
     browser.assert_text("1,000", "#total-individuals")
@@ -433,6 +443,9 @@ def test_completion_dashboard_loads(browser, completion_aggregates, financial_ag
     browser.wait_for_element_visible("#completion-gauge canvas")
     browser.wait_for_element_visible("#beneficiary-group-chart canvas")
 
+    browser.assert_text("Still open", "#opened-card-title")
+    browser.assert_text("Payment reconciliation dashboard", "h1")
+
     # Assert current year totals
     browser.assert_text("15 (100.0% out of 15 total)", "#total-reconciled")
 
@@ -449,11 +462,11 @@ def test_grievance_dashboard_loads(browser, grievance_aggregates, grievance_stat
     browser.open("/grievance/")
     browser.wait_for_element_visible("#total-tickets")
     browser.wait_for_element_visible("#time-filter-container")
-    browser.wait_for_text_visible("Status")
-    browser.wait_for_text_visible("Priority")
-    browser.wait_for_text_visible("Category")
-    browser.wait_for_text_visible("Issue type")
-    browser.wait_for_text_visible("Ticket status by country")
+    browser.wait_for_text_visible("Tickets by status")
+    browser.wait_for_text_visible("Tickets by priority")
+    browser.wait_for_text_visible("Tickets by category")
+    browser.wait_for_text_visible("Tickets by subcategory")
+    browser.wait_for_text_visible("Tickets by status and country")
     browser.wait_for_element_visible("#grievance-status-chart canvas")
     browser.wait_for_element_visible("#grievance-priority-chart canvas")
     browser.wait_for_element_visible("#grievance-category-chart canvas")
@@ -519,6 +532,49 @@ def test_completion_quality_quadrant_loads(browser, completion_aggregates, finan
     browser.wait_for_element_visible("#time-filter-container")
     browser.wait_for_element_visible("#time-focus-chart canvas")
     browser.wait_for_element_visible("#quality-quadrant-chart canvas")
+
+
+def test_program_and_country_charts_show_top_ten(browser, db):
+    """The dashboard must show the top 10 categories without an Other bucket."""
+    year = datetime.datetime.now().year
+    for i in range(12):
+        FinancialAggregateFactory(
+            date=datetime.date(year, 1, i + 1),
+            time_grain="daily",
+            country_slug=f"country-{i}",
+            dimension_type="sector",
+            dimension_value=f"Sector {i}",
+            total_usd=1000 + i,
+            payment_count=1,
+        )
+        FinancialAggregateFactory(
+            date=datetime.date(year, 1, i + 1),
+            time_grain="daily",
+            country_slug=f"country-{i}",
+            dimension_type="program",
+            dimension_value=f"Programme {i}",
+            total_usd=1000 + i,
+            payment_count=1,
+        )
+
+    browser.login_as_user()
+    browser.open("/dashboard/")
+    browser.wait_for_element_visible("#program-chart canvas")
+    browser.wait_for_element_visible("#country-chart canvas")
+
+    program_option = browser.execute_script(
+        "return echarts.getInstanceByDom(document.getElementById('program-chart')).getOption();"
+    )
+    program_names = [item["name"] for item in program_option["series"][0]["data"]]
+    assert len(program_names) == 10, program_names
+    assert "Other" not in program_names, program_names
+
+    country_option = browser.execute_script(
+        "return echarts.getInstanceByDom(document.getElementById('country-chart')).getOption();"
+    )
+    country_names = [item["name"] for item in country_option["series"][0]["data"]]
+    assert len(country_names) == 10, country_names
+    assert "Other" not in country_names, country_names
 
 
 def test_risk_filters_are_searchable(browser, risk_aggregates):

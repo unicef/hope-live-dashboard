@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-26 08:23+0000\n"
+"POT-Creation-Date: 2026-10-26 10:33+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,8 +16,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
-"&& n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
 
 #: src/hope_live/config/settings.py:168
 msgid "Spanish"
@@ -204,8 +203,9 @@ msgid ""
 msgstr ""
 
 #: src/hope_live/templates/pages/completion.html:8
-msgid "Completion rate dashboard"
-msgstr "لوحة معلومات معدل الإكمال"
+#| msgid "Payment reconciliation and completion status tracking"
+msgid "Payment reconciliation dashboard"
+msgstr ""
 
 #: src/hope_live/templates/pages/completion.html:9
 msgid "Payment reconciliation and completion status tracking"
@@ -238,8 +238,9 @@ msgid "Reconciled payments"
 msgstr "المدفوعات التوفيقية"
 
 #: src/hope_live/templates/pages/completion.html:40
-msgid "Still opened"
-msgstr "لا يزال مفتوحا"
+#| msgid "Still opened"
+msgid "Still open"
+msgstr ""
 
 #: src/hope_live/templates/pages/completion.html:46
 msgid "Reconciliation rate"
@@ -258,7 +259,7 @@ msgid "Payments by beneficiary group"
 msgstr ""
 
 #: src/hope_live/templates/pages/completion.html:75
-msgid "Quality Quadrant"
+msgid "Quality quadrant"
 msgstr ""
 
 #: src/hope_live/templates/pages/completion.html:76
@@ -308,34 +309,35 @@ msgid "Number of payments"
 msgstr "عدد الدفعات"
 
 #: src/hope_live/templates/pages/dashboard.html:61
-msgid "Outstanding payment"
-msgstr "الدفع المستحق"
+#| msgid "Outstanding payment"
+msgid "Outstanding payments"
+msgstr ""
 
 #: src/hope_live/templates/pages/dashboard.html:69
 msgid "Spending timeline"
 msgstr "الجدول الزمني للإنفاق"
 
 #: src/hope_live/templates/pages/dashboard.html:76
-#, fuzzy
 #| msgid "Payments Count"
-msgid "Payment Pipeline"
-msgstr "عدد الدفعات"
+msgid "Payment pipeline"
+msgstr ""
 
 #: src/hope_live/templates/pages/dashboard.html:77
 msgid "From payments in the pipeline through to reconciled payments."
 msgstr ""
 
 #: src/hope_live/templates/pages/dashboard.html:84
-msgid "Delivery types"
-msgstr "أنواع التسليم"
+msgid "Cash disbursed by delivery type"
+msgstr ""
 
 #: src/hope_live/templates/pages/dashboard.html:88
-msgid "Distribution by sector"
-msgstr "التوزيع حسب القطاع"
+#| msgid "Distribution by sector"
+msgid "Cash disbursed by sector"
+msgstr ""
 
 #: src/hope_live/templates/pages/dashboard.html:97
-msgid "Regions"
-msgstr "المناطق"
+msgid "Cash disbursed by region"
+msgstr ""
 
 #: src/hope_live/templates/pages/dashboard.html:100
 msgid ""
@@ -345,16 +347,19 @@ msgid ""
 msgstr ""
 
 #: src/hope_live/templates/pages/dashboard.html:103
-msgid "Countries"
-msgstr "بلدان"
+#| msgid "Ticket status by country"
+msgid "Cash disbursed by country"
+msgstr ""
 
 #: src/hope_live/templates/pages/dashboard.html:111
-msgid "Distribution by program"
-msgstr "التوزيع حسب البرنامج"
+#| msgid "Distribution by program"
+msgid "Cash disbursed by programme"
+msgstr ""
 
 #: src/hope_live/templates/pages/dashboard.html:115
-msgid "Financial service providers (FSP)"
-msgstr "مقدمو الخدمات المالية (FSP)"
+#| msgid "Financial service providers (FSP)"
+msgid "Cash disbursed by financial service provider (FSP)"
+msgstr ""
 
 #: src/hope_live/templates/pages/dashboard.html:123
 msgid "Cash disbursed by beneficiary group"
@@ -367,7 +372,8 @@ msgid "Demographic dashboard"
 msgstr "التركيبة السكانية"
 
 #: src/hope_live/templates/pages/demographic.html:9
-msgid "Breakdown of individuals, children, and PWD reached"
+msgid ""
+"Breakdown of individuals, children, and persons with disabilities reached"
 msgstr ""
 
 #: src/hope_live/templates/pages/demographic.html:21
@@ -387,15 +393,13 @@ msgid "Households"
 msgstr "وصلت الأسر"
 
 #: src/hope_live/templates/pages/demographic.html:30
-#: src/hope_live/templates/pages/demographic.html:67
 #, fuzzy
 #| msgid "Children Reached"
 msgid "Children"
 msgstr "وصل الأطفال"
 
 #: src/hope_live/templates/pages/demographic.html:33
-#: src/hope_live/templates/pages/demographic.html:72
-msgid "PWD reached"
+msgid "Persons with disabilities"
 msgstr ""
 
 #: src/hope_live/templates/pages/demographic.html:57
@@ -405,6 +409,15 @@ msgstr ""
 #: src/hope_live/templates/pages/demographic.html:62
 msgid "Households reached"
 msgstr "وصلت الأسر"
+
+#: src/hope_live/templates/pages/demographic.html:67
+#| msgid "Children Reached"
+msgid "Children reached"
+msgstr ""
+
+#: src/hope_live/templates/pages/demographic.html:72
+msgid "Persons with disabilities reached"
+msgstr ""
 
 #: src/hope_live/templates/pages/demographic.html:80
 #, fuzzy
@@ -447,24 +460,29 @@ msgid "Tickets timeline"
 msgstr "الجدول الزمني للتذاكر"
 
 #: src/hope_live/templates/pages/grievance.html:38
-msgid "Status"
-msgstr "حالة"
+#| msgid "Ticket status by country"
+msgid "Tickets by status"
+msgstr ""
 
 #: src/hope_live/templates/pages/grievance.html:42
-msgid "Priority"
-msgstr "أولوية"
+#| msgid "Ticket status by country"
+msgid "Tickets by priority"
+msgstr ""
 
 #: src/hope_live/templates/pages/grievance.html:49
-msgid "Category"
-msgstr "فئة"
+#| msgid "Ticket status by country"
+msgid "Tickets by category"
+msgstr ""
 
 #: src/hope_live/templates/pages/grievance.html:53
-msgid "Issue type"
-msgstr "نوع المشكلة"
+#| msgid "Ticket status by country"
+msgid "Tickets by subcategory"
+msgstr ""
 
 #: src/hope_live/templates/pages/grievance.html:60
-msgid "Ticket status by country"
-msgstr "حالة التذاكر حسب البلد"
+#| msgid "Ticket status by country"
+msgid "Tickets by status and country"
+msgstr ""
 
 #: src/hope_live/templates/pages/landing.html:28
 msgid "Humanitarian cash"
@@ -503,8 +521,9 @@ msgid "Countries & territories"
 msgstr "البلدان والأقاليم"
 
 #: src/hope_live/templates/pages/landing.html:79
-msgid "Programs"
-msgstr "البرامج"
+#| msgid "Programs"
+msgid "Programmes"
+msgstr ""
 
 #: src/hope_live/templates/pages/landing.html:89
 #, fuzzy
@@ -751,8 +770,8 @@ msgid ""
 "New features and enhancements 1. Added a Currency Conversion section to the "
 "payment plan module, allowing users to override the UN..."
 msgstr ""
-"ميزات وتحسينات جديدة 1. إضافة قسم تحويل العملات إلى وحدة خطة الدفع، مما يسمح "
-"للمستخدمين بتجاوز الأمم المتحدة..."
+"ميزات وتحسينات جديدة 1. إضافة قسم تحويل العملات إلى وحدة خطة الدفع، مما يسمح"
+" للمستخدمين بتجاوز الأمم المتحدة..."
 
 #: src/hope_live/templates/pages/landing.html:434
 msgid "Data responsibly"
@@ -1009,6 +1028,33 @@ msgstr "عُد"
 msgid "Django administration"
 msgstr "إدارة جانغو"
 
+#~ msgid "Completion rate dashboard"
+#~ msgstr "لوحة معلومات معدل الإكمال"
+
+#~ msgid "Delivery types"
+#~ msgstr "أنواع التسليم"
+
+#~ msgid "Regions"
+#~ msgstr "المناطق"
+
+#~ msgid "Countries"
+#~ msgstr "بلدان"
+
+#~ msgid "Status"
+#~ msgstr "حالة"
+
+#~ msgid "Priority"
+#~ msgstr "أولوية"
+
+#~ msgid "Category"
+#~ msgstr "فئة"
+
+#~ msgid "Issue type"
+#~ msgstr "نوع المشكلة"
+
+#~ msgid "Programs"
+#~ msgstr "البرامج"
+
 #~ msgid "Documentation"
 #~ msgstr "التوثيق"
 
@@ -1025,11 +1071,11 @@ msgstr "إدارة جانغو"
 #~ msgstr "البيانات وواجهة برمجة التطبيقات"
 
 #~ msgid ""
-#~ "* Use the slider handles at the bottom of the timeline or click and drag "
-#~ "to filter dates."
+#~ "* Use the slider handles at the bottom of the timeline or click and drag to "
+#~ "filter dates."
 #~ msgstr ""
-#~ "* استخدم مقابض شريط التمرير الموجودة أسفل المخطط الزمني أو انقر واسحب "
-#~ "لتصفية التواريخ."
+#~ "* استخدم مقابض شريط التمرير الموجودة أسفل المخطط الزمني أو انقر واسحب لتصفية"
+#~ " التواريخ."
 
 #~ msgid "Completion rates & metrics"
 #~ msgstr "معدلات الإنجاز والمقاييس"
@@ -1044,8 +1090,8 @@ msgstr "إدارة جانغو"
 #~ "Lifeline of hope for families after Typhoon Yagi: UNICEF's first "
 #~ "humanitarian cash transfers in Viet Nam."
 #~ msgstr ""
-#~ "شريان الحياة للأسر بعد إعصار ياغي: أول تحويلات نقدية إنسانية تقدمها "
-#~ "اليونيسف في فيتنام."
+#~ "شريان الحياة للأسر بعد إعصار ياغي: أول تحويلات نقدية إنسانية تقدمها اليونيسف"
+#~ " في فيتنام."
 
 #~ msgid "Read story"
 #~ msgstr "قراءة القصة"
@@ -1060,8 +1106,8 @@ msgstr "إدارة جانغو"
 #~ "Advancing Sustainable Funding for UNICEF Digital Public Good (HOPE) cash "
 #~ "assistance platform."
 #~ msgstr ""
-#~ "تعزيز التمويل المستدام لمنصة المساعدة النقدية للصالح العام الرقمي "
-#~ "لليونيسف (HOPE)."
+#~ "تعزيز التمويل المستدام لمنصة المساعدة النقدية للصالح العام الرقمي لليونيسف "
+#~ "(HOPE)."
 
 #~ msgid "View report"
 #~ msgstr "عرض التقرير"

@@ -31,7 +31,7 @@
 
     <!-- Cohort Selector -->
     <div class="mb-3 flex flex-wrap gap-2 items-center justify-between">
-        <div class="text-xs font-bold text-gray-500 uppercase tracking-wider">{% translate "Programme cohort:" %}</div>
+        <div class="text-xs font-bold text-gray-500">{% translate "Programme cohort:" %}</div>
         <div class="flex bg-gray-100 p-0.5 rounded-lg space-x-1 border border-gray-200">
             <button type="button" class="cohort-tab px-3 py-1 text-xs font-bold rounded-md bg-white shadow text-blue-800 transition-all duration-200 cursor-pointer" data-cohort="ALL">
                 {% translate "All" %}
@@ -58,7 +58,7 @@
             {% include "includes/chart_info.html" with definition="Number of payments made." source="HOPE payments" method="Count of payment records for the active dimension." %}
         </div>
         <div class="bg-white rounded-xl shadow-2xs border border-gray-200 p-3 border-l-4 border-yellow-500 flex flex-col justify-center min-h-[84px]">
-            <h3 class="text-gray-500 text-[10px] sm:text-[11px] font-bold">{% translate "Outstanding payment" %}</h3>
+            <h3 class="text-gray-500 text-[10px] sm:text-[11px] font-bold">{% translate "Outstanding payments" %}</h3>
             <p id="outstanding-payments" class="text-xl sm:text-2xl font-black text-amber-600 mt-0.5 leading-none">$0.00</p>
             {% include "includes/chart_info.html" with definition="Amount not yet paid." source="HOPE payments" method="Sum of entitlement (USD) for pending statuses." %}
         </div>
@@ -73,7 +73,7 @@
 
     <!-- Payment Pipeline Funnel -->
     <div class="bg-white rounded-xl shadow-2xs border border-gray-200 p-3.5 mb-4">
-        <h3 id="pipeline-title" class="text-sm font-bold text-gray-900 mb-1">{% translate "Payment Pipeline" %}</h3>
+        <h3 id="pipeline-title" class="text-sm font-bold text-gray-900 mb-1">{% translate "Payment pipeline" %}</h3>
         <p id="pipeline-note" class="text-[11px] text-gray-400 mb-2 italic">{% translate "From payments in the pipeline through to reconciled payments." %}</p>
         <div id="pipeline-funnel-chart" class="w-full h-[300px]"></div>
     </div>
@@ -81,11 +81,11 @@
     <!-- Delivery Types and Sector -->
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
         <div class="bg-white rounded-xl shadow-2xs border border-gray-200 p-3.5">
-            <h3 class="text-sm font-bold text-gray-900 mb-2">{% translate "Delivery types" %}</h3>
+            <h3 id="delivery-title" class="text-sm font-bold text-gray-900 mb-2">{% translate "Cash disbursed by delivery type" %}</h3>
             <div id="delivery-chart" class="w-full h-[240px]"></div>
         </div>
         <div class="bg-white rounded-xl shadow-2xs border border-gray-200 p-3.5">
-            <h3 class="text-sm font-bold text-gray-900 mb-2">{% translate "Distribution by sector" %}</h3>
+            <h3 id="sector-title" class="text-sm font-bold text-gray-900 mb-2">{% translate "Cash disbursed by sector" %}</h3>
             <div id="sector-chart" class="w-full h-[240px]"></div>
         </div>
     </div>
@@ -94,13 +94,13 @@
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
         <div class="bg-white rounded-xl shadow-2xs border border-gray-200 p-3.5 flex flex-col justify-between">
             <div>
-                <h3 class="text-sm font-bold text-gray-900 mb-1">{% translate "Regions" %}</h3>
+                <h3 id="region-title" class="text-sm font-bold text-gray-900 mb-1">{% translate "Cash disbursed by region" %}</h3>
                 <div id="region-chart" class="w-full h-[260px]"></div>
             </div>
             <p class="text-[10px] text-gray-400 mt-1 italic leading-tight">{% translate "MENAR: Middle East & North Africa · ESAR: Eastern & Southern Africa · ECAR: Europe & Central Asia · WCAR: West & Central Africa · LACR: Latin America & Caribbean · EAPR: East Asia & Pacific · SAR: South Asia" %}</p>
         </div>
         <div class="bg-white rounded-xl shadow-2xs border border-gray-200 p-3.5">
-            <h3 class="text-sm font-bold text-gray-900 mb-1">{% translate "Countries" %}</h3>
+            <h3 id="country-title" class="text-sm font-bold text-gray-900 mb-1">{% translate "Cash disbursed by country" %}</h3>
             <div id="country-chart" class="w-full h-[260px]"></div>
         </div>
     </div>
@@ -108,11 +108,11 @@
     <!-- Additional Segments (Program, FSP) -->
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
         <div class="bg-white rounded-xl shadow-2xs border border-gray-200 p-3.5">
-            <h3 class="text-sm font-bold text-gray-900 mb-2">{% translate "Distribution by program" %}</h3>
+            <h3 id="program-title" class="text-sm font-bold text-gray-900 mb-2">{% translate "Cash disbursed by programme" %}</h3>
             <div id="program-chart" class="w-full h-[320px]"></div>
         </div>
         <div class="bg-white rounded-xl shadow-2xs border border-gray-200 p-3.5">
-            <h3 class="text-sm font-bold text-gray-900 mb-2">{% translate "Financial service providers (FSP)" %}</h3>
+            <h3 id="fsp-title" class="text-sm font-bold text-gray-900 mb-2">{% translate "Cash disbursed by financial service provider (FSP)" %}</h3>
             <div id="fsp-chart" class="w-full h-[320px]"></div>
         </div>
     </div>

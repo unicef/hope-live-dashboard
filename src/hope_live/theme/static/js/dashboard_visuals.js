@@ -24,22 +24,9 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     };
 
-    const colorPalette = [
-        '#2ec7c9', '#b6a2de', '#5ab1ef', '#ffb980', '#d87a80',
-        '#8d98b3', '#e5cf0d', '#97b552', '#95706d', '#dc69aa',
-        '#07a2a4', '#9a7fd1', '#588dd5', '#f5994e', '#c05050',
-        '#59678c', '#c9ab00', '#76933c', '#bc65a6'
-    ];
-
-    function getStableColor(name) {
-        if (!name) return '#5470c6';
-        let hash = 0;
-        for (let i = 0; i < name.length; i++) {
-            hash = name.charCodeAt(i) + (Math.imul(hash, 32) - hash); // == ((hash << 5) - hash); avoids a shift, which breaks gettext extraction
-        }
-        const index = Math.abs(hash) % colorPalette.length;
-        return colorPalette[index];
-    }
+    const chartHelpers = window.HopeChart || {};
+    const getStableColor = chartHelpers.getStableColor || (() => '#5470c6');
+    const getRegionColor = chartHelpers.getRegionColor || getStableColor;
 
     const fallbackCountryToRegion = {
         'afghanistan': 'SAR',
@@ -271,7 +258,35 @@ document.addEventListener('DOMContentLoaded', function () {
         if (outEl) outEl.textContent = '$' + d3.format(',.0f')(totalOutstanding);
     }
 
+    function updateChartTitles() {
+        const usd = currentMetric === 'usd';
+        const titles = usd ? {
+            'timeline-title': gettext('Spending timeline'),
+            'sector-title': gettext('Cash disbursed by sector'),
+            'delivery-title': gettext('Cash disbursed by delivery type'),
+            'region-title': gettext('Cash disbursed by region'),
+            'country-title': gettext('Cash disbursed by country'),
+            'program-title': gettext('Cash disbursed by programme'),
+            'fsp-title': gettext('Cash disbursed by financial service provider (FSP)'),
+            'bg-title': gettext('Cash disbursed by beneficiary group')
+        } : {
+            'timeline-title': gettext('Payments timeline'),
+            'sector-title': gettext('Payments by sector'),
+            'delivery-title': gettext('Payments by delivery type'),
+            'region-title': gettext('Payments by region'),
+            'country-title': gettext('Payments by country'),
+            'program-title': gettext('Payments by programme'),
+            'fsp-title': gettext('Payments by financial service provider (FSP)'),
+            'bg-title': gettext('Payments by beneficiary group')
+        };
+        Object.keys(titles).forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.textContent = titles[id];
+        });
+    }
+
     function updateAll() {
+        updateChartTitles();
         let activeDimType = 'sector';
         if (selectedPrograms.size > 0) activeDimType = 'program';
         else if (selectedDeliveries.size > 0) activeDimType = 'delivery_type';
@@ -331,7 +346,7 @@ document.addEventListener('DOMContentLoaded', function () {
         timelineChart.setOption(timelineOption, { notMerge: true });
 
         // Helper to update horizontal bar charts (row charts)
-        function updateHorizontalBarChart(chartObj, group, activeFiltersSet, leftMargin = 120, maxBars = 100, isRegionalOrCountry = false) {
+        function updateHorizontalBarChart(chartObj, group, activeFiltersSet, leftMargin = 220, maxBars = 100, isRegionalOrCountry = false) {
             const rawData = group.all()
                 .map(d => {
                     if (isRegionalOrCountry) {
@@ -347,13 +362,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
             const hasAnySelection = activeFiltersSet.size > 0;
             const seriesData = rawData.map(d => {
+                const stableColor = getStableColor(d.key);
                 return {
                     name: d.key,
                     value: d.value,
                     itemStyle: {
-                        color: activeFiltersSet.has(d.key)
-                            ? getStableColor(d.key)
-                            : (hasAnySelection ? '#cbd5e1' : getStableColor(d.key))
+                        color: activeFiltersSet.has(d.key) ? stableColor : (hasAnySelection ? '#cbd5e1' : stableColor)
                     }
                 };
             });
@@ -364,7 +378,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     axisPointer: { type: 'shadow' },
                     formatter: params => `${params[0].name}: <b>${formatFullVal(params[0].value)}</b>`
                 },
-                grid: { top: 15, bottom: 25, left: 15, right: 25 },
+                grid: { top: 15, bottom: 25, left: leftMargin, right: 60 },
                 xAxis: {
                     type: 'value',
                     axisLabel: { formatter: val => formatMetric(val), color: '#64748b', fontSize: 10 },
@@ -376,25 +390,29 @@ document.addEventListener('DOMContentLoaded', function () {
                     inverse: true,
                     axisTick: { show: false },
                     axisLine: { show: true, lineStyle: { color: '#f1f5f9' } },
-                    axisLabel: { show: false }
+                    axisLabel: {
+                        show: true,
+                        width: leftMargin - 20,
+                        overflow: 'truncate',
+                        color: '#374151',
+                        fontSize: 10
+                    }
                 },
                 series: [{
                     type: 'bar',
                     data: seriesData,
-                    barMaxWidth: 24,
+                    barMaxWidth: 22,
                     showBackground: true,
                     backgroundStyle: { color: 'rgba(241, 245, 249, 0.75)', borderRadius: [0, 4, 4, 0] },
                     itemStyle: { borderRadius: [0, 4, 4, 0] },
                     label: {
                         show: true,
-                        position: 'insideLeft',
-                        distance: 8,
-                        formatter: params => `${params.name}  •  ${formatMetric(params.value)}`,
+                        position: 'right',
+                        distance: 6,
+                        formatter: params => formatMetric(params.value),
                         color: '#0f172a',
                         fontWeight: 600,
-                        fontSize: 11,
-                        textBorderColor: '#ffffff',
-                        textBorderWidth: 2.5
+                        fontSize: 11
                     }
                 }]
             }, { notMerge: true });
@@ -448,7 +466,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 data: sectorDonutData
             }]
         }, { notMerge: true });
-        updateHorizontalBarChart(programChart, programGroup, selectedPrograms, 140, 10);
+        updateHorizontalBarChart(programChart, programGroup, selectedPrograms, 220, 10);
         // Delivery Donut Chart with outside labels
         const deliveryRawData = deliveryGroup.all()
             .map(d => ({ name: d.key, value: d.value[currentMetric] }))
@@ -496,7 +514,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 data: deliverySeriesData
             }]
         }, { notMerge: true });
-        updateHorizontalBarChart(fspChart, fspGroup, selectedFsps, 140, 10);
+        updateHorizontalBarChart(fspChart, fspGroup, selectedFsps, 220, 10);
         // Region Chart (with full-name mapping)
         const regionData = regionGroup.all()
             .map(d => {
@@ -514,7 +532,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 axisPointer: { type: 'shadow' },
                 formatter: params => `${getRegionName(params[0].name)}: <b>${formatFullVal(params[0].value)}</b>`
             },
-            grid: { top: 15, bottom: 25, left: 15, right: 25 },
+            grid: { top: 15, bottom: 25, left: 220, right: 60 },
             xAxis: {
                 type: 'value',
                 axisLabel: { formatter: val => formatMetric(val), color: '#64748b', fontSize: 10 },
@@ -526,46 +544,53 @@ document.addEventListener('DOMContentLoaded', function () {
                 inverse: true,
                 axisTick: { show: false },
                 axisLine: { show: true, lineStyle: { color: '#f1f5f9' } },
-                axisLabel: { show: false }
+                axisLabel: {
+                    show: true,
+                    width: 200,
+                    overflow: 'truncate',
+                    formatter: val => getRegionName(val),
+                    color: '#374151',
+                    fontSize: 10
+                }
             },
             series: [{
                 type: 'bar',
                 data: regionData.map(d => {
+                    const stableColor = getRegionColor(d.key);
                     return {
                         name: d.key,
                         value: d.value,
                         itemStyle: {
-                            color: selectedRegions.has(d.key) ? getStableColor(d.key) : (hasAnyRegionSelection ? '#cbd5e1' : getStableColor(d.key))
+                            color: selectedRegions.has(d.key) ? stableColor : (hasAnyRegionSelection ? '#cbd5e1' : stableColor)
                         }
                     };
                 }),
-                barMaxWidth: 24,
+                barMaxWidth: 22,
                 showBackground: true,
                 backgroundStyle: { color: 'rgba(241, 245, 249, 0.75)', borderRadius: [0, 4, 4, 0] },
                 itemStyle: { borderRadius: [0, 4, 4, 0] },
                 label: {
                     show: true,
-                    position: 'insideLeft',
-                    distance: 8,
-                    formatter: params => `${getRegionName(params.name)}  •  ${formatMetric(params.value)}`,
+                    position: 'right',
+                    distance: 6,
+                    formatter: params => formatMetric(params.value),
                     color: '#0f172a',
                     fontWeight: 600,
-                    fontSize: 11,
-                    textBorderColor: '#ffffff',
-                    textBorderWidth: 2.5
+                    fontSize: 11
                 }
             }]
         }, { notMerge: true });
-        updateHorizontalBarChart(beneficiaryGroupChart, beneficiaryGroupGroup, selectedBeneficiaryGroups, 140);
+        updateHorizontalBarChart(beneficiaryGroupChart, beneficiaryGroupGroup, selectedBeneficiaryGroups, 220);
 
-        // 2. Country Chart (Donut with outside labels, all countries)
+        // 2. Country Chart (Donut, top 10)
         const countryData = countryGroup.all()
             .map(d => {
                 const valObj = d.value[activeDimType] || { usd: 0, qty: 0, payments: 0 };
                 return { key: d.key, value: valObj[currentMetric] };
             })
             .filter(d => d.key !== '' && d.key !== null && d.value > 0)
-            .sort((a, b) => b.value - a.value);
+            .sort((a, b) => b.value - a.value)
+            .slice(0, 10);
 
         const hasAnyCountrySelection = selectedCountries.size > 0;
         const countrySeriesData = countryData.map(d => {
@@ -574,9 +599,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 name: d.key,
                 value: d.value,
                 itemStyle: {
-                    color: selectedCountries.has(d.key)
-                        ? stableColor
-                        : (hasAnyCountrySelection ? '#cbd5e1' : stableColor)
+                    color: selectedCountries.has(d.key) ? stableColor : (hasAnyCountrySelection ? '#cbd5e1' : stableColor)
                 }
             };
         });
@@ -719,19 +742,6 @@ document.addEventListener('DOMContentLoaded', function () {
             this.classList.add('bg-white', 'shadow', 'text-blue-800', 'active-metric');
             this.classList.remove('text-gray-600');
             currentMetric = this.dataset.metric;
-
-            const timelineTitle = document.getElementById('timeline-title');
-            if (timelineTitle) {
-                if (currentMetric === 'usd') timelineTitle.textContent = gettext('Spending timeline');
-                else timelineTitle.textContent = gettext('Payments timeline');
-            }
-
-            const bgTitle = document.getElementById('bg-title');
-            if (bgTitle) {
-                if (currentMetric === 'usd') bgTitle.textContent = gettext('Cash disbursed by beneficiary group');
-                else bgTitle.textContent = gettext('Payments by beneficiary group');
-            }
-
             updateAll();
         });
     });

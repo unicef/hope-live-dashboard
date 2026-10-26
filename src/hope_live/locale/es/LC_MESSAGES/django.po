@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-26 08:23+0000\n"
+"POT-Creation-Date: 2026-10-26 10:33+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,8 +16,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? "
-"1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #: src/hope_live/config/settings.py:168
 msgid "Spanish"
@@ -47,7 +46,8 @@ msgstr "Chino"
 #, python-format
 msgid "Copyright © %(year)s - All right reserved by UNICEF - %(version)s"
 msgstr ""
-"Copyright © %(year)s - Todos los derechos reservados por UNICEF - %(version)s"
+"Copyright © %(year)s - Todos los derechos reservados por UNICEF - "
+"%(version)s"
 
 #: src/hope_live/templates/header.html:26
 msgid "Select Language"
@@ -180,8 +180,8 @@ msgid ""
 "HOPE helps countries strengthen evidence for humanitarian action for "
 "children."
 msgstr ""
-"HOPE ayuda a los países a fortalecer la evidencia para la acción humanitaria "
-"en favor de los niños."
+"HOPE ayuda a los países a fortalecer la evidencia para la acción humanitaria"
+" en favor de los niños."
 
 #: src/hope_live/templates/menu.html:76
 #: src/hope_live/templates/pages/about.html:17
@@ -204,8 +204,9 @@ msgid ""
 msgstr ""
 
 #: src/hope_live/templates/pages/completion.html:8
-msgid "Completion rate dashboard"
-msgstr "Tablero de Tasa de Finalización"
+#| msgid "Payment reconciliation and completion status tracking"
+msgid "Payment reconciliation dashboard"
+msgstr ""
 
 #: src/hope_live/templates/pages/completion.html:9
 msgid "Payment reconciliation and completion status tracking"
@@ -238,8 +239,9 @@ msgid "Reconciled payments"
 msgstr "Pagos conciliados"
 
 #: src/hope_live/templates/pages/completion.html:40
-msgid "Still opened"
-msgstr "Aún abierto"
+#| msgid "Still opened"
+msgid "Still open"
+msgstr ""
 
 #: src/hope_live/templates/pages/completion.html:46
 msgid "Reconciliation rate"
@@ -258,7 +260,7 @@ msgid "Payments by beneficiary group"
 msgstr ""
 
 #: src/hope_live/templates/pages/completion.html:75
-msgid "Quality Quadrant"
+msgid "Quality quadrant"
 msgstr ""
 
 #: src/hope_live/templates/pages/completion.html:76
@@ -308,34 +310,35 @@ msgid "Number of payments"
 msgstr "Número de pagos"
 
 #: src/hope_live/templates/pages/dashboard.html:61
-msgid "Outstanding payment"
-msgstr "Pago pendiente"
+#| msgid "Outstanding payment"
+msgid "Outstanding payments"
+msgstr ""
 
 #: src/hope_live/templates/pages/dashboard.html:69
 msgid "Spending timeline"
 msgstr "Cronograma de gastos"
 
 #: src/hope_live/templates/pages/dashboard.html:76
-#, fuzzy
 #| msgid "Payments Count"
-msgid "Payment Pipeline"
-msgstr "Recuento de pagos"
+msgid "Payment pipeline"
+msgstr ""
 
 #: src/hope_live/templates/pages/dashboard.html:77
 msgid "From payments in the pipeline through to reconciled payments."
 msgstr ""
 
 #: src/hope_live/templates/pages/dashboard.html:84
-msgid "Delivery types"
-msgstr "Tipos de entrega"
+msgid "Cash disbursed by delivery type"
+msgstr ""
 
 #: src/hope_live/templates/pages/dashboard.html:88
-msgid "Distribution by sector"
-msgstr "Distribución por Sector"
+#| msgid "Distribution by sector"
+msgid "Cash disbursed by sector"
+msgstr ""
 
 #: src/hope_live/templates/pages/dashboard.html:97
-msgid "Regions"
-msgstr "Regiones"
+msgid "Cash disbursed by region"
+msgstr ""
 
 #: src/hope_live/templates/pages/dashboard.html:100
 msgid ""
@@ -345,16 +348,19 @@ msgid ""
 msgstr ""
 
 #: src/hope_live/templates/pages/dashboard.html:103
-msgid "Countries"
-msgstr "Países"
+#| msgid "Ticket status by country"
+msgid "Cash disbursed by country"
+msgstr ""
 
 #: src/hope_live/templates/pages/dashboard.html:111
-msgid "Distribution by program"
-msgstr "Distribución por programa"
+#| msgid "Distribution by program"
+msgid "Cash disbursed by programme"
+msgstr ""
 
 #: src/hope_live/templates/pages/dashboard.html:115
-msgid "Financial service providers (FSP)"
-msgstr "Proveedores de servicios financieros (FSP)"
+#| msgid "Financial service providers (FSP)"
+msgid "Cash disbursed by financial service provider (FSP)"
+msgstr ""
 
 #: src/hope_live/templates/pages/dashboard.html:123
 msgid "Cash disbursed by beneficiary group"
@@ -367,7 +373,8 @@ msgid "Demographic dashboard"
 msgstr "Demografía"
 
 #: src/hope_live/templates/pages/demographic.html:9
-msgid "Breakdown of individuals, children, and PWD reached"
+msgid ""
+"Breakdown of individuals, children, and persons with disabilities reached"
 msgstr ""
 
 #: src/hope_live/templates/pages/demographic.html:21
@@ -387,15 +394,13 @@ msgid "Households"
 msgstr "Hogares alcanzados"
 
 #: src/hope_live/templates/pages/demographic.html:30
-#: src/hope_live/templates/pages/demographic.html:67
 #, fuzzy
 #| msgid "Children Reached"
 msgid "Children"
 msgstr "Niños alcanzados"
 
 #: src/hope_live/templates/pages/demographic.html:33
-#: src/hope_live/templates/pages/demographic.html:72
-msgid "PWD reached"
+msgid "Persons with disabilities"
 msgstr ""
 
 #: src/hope_live/templates/pages/demographic.html:57
@@ -405,6 +410,15 @@ msgstr ""
 #: src/hope_live/templates/pages/demographic.html:62
 msgid "Households reached"
 msgstr "Hogares alcanzados"
+
+#: src/hope_live/templates/pages/demographic.html:67
+#| msgid "Children Reached"
+msgid "Children reached"
+msgstr ""
+
+#: src/hope_live/templates/pages/demographic.html:72
+msgid "Persons with disabilities reached"
+msgstr ""
 
 #: src/hope_live/templates/pages/demographic.html:80
 #, fuzzy
@@ -447,24 +461,29 @@ msgid "Tickets timeline"
 msgstr "Cronología de entradas"
 
 #: src/hope_live/templates/pages/grievance.html:38
-msgid "Status"
-msgstr "Estado"
+#| msgid "Ticket status by country"
+msgid "Tickets by status"
+msgstr ""
 
 #: src/hope_live/templates/pages/grievance.html:42
-msgid "Priority"
-msgstr "Prioridad"
+#| msgid "Ticket status by country"
+msgid "Tickets by priority"
+msgstr ""
 
 #: src/hope_live/templates/pages/grievance.html:49
-msgid "Category"
-msgstr "Categoría"
+#| msgid "Ticket status by country"
+msgid "Tickets by category"
+msgstr ""
 
 #: src/hope_live/templates/pages/grievance.html:53
-msgid "Issue type"
-msgstr "Tipo de problema"
+#| msgid "Ticket status by country"
+msgid "Tickets by subcategory"
+msgstr ""
 
 #: src/hope_live/templates/pages/grievance.html:60
-msgid "Ticket status by country"
-msgstr "Estado de los tickets por país"
+#| msgid "Ticket status by country"
+msgid "Tickets by status and country"
+msgstr ""
 
 #: src/hope_live/templates/pages/landing.html:28
 msgid "Humanitarian cash"
@@ -505,8 +524,9 @@ msgid "Countries & territories"
 msgstr "Países y territorios"
 
 #: src/hope_live/templates/pages/landing.html:79
-msgid "Programs"
-msgstr "Programas"
+#| msgid "Programs"
+msgid "Programmes"
+msgstr ""
 
 #: src/hope_live/templates/pages/landing.html:89
 #, fuzzy
@@ -774,7 +794,8 @@ msgstr "Metodología"
 #: src/hope_live/templates/pages/landing.html:444
 msgid "Learn how HOPE data is produced and standards applied."
 msgstr ""
-"Descubra cómo se producen los datos de HOPE y cómo se aplican los estándares."
+"Descubra cómo se producen los datos de HOPE y cómo se aplican los "
+"estándares."
 
 #: src/hope_live/templates/pages/landing.html:452
 msgid "Give feedback"
@@ -1015,6 +1036,33 @@ msgstr "Volver"
 msgid "Django administration"
 msgstr "administración de django"
 
+#~ msgid "Completion rate dashboard"
+#~ msgstr "Tablero de Tasa de Finalización"
+
+#~ msgid "Delivery types"
+#~ msgstr "Tipos de entrega"
+
+#~ msgid "Regions"
+#~ msgstr "Regiones"
+
+#~ msgid "Countries"
+#~ msgstr "Países"
+
+#~ msgid "Status"
+#~ msgstr "Estado"
+
+#~ msgid "Priority"
+#~ msgstr "Prioridad"
+
+#~ msgid "Category"
+#~ msgstr "Categoría"
+
+#~ msgid "Issue type"
+#~ msgstr "Tipo de problema"
+
+#~ msgid "Programs"
+#~ msgstr "Programas"
+
 #~ msgid "Documentation"
 #~ msgstr "Documentación"
 
@@ -1031,8 +1079,8 @@ msgstr "administración de django"
 #~ msgstr "Datos y API"
 
 #~ msgid ""
-#~ "* Use the slider handles at the bottom of the timeline or click and drag "
-#~ "to filter dates."
+#~ "* Use the slider handles at the bottom of the timeline or click and drag to "
+#~ "filter dates."
 #~ msgstr ""
 #~ "* Utilice los controles deslizantes en la parte inferior de la línea de "
 #~ "tiempo o haga clic y arrastre para filtrar fechas."
@@ -1066,8 +1114,8 @@ msgstr "administración de django"
 #~ "Advancing Sustainable Funding for UNICEF Digital Public Good (HOPE) cash "
 #~ "assistance platform."
 #~ msgstr ""
-#~ "Promoción de la financiación sostenible para la plataforma de asistencia "
-#~ "en efectivo para el bien público digital (HOPE) de UNICEF."
+#~ "Promoción de la financiación sostenible para la plataforma de asistencia en "
+#~ "efectivo para el bien público digital (HOPE) de UNICEF."
 
 #~ msgid "View report"
 #~ msgstr "Ver informe"

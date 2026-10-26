@@ -21,22 +21,8 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     };
 
-    const colorPalette = [
-        '#2ec7c9', '#b6a2de', '#5ab1ef', '#ffb980', '#d87a80',
-        '#8d98b3', '#e5cf0d', '#97b552', '#95706d', '#dc69aa',
-        '#07a2a4', '#9a7fd1', '#588dd5', '#f5994e', '#c05050',
-        '#59678c', '#c9ab00', '#76933c', '#bc65a6'
-    ];
-
-    function getStableColor(name) {
-        if (!name) return '#5470c6';
-        let hash = 0;
-        for (let i = 0; i < name.length; i++) {
-            hash = name.charCodeAt(i) + (Math.imul(hash, 32) - hash); // == ((hash << 5) - hash); avoids a shift, which breaks gettext extraction
-        }
-        const index = Math.abs(hash) % colorPalette.length;
-        return colorPalette[index];
-    }
+    const chartHelpers = window.HopeChart || {};
+    const getStableColor = chartHelpers.getStableColor || (() => '#5470c6');
 
     let ndx = crossfilter([]);
 
@@ -275,7 +261,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
             },
             legend: {
-                data: [gettext('Reconciled'), gettext('Still opened')],
+                data: [gettext('Reconciled'), gettext('Still open')],
                 bottom: 0,
                 icon: 'roundRect'
             },
@@ -307,7 +293,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     data: reconciledData
                 },
                 {
-                    name: gettext('Still opened'),
+                    name: gettext('Still open'),
                     type: 'bar',
                     stack: 'total',
                     color: '#5ab1ef',
@@ -319,7 +305,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         timelineChart.setOption(timelineOption, { notMerge: true });
 
-        // 2. Stacked Country Chart
+        // 2. Stacked Country Chart (top 10)
         const countryData = countryStatusGroup.all()
             .map(d => {
                 const reconciled = currentMetric === 'usd' ? d.value.reconciled_usd : d.value.reconciled_payments;
@@ -333,7 +319,7 @@ document.addEventListener('DOMContentLoaded', function () {
             })
             .filter(d => d.key !== '' && d.key !== null && d.total > 0)
             .sort((a, b) => b.total - a.total)
-            .slice(0, 15);
+            .slice(0, 10);
 
         const hasAnyCountrySelection = selectedCountries.size > 0;
         const countrySeriesDataReconciled = countryData.map(d => {
@@ -367,7 +353,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
             },
             legend: {
-                data: [gettext('Reconciled'), gettext('Still opened')],
+                data: [gettext('Reconciled'), gettext('Still open')],
                 top: 0,
                 right: 20
             },
@@ -378,6 +364,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 axisLabel: {
                     rotate: 30,
                     interval: 0,
+                    width: 80,
+                    overflow: 'truncate',
                     color: '#1f2937',
                     fontWeight: 500
                 }
@@ -400,30 +388,39 @@ document.addEventListener('DOMContentLoaded', function () {
                     itemStyle: { borderRadius: [0, 0, 0, 0] }
                 },
                 {
-                    name: gettext('Still opened'),
+                    name: gettext('Still open'),
                     type: 'bar',
                     stack: 'total',
                     barMaxWidth: 30,
                     data: countrySeriesDataOpened,
-                    itemStyle: { borderRadius: [4, 4, 0, 0] }
+                    itemStyle: { borderRadius: [4, 4, 0, 0] },
+                    label: {
+                        show: true,
+                        position: 'top',
+                        formatter: params => formatMetric(countryData[params.dataIndex] ? countryData[params.dataIndex].total : params.value),
+                        color: '#0f172a',
+                        fontWeight: 600,
+                        fontSize: 10
+                    }
                 }
             ]
         }, { notMerge: true });
 
-        // Beneficiary Group Chart
+        // Beneficiary Group Chart (top 10)
         const bgData = beneficiaryGroupGroup.all()
-            .filter(d => d.key !== '' && d.key !== null && d.value[currentMetric] > 0)
-            .sort((a, b) => b.value[currentMetric] - a.value[currentMetric]);
+            .map(d => ({ key: d.key, value: d.value[currentMetric] }))
+            .filter(d => d.key !== '' && d.key !== null && d.value > 0)
+            .sort((a, b) => b.value - a.value)
+            .slice(0, 10);
 
         const hasAnyBgSelection = selectedBeneficiaryGroups.size > 0;
         const bgSeriesData = bgData.map(d => {
+            const stableColor = getStableColor(d.key);
             return {
                 name: d.key,
-                value: d.value[currentMetric],
+                value: d.value,
                 itemStyle: {
-                    color: selectedBeneficiaryGroups.has(d.key)
-                        ? getStableColor(d.key)
-                        : (hasAnyBgSelection ? '#cbd5e1' : getStableColor(d.key))
+                    color: selectedBeneficiaryGroups.has(d.key) ? stableColor : (hasAnyBgSelection ? '#cbd5e1' : stableColor)
                 }
             };
         });
@@ -434,7 +431,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 axisPointer: { type: 'shadow' },
                 formatter: params => `${params[0].name}: <b>${formatFullVal(params[0].value)}</b> ${unitName}`
             },
-            grid: { top: 15, bottom: 25, left: 15, right: 25 },
+            grid: { top: 15, bottom: 25, left: 220, right: 60 },
             xAxis: {
                 type: 'value',
                 axisLabel: { formatter: val => formatMetric(val), color: '#64748b', fontSize: 10 },
@@ -446,25 +443,29 @@ document.addEventListener('DOMContentLoaded', function () {
                 inverse: true,
                 axisTick: { show: false },
                 axisLine: { show: true, lineStyle: { color: '#f1f5f9' } },
-                axisLabel: { show: false }
+                axisLabel: {
+                    show: true,
+                    width: 200,
+                    overflow: 'truncate',
+                    color: '#374151',
+                    fontSize: 10
+                }
             },
             series: [{
                 type: 'bar',
                 data: bgSeriesData,
-                barMaxWidth: 24,
+                barMaxWidth: 22,
                 showBackground: true,
                 backgroundStyle: { color: 'rgba(241, 245, 249, 0.75)', borderRadius: [0, 4, 4, 0] },
                 itemStyle: { borderRadius: [0, 4, 4, 0] },
                 label: {
                     show: true,
-                    position: 'insideLeft',
-                    distance: 8,
-                    formatter: params => `${params.name}  •  ${formatMetric(params.value)}`,
+                    position: 'right',
+                    distance: 6,
+                    formatter: params => formatMetric(params.value),
                     color: '#0f172a',
                     fontWeight: 600,
-                    fontSize: 11,
-                    textBorderColor: '#ffffff',
-                    textBorderWidth: 2.5
+                    fontSize: 11
                 }
             }]
         }, { notMerge: true });
@@ -655,12 +656,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
             if (currentMetric === 'usd') {
                 if (reconciledTitle) reconciledTitle.textContent = gettext('Reconciled amount (USD)');
-                if (openedTitle) openedTitle.textContent = gettext('Still opened amount (USD)');
+                if (openedTitle) openedTitle.textContent = gettext('Still open amount (USD)');
                 if (timelineTitle) timelineTitle.textContent = gettext('Reconciliation timeline (USD)');
                 if (countryTitle) countryTitle.textContent = gettext('Reconciliation status by country (USD)');
             } else {
                 if (reconciledTitle) reconciledTitle.textContent = gettext('Reconciled payments');
-                if (openedTitle) openedTitle.textContent = gettext('Still opened payments');
+                if (openedTitle) openedTitle.textContent = gettext('Still open payments');
                 if (timelineTitle) timelineTitle.textContent = gettext('Reconciliation timeline');
                 if (countryTitle) countryTitle.textContent = gettext('Reconciliation status by country');
             }

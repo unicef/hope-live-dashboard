@@ -5,7 +5,7 @@
 <div class="container mx-auto px-4 lg:px-6 py-4 lg:py-5">
     <div class="mb-3 flex flex-wrap justify-between items-center gap-2">
         <div>
-            <h1 class="text-xl lg:text-2xl font-black text-gray-900 leading-tight">{% translate "Completion rate dashboard" %}</h1>
+            <h1 class="text-xl lg:text-2xl font-black text-gray-900 leading-tight">{% translate "Payment reconciliation dashboard" %}</h1>
             <p class="text-xs text-gray-500">{% translate "Payment reconciliation and completion status tracking" %}</p>
         </div>
         <div>
@@ -37,7 +37,7 @@
             {% include "includes/chart_info.html" with definition="Payments that have been reconciled." source="HOPE payments" method="Count of payments with reconciled status." %}
         </div>
         <div class="bg-white rounded-xl shadow-2xs border border-gray-200 p-3 border-l-4 border-unicef-primary flex flex-col justify-center min-h-[84px]">
-            <h3 id="opened-card-title" class="text-gray-500 text-[10px] sm:text-[11px] font-bold">{% translate "Still opened" %}</h3>
+            <h3 id="opened-card-title" class="text-gray-500 text-[10px] sm:text-[11px] font-bold">{% translate "Still open" %}</h3>
             <p id="total-opened" class="text-xl sm:text-2xl font-black text-amber-600 mt-0.5 leading-none">0</p>
             {% include "includes/chart_info.html" with definition="Payments still open." source="HOPE payments" method="Count of payments with open status." %}
         </div>
@@ -72,7 +72,7 @@
 
     <!-- Quality Quadrant -->
     <div class="bg-white rounded-xl shadow-2xs border border-gray-200 p-3.5 mb-4">
-        <h3 class="text-sm font-bold text-gray-900 mb-1">{% translate "Quality Quadrant" %}</h3>
+        <h3 class="text-sm font-bold text-gray-900 mb-1">{% translate "Quality quadrant" %}</h3>
         <p class="text-[11px] text-gray-400 mb-2 italic">{% translate "Delivery success rate versus reconciliation rate, by country. Bubble size reflects reconciled volume." %}</p>
         <div id="quality-quadrant-chart" class="w-full h-[380px]"></div>
     </div>

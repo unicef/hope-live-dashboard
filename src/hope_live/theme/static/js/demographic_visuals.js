@@ -16,25 +16,11 @@ document.addEventListener('DOMContentLoaded', function () {
         individuals: gettext('Individuals reached'),
         households: gettext('Households reached'),
         children: gettext('Children reached'),
-        pwd: gettext('PWD reached')
+        pwd: gettext('Persons with disabilities reached')
     };
 
-    const colorPalette = [
-        '#2ec7c9', '#b6a2de', '#5ab1ef', '#ffb980', '#d87a80',
-        '#8d98b3', '#e5cf0d', '#97b552', '#95706d', '#dc69aa',
-        '#07a2a4', '#9a7fd1', '#588dd5', '#f5994e', '#c05050',
-        '#59678c', '#c9ab00', '#76933c', '#bc65a6'
-    ];
-
-    function getStableColor(name) {
-        if (!name) return '#5470c6';
-        let hash = 0;
-        for (let i = 0; i < name.length; i++) {
-            hash = name.charCodeAt(i) + (Math.imul(hash, 32) - hash); // == ((hash << 5) - hash); avoids a shift, which breaks gettext extraction
-        }
-        const index = Math.abs(hash) % colorPalette.length;
-        return colorPalette[index];
-    }
+    const chartHelpers = window.HopeChart || {};
+    const getStableColor = chartHelpers.getStableColor || (() => '#5470c6');
 
     // Initialize empty Crossfilter
     let ndx = crossfilter([]);
@@ -247,10 +233,11 @@ document.addEventListener('DOMContentLoaded', function () {
             }]
         }, { notMerge: true });
 
-        // 3. Country Distribution Chart (Donut with outside labels)
+        // 3. Country Distribution Chart (Donut, top 10)
         const countryData = countryGroup.all()
-            .filter(d => d.key !== null && d.value.beneficiaries > 0)
-            .sort((a, b) => b.value[activeField] - a.value[activeField])
+            .map(d => ({ key: d.key, value: d.value[activeField] }))
+            .filter(d => d.key !== null && d.value > 0)
+            .sort((a, b) => b.value - a.value)
             .slice(0, 10);
 
         const hasAnyCountrySelection = selectedCountries.size > 0;
@@ -259,7 +246,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const isSelected = selectedCountries.has(d.key);
             return {
                 name: d.key,
-                value: d.value[activeField],
+                value: d.value,
                 itemStyle: {
                     color: isSelected ? stableColor : (hasAnyCountrySelection ? '#cbd5e1' : stableColor)
                 }
@@ -284,17 +271,20 @@ document.addEventListener('DOMContentLoaded', function () {
             }]
         }, { notMerge: true });
 
-        // 6. Beneficiary Group Chart
+        // 6. Beneficiary Group Chart (top 10)
         const bgData = beneficiaryGroupGroup.all()
-            .filter(d => d.key !== null && d.value.beneficiaries > 0)
-            .sort((a, b) => b.value[activeField] - a.value[activeField]);
+            .map(d => ({ key: d.key, value: d.value[activeField] }))
+            .filter(d => d.key !== null && d.value > 0)
+            .sort((a, b) => b.value - a.value)
+            .slice(0, 10);
 
         const bgCategories = bgData.map(d => d.key);
         const hasAnyBgSelection = selectedBeneficiaryGroups.size > 0;
         const bgSeriesData = bgData.map(d => {
             const isSelected = selectedBeneficiaryGroups.has(d.key);
             return {
-                value: d.value[activeField],
+                name: d.key,
+                value: d.value,
                 itemStyle: {
                     color: isSelected ? getStableColor(d.key) : (hasAnyBgSelection ? '#cbd5e1' : getStableColor(d.key))
                 }
@@ -307,7 +297,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 axisPointer: { type: 'shadow' },
                 formatter: params => `${params[0].name}: <b>${d3.format(",")(params[0].value)}</b>`
             },
-            grid: { top: 15, bottom: 25, left: 15, right: 25 },
+            grid: { top: 15, bottom: 25, left: 220, right: 60 },
             xAxis: {
                 type: 'value',
                 axisLabel: { formatter: val => d3.format(".2s")(val).replace('G', 'B'), color: '#64748b', fontSize: 10 },
@@ -319,25 +309,29 @@ document.addEventListener('DOMContentLoaded', function () {
                 inverse: true,
                 axisTick: { show: false },
                 axisLine: { show: true, lineStyle: { color: '#f1f5f9' } },
-                axisLabel: { show: false }
+                axisLabel: {
+                    show: true,
+                    width: 200,
+                    overflow: 'truncate',
+                    color: '#374151',
+                    fontSize: 10
+                }
             },
             series: [{
                 type: 'bar',
                 data: bgSeriesData,
-                barMaxWidth: 24,
+                barMaxWidth: 22,
                 showBackground: true,
                 backgroundStyle: { color: 'rgba(241, 245, 249, 0.75)', borderRadius: [0, 4, 4, 0] },
                 itemStyle: { borderRadius: [0, 4, 4, 0] },
                 label: {
                     show: true,
-                    position: 'insideLeft',
-                    distance: 8,
-                    formatter: params => `${params.name}  •  ${d3.format(".2s")(params.value).replace('G', 'B')}`,
+                    position: 'right',
+                    distance: 6,
+                    formatter: params => d3.format(".2s")(params.value).replace('G', 'B'),
                     color: '#0f172a',
                     fontWeight: 600,
-                    fontSize: 11,
-                    textBorderColor: '#ffffff',
-                    textBorderWidth: 2.5
+                    fontSize: 11
                 }
             }]
         }, { notMerge: true });
@@ -430,7 +424,7 @@ document.addEventListener('DOMContentLoaded', function () {
             individuals: gettext('Individuals reached by beneficiary group'),
             households: gettext('Households reached by beneficiary group'),
             children: gettext('Children reached by beneficiary group'),
-            pwd: gettext('PWD reached by beneficiary group')
+            pwd: gettext('Persons with disabilities reached by beneficiary group')
         };
         const bgTitle = document.getElementById('bg-title');
         if (bgTitle) bgTitle.textContent = bgTitleMap[currentMetric];

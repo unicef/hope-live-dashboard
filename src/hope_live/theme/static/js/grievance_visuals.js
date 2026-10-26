@@ -60,22 +60,8 @@ document.addEventListener('DOMContentLoaded', function () {
         "26": gettext("Update Delegate")
     };
 
-    const colorPalette = [
-        '#2ec7c9', '#b6a2de', '#5ab1ef', '#ffb980', '#d87a80',
-        '#8d98b3', '#e5cf0d', '#97b552', '#95706d', '#dc69aa',
-        '#07a2a4', '#9a7fd1', '#588dd5', '#f5994e', '#c05050',
-        '#59678c', '#c9ab00', '#76933c', '#bc65a6'
-    ];
-
-    function getStableColor(name) {
-        if (!name) return '#5470c6';
-        let hash = 0;
-        for (let i = 0; i < name.length; i++) {
-            hash = name.charCodeAt(i) + (Math.imul(hash, 32) - hash); // == ((hash << 5) - hash); avoids a shift, which breaks gettext extraction
-        }
-        const index = Math.abs(hash) % colorPalette.length;
-        return colorPalette[index];
-    }
+    const chartHelpers = window.HopeChart || {};
+    const getStableColor = chartHelpers.getStableColor || (() => '#5470c6');
 
     // Initialize empty Crossfilter
     let ndx = crossfilter([]);
@@ -298,26 +284,32 @@ document.addEventListener('DOMContentLoaded', function () {
             }]
         }, { notMerge: true });
 
-        // 4. Category Chart (Horizontal Bar / Row)
-        const categoryData = categoryGroup.all().filter(d => d.key !== '' && d.key !== null && d.value > 0);
-        categoryData.sort((a, b) => b.value - a.value);
+        // 4. Category Chart (top 10)
+        const categoryData = categoryGroup.all()
+            .map(d => ({ key: d.key, value: d.value }))
+            .filter(d => d.key !== '' && d.key !== null && d.value > 0)
+            .sort((a, b) => b.value - a.value)
+            .slice(0, 10);
 
         const hasAnyCategorySelection = selectedCategories.size > 0;
         const categorySeriesData = categoryData.map(d => {
+            const stableColor = getStableColor(d.key);
             return {
                 name: d.key,
                 value: d.value,
                 itemStyle: {
-                    color: selectedCategories.has(d.key)
-                        ? getStableColor(d.key)
-                        : (hasAnyCategorySelection ? '#cbd5e1' : getStableColor(d.key))
+                    color: selectedCategories.has(d.key) ? stableColor : (hasAnyCategorySelection ? '#cbd5e1' : stableColor)
                 }
             };
         });
 
         categoryChart.setOption({
-            tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' }, formatter: params => `${params[0].name}: <b>${d3.format(",")(params[0].value)}</b>` },
-            grid: { top: 15, bottom: 25, left: 15, right: 25 },
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: { type: 'shadow' },
+                formatter: params => `${params[0].name}: <b>${d3.format(",")(params[0].value)}</b>`
+            },
+            grid: { top: 15, bottom: 25, left: 220, right: 60 },
             xAxis: {
                 type: 'value',
                 axisLabel: { formatter: val => d3.format(".2s")(val).replace('G', 'B'), color: '#64748b', fontSize: 10 },
@@ -329,49 +321,59 @@ document.addEventListener('DOMContentLoaded', function () {
                 inverse: true,
                 axisTick: { show: false },
                 axisLine: { show: true, lineStyle: { color: '#f1f5f9' } },
-                axisLabel: { show: false }
+                axisLabel: {
+                    show: true,
+                    width: 200,
+                    overflow: 'truncate',
+                    color: '#374151',
+                    fontSize: 10
+                }
             },
             series: [{
                 type: 'bar',
                 data: categorySeriesData,
-                barMaxWidth: 24,
+                barMaxWidth: 22,
                 showBackground: true,
                 backgroundStyle: { color: 'rgba(241, 245, 249, 0.75)', borderRadius: [0, 4, 4, 0] },
                 itemStyle: { borderRadius: [0, 4, 4, 0] },
                 label: {
                     show: true,
-                    position: 'insideLeft',
-                    distance: 8,
-                    formatter: params => `${params.name}  •  ${d3.format(",")(params.value)}`,
+                    position: 'right',
+                    distance: 6,
+                    formatter: params => d3.format(",")(params.value),
                     color: '#0f172a',
                     fontWeight: 600,
-                    fontSize: 11,
-                    textBorderColor: '#ffffff',
-                    textBorderWidth: 2.5
+                    fontSize: 11
                 }
             }]
         }, { notMerge: true });
 
-        // 5. Issue Type Chart (Horizontal Bar / Row)
-        const issueTypeData = issueTypeGroup.all().filter(d => d.key !== '' && d.key !== null && d.value > 0);
-        issueTypeData.sort((a, b) => b.value - a.value);
+        // 5. Issue Type Chart (top 10)
+        const issueTypeData = issueTypeGroup.all()
+            .map(d => ({ key: d.key, value: d.value }))
+            .filter(d => d.key !== '' && d.key !== null && d.value > 0)
+            .sort((a, b) => b.value - a.value)
+            .slice(0, 10);
 
         const hasAnyIssueTypeSelection = selectedIssueTypes.size > 0;
         const issueTypeSeriesData = issueTypeData.map(d => {
+            const stableColor = getStableColor(d.key);
             return {
                 name: d.key,
                 value: d.value,
                 itemStyle: {
-                    color: selectedIssueTypes.has(d.key)
-                        ? getStableColor(d.key)
-                        : (hasAnyIssueTypeSelection ? '#cbd5e1' : getStableColor(d.key))
+                    color: selectedIssueTypes.has(d.key) ? stableColor : (hasAnyIssueTypeSelection ? '#cbd5e1' : stableColor)
                 }
             };
         });
 
         issueTypeChart.setOption({
-            tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' }, formatter: params => `${params[0].name}: <b>${d3.format(",")(params[0].value)}</b>` },
-            grid: { top: 15, bottom: 25, left: 15, right: 25 },
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: { type: 'shadow' },
+                formatter: params => `${params[0].name}: <b>${d3.format(",")(params[0].value)}</b>`
+            },
+            grid: { top: 15, bottom: 25, left: 220, right: 60 },
             xAxis: {
                 type: 'value',
                 axisLabel: { formatter: val => d3.format(".2s")(val).replace('G', 'B'), color: '#64748b', fontSize: 10 },
@@ -383,30 +385,34 @@ document.addEventListener('DOMContentLoaded', function () {
                 inverse: true,
                 axisTick: { show: false },
                 axisLine: { show: true, lineStyle: { color: '#f1f5f9' } },
-                axisLabel: { show: false }
+                axisLabel: {
+                    show: true,
+                    width: 200,
+                    overflow: 'truncate',
+                    color: '#374151',
+                    fontSize: 10
+                }
             },
             series: [{
                 type: 'bar',
                 data: issueTypeSeriesData,
-                barMaxWidth: 24,
+                barMaxWidth: 22,
                 showBackground: true,
                 backgroundStyle: { color: 'rgba(241, 245, 249, 0.75)', borderRadius: [0, 4, 4, 0] },
                 itemStyle: { borderRadius: [0, 4, 4, 0] },
                 label: {
                     show: true,
-                    position: 'insideLeft',
-                    distance: 8,
-                    formatter: params => `${params.name}  •  ${d3.format(",")(params.value)}`,
+                    position: 'right',
+                    distance: 6,
+                    formatter: params => d3.format(",")(params.value),
                     color: '#0f172a',
                     fontWeight: 600,
-                    fontSize: 11,
-                    textBorderColor: '#ffffff',
-                    textBorderWidth: 2.5
+                    fontSize: 11
                 }
             }]
         }, { notMerge: true });
 
-        // 6. Country Chart (Stacked status bar)
+        // 6. Country Chart (top 10)
         const countryData = countryGroup.all()
             .map(d => ({
                 key: d.key,
@@ -416,7 +422,7 @@ document.addEventListener('DOMContentLoaded', function () {
             }))
             .filter(d => d.key !== null && d.total > 0)
             .sort((a, b) => b.total - a.total)
-            .slice(0, 15);
+            .slice(0, 10);
 
         const hasAnyCountrySelection = selectedCountries.size > 0;
 
@@ -459,7 +465,14 @@ document.addEventListener('DOMContentLoaded', function () {
             xAxis: {
                 type: 'category',
                 data: countryData.map(d => d.key),
-                axisLabel: { rotate: 30, interval: 0, color: '#1f2937', fontWeight: 500 }
+                axisLabel: {
+                    rotate: 30,
+                    interval: 0,
+                    width: 80,
+                    overflow: 'truncate',
+                    color: '#1f2937',
+                    fontWeight: 500
+                }
             },
             yAxis: {
                 type: 'value',
@@ -481,7 +494,15 @@ document.addEventListener('DOMContentLoaded', function () {
                     stack: 'status',
                     barMaxWidth: 30,
                     data: countrySeriesDataOpen,
-                    itemStyle: { borderRadius: [4, 4, 0, 0] }
+                    itemStyle: { borderRadius: [4, 4, 0, 0] },
+                    label: {
+                        show: true,
+                        position: 'top',
+                        formatter: params => d3.format(",")(countryData[params.dataIndex] ? countryData[params.dataIndex].total : params.value),
+                        color: '#0f172a',
+                        fontWeight: 600,
+                        fontSize: 10
+                    }
                 }
             ]
         }, { notMerge: true });

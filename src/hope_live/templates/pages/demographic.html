@@ -6,7 +6,7 @@
     <div class="mb-3 flex flex-wrap justify-between items-center gap-2">
         <div>
             <h1 class="text-xl lg:text-2xl font-black text-gray-900 leading-tight">{% translate "Demographic dashboard" %}</h1>
-            <p class="text-xs text-gray-500">{% translate "Breakdown of individuals, children, and PWD reached" %}</p>
+            <p class="text-xs text-gray-500">{% translate "Breakdown of individuals, children, and persons with disabilities reached" %}</p>
         </div>
         <div>
             <span class="bg-unicef-blue text-white text-[11px] font-bold px-2 py-0.5 rounded">{% translate "Live data" %}</span>
@@ -30,14 +30,14 @@
                 {% translate "Children" %}
             </button>
             <button id="btn-pwd" class="metric-tab px-3 py-1 text-xs font-bold rounded-md text-gray-600 hover:text-gray-900 transition-all duration-200 cursor-pointer" data-metric="pwd">
-                {% translate "PWD reached" %}
+                {% translate "Persons with disabilities" %}
             </button>
         </div>
     </div>
 
     <!-- Cohort Selector -->
     <div class="mb-3 flex flex-wrap gap-2 items-center justify-between">
-        <div class="text-xs font-bold text-gray-500 uppercase tracking-wider">{% translate "Programme cohort:" %}</div>
+        <div class="text-xs font-bold text-gray-500">{% translate "Programme cohort:" %}</div>
         <div class="flex bg-gray-100 p-0.5 rounded-lg space-x-1 border border-gray-200">
             <button type="button" class="cohort-tab px-3 py-1 text-xs font-bold rounded-md bg-white shadow text-blue-800 transition-all duration-200 cursor-pointer" data-cohort="ALL">
                 {% translate "All" %}
@@ -64,12 +64,12 @@
             {% include "includes/chart_info.html" with definition="Number of households reached." source="HOPE demographics" method="Sum of total_households for the sector dimension." %}
         </div>
         <div id="card-children" class="bg-white rounded-xl shadow-2xs border border-gray-200 p-3 border-l-4 border-unicef-primary flex flex-col justify-center min-h-[84px]">
-            <h3 class="text-gray-500 text-[10px] sm:text-[11px] font-bold">{% translate "Children" %}</h3>
+            <h3 class="text-gray-500 text-[10px] sm:text-[11px] font-bold">{% translate "Children reached" %}</h3>
             <p id="total-children" class="text-xl sm:text-2xl font-black text-sky-600 mt-0.5 leading-none">0</p>
             {% include "includes/chart_info.html" with definition="Estimated children reached." source="HOPE demographics" method="For programmes not collecting children data, figures are estimated using agreed fertility rate multipliers." %}
         </div>
         <div id="card-pwd" class="bg-white rounded-xl shadow-2xs border border-gray-200 p-3 border-l-4 border-purple-500 flex flex-col justify-center min-h-[84px]">
-            <h3 class="text-gray-500 text-[10px] sm:text-[11px] font-bold">{% translate "PWD reached" %}</h3>
+            <h3 class="text-gray-500 text-[10px] sm:text-[11px] font-bold">{% translate "Persons with disabilities reached" %}</h3>
             <p id="total-pwd" class="text-xl sm:text-2xl font-black text-purple-700 mt-0.5 leading-none">0</p>
             {% include "includes/chart_info.html" with definition="Confirmed persons with disabilities reached." source="HOPE demographics" method="Some programmes do not collect this data, so the figure may be under-represented." %}
         </div>

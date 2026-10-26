@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-26 08:23+0000\n"
+"POT-Creation-Date: 2026-10-26 10:33+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,9 +16,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
-"n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || "
-"(n%100>=11 && n%100<=14)? 2 : 3);\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
 
 #: src/hope_live/config/settings.py:168
 msgid "Spanish"
@@ -204,8 +202,9 @@ msgid ""
 msgstr ""
 
 #: src/hope_live/templates/pages/completion.html:8
-msgid "Completion rate dashboard"
-msgstr "Панель управления показателями завершения"
+#| msgid "Payment reconciliation and completion status tracking"
+msgid "Payment reconciliation dashboard"
+msgstr ""
 
 #: src/hope_live/templates/pages/completion.html:9
 msgid "Payment reconciliation and completion status tracking"
@@ -238,8 +237,9 @@ msgid "Reconciled payments"
 msgstr "Сверенные платежи"
 
 #: src/hope_live/templates/pages/completion.html:40
-msgid "Still opened"
-msgstr "Все еще открыто"
+#| msgid "Still opened"
+msgid "Still open"
+msgstr ""
 
 #: src/hope_live/templates/pages/completion.html:46
 msgid "Reconciliation rate"
@@ -258,7 +258,7 @@ msgid "Payments by beneficiary group"
 msgstr ""
 
 #: src/hope_live/templates/pages/completion.html:75
-msgid "Quality Quadrant"
+msgid "Quality quadrant"
 msgstr ""
 
 #: src/hope_live/templates/pages/completion.html:76
@@ -308,34 +308,35 @@ msgid "Number of payments"
 msgstr "Количество платежей"
 
 #: src/hope_live/templates/pages/dashboard.html:61
-msgid "Outstanding payment"
-msgstr "Невыплаченный платеж"
+#| msgid "Outstanding payment"
+msgid "Outstanding payments"
+msgstr ""
 
 #: src/hope_live/templates/pages/dashboard.html:69
 msgid "Spending timeline"
 msgstr "График расходов"
 
 #: src/hope_live/templates/pages/dashboard.html:76
-#, fuzzy
 #| msgid "Payments Count"
-msgid "Payment Pipeline"
-msgstr "Количество платежей"
+msgid "Payment pipeline"
+msgstr ""
 
 #: src/hope_live/templates/pages/dashboard.html:77
 msgid "From payments in the pipeline through to reconciled payments."
 msgstr ""
 
 #: src/hope_live/templates/pages/dashboard.html:84
-msgid "Delivery types"
-msgstr "Типы доставки"
+msgid "Cash disbursed by delivery type"
+msgstr ""
 
 #: src/hope_live/templates/pages/dashboard.html:88
-msgid "Distribution by sector"
-msgstr "Распределение по секторам"
+#| msgid "Distribution by sector"
+msgid "Cash disbursed by sector"
+msgstr ""
 
 #: src/hope_live/templates/pages/dashboard.html:97
-msgid "Regions"
-msgstr "Регионы"
+msgid "Cash disbursed by region"
+msgstr ""
 
 #: src/hope_live/templates/pages/dashboard.html:100
 msgid ""
@@ -345,16 +346,19 @@ msgid ""
 msgstr ""
 
 #: src/hope_live/templates/pages/dashboard.html:103
-msgid "Countries"
-msgstr "Страны"
+#| msgid "Ticket status by country"
+msgid "Cash disbursed by country"
+msgstr ""
 
 #: src/hope_live/templates/pages/dashboard.html:111
-msgid "Distribution by program"
-msgstr "Распределение по программам"
+#| msgid "Distribution by program"
+msgid "Cash disbursed by programme"
+msgstr ""
 
 #: src/hope_live/templates/pages/dashboard.html:115
-msgid "Financial service providers (FSP)"
-msgstr "Поставщики финансовых услуг (FSP)"
+#| msgid "Financial service providers (FSP)"
+msgid "Cash disbursed by financial service provider (FSP)"
+msgstr ""
 
 #: src/hope_live/templates/pages/dashboard.html:123
 msgid "Cash disbursed by beneficiary group"
@@ -367,7 +371,8 @@ msgid "Demographic dashboard"
 msgstr "Демография"
 
 #: src/hope_live/templates/pages/demographic.html:9
-msgid "Breakdown of individuals, children, and PWD reached"
+msgid ""
+"Breakdown of individuals, children, and persons with disabilities reached"
 msgstr ""
 
 #: src/hope_live/templates/pages/demographic.html:21
@@ -387,15 +392,13 @@ msgid "Households"
 msgstr "Охваченные домохозяйства"
 
 #: src/hope_live/templates/pages/demographic.html:30
-#: src/hope_live/templates/pages/demographic.html:67
 #, fuzzy
 #| msgid "Children Reached"
 msgid "Children"
 msgstr "Дети достигли"
 
 #: src/hope_live/templates/pages/demographic.html:33
-#: src/hope_live/templates/pages/demographic.html:72
-msgid "PWD reached"
+msgid "Persons with disabilities"
 msgstr ""
 
 #: src/hope_live/templates/pages/demographic.html:57
@@ -405,6 +408,15 @@ msgstr ""
 #: src/hope_live/templates/pages/demographic.html:62
 msgid "Households reached"
 msgstr "Охваченные домохозяйства"
+
+#: src/hope_live/templates/pages/demographic.html:67
+#| msgid "Children Reached"
+msgid "Children reached"
+msgstr ""
+
+#: src/hope_live/templates/pages/demographic.html:72
+msgid "Persons with disabilities reached"
+msgstr ""
 
 #: src/hope_live/templates/pages/demographic.html:80
 #, fuzzy
@@ -447,24 +459,29 @@ msgid "Tickets timeline"
 msgstr "Билеты"
 
 #: src/hope_live/templates/pages/grievance.html:38
-msgid "Status"
-msgstr "Статус"
+#| msgid "Ticket status by country"
+msgid "Tickets by status"
+msgstr ""
 
 #: src/hope_live/templates/pages/grievance.html:42
-msgid "Priority"
-msgstr "Приоритет"
+#| msgid "Ticket status by country"
+msgid "Tickets by priority"
+msgstr ""
 
 #: src/hope_live/templates/pages/grievance.html:49
-msgid "Category"
-msgstr "Категория"
+#| msgid "Ticket status by country"
+msgid "Tickets by category"
+msgstr ""
 
 #: src/hope_live/templates/pages/grievance.html:53
-msgid "Issue type"
-msgstr "Тип проблемы"
+#| msgid "Ticket status by country"
+msgid "Tickets by subcategory"
+msgstr ""
 
 #: src/hope_live/templates/pages/grievance.html:60
-msgid "Ticket status by country"
-msgstr "Статус заявок по странам"
+#| msgid "Ticket status by country"
+msgid "Tickets by status and country"
+msgstr ""
 
 #: src/hope_live/templates/pages/landing.html:28
 msgid "Humanitarian cash"
@@ -505,8 +522,9 @@ msgid "Countries & territories"
 msgstr "Страны и территории"
 
 #: src/hope_live/templates/pages/landing.html:79
-msgid "Programs"
-msgstr "Программы"
+#| msgid "Programs"
+msgid "Programmes"
+msgstr ""
 
 #: src/hope_live/templates/pages/landing.html:89
 #, fuzzy
@@ -730,7 +748,8 @@ msgid ""
 "group to the programme setup page, enabling visualization..."
 msgstr ""
 "Новые функции и улучшения 1. Добавлена группа бенефициаров «Работники "
-"учреждения» на страницу настройки программы, что позволяет визуализировать..."
+"учреждения» на страницу настройки программы, что позволяет "
+"визуализировать..."
 
 #: src/hope_live/templates/pages/landing.html:395
 msgid "April 8, 2026"
@@ -742,8 +761,8 @@ msgid ""
 "Individual IDs for alternate collectors receiving p..."
 msgstr ""
 "Новые функции и улучшения 1. Добавлен новый фильтр для выбора "
-"идентификаторов домохозяйств или отдельных лиц для альтернативных сборщиков, "
-"получающих..."
+"идентификаторов домохозяйств или отдельных лиц для альтернативных сборщиков,"
+" получающих..."
 
 #: src/hope_live/templates/pages/landing.html:413
 msgid "March 16, 2026"
@@ -1013,6 +1032,33 @@ msgstr "Возвращаться"
 msgid "Django administration"
 msgstr "Администрация Джанго"
 
+#~ msgid "Completion rate dashboard"
+#~ msgstr "Панель управления показателями завершения"
+
+#~ msgid "Delivery types"
+#~ msgstr "Типы доставки"
+
+#~ msgid "Regions"
+#~ msgstr "Регионы"
+
+#~ msgid "Countries"
+#~ msgstr "Страны"
+
+#~ msgid "Status"
+#~ msgstr "Статус"
+
+#~ msgid "Priority"
+#~ msgstr "Приоритет"
+
+#~ msgid "Category"
+#~ msgstr "Категория"
+
+#~ msgid "Issue type"
+#~ msgstr "Тип проблемы"
+
+#~ msgid "Programs"
+#~ msgstr "Программы"
+
 #~ msgid "Documentation"
 #~ msgstr "Документация"
 
@@ -1029,11 +1075,11 @@ msgstr "Администрация Джанго"
 #~ msgstr "Данные и API"
 
 #~ msgid ""
-#~ "* Use the slider handles at the bottom of the timeline or click and drag "
-#~ "to filter dates."
+#~ "* Use the slider handles at the bottom of the timeline or click and drag to "
+#~ "filter dates."
 #~ msgstr ""
-#~ "* Используйте ползунки внизу временной шкалы или щелкните и перетащите "
-#~ "их, чтобы отфильтровать даты."
+#~ "* Используйте ползунки внизу временной шкалы или щелкните и перетащите их, "
+#~ "чтобы отфильтровать даты."
 
 #~ msgid "Completion rates & metrics"
 #~ msgstr "Показатели завершения и показатели"
@@ -1077,8 +1123,8 @@ msgstr "Администрация Джанго"
 #~ "Bringing HOPE To Whoever Needs It Most: podcast on secure data and risk-"
 #~ "informed cash transfers."
 #~ msgstr ""
-#~ "Дарим НАДЕЖДУ тем, кто в ней больше всего нуждается: подкаст о "
-#~ "безопасности данных и денежных переводах с учетом рисков."
+#~ "Дарим НАДЕЖДУ тем, кто в ней больше всего нуждается: подкаст о безопасности "
+#~ "данных и денежных переводах с учетом рисков."
 
 #~ msgid "Listen now"
 #~ msgstr "Слушай сейчас"
