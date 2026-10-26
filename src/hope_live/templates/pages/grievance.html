@@ -1,5 +1,5 @@
 {% extends "layout.html" %}
-{% load i18n js static %}
+{% load chart_info i18n js static %}
 
 {% block content %}
 <div class="container mx-auto px-4 lg:px-6 py-4 lg:py-5">
@@ -28,6 +28,7 @@
     <!-- Timeline Filter (Full Width) -->
     <div class="bg-white rounded-xl shadow-2xs border border-gray-200 p-3.5 mb-4">
         <h3 id="timeline-title" class="text-sm font-bold text-gray-900 mb-1">{% translate "Tickets timeline" %}</h3>
+        {% chart_info "grievance.timeline" %}
         <div id="time-focus-chart" class="w-full h-[220px]"></div>
         <div id="time-range-chart" style="display: none;"></div>
     </div>
@@ -36,10 +37,12 @@
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
         <div class="bg-white rounded-xl shadow-2xs border border-gray-200 p-3.5">
             <h3 class="text-sm font-bold text-gray-900 mb-2">{% translate "Tickets by status" %}</h3>
+            {% chart_info "grievance.status" %}
             <div id="grievance-status-chart" class="w-full h-[220px] flex justify-center"></div>
         </div>
         <div class="bg-white rounded-xl shadow-2xs border border-gray-200 p-3.5">
             <h3 class="text-sm font-bold text-gray-900 mb-2">{% translate "Tickets by priority" %}</h3>
+            {% chart_info "grievance.priority" %}
             <div id="grievance-priority-chart" class="w-full h-[220px] flex justify-center"></div>
         </div>
     </div>
@@ -47,10 +50,12 @@
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
         <div class="bg-white rounded-xl shadow-2xs border border-gray-200 p-3.5">
             <h3 class="text-sm font-bold text-gray-900 mb-2">{% translate "Tickets by category" %}</h3>
+            {% chart_info "grievance.category" %}
             <div id="grievance-category-chart" class="w-full h-[260px]"></div>
         </div>
         <div class="bg-white rounded-xl shadow-2xs border border-gray-200 p-3.5">
             <h3 class="text-sm font-bold text-gray-900 mb-2">{% translate "Tickets by subcategory" %}</h3>
+            {% chart_info "grievance.subcategory" %}
             <div id="grievance-issue-type-chart" class="w-full h-[260px]"></div>
         </div>
     </div>
@@ -58,6 +63,7 @@
     <!-- Geographic Breakdown -->
     <div class="bg-white rounded-xl shadow-2xs border border-gray-200 p-3.5 mb-4">
         <h3 class="text-sm font-bold text-gray-900 mb-2">{% translate "Tickets by status and country" %}</h3>
+        {% chart_info "grievance.country" %}
         <div id="grievance-country-chart" class="w-full h-[260px]"></div>
     </div>
 </div>

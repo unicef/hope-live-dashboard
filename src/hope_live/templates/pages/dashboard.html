@@ -1,5 +1,5 @@
 {% extends "layout.html" %}
-{% load i18n js static %}
+{% load chart_info i18n js static %}
 
 {% block content %}
 <div class="container mx-auto px-4 lg:px-6 py-4 lg:py-5">
@@ -67,6 +67,7 @@
     <!-- Timeline Filter (Full Width, Top) -->
     <div class="bg-white rounded-xl shadow-2xs border border-gray-200 p-3.5 mb-4">
         <h3 id="timeline-title" class="text-sm font-bold text-gray-900 mb-1">{% translate "Spending timeline" %}</h3>
+        {% chart_info "financial.timeline" %}
         <div id="time-focus-chart" class="w-full h-[220px]"></div>
         <div id="time-range-chart" style="display: none;"></div>
     </div>
@@ -74,6 +75,7 @@
     <!-- Payment Pipeline Funnel -->
     <div class="bg-white rounded-xl shadow-2xs border border-gray-200 p-3.5 mb-4">
         <h3 id="pipeline-title" class="text-sm font-bold text-gray-900 mb-1">{% translate "Payment pipeline" %}</h3>
+        {% chart_info "financial.pipeline" %}
         <p id="pipeline-note" class="text-[11px] text-gray-400 mb-2 italic">{% translate "From payments in the pipeline through to reconciled payments." %}</p>
         <div id="pipeline-funnel-chart" class="w-full h-[300px]"></div>
     </div>
@@ -82,10 +84,12 @@
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
         <div class="bg-white rounded-xl shadow-2xs border border-gray-200 p-3.5">
             <h3 id="delivery-title" class="text-sm font-bold text-gray-900 mb-2">{% translate "Cash disbursed by delivery type" %}</h3>
+            {% chart_info "financial.delivery" %}
             <div id="delivery-chart" class="w-full h-[240px]"></div>
         </div>
         <div class="bg-white rounded-xl shadow-2xs border border-gray-200 p-3.5">
             <h3 id="sector-title" class="text-sm font-bold text-gray-900 mb-2">{% translate "Cash disbursed by sector" %}</h3>
+            {% chart_info "financial.sector" %}
             <div id="sector-chart" class="w-full h-[240px]"></div>
         </div>
     </div>
@@ -95,12 +99,14 @@
         <div class="bg-white rounded-xl shadow-2xs border border-gray-200 p-3.5 flex flex-col justify-between">
             <div>
                 <h3 id="region-title" class="text-sm font-bold text-gray-900 mb-1">{% translate "Cash disbursed by region" %}</h3>
+                {% chart_info "financial.region" %}
                 <div id="region-chart" class="w-full h-[260px]"></div>
             </div>
             <p class="text-[10px] text-gray-400 mt-1 italic leading-tight">{% translate "MENAR: Middle East & North Africa · ESAR: Eastern & Southern Africa · ECAR: Europe & Central Asia · WCAR: West & Central Africa · LACR: Latin America & Caribbean · EAPR: East Asia & Pacific · SAR: South Asia" %}</p>
         </div>
         <div class="bg-white rounded-xl shadow-2xs border border-gray-200 p-3.5">
             <h3 id="country-title" class="text-sm font-bold text-gray-900 mb-1">{% translate "Cash disbursed by country" %}</h3>
+            {% chart_info "financial.country" %}
             <div id="country-chart" class="w-full h-[260px]"></div>
         </div>
     </div>
@@ -109,10 +115,12 @@
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
         <div class="bg-white rounded-xl shadow-2xs border border-gray-200 p-3.5">
             <h3 id="program-title" class="text-sm font-bold text-gray-900 mb-2">{% translate "Cash disbursed by programme" %}</h3>
+            {% chart_info "financial.program" %}
             <div id="program-chart" class="w-full h-[320px]"></div>
         </div>
         <div class="bg-white rounded-xl shadow-2xs border border-gray-200 p-3.5">
             <h3 id="fsp-title" class="text-sm font-bold text-gray-900 mb-2">{% translate "Cash disbursed by financial service provider (FSP)" %}</h3>
+            {% chart_info "financial.fsp" %}
             <div id="fsp-chart" class="w-full h-[320px]"></div>
         </div>
     </div>
@@ -121,6 +129,7 @@
     <div class="grid grid-cols-1 gap-4 mb-6">
         <div class="bg-white rounded-xl shadow-2xs border border-gray-200 p-3.5">
             <h3 id="bg-title" class="text-sm font-bold text-gray-900 mb-2">{% translate "Cash disbursed by beneficiary group" %}</h3>
+            {% chart_info "financial.beneficiary_group" %}
             <div id="beneficiary-group-chart" class="w-full h-[220px]"></div>
         </div>
     </div>

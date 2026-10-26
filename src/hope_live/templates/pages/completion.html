@@ -1,5 +1,5 @@
 {% extends "layout.html" %}
-{% load i18n js static %}
+{% load chart_info i18n js static %}
 
 {% block content %}
 <div class="container mx-auto px-4 lg:px-6 py-4 lg:py-5">
@@ -54,6 +54,7 @@
     <!-- Timeline Filter (Full Width) -->
     <div class="bg-white rounded-xl shadow-2xs border border-gray-200 p-3.5 mb-4">
         <h3 id="timeline-title" class="text-sm font-bold text-gray-900 mb-1">{% translate "Reconciliation timeline" %}</h3>
+        {% chart_info "completion.timeline" %}
         <div id="time-focus-chart" class="w-full h-[220px]"></div>
         <div id="time-range-chart" style="display: none;"></div>
     </div>
@@ -62,10 +63,12 @@
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
         <div class="bg-white rounded-xl shadow-2xs border border-gray-200 p-3.5">
             <h3 id="country-chart-title" class="text-sm font-bold text-gray-900 mb-2">{% translate "Reconciliation status by country" %}</h3>
+            {% chart_info "completion.country" %}
             <div id="status-country-chart" class="w-full h-[260px]"></div>
         </div>
         <div class="bg-white rounded-xl shadow-2xs border border-gray-200 p-3.5">
             <h3 id="bg-title" class="text-sm font-bold text-gray-900 mb-2">{% translate "Payments by beneficiary group" %}</h3>
+            {% chart_info "completion.beneficiary_group" %}
             <div id="beneficiary-group-chart" class="w-full h-[260px]"></div>
         </div>
     </div>
@@ -74,6 +77,7 @@
     <div class="bg-white rounded-xl shadow-2xs border border-gray-200 p-3.5 mb-4">
         <h3 class="text-sm font-bold text-gray-900 mb-1">{% translate "Quality quadrant" %}</h3>
         <p class="text-[11px] text-gray-400 mb-2 italic">{% translate "Delivery success rate versus reconciliation rate, by country. Bubble size reflects reconciled volume." %}</p>
+        {% chart_info "completion.quadrant" %}
         <div id="quality-quadrant-chart" class="w-full h-[380px]"></div>
     </div>
 </div>

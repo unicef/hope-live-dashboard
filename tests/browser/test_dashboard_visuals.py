@@ -388,6 +388,11 @@ def test_financial_dashboard_loads(browser, financial_aggregates):
     browser.assert_text("Cash disbursed by programme", "#program-title")
     browser.assert_text("Cash disbursed by financial service provider (FSP)", "#fsp-title")
 
+    browser.wait_for_element_visible('[data-chart-info="financial.timeline"]')
+    browser.wait_for_element_visible('[data-chart-info="financial.program"]')
+    browser.click('[data-chart-info="financial.program"] summary')
+    browser.wait_for_text_visible("top 10 programmes")
+
     # Assert current year totals (default "This Year" preset)
     browser.assert_text("25", "#total-payments")
 
@@ -414,6 +419,9 @@ def test_demographic_dashboard_loads(browser, demographic_aggregates, financial_
 
     browser.assert_text("Children reached", "#card-children h3")
     browser.assert_text("Persons with disabilities reached", "#card-pwd h3")
+
+    browser.wait_for_element_visible('[data-chart-info="demographic.timeline"]')
+    browser.wait_for_element_visible('[data-chart-info="demographic.country"]')
 
     # Assert current year totals
     browser.assert_text("1,000", "#total-individuals")
@@ -446,6 +454,9 @@ def test_completion_dashboard_loads(browser, completion_aggregates, financial_ag
     browser.assert_text("Still open", "#opened-card-title")
     browser.assert_text("Payment reconciliation dashboard", "h1")
 
+    browser.wait_for_element_visible('[data-chart-info="completion.timeline"]')
+    browser.wait_for_element_visible('[data-chart-info="completion.quadrant"]')
+
     # Assert current year totals
     browser.assert_text("15 (100.0% out of 15 total)", "#total-reconciled")
 
@@ -467,6 +478,8 @@ def test_grievance_dashboard_loads(browser, grievance_aggregates, grievance_stat
     browser.wait_for_text_visible("Tickets by category")
     browser.wait_for_text_visible("Tickets by subcategory")
     browser.wait_for_text_visible("Tickets by status and country")
+    browser.wait_for_element_visible('[data-chart-info="grievance.timeline"]')
+    browser.wait_for_element_visible('[data-chart-info="grievance.subcategory"]')
     browser.wait_for_element_visible("#grievance-status-chart canvas")
     browser.wait_for_element_visible("#grievance-priority-chart canvas")
     browser.wait_for_element_visible("#grievance-category-chart canvas")
