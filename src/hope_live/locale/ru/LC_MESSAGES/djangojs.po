@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-03 11:34+0000\n"
+"POT-Creation-Date: 2026-11-03 12:14+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -19,124 +19,117 @@ msgstr ""
 "n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || "
 "(n%100>=11 && n%100<=14)? 2 : 3);\n"
 
-#: src/hope_live/theme/static/js/completion_visuals.js:235
-#: src/hope_live/theme/static/js/completion_visuals.js:238
+#: src/hope_live/theme/static/js/completion_visuals.js:237
+#: src/hope_live/theme/static/js/completion_visuals.js:240
 #: src/hope_live/theme/static/js/completion_visuals.min.js:1
 #, javascript-format
 msgid "%s out of %s total"
 msgstr "%s из %s всего"
 
-#: src/hope_live/theme/static/js/completion_visuals.js:320
+#: src/hope_live/theme/static/js/completion_visuals.js:322
 #: src/hope_live/theme/static/js/completion_visuals.min.js:1
 msgid "payments"
 msgstr "платежи"
 
-#: src/hope_live/theme/static/js/completion_visuals.js:346
-#: src/hope_live/theme/static/js/completion_visuals.js:370
-#: src/hope_live/theme/static/js/completion_visuals.js:457
-#: src/hope_live/theme/static/js/completion_visuals.js:469
-#: src/hope_live/theme/static/js/completion_visuals.js:499
+#: src/hope_live/theme/static/js/completion_visuals.js:348
+#: src/hope_live/theme/static/js/completion_visuals.js:372
+#: src/hope_live/theme/static/js/completion_visuals.js:459
+#: src/hope_live/theme/static/js/completion_visuals.js:471
+#: src/hope_live/theme/static/js/completion_visuals.js:501
 #: src/hope_live/theme/static/js/completion_visuals.min.js:1
 #: src/hope_live/theme/static/js/dashboard_visuals.js:673
 #: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
 msgid "Reconciled"
 msgstr "Сверено"
 
-#: src/hope_live/theme/static/js/completion_visuals.js:346
-#: src/hope_live/theme/static/js/completion_visuals.js:378
-#: src/hope_live/theme/static/js/completion_visuals.js:458
-#: src/hope_live/theme/static/js/completion_visuals.js:469
-#: src/hope_live/theme/static/js/completion_visuals.js:508
+#: src/hope_live/theme/static/js/completion_visuals.js:348
+#: src/hope_live/theme/static/js/completion_visuals.js:380
+#: src/hope_live/theme/static/js/completion_visuals.js:460
+#: src/hope_live/theme/static/js/completion_visuals.js:471
+#: src/hope_live/theme/static/js/completion_visuals.js:510
 #: src/hope_live/theme/static/js/completion_visuals.min.js:1
 msgid "Still open"
 msgstr ""
 
-#: src/hope_live/theme/static/js/completion_visuals.js:459
+#: src/hope_live/theme/static/js/completion_visuals.js:461
 #: src/hope_live/theme/static/js/completion_visuals.min.js:1
 msgid "Total"
 msgstr ""
 
-#: src/hope_live/theme/static/js/completion_visuals.js:643
+#: src/hope_live/theme/static/js/completion_visuals.js:649
 #: src/hope_live/theme/static/js/completion_visuals.min.js:1
-#, fuzzy
-#| msgid "Reconciliation Timeline"
-msgid "Reconciliation rate"
-msgstr "График примирения"
+msgid "No country has both completion and financial data for this period."
+msgstr "Нет стран с данными о завершении и финансовыми данными за этот период."
 
-#: src/hope_live/theme/static/js/completion_visuals.js:644
+#: src/hope_live/theme/static/js/completion_visuals.js:668
+#: src/hope_live/theme/static/js/completion_visuals.js:675
+#: src/hope_live/theme/static/js/completion_visuals.js:703
+#: src/hope_live/theme/static/js/completion_visuals.min.js:1
+msgid "Reconciliation rate"
+msgstr "Уровень сверки"
+
+#: src/hope_live/theme/static/js/completion_visuals.js:670
+#: src/hope_live/theme/static/js/completion_visuals.js:675
+#: src/hope_live/theme/static/js/completion_visuals.js:732
 #: src/hope_live/theme/static/js/completion_visuals.min.js:1
 msgid "Delivery success rate"
-msgstr ""
+msgstr "Уровень успешной доставки"
 
-#: src/hope_live/theme/static/js/completion_visuals.js:645
+#: src/hope_live/theme/static/js/completion_visuals.js:723
 #: src/hope_live/theme/static/js/completion_visuals.min.js:1
-#, fuzzy
-#| msgid "Reconciled"
-msgid "Reconciled volume"
-msgstr "Сверено"
+msgid "80% reference"
+msgstr "Ориентир 80%"
 
-#: src/hope_live/theme/static/js/completion_visuals.js:653
-#: src/hope_live/theme/static/js/completion_visuals.min.js:1
-#, fuzzy
-#| msgid "Reconciliation Timeline"
-msgid "Reconciliation rate (%)"
-msgstr "График примирения"
-
-#: src/hope_live/theme/static/js/completion_visuals.js:664
-#: src/hope_live/theme/static/js/completion_visuals.min.js:1
-msgid "Delivery success rate (%)"
-msgstr ""
-
-#: src/hope_live/theme/static/js/completion_visuals.js:768
+#: src/hope_live/theme/static/js/completion_visuals.js:827
 #: src/hope_live/theme/static/js/completion_visuals.min.js:1
 msgid "Reconciled amount (USD)"
 msgstr "Сверенная сумма (USD)"
 
-#: src/hope_live/theme/static/js/completion_visuals.js:769
+#: src/hope_live/theme/static/js/completion_visuals.js:828
 #: src/hope_live/theme/static/js/completion_visuals.min.js:1
 msgid "Still open amount (USD)"
 msgstr ""
 
-#: src/hope_live/theme/static/js/completion_visuals.js:770
+#: src/hope_live/theme/static/js/completion_visuals.js:829
 #: src/hope_live/theme/static/js/completion_visuals.min.js:1
 msgid "Reconciliation timeline (USD)"
 msgstr "Хронология сверки (USD)"
 
-#: src/hope_live/theme/static/js/completion_visuals.js:771
+#: src/hope_live/theme/static/js/completion_visuals.js:830
 #: src/hope_live/theme/static/js/completion_visuals.min.js:1
 msgid "Reconciliation status by country (USD)"
 msgstr "Статус сверки по странам (USD)"
 
-#: src/hope_live/theme/static/js/completion_visuals.js:773
+#: src/hope_live/theme/static/js/completion_visuals.js:832
 #: src/hope_live/theme/static/js/completion_visuals.min.js:1
 msgid "Reconciled payments"
 msgstr "Сверенные платежи"
 
-#: src/hope_live/theme/static/js/completion_visuals.js:774
+#: src/hope_live/theme/static/js/completion_visuals.js:833
 #: src/hope_live/theme/static/js/completion_visuals.min.js:1
 msgid "Still open payments"
 msgstr ""
 
-#: src/hope_live/theme/static/js/completion_visuals.js:775
+#: src/hope_live/theme/static/js/completion_visuals.js:834
 #: src/hope_live/theme/static/js/completion_visuals.min.js:1
 #, fuzzy
 #| msgid "Reconciliation Timeline (USD)"
 msgid "Reconciliation timeline"
 msgstr "Хронология сверки (USD)"
 
-#: src/hope_live/theme/static/js/completion_visuals.js:776
+#: src/hope_live/theme/static/js/completion_visuals.js:835
 #: src/hope_live/theme/static/js/completion_visuals.min.js:1
 msgid "Reconciliation status by country"
 msgstr "Статус сверки по странам"
 
-#: src/hope_live/theme/static/js/completion_visuals.js:782
+#: src/hope_live/theme/static/js/completion_visuals.js:841
 #: src/hope_live/theme/static/js/completion_visuals.min.js:1
 #: src/hope_live/theme/static/js/dashboard_visuals.js:308
 #: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
 msgid "Cash disbursed by beneficiary group"
 msgstr ""
 
-#: src/hope_live/theme/static/js/completion_visuals.js:783
+#: src/hope_live/theme/static/js/completion_visuals.js:842
 #: src/hope_live/theme/static/js/completion_visuals.min.js:1
 #: src/hope_live/theme/static/js/dashboard_visuals.js:317
 #: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
@@ -790,6 +783,16 @@ msgstr ""
 #: src/hope_live/theme/static/js/risk_visuals.min.js:1
 msgid "No matching results"
 msgstr ""
+
+#, fuzzy
+#~| msgid "Reconciled"
+#~ msgid "Reconciled volume"
+#~ msgstr "Сверено"
+
+#, fuzzy
+#~| msgid "Reconciliation Timeline"
+#~ msgid "Reconciliation rate (%)"
+#~ msgstr "График примирения"
 
 #~ msgid "PWD reached"
 #~ msgstr "Охвачено людей с инвалидностью"

@@ -501,14 +501,14 @@ document.addEventListener('DOMContentLoaded', function () {
                 top: 0,
                 right: 20
             },
-            grid: { top: 30, bottom: 55, left: 60, right: 20 },
+            grid: { top: 30, bottom: 75, left: 60, right: 20 },
             xAxis: {
                 type: 'category',
                 data: countryData.map(d => d.key),
                 axisLabel: {
                     rotate: 30,
                     interval: 0,
-                    width: 80,
+                    width: 115,
                     overflow: 'truncate',
                     color: '#1f2937',
                     fontWeight: 500

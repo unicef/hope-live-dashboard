@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-03 11:34+0000\n"
+"POT-Creation-Date: 2026-11-03 12:14+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,124 +18,117 @@ msgstr ""
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
 "&& n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
 
-#: src/hope_live/theme/static/js/completion_visuals.js:235
-#: src/hope_live/theme/static/js/completion_visuals.js:238
+#: src/hope_live/theme/static/js/completion_visuals.js:237
+#: src/hope_live/theme/static/js/completion_visuals.js:240
 #: src/hope_live/theme/static/js/completion_visuals.min.js:1
 #, javascript-format
 msgid "%s out of %s total"
 msgstr "%s من إجمالي %s"
 
-#: src/hope_live/theme/static/js/completion_visuals.js:320
+#: src/hope_live/theme/static/js/completion_visuals.js:322
 #: src/hope_live/theme/static/js/completion_visuals.min.js:1
 msgid "payments"
 msgstr "المدفوعات"
 
-#: src/hope_live/theme/static/js/completion_visuals.js:346
-#: src/hope_live/theme/static/js/completion_visuals.js:370
-#: src/hope_live/theme/static/js/completion_visuals.js:457
-#: src/hope_live/theme/static/js/completion_visuals.js:469
-#: src/hope_live/theme/static/js/completion_visuals.js:499
+#: src/hope_live/theme/static/js/completion_visuals.js:348
+#: src/hope_live/theme/static/js/completion_visuals.js:372
+#: src/hope_live/theme/static/js/completion_visuals.js:459
+#: src/hope_live/theme/static/js/completion_visuals.js:471
+#: src/hope_live/theme/static/js/completion_visuals.js:501
 #: src/hope_live/theme/static/js/completion_visuals.min.js:1
 #: src/hope_live/theme/static/js/dashboard_visuals.js:673
 #: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
 msgid "Reconciled"
 msgstr "مسواة"
 
-#: src/hope_live/theme/static/js/completion_visuals.js:346
-#: src/hope_live/theme/static/js/completion_visuals.js:378
-#: src/hope_live/theme/static/js/completion_visuals.js:458
-#: src/hope_live/theme/static/js/completion_visuals.js:469
-#: src/hope_live/theme/static/js/completion_visuals.js:508
+#: src/hope_live/theme/static/js/completion_visuals.js:348
+#: src/hope_live/theme/static/js/completion_visuals.js:380
+#: src/hope_live/theme/static/js/completion_visuals.js:460
+#: src/hope_live/theme/static/js/completion_visuals.js:471
+#: src/hope_live/theme/static/js/completion_visuals.js:510
 #: src/hope_live/theme/static/js/completion_visuals.min.js:1
 msgid "Still open"
 msgstr ""
 
-#: src/hope_live/theme/static/js/completion_visuals.js:459
+#: src/hope_live/theme/static/js/completion_visuals.js:461
 #: src/hope_live/theme/static/js/completion_visuals.min.js:1
 msgid "Total"
 msgstr ""
 
-#: src/hope_live/theme/static/js/completion_visuals.js:643
+#: src/hope_live/theme/static/js/completion_visuals.js:649
 #: src/hope_live/theme/static/js/completion_visuals.min.js:1
-#, fuzzy
-#| msgid "Reconciliation Timeline"
-msgid "Reconciliation rate"
-msgstr "الجدول الزمني للمصالحة"
+msgid "No country has both completion and financial data for this period."
+msgstr "لا يوجد بلد تتوفر له بيانات الإنجاز والبيانات المالية لهذه الفترة."
 
-#: src/hope_live/theme/static/js/completion_visuals.js:644
+#: src/hope_live/theme/static/js/completion_visuals.js:668
+#: src/hope_live/theme/static/js/completion_visuals.js:675
+#: src/hope_live/theme/static/js/completion_visuals.js:703
+#: src/hope_live/theme/static/js/completion_visuals.min.js:1
+msgid "Reconciliation rate"
+msgstr "معدل التسوية"
+
+#: src/hope_live/theme/static/js/completion_visuals.js:670
+#: src/hope_live/theme/static/js/completion_visuals.js:675
+#: src/hope_live/theme/static/js/completion_visuals.js:732
 #: src/hope_live/theme/static/js/completion_visuals.min.js:1
 msgid "Delivery success rate"
-msgstr ""
+msgstr "معدل نجاح التسليم"
 
-#: src/hope_live/theme/static/js/completion_visuals.js:645
+#: src/hope_live/theme/static/js/completion_visuals.js:723
 #: src/hope_live/theme/static/js/completion_visuals.min.js:1
-#, fuzzy
-#| msgid "Reconciled"
-msgid "Reconciled volume"
-msgstr "مسواة"
+msgid "80% reference"
+msgstr "مرجع 80%"
 
-#: src/hope_live/theme/static/js/completion_visuals.js:653
-#: src/hope_live/theme/static/js/completion_visuals.min.js:1
-#, fuzzy
-#| msgid "Reconciliation Timeline"
-msgid "Reconciliation rate (%)"
-msgstr "الجدول الزمني للمصالحة"
-
-#: src/hope_live/theme/static/js/completion_visuals.js:664
-#: src/hope_live/theme/static/js/completion_visuals.min.js:1
-msgid "Delivery success rate (%)"
-msgstr ""
-
-#: src/hope_live/theme/static/js/completion_visuals.js:768
+#: src/hope_live/theme/static/js/completion_visuals.js:827
 #: src/hope_live/theme/static/js/completion_visuals.min.js:1
 msgid "Reconciled amount (USD)"
 msgstr "المبلغ المسوّى (بالدولار الأمريكي)"
 
-#: src/hope_live/theme/static/js/completion_visuals.js:769
+#: src/hope_live/theme/static/js/completion_visuals.js:828
 #: src/hope_live/theme/static/js/completion_visuals.min.js:1
 msgid "Still open amount (USD)"
 msgstr ""
 
-#: src/hope_live/theme/static/js/completion_visuals.js:770
+#: src/hope_live/theme/static/js/completion_visuals.js:829
 #: src/hope_live/theme/static/js/completion_visuals.min.js:1
 msgid "Reconciliation timeline (USD)"
 msgstr "الخط الزمني للتسوية (بالدولار الأمريكي)"
 
-#: src/hope_live/theme/static/js/completion_visuals.js:771
+#: src/hope_live/theme/static/js/completion_visuals.js:830
 #: src/hope_live/theme/static/js/completion_visuals.min.js:1
 msgid "Reconciliation status by country (USD)"
 msgstr "حالة التسوية حسب البلد (بالدولار الأمريكي)"
 
-#: src/hope_live/theme/static/js/completion_visuals.js:773
+#: src/hope_live/theme/static/js/completion_visuals.js:832
 #: src/hope_live/theme/static/js/completion_visuals.min.js:1
 msgid "Reconciled payments"
 msgstr "المدفوعات التوفيقية"
 
-#: src/hope_live/theme/static/js/completion_visuals.js:774
+#: src/hope_live/theme/static/js/completion_visuals.js:833
 #: src/hope_live/theme/static/js/completion_visuals.min.js:1
 msgid "Still open payments"
 msgstr ""
 
-#: src/hope_live/theme/static/js/completion_visuals.js:775
+#: src/hope_live/theme/static/js/completion_visuals.js:834
 #: src/hope_live/theme/static/js/completion_visuals.min.js:1
 #, fuzzy
 #| msgid "Reconciliation Timeline (USD)"
 msgid "Reconciliation timeline"
 msgstr "الخط الزمني للتسوية (بالدولار الأمريكي)"
 
-#: src/hope_live/theme/static/js/completion_visuals.js:776
+#: src/hope_live/theme/static/js/completion_visuals.js:835
 #: src/hope_live/theme/static/js/completion_visuals.min.js:1
 msgid "Reconciliation status by country"
 msgstr "حالة المطابقة حسب البلد"
 
-#: src/hope_live/theme/static/js/completion_visuals.js:782
+#: src/hope_live/theme/static/js/completion_visuals.js:841
 #: src/hope_live/theme/static/js/completion_visuals.min.js:1
 #: src/hope_live/theme/static/js/dashboard_visuals.js:308
 #: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
 msgid "Cash disbursed by beneficiary group"
 msgstr ""
 
-#: src/hope_live/theme/static/js/completion_visuals.js:783
+#: src/hope_live/theme/static/js/completion_visuals.js:842
 #: src/hope_live/theme/static/js/completion_visuals.min.js:1
 #: src/hope_live/theme/static/js/dashboard_visuals.js:317
 #: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
@@ -786,6 +779,16 @@ msgstr ""
 #: src/hope_live/theme/static/js/risk_visuals.min.js:1
 msgid "No matching results"
 msgstr ""
+
+#, fuzzy
+#~| msgid "Reconciled"
+#~ msgid "Reconciled volume"
+#~ msgstr "مسواة"
+
+#, fuzzy
+#~| msgid "Reconciliation Timeline"
+#~ msgid "Reconciliation rate (%)"
+#~ msgstr "الجدول الزمني للمصالحة"
 
 #~ msgid "PWD reached"
 #~ msgstr "الأشخاص ذوو الإعاقة الذين تم الوصول إليهم"

@@ -111,12 +111,12 @@
         </div>
     </div>
 
-    <!-- Quality Quadrant -->
+    <!-- Reconciliation and delivery success rates -->
     <div class="bg-white rounded-xl shadow-2xs border border-gray-200 p-3.5 mb-4">
-        <h3 class="text-sm font-bold text-gray-900 mb-1">{% translate "Quality quadrant" %}</h3>
-        <p class="text-[11px] text-gray-400 mb-2 italic">{% translate "Delivery success rate versus reconciliation rate, by country. Bubble size reflects reconciled volume." %}</p>
-        {% chart_info "completion.quadrant" %}
-        <div id="quality-quadrant-chart" class="w-full h-[380px]"></div>
+        <h3 class="text-sm font-bold text-gray-900 mb-1">{% translate "Reconciliation and delivery success by country" %}</h3>
+        <p class="text-[11px] text-gray-400 mb-2 italic">{% translate "Two rates per country, sorted by reconciliation rate. The dashed line is the 80 percent reference." %}</p>
+        {% chart_info "completion.rates" %}
+        <div id="completion-rates-chart" class="w-full h-[420px]"></div>
     </div>
 </div>
 

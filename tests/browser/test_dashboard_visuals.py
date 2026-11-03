@@ -19,7 +19,7 @@ def clear_aggregate_api_cache():
 
     Each dashboard now loads two aggregate feeds (e.g. the financial page also pulls
     completion data for the pipeline funnel, and completion pulls financial data for the
-    quality quadrant). Without clearing, a test would be served a previous test's cached
+    delivery success rates). Without clearing, a test would be served a previous test's cached
     payload — including empty payloads cached when that test had no rows for the feed.
     """
     from django.core.cache import cache
@@ -456,7 +456,7 @@ def test_completion_dashboard_loads(browser, completion_aggregates, financial_ag
     browser.assert_text("Payment reconciliation dashboard", "h1")
 
     browser.wait_for_element_visible('[data-chart-info="completion.timeline"]')
-    browser.wait_for_element_visible('[data-chart-info="completion.quadrant"]')
+    browser.wait_for_element_visible('[data-chart-info="completion.rates"]')
 
     # Country chart: absolute default, 100% share toggle flips the axis to percentages.
     browser.assert_element_not_visible("#verification-card")
@@ -557,12 +557,32 @@ def test_demographic_dashboard_cohort_toggle(browser, demographic_aggregates, fi
     browser.assert_text("Individuals reached", "#individuals-card-title")
 
 
-def test_completion_quality_quadrant_loads(browser, completion_aggregates, financial_aggregates):
+def test_completion_rates_chart_loads(browser, completion_aggregates, financial_aggregates):
+    year = datetime.datetime.now().year
+    # Delivery-status rows so the chart has both feeds for the same countries.
+    for i, country in enumerate(["kenya", "somalia", "nigeria", "ukraine", "bangladesh"]):
+        for status, count in [("DISTRIBUTION SUCCESSFUL", 80 + i), ("PENDING", 20 - i)]:
+            FinancialAggregateFactory(
+                date=datetime.date(year, 1, i + 1),
+                time_grain="daily",
+                country_slug=country,
+                dimension_type="status",
+                dimension_value=status,
+                total_usd=1000 * count,
+                payment_count=count,
+            )
+
     browser.login_as_user()
     browser.open("/completion/")
     browser.wait_for_element_visible("#time-filter-container")
     browser.wait_for_element_visible("#time-focus-chart canvas")
-    browser.wait_for_element_visible("#quality-quadrant-chart canvas")
+    browser.wait_for_element_visible("#completion-rates-chart canvas")
+
+    rates_option = browser.execute_script(
+        "return echarts.getInstanceByDom(document.getElementById('completion-rates-chart')).getOption();"
+    )
+    assert [s["type"] for s in rates_option["series"]] == ["bar", "bar"]
+    assert rates_option["xAxis"][0]["max"] == 100
 
 
 def test_program_and_country_charts_show_top_ten_with_other(browser, db):

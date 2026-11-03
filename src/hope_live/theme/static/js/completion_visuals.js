@@ -5,9 +5,11 @@ document.addEventListener('DOMContentLoaded', function () {
     let currentMetric = 'payments'; // Default metric: payments. Can be 'payments' or 'usd'
     let countryView = 'absolute'; // Country chart: 'absolute' or 'share' (100% stacked)
 
-    // Shared semantic colours: green = reconciled, amber = still open.
+    // Shared semantic colours: green = reconciled, amber = still open,
+    // teal = delivered (matches the financial dashboard's Delivered stage).
     const RECONCILED_COLOR = '#97b552';
     const OPEN_COLOR = '#ffb980';
+    const DELIVERY_COLOR = '#2ec7c9';
 
     const formatCompact = (val) => {
         if (currentMetric === 'usd') {
@@ -189,8 +191,8 @@ document.addEventListener('DOMContentLoaded', function () {
     const countryChart = echarts.init(document.getElementById('status-country-chart'), 'macarons');
     const completionGauge = echarts.init(document.getElementById('completion-gauge'), 'macarons');
     const beneficiaryGroupChart = echarts.init(document.getElementById('beneficiary-group-chart'), 'macarons');
-    const quadrantEl = document.getElementById('quality-quadrant-chart');
-    const quadrantChart = quadrantEl ? echarts.init(quadrantEl, 'macarons') : null;
+    const ratesEl = document.getElementById('completion-rates-chart');
+    const ratesChart = ratesEl ? echarts.init(ratesEl, 'macarons') : null;
 
     // Resize Handler
     window.addEventListener('resize', function () {
@@ -198,7 +200,7 @@ document.addEventListener('DOMContentLoaded', function () {
         countryChart.resize();
         completionGauge.resize();
         beneficiaryGroupChart.resize();
-        if (quadrantChart) quadrantChart.resize();
+        if (ratesChart) ratesChart.resize();
     });
 
     const pendingList = ["SENT TO PAYMENT GATEWAY", "SENT TO FSP", "PENDING"];
@@ -208,7 +210,7 @@ document.addEventListener('DOMContentLoaded', function () {
         "TRANSACTION SUCCESSFUL",
     ].map(s => s.toUpperCase());
 
-    // Financial rows are used only for the delivery axis of the quality quadrant.
+    // Financial rows are used only for the delivery success rate chart.
     let financialRows = [];
     let activeRange = null;
 
@@ -470,14 +472,14 @@ document.addEventListener('DOMContentLoaded', function () {
                 top: 0,
                 right: 20
             },
-            grid: { top: 48, bottom: 55, left: 60, right: 20 },
+            grid: { top: 48, bottom: 75, left: 60, right: 20 },
             xAxis: {
                 type: 'category',
                 data: countryData.map(d => d.key),
                 axisLabel: {
                     rotate: 30,
                     interval: 0,
-                    width: 90,
+                    width: 115,
                     overflow: 'truncate',
                     formatter: val => formatCountryName(val),
                     color: '#1f2937',
@@ -580,12 +582,14 @@ document.addEventListener('DOMContentLoaded', function () {
             }]
         }, { notMerge: true });
 
-        updateQuadrant();
+        updateRatesChart();
     }
 
-    // Quality quadrant: reconciliation rate (completion) versus delivery success rate (financial)
-    function updateQuadrant() {
-        if (!quadrantChart) return;
+    // Reconciliation and delivery success rates by country: two bars per
+    // country, sorted by reconciliation rate. The 80% dashed line is a
+    // reference guide, not a threshold.
+    function updateRatesChart() {
+        if (!ratesChart) return;
 
         const reconciliation = {};
         countryStatusGroup.all().forEach(d => {
@@ -621,75 +625,131 @@ document.addEventListener('DOMContentLoaded', function () {
             if (totalDelivery <= 0) return;
 
             points.push({
-                name: formatCountryName(country),
-                value: [
-                    (rec.reconciled / totalReconciled) * 100,
-                    (deliv.delivered / totalDelivery) * 100,
-                    totalReconciled
-                ],
-                itemStyle: { color: getStableColor(country) }
+                country: country,
+                reconciliationRate: (rec.reconciled / totalReconciled) * 100,
+                deliveryRate: (deliv.delivered / totalDelivery) * 100,
+                reconciled: rec.reconciled,
+                totalReconciled: totalReconciled,
+                delivered: deliv.delivered,
+                totalDelivery: totalDelivery
             });
         });
 
-        const maxVolume = points.reduce((max, p) => Math.max(max, p.value[2]), 0) || 1;
+        // Keep the largest countries so the chart stays readable, then order
+        // by reconciliation rate (category axes render bottom-up, so the
+        // highest rate ends up at the top).
+        const visible = points
+            .sort((a, b) => b.totalReconciled - a.totalReconciled)
+            .slice(0, 12)
+            .sort((a, b) => a.reconciliationRate - b.reconciliationRate);
 
-        quadrantChart.setOption({
+        if (visible.length === 0) {
+            ratesChart.setOption({
+                title: {
+                    text: gettext('No country has both completion and financial data for this period.'),
+                    left: 'center',
+                    top: 'middle',
+                    textStyle: { color: '#94a3b8', fontSize: 12, fontWeight: 400 }
+                }
+            }, { notMerge: true });
+            return;
+        }
+
+        const rateFormatter = params => `${params.value.toFixed(1)}%`;
+
+        ratesChart.setOption({
             tooltip: {
-                trigger: 'item',
+                trigger: 'axis',
+                axisPointer: { type: 'shadow' },
                 formatter: params => {
-                    const reconPct = params.value[0];
-                    const deliveryPct = params.value[1];
-                    const volume = params.value[2];
-                    return `<b>${params.name}</b><br/>${gettext('Reconciliation rate')}: ${reconPct.toFixed(1)}%<br/>` +
-                        `${gettext('Delivery success rate')}: ${deliveryPct.toFixed(1)}%<br/>` +
-                        `${gettext('Reconciled volume')}: ${formatFullVal(volume)}`;
+                    const p = visible[params[0].dataIndex];
+                    if (!p) return '';
+                    return `<b>${formatCountryName(p.country)}</b><br/>` +
+                        `${params[0].marker} ${gettext('Reconciliation rate')}: <b>${p.reconciliationRate.toFixed(1)}%</b> ` +
+                        `(${formatFullVal(p.reconciled)} / ${formatFullVal(p.totalReconciled)})<br/>` +
+                        `${params[1].marker} ${gettext('Delivery success rate')}: <b>${p.deliveryRate.toFixed(1)}%</b> ` +
+                        `(${formatFullVal(p.delivered)} / ${formatFullVal(p.totalDelivery)})`;
                 }
             },
-            grid: { top: 30, right: 35, bottom: 55, left: 65 },
+            legend: {
+                data: [gettext('Reconciliation rate'), gettext('Delivery success rate')],
+                top: 0,
+                right: 20
+            },
+            grid: { top: 38, right: 70, bottom: 30, left: 140 },
             xAxis: {
                 type: 'value',
                 min: 0,
                 max: 100,
-                name: gettext('Reconciliation rate (%)'),
-                nameLocation: 'middle',
-                nameGap: 32,
-                nameTextStyle: { color: '#475569', fontSize: 11 },
                 axisLabel: { formatter: '{value}%', color: '#64748b' },
                 splitLine: { lineStyle: { color: '#f1f5f9' } }
             },
             yAxis: {
-                type: 'value',
-                min: 0,
-                max: 100,
-                name: gettext('Delivery success rate (%)'),
-                nameLocation: 'middle',
-                nameGap: 46,
-                nameTextStyle: { color: '#475569', fontSize: 11 },
-                axisLabel: { formatter: '{value}%', color: '#64748b' },
-                splitLine: { lineStyle: { color: '#f1f5f9' } }
-            },
-            series: [{
-                type: 'scatter',
-                data: points,
-                symbolSize: value => 10 + 30 * Math.sqrt(value[2] / maxVolume),
-                label: {
-                    show: true,
-                    position: 'top',
+                type: 'category',
+                data: visible.map(p => formatCountryName(p.country)),
+                axisLabel: {
+                    color: '#1f2937',
+                    fontWeight: 500,
                     fontSize: 10,
-                    color: '#374151',
-                    formatter: params => params.name
+                    lineHeight: 11,
+                    width: 130,
+                    overflow: 'break'
                 },
-                markLine: {
-                    silent: true,
-                    symbol: 'none',
-                    lineStyle: { type: 'dashed', color: '#cbd5e1' },
-                    data: [{ xAxis: 80 }, { yAxis: 80 }]
+                axisTick: { show: false },
+                axisLine: { lineStyle: { color: '#e2e8f0' } }
+            },
+            series: [
+                {
+                    name: gettext('Reconciliation rate'),
+                    type: 'bar',
+                    barMaxWidth: 10,
+                    barGap: '20%',
+                    itemStyle: { color: RECONCILED_COLOR, borderRadius: [0, 3, 3, 0] },
+                    data: visible.map(p => p.reconciliationRate),
+                    label: {
+                        show: true,
+                        position: 'right',
+                        distance: 4,
+                        formatter: rateFormatter,
+                        color: '#0f172a',
+                        fontWeight: 600,
+                        fontSize: 10
+                    },
+                    markLine: {
+                        silent: true,
+                        symbol: 'none',
+                        lineStyle: { type: 'dashed', color: '#cbd5e1' },
+                        label: {
+                            formatter: gettext('80% reference'),
+                            position: 'insideEndTop',
+                            rotate: 0,
+                            color: '#94a3b8',
+                            fontSize: 10
+                        },
+                        data: [{ xAxis: 80 }]
+                    }
+                },
+                {
+                    name: gettext('Delivery success rate'),
+                    type: 'bar',
+                    barMaxWidth: 10,
+                    itemStyle: { color: DELIVERY_COLOR, borderRadius: [0, 3, 3, 0] },
+                    data: visible.map(p => p.deliveryRate),
+                    label: {
+                        show: true,
+                        position: 'right',
+                        distance: 4,
+                        formatter: rateFormatter,
+                        color: '#475569',
+                        fontWeight: 600,
+                        fontSize: 10
+                    }
                 }
-            }]
+            ]
         }, { notMerge: true });
     }
 
-    async function loadFinancialForQuadrant(from, to) {
+    async function loadFinancialForRates(from, to) {
         try {
             const url = `${window.DASHBOARD_CONFIG.endpoint}?date_from=${from}&date_to=${to}&dashboard=financial`;
             const response = await fetch(url, {
@@ -710,7 +770,7 @@ document.addEventListener('DOMContentLoaded', function () {
             });
             financialRows = rows;
         } catch (error) {
-            console.error('Error loading financial data for the quality quadrant:', error);
+            console.error('Error loading financial data for the delivery success rate:', error);
         }
     }
 
@@ -845,7 +905,7 @@ document.addEventListener('DOMContentLoaded', function () {
             ndx.remove();
             ndx.add(data);
 
-            await loadFinancialForQuadrant(from, to);
+            await loadFinancialForRates(from, to);
 
             timeFilter.setBuffer(startDate, endDate);
             updateAll();

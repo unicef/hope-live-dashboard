@@ -134,6 +134,35 @@ CHART_INFO = {
     # ------------------------------------------------------------------
     # Demographic
     # ------------------------------------------------------------------
+    "demographic.reached": {
+        "definition": _("People reached in households with at least one qualifying payment in the period."),
+        "source": _("HOPE households and payments — country report demographic feed."),
+        "method": _(
+            "A household counts once per period when it has a qualifying payment. Individuals, "
+            "children and persons with disabilities come from the household's recorded "
+            "composition. Date basis: payment delivery date, then entitlement date, then payment "
+            "status date. Only accepted, finished or closed plans are included; failed, removed, "
+            "conflicted and excluded payments are excluded."
+        ),
+        "note": _(
+            "Children and PWD figures rely on recorded household fields, so missing composition "
+            "or dates of birth understate the totals."
+        ),
+    },
+    "demographic.children": {
+        "definition": _("Children reached in households with at least one qualifying payment in the period."),
+        "source": _("HOPE households and payments — country report demographic feed."),
+        "method": _(
+            "Sums each household's recorded children count (the household composition count "
+            "where available, otherwise the beneficiary-recorded children count). Households "
+            "with no recorded count contribute zero."
+        ),
+        "note": _(
+            "Where household composition has not been recalculated or children's dates of birth "
+            "are missing, the figure is understated. An improved estimate based on household "
+            "members is being added to the feed."
+        ),
+    },
     "demographic.timeline": {
         "definition": _("Individuals, households, children or persons with disabilities reached over time."),
         "source": _("HOPE households and payments — country report demographic feed."),
@@ -141,9 +170,8 @@ CHART_INFO = {
             "Demographic rows come from households with at least one qualifying payment in the "
             "month. Payment plans must be accepted, finished or closed; failed, removed, "
             "conflicted and excluded payments are excluded. Households are counted distinctly. "
-            "Beneficiary, child and PWD counts follow the programme-collected household fields; "
-            "children may be estimated with fertility multipliers where a programme does not "
-            "collect them."
+            "Beneficiary, child and PWD counts follow the household's recorded composition; "
+            "missing composition or dates of birth understate the totals."
         ),
         "note": _(
             "Under the current legacy calculation, a household with more than one qualifying "
@@ -160,7 +188,7 @@ CHART_INFO = {
             "Shares are calculated from the active metric (individuals, households, children or "
             "persons with disabilities)."
         ),
-        "note": _("Children estimates and the PWD under-reporting caveat also apply here."),
+        "note": _("Children and PWD under-reporting caveats also apply here."),
     },
     "demographic.country": {
         "definition": _("Share of the reached population by country."),
@@ -169,7 +197,7 @@ CHART_INFO = {
             "Uses the same demographic base as the reach timeline, grouped by business area "
             "country. Shares are calculated from the active metric."
         ),
-        "note": _("The chart shows the top 10 countries. Children estimates and PWD caveats apply."),
+        "note": _("The chart shows the top 10 countries. Children and PWD caveats apply."),
     },
     "demographic.beneficiary_group": {
         "definition": _("Reached population by beneficiary group."),
@@ -178,7 +206,7 @@ CHART_INFO = {
             "Uses the same demographic base as the reach timeline, grouped by the programme's "
             "beneficiary group label. Values follow the active metric."
         ),
-        "note": _("The chart shows the top 10 groups. Children estimates and PWD caveats apply."),
+        "note": _("The chart shows the top 10 groups. Children and PWD caveats apply."),
     },
     # ------------------------------------------------------------------
     # Completion
@@ -220,16 +248,19 @@ CHART_INFO = {
         ),
         "note": _("The chart shows the top 10 groups."),
     },
-    "completion.quadrant": {
-        "definition": _("Delivery success rate versus reconciliation rate by country."),
+    "completion.rates": {
+        "definition": _("Reconciliation and delivery success rates by country."),
         "source": _("HOPE payments — financial and completion feeds."),
         "method": _(
             "Reconciliation rate is reconciled divided by reconciled plus still open in the "
             "completion feed. Delivery success rate is successful statuses divided by successful "
-            "plus pending statuses in the financial feed. Bubble size is total reconciled volume. "
-            "Only countries present in both feeds are plotted."
+            "plus pending statuses in the financial feed. Only countries present in both feeds "
+            "are shown."
         ),
-        "note": _("The dashed 80% lines are reference guides, not thresholds."),
+        "note": _(
+            "Top 12 countries by completion volume, sorted by reconciliation rate. The dashed "
+            "80% line is a reference guide, not a threshold."
+        ),
     },
     "completion.verification": {
         "definition": _("Payment verification outcomes: selected, verified, pending and discrepancies."),

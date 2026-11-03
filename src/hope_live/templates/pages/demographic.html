@@ -7,6 +7,7 @@
         <div>
             <h1 class="text-xl lg:text-2xl font-black text-gray-900 leading-tight">{% translate "Demographic dashboard" %}</h1>
             <p class="text-xs text-gray-500">{% translate "Breakdown of individuals, children, and persons with disabilities reached" %}</p>
+            {% chart_info "demographic.reached" %}
         </div>
         <div>
             <span class="bg-unicef-blue text-white text-[11px] font-bold px-2 py-0.5 rounded">{% translate "Live data" %}</span>
@@ -66,7 +67,7 @@
         <div id="card-children" class="bg-white rounded-xl shadow-2xs border border-gray-200 p-3 border-l-4 border-unicef-primary flex flex-col justify-center min-h-[84px]">
             <h3 class="text-gray-500 text-[10px] sm:text-[11px] font-bold">{% translate "Children reached" %}</h3>
             <p id="total-children" class="text-xl sm:text-2xl font-black text-sky-600 mt-0.5 leading-none">0</p>
-            {% include "includes/chart_info.html" with definition="Estimated children reached." source="HOPE demographics" method="For programmes not collecting children data, figures are estimated using agreed fertility rate multipliers." %}
+            {% chart_info "demographic.children" %}
         </div>
         <div id="card-pwd" class="bg-white rounded-xl shadow-2xs border border-gray-200 p-3 border-l-4 border-purple-500 flex flex-col justify-center min-h-[84px]">
             <h3 class="text-gray-500 text-[10px] sm:text-[11px] font-bold">{% translate "Persons with disabilities reached" %}</h3>
@@ -88,7 +89,7 @@
         <div class="bg-white rounded-xl shadow-2xs border border-gray-200 p-3.5 flex flex-col">
             <h3 id="sector-share-title" class="text-sm font-bold text-gray-900 mb-1">{% translate "Sector share of reached population" %}</h3>
             {% chart_info "demographic.sector" %}
-            <p class="text-[11px] text-gray-400 mb-2 italic">{% translate "Note: Figures may use estimated multipliers where children data is not collected." %}</p>
+            <p class="text-[11px] text-gray-400 mb-2 italic">{% translate "Note: children and PWD figures rely on recorded household composition." %}</p>
             <div id="sector-children-chart" class="w-full h-[250px]"></div>
         </div>
         <div class="bg-white rounded-xl shadow-2xs border border-gray-200 p-3.5">

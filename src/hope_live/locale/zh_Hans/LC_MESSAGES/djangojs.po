@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-03 11:34+0000\n"
+"POT-Creation-Date: 2026-11-03 12:14+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,124 +17,117 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
-#: src/hope_live/theme/static/js/completion_visuals.js:235
-#: src/hope_live/theme/static/js/completion_visuals.js:238
+#: src/hope_live/theme/static/js/completion_visuals.js:237
+#: src/hope_live/theme/static/js/completion_visuals.js:240
 #: src/hope_live/theme/static/js/completion_visuals.min.js:1
 #, javascript-format
 msgid "%s out of %s total"
 msgstr "在总共 %s 中占 %s"
 
-#: src/hope_live/theme/static/js/completion_visuals.js:320
+#: src/hope_live/theme/static/js/completion_visuals.js:322
 #: src/hope_live/theme/static/js/completion_visuals.min.js:1
 msgid "payments"
 msgstr "付款"
 
-#: src/hope_live/theme/static/js/completion_visuals.js:346
-#: src/hope_live/theme/static/js/completion_visuals.js:370
-#: src/hope_live/theme/static/js/completion_visuals.js:457
-#: src/hope_live/theme/static/js/completion_visuals.js:469
-#: src/hope_live/theme/static/js/completion_visuals.js:499
+#: src/hope_live/theme/static/js/completion_visuals.js:348
+#: src/hope_live/theme/static/js/completion_visuals.js:372
+#: src/hope_live/theme/static/js/completion_visuals.js:459
+#: src/hope_live/theme/static/js/completion_visuals.js:471
+#: src/hope_live/theme/static/js/completion_visuals.js:501
 #: src/hope_live/theme/static/js/completion_visuals.min.js:1
 #: src/hope_live/theme/static/js/dashboard_visuals.js:673
 #: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
 msgid "Reconciled"
 msgstr "已对账"
 
-#: src/hope_live/theme/static/js/completion_visuals.js:346
-#: src/hope_live/theme/static/js/completion_visuals.js:378
-#: src/hope_live/theme/static/js/completion_visuals.js:458
-#: src/hope_live/theme/static/js/completion_visuals.js:469
-#: src/hope_live/theme/static/js/completion_visuals.js:508
+#: src/hope_live/theme/static/js/completion_visuals.js:348
+#: src/hope_live/theme/static/js/completion_visuals.js:380
+#: src/hope_live/theme/static/js/completion_visuals.js:460
+#: src/hope_live/theme/static/js/completion_visuals.js:471
+#: src/hope_live/theme/static/js/completion_visuals.js:510
 #: src/hope_live/theme/static/js/completion_visuals.min.js:1
 msgid "Still open"
 msgstr ""
 
-#: src/hope_live/theme/static/js/completion_visuals.js:459
+#: src/hope_live/theme/static/js/completion_visuals.js:461
 #: src/hope_live/theme/static/js/completion_visuals.min.js:1
 msgid "Total"
 msgstr ""
 
-#: src/hope_live/theme/static/js/completion_visuals.js:643
+#: src/hope_live/theme/static/js/completion_visuals.js:649
 #: src/hope_live/theme/static/js/completion_visuals.min.js:1
-#, fuzzy
-#| msgid "Reconciliation Timeline"
-msgid "Reconciliation rate"
-msgstr "和解时间表"
+msgid "No country has both completion and financial data for this period."
+msgstr "本期没有国家同时具备完成情况和财务数据。"
 
-#: src/hope_live/theme/static/js/completion_visuals.js:644
+#: src/hope_live/theme/static/js/completion_visuals.js:668
+#: src/hope_live/theme/static/js/completion_visuals.js:675
+#: src/hope_live/theme/static/js/completion_visuals.js:703
+#: src/hope_live/theme/static/js/completion_visuals.min.js:1
+msgid "Reconciliation rate"
+msgstr "对账率"
+
+#: src/hope_live/theme/static/js/completion_visuals.js:670
+#: src/hope_live/theme/static/js/completion_visuals.js:675
+#: src/hope_live/theme/static/js/completion_visuals.js:732
 #: src/hope_live/theme/static/js/completion_visuals.min.js:1
 msgid "Delivery success rate"
-msgstr ""
+msgstr "发放成功率"
 
-#: src/hope_live/theme/static/js/completion_visuals.js:645
+#: src/hope_live/theme/static/js/completion_visuals.js:723
 #: src/hope_live/theme/static/js/completion_visuals.min.js:1
-#, fuzzy
-#| msgid "Reconciled"
-msgid "Reconciled volume"
-msgstr "已对账"
+msgid "80% reference"
+msgstr "80% 参考线"
 
-#: src/hope_live/theme/static/js/completion_visuals.js:653
-#: src/hope_live/theme/static/js/completion_visuals.min.js:1
-#, fuzzy
-#| msgid "Reconciliation Timeline"
-msgid "Reconciliation rate (%)"
-msgstr "和解时间表"
-
-#: src/hope_live/theme/static/js/completion_visuals.js:664
-#: src/hope_live/theme/static/js/completion_visuals.min.js:1
-msgid "Delivery success rate (%)"
-msgstr ""
-
-#: src/hope_live/theme/static/js/completion_visuals.js:768
+#: src/hope_live/theme/static/js/completion_visuals.js:827
 #: src/hope_live/theme/static/js/completion_visuals.min.js:1
 msgid "Reconciled amount (USD)"
 msgstr "已对账金额 (美元)"
 
-#: src/hope_live/theme/static/js/completion_visuals.js:769
+#: src/hope_live/theme/static/js/completion_visuals.js:828
 #: src/hope_live/theme/static/js/completion_visuals.min.js:1
 msgid "Still open amount (USD)"
 msgstr ""
 
-#: src/hope_live/theme/static/js/completion_visuals.js:770
+#: src/hope_live/theme/static/js/completion_visuals.js:829
 #: src/hope_live/theme/static/js/completion_visuals.min.js:1
 msgid "Reconciliation timeline (USD)"
 msgstr "对账时间线 (美元)"
 
-#: src/hope_live/theme/static/js/completion_visuals.js:771
+#: src/hope_live/theme/static/js/completion_visuals.js:830
 #: src/hope_live/theme/static/js/completion_visuals.min.js:1
 msgid "Reconciliation status by country (USD)"
 msgstr "各国对账状态 (美元)"
 
-#: src/hope_live/theme/static/js/completion_visuals.js:773
+#: src/hope_live/theme/static/js/completion_visuals.js:832
 #: src/hope_live/theme/static/js/completion_visuals.min.js:1
 msgid "Reconciled payments"
 msgstr "核对付款"
 
-#: src/hope_live/theme/static/js/completion_visuals.js:774
+#: src/hope_live/theme/static/js/completion_visuals.js:833
 #: src/hope_live/theme/static/js/completion_visuals.min.js:1
 msgid "Still open payments"
 msgstr ""
 
-#: src/hope_live/theme/static/js/completion_visuals.js:775
+#: src/hope_live/theme/static/js/completion_visuals.js:834
 #: src/hope_live/theme/static/js/completion_visuals.min.js:1
 #, fuzzy
 #| msgid "Reconciliation Timeline (USD)"
 msgid "Reconciliation timeline"
 msgstr "对账时间线 (美元)"
 
-#: src/hope_live/theme/static/js/completion_visuals.js:776
+#: src/hope_live/theme/static/js/completion_visuals.js:835
 #: src/hope_live/theme/static/js/completion_visuals.min.js:1
 msgid "Reconciliation status by country"
 msgstr "各国对账状态"
 
-#: src/hope_live/theme/static/js/completion_visuals.js:782
+#: src/hope_live/theme/static/js/completion_visuals.js:841
 #: src/hope_live/theme/static/js/completion_visuals.min.js:1
 #: src/hope_live/theme/static/js/dashboard_visuals.js:308
 #: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
 msgid "Cash disbursed by beneficiary group"
 msgstr ""
 
-#: src/hope_live/theme/static/js/completion_visuals.js:783
+#: src/hope_live/theme/static/js/completion_visuals.js:842
 #: src/hope_live/theme/static/js/completion_visuals.min.js:1
 #: src/hope_live/theme/static/js/dashboard_visuals.js:317
 #: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
@@ -784,6 +777,16 @@ msgstr ""
 #: src/hope_live/theme/static/js/risk_visuals.min.js:1
 msgid "No matching results"
 msgstr ""
+
+#, fuzzy
+#~| msgid "Reconciled"
+#~ msgid "Reconciled volume"
+#~ msgstr "已对账"
+
+#, fuzzy
+#~| msgid "Reconciliation Timeline"
+#~ msgid "Reconciliation rate (%)"
+#~ msgstr "和解时间表"
 
 #~ msgid "PWD reached"
 #~ msgstr "覆盖残疾人数"
