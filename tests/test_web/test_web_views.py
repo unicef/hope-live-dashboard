@@ -73,7 +73,7 @@ def test_landing_page_unauthenticated_no_private_sections(client):
     assert 'href="/login/"' in content
 
     # Unauthenticated visitor must NOT see private section grid, links, or mentions
-    assert "Explore Dashboards" not in content
+    assert "Explore the Dashboard" not in content
     assert 'href="/dashboard/"' not in content
     assert 'href="/demographic/"' not in content
     assert 'href="/completion/"' not in content
@@ -97,7 +97,7 @@ def test_landing_page_authenticated_shows_dashboards(client, user_factory):
 
     # Authenticated user sees operational dashboards launcher and sign out
     assert "Go to Dashboards" in content
-    assert "Explore Dashboards" in content
+    assert "Explore the Dashboard" in content
     assert "Sign Out" in content
     assert 'href="/dashboard/"' in content
     assert 'href="/risk/"' in content

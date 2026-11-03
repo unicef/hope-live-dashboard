@@ -11,7 +11,8 @@ from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.cache import cache
 from django.db.models import Max, Sum
-from django.http import HttpRequest, HttpResponseRedirect
+from django.http import Http404, HttpRequest, HttpResponseRedirect
+from django.utils.text import slugify
 from django.utils.translation import activate, get_language_from_path
 from django.views.generic import TemplateView
 from django.views.i18n import set_language as django_set_language
@@ -93,11 +94,17 @@ def _fetch_news_dataset_rows(api_url: str, query_id: int, headers: dict[str, str
     return all_rows
 
 
-def fetch_hope_news() -> list[dict[str, Any]]:
+def fetch_hope_news(limit: int | None = 3) -> list[dict[str, Any]]:
+    """Fetch HOPE release updates from the country report feed.
+
+    The whole list is cached once; ``limit=None`` returns every update so the
+    "Read details" pages can resolve any linked entry.
+    """
     cache_key = "hope_news_updates_list"
     cached_data = cache.get(cache_key)
     if cached_data is not None:
-        return cast("list[dict[str, Any]]", cached_data)
+        updates = cast("list[dict[str, Any]]", cached_data)
+        return updates if limit is None else updates[:limit]
 
     try:
         api_url = config.HOPE_COUNTRY_REPORT_API_URL
@@ -112,24 +119,25 @@ def fetch_hope_news() -> list[dict[str, Any]]:
             if not item.get("active", True):
                 continue
 
+            version = str(item.get("version", "Update"))
+            description = str(item.get("description", "")).replace("**", "").replace("\r", "")
+
             processed.append(
                 {
-                    "version": item.get("version", "Update"),
+                    "version": version,
+                    "slug": slugify(version),
                     "date": _parse_news_item_date(item.get("date")),
-                    "snippet": _create_news_item_snippet(item.get("description", "")),
-                    "description": item.get("description", ""),
+                    "snippet": _create_news_item_snippet(description),
+                    "description": description,
                 }
             )
 
         # Sort by date descending (newest first)
         processed.sort(key=lambda x: x["date"] or datetime.date.min, reverse=True)
 
-        # Take the top 3
-        top_updates = processed[:3]
-
-        # Cache for 1 hour
-        cache.set(cache_key, top_updates, 60 * 60)
-        return top_updates
+        # Cache the full list for one hour; callers slice it as needed.
+        cache.set(cache_key, processed, 60 * 60)
+        return processed if limit is None else processed[:limit]
     except Exception as e:  # noqa: BLE001
         logger.warning(f"Failed to fetch HOPE news updates: {e}")
         return []
@@ -270,6 +278,21 @@ class IndexView(TemplateView):
         context["latest_data_str"] = latest_data_str
         context["hope_updates"] = fetch_hope_news()
 
+        return context
+
+
+class UpdateDetailView(TemplateView):
+    """Full text of one release update linked from the landing "Read details"."""
+
+    template_name = "pages/update_detail.html"
+
+    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        wanted = self.kwargs.get("slug", "")
+        update = next((item for item in fetch_hope_news(limit=None) if item["slug"] == wanted), None)
+        if update is None:
+            raise Http404("Update not found")
+        context["update"] = update
         return context
 
 

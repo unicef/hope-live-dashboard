@@ -10,7 +10,7 @@ PAGES = Path(__file__).parents[2] / "src" / "hope_live" / "templates" / "pages"
 
 def _template_keys() -> set[str]:
     keys: set[str] = set()
-    for name in ("dashboard.html", "demographic.html", "completion.html", "grievance.html"):
+    for name in ("dashboard.html", "demographic.html", "completion.html", "grievance.html", "landing.html"):
         text = (PAGES / name).read_text(encoding="utf-8")
         keys.update(re.findall(r'{%\s*chart_info\s+"([^"]+)"', text))
     return keys
