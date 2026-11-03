@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-03 11:07+0000\n"
+"POT-Creation-Date: 2026-11-03 11:17+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -191,6 +191,7 @@ msgid "Cash disbursed by region"
 msgstr ""
 
 #: src/hope_live/theme/static/js/dashboard_visuals.js:305
+#: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
 msgid "Cash disbursed (paid) by country"
 msgstr "Fonds décaissés (payés) par pays"
 
@@ -252,6 +253,7 @@ msgstr "Paiements"
 #: src/hope_live/theme/static/js/dashboard_visuals.js:473
 #: src/hope_live/theme/static/js/dashboard_visuals.js:608
 #: src/hope_live/theme/static/js/dashboard_visuals.js:622
+#: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
 msgid "Other"
 msgstr "Autre"
 
@@ -273,10 +275,6 @@ msgstr ""
 #| msgid "Spending Timeline"
 msgid "Pending in pipeline"
 msgstr "Chronologie des dépenses"
-
-#: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
-msgid "Cash disbursed by country"
-msgstr ""
 
 #: src/hope_live/theme/static/js/demographic_visuals.js:16
 #: src/hope_live/theme/static/js/demographic_visuals.js:457
@@ -356,35 +354,41 @@ msgid "Individuals"
 msgstr "Individus"
 
 #: src/hope_live/theme/static/js/grievance_visuals.js:6
+#: src/hope_live/theme/static/js/grievance_visuals.js:188
 #: src/hope_live/theme/static/js/grievance_visuals.min.js:1
 msgid "New"
 msgstr "Nouveau"
 
 #: src/hope_live/theme/static/js/grievance_visuals.js:7
+#: src/hope_live/theme/static/js/grievance_visuals.js:189
 #: src/hope_live/theme/static/js/grievance_visuals.min.js:1
 msgid "Assigned"
 msgstr "Assigné"
 
 #: src/hope_live/theme/static/js/grievance_visuals.js:8
+#: src/hope_live/theme/static/js/grievance_visuals.js:190
 #: src/hope_live/theme/static/js/grievance_visuals.min.js:1
 msgid "In Progress"
 msgstr "En cours"
 
 #: src/hope_live/theme/static/js/grievance_visuals.js:9
+#: src/hope_live/theme/static/js/grievance_visuals.js:191
 #: src/hope_live/theme/static/js/grievance_visuals.min.js:1
 msgid "On Hold"
 msgstr "En attente"
 
 #: src/hope_live/theme/static/js/grievance_visuals.js:10
+#: src/hope_live/theme/static/js/grievance_visuals.js:192
 #: src/hope_live/theme/static/js/grievance_visuals.min.js:1
 msgid "For Approval"
 msgstr "Pour approbation"
 
 #: src/hope_live/theme/static/js/grievance_visuals.js:11
-#: src/hope_live/theme/static/js/grievance_visuals.js:200
-#: src/hope_live/theme/static/js/grievance_visuals.js:219
-#: src/hope_live/theme/static/js/grievance_visuals.js:460
-#: src/hope_live/theme/static/js/grievance_visuals.js:484
+#: src/hope_live/theme/static/js/grievance_visuals.js:193
+#: src/hope_live/theme/static/js/grievance_visuals.js:236
+#: src/hope_live/theme/static/js/grievance_visuals.js:255
+#: src/hope_live/theme/static/js/grievance_visuals.js:500
+#: src/hope_live/theme/static/js/grievance_visuals.js:524
 #: src/hope_live/theme/static/js/grievance_visuals.min.js:1
 msgid "Closed"
 msgstr "Clôturé"
@@ -593,16 +597,16 @@ msgstr "Similitude de la biométrie"
 msgid "Update Delegate"
 msgstr "Mise à jour du délégué"
 
-#: src/hope_live/theme/static/js/grievance_visuals.js:194
-#: src/hope_live/theme/static/js/grievance_visuals.js:454
+#: src/hope_live/theme/static/js/grievance_visuals.js:230
+#: src/hope_live/theme/static/js/grievance_visuals.js:494
 #: src/hope_live/theme/static/js/grievance_visuals.min.js:1
 msgid "tickets"
 msgstr "tickets"
 
-#: src/hope_live/theme/static/js/grievance_visuals.js:200
-#: src/hope_live/theme/static/js/grievance_visuals.js:234
-#: src/hope_live/theme/static/js/grievance_visuals.js:460
-#: src/hope_live/theme/static/js/grievance_visuals.js:492
+#: src/hope_live/theme/static/js/grievance_visuals.js:236
+#: src/hope_live/theme/static/js/grievance_visuals.js:271
+#: src/hope_live/theme/static/js/grievance_visuals.js:500
+#: src/hope_live/theme/static/js/grievance_visuals.js:532
 #: src/hope_live/theme/static/js/grievance_visuals.min.js:1
 msgid "Open & Active"
 msgstr "Ouvert et Actif"

@@ -63,6 +63,11 @@ document.addEventListener('DOMContentLoaded', function () {
     const chartHelpers = window.HopeChart || {};
     const getStableColor = chartHelpers.getStableColor || (() => '#5470c6');
 
+    const formatCompactCount = val => {
+        if (Math.abs(val) < 1000) return d3.format(",")(val);
+        return d3.format(".2s")(val).replace('G', 'B');
+    };
+
     // Initialize empty Crossfilter
     let ndx = crossfilter([]);
 
@@ -169,6 +174,35 @@ document.addEventListener('DOMContentLoaded', function () {
         if (totalTicketsElement) {
             totalTicketsElement.textContent = d3.format(',')(totalTickets);
         }
+
+        // Key-status figures: the same status bucket as the doughnut, so the
+        // two always reconcile with each other.
+        const statusTotals = {};
+        statusGroup.all().forEach(d => {
+            if (d.key !== '' && d.key !== null) {
+                statusTotals[String(d.key).trim().toUpperCase()] = d.value;
+            }
+        });
+
+        const statusCards = [
+            ['status-count-new', gettext('New'), ['NEW']],
+            ['status-count-assigned', gettext('Assigned'), ['ASSIGNED']],
+            ['status-count-in-progress', gettext('In Progress'), ['IN PROGRESS', 'IN_PROGRESS']],
+            ['status-count-on-hold', gettext('On Hold'), ['ON HOLD', 'ON_HOLD']],
+            ['status-count-for-approval', gettext('For Approval'), ['FOR APPROVAL', 'FOR_APPROVAL']],
+            ['status-count-closed', gettext('Closed'), ['CLOSED', 'RESOLVED']],
+        ];
+
+        statusCards.forEach(([id, label, aliases]) => {
+            const el = document.getElementById(id);
+            if (!el) return;
+            const key = String(label).trim().toUpperCase();
+            let value = 0;
+            Object.keys(statusTotals).forEach(status => {
+                if (status === key || aliases.includes(status)) value += statusTotals[status];
+            });
+            el.textContent = d3.format(',')(value);
+        });
     }
 
     function updateAll() {
@@ -184,6 +218,8 @@ document.addEventListener('DOMContentLoaded', function () {
             .map(d => [d.key.getTime(), d.value.resolved]);
 
         const timelineOption = {
+            // Explicit palette so the legend swatches match the line colours.
+            color: ['#97b552', '#d87a80'],
             tooltip: {
                 trigger: 'axis',
                 formatter: function (params) {
@@ -222,6 +258,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     smooth: true,
                     symbol: 'none',
                     lineStyle: { color: '#97b552', width: 2 },
+                    itemStyle: { color: '#97b552' },
                     areaStyle: {
                         color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
                             { offset: 0, color: 'rgba(151, 181, 82, 0.4)' },
@@ -237,6 +274,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     smooth: true,
                     symbol: 'none',
                     lineStyle: { color: '#d87a80', width: 2 },
+                    itemStyle: { color: '#d87a80' },
                     areaStyle: {
                         color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
                             { offset: 0, color: 'rgba(216, 122, 128, 0.4)' },
@@ -340,7 +378,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     show: true,
                     position: 'right',
                     distance: 6,
-                    formatter: params => d3.format(",")(params.value),
+                    formatter: params => formatCompactCount(params.value),
                     color: '#0f172a',
                     fontWeight: 600,
                     fontSize: 11
@@ -348,7 +386,7 @@ document.addEventListener('DOMContentLoaded', function () {
             }]
         }, { notMerge: true });
 
-        // 5. Issue Type Chart (top 10)
+        // 5. Subcategory Chart (top 10; HOPE stores this as issue_type)
         const issueTypeData = issueTypeGroup.all()
             .map(d => ({ key: d.key, value: d.value }))
             .filter(d => d.key !== '' && d.key !== null && d.value > 0)
@@ -404,7 +442,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     show: true,
                     position: 'right',
                     distance: 6,
-                    formatter: params => d3.format(",")(params.value),
+                    formatter: params => formatCompactCount(params.value),
                     color: '#0f172a',
                     fontWeight: 600,
                     fontSize: 11
@@ -445,6 +483,8 @@ document.addEventListener('DOMContentLoaded', function () {
         });
 
         countryChart.setOption({
+            // Legend swatches must match the stacked bar colours.
+            color: ['#97b552', '#d87a80'],
             tooltip: {
                 trigger: 'axis',
                 axisPointer: { type: 'shadow' },
@@ -486,7 +526,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     stack: 'status',
                     barMaxWidth: 30,
                     data: countrySeriesDataResolved,
-                    itemStyle: { borderRadius: [0, 0, 0, 0] }
+                    itemStyle: { color: '#97b552', borderRadius: [0, 0, 0, 0] }
                 },
                 {
                     name: gettext('Open & Active'),
@@ -494,11 +534,11 @@ document.addEventListener('DOMContentLoaded', function () {
                     stack: 'status',
                     barMaxWidth: 30,
                     data: countrySeriesDataOpen,
-                    itemStyle: { borderRadius: [4, 4, 0, 0] },
+                    itemStyle: { color: '#d87a80', borderRadius: [4, 4, 0, 0] },
                     label: {
                         show: true,
                         position: 'top',
-                        formatter: params => d3.format(",")(countryData[params.dataIndex] ? countryData[params.dataIndex].total : params.value),
+                        formatter: params => formatCompactCount(countryData[params.dataIndex] ? countryData[params.dataIndex].total : params.value),
                         color: '#0f172a',
                         fontWeight: 600,
                         fontSize: 10

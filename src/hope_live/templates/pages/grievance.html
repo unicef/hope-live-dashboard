@@ -16,12 +16,36 @@
     <!-- Time Filter -->
     {% include "includes/time_filter.html" with granularity="daily" %}
 
-    <!-- Stats Cards (Headline KPIs - Above Timeline!) -->
-    <div class="flex flex-wrap gap-3 mb-3.5">
-        <div class="bg-white rounded-xl shadow-2xs border border-gray-200 p-3 border-l-4 border-unicef-blue flex flex-col justify-center min-h-[84px] w-full sm:w-64">
+    <!-- Stats Cards: total plus key statuses (above timeline) -->
+    <div class="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-7 gap-3 mb-3.5">
+        <div class="bg-white rounded-xl shadow-2xs border border-gray-200 p-3 border-l-4 border-unicef-blue flex flex-col justify-center min-h-[84px]">
             <h3 class="text-gray-500 text-[10px] sm:text-[11px] font-bold">{% translate "Total tickets" %}</h3>
             <p id="total-tickets" class="text-xl sm:text-2xl font-black text-blue-700 mt-0.5 leading-none">0</p>
             {% include "includes/chart_info.html" with definition="Number of grievance tickets." source="HOPE grievances" method="Sum of ticket_count." %}
+        </div>
+        <div class="bg-white rounded-xl shadow-2xs border border-gray-200 p-3 flex flex-col justify-center min-h-[84px]">
+            <h3 class="text-gray-500 text-[10px] font-bold">{% translate "New" %}</h3>
+            <p id="status-count-new" class="text-lg font-black text-blue-700 mt-0.5 leading-none">0</p>
+        </div>
+        <div class="bg-white rounded-xl shadow-2xs border border-gray-200 p-3 flex flex-col justify-center min-h-[84px]">
+            <h3 class="text-gray-500 text-[10px] font-bold">{% translate "Assigned" %}</h3>
+            <p id="status-count-assigned" class="text-lg font-black text-indigo-600 mt-0.5 leading-none">0</p>
+        </div>
+        <div class="bg-white rounded-xl shadow-2xs border border-gray-200 p-3 flex flex-col justify-center min-h-[84px]">
+            <h3 class="text-gray-500 text-[10px] font-bold">{% translate "In Progress" %}</h3>
+            <p id="status-count-in-progress" class="text-lg font-black text-amber-600 mt-0.5 leading-none">0</p>
+        </div>
+        <div class="bg-white rounded-xl shadow-2xs border border-gray-200 p-3 flex flex-col justify-center min-h-[84px]">
+            <h3 class="text-gray-500 text-[10px] font-bold">{% translate "On Hold" %}</h3>
+            <p id="status-count-on-hold" class="text-lg font-black text-orange-600 mt-0.5 leading-none">0</p>
+        </div>
+        <div class="bg-white rounded-xl shadow-2xs border border-gray-200 p-3 flex flex-col justify-center min-h-[84px]">
+            <h3 class="text-gray-500 text-[10px] font-bold">{% translate "For Approval" %}</h3>
+            <p id="status-count-for-approval" class="text-lg font-black text-purple-600 mt-0.5 leading-none">0</p>
+        </div>
+        <div class="bg-white rounded-xl shadow-2xs border border-gray-200 p-3 flex flex-col justify-center min-h-[84px]">
+            <h3 class="text-gray-500 text-[10px] font-bold">{% translate "Closed" %}</h3>
+            <p id="status-count-closed" class="text-lg font-black text-emerald-600 mt-0.5 leading-none">0</p>
         </div>
     </div>
 
@@ -31,6 +55,7 @@
         {% chart_info "grievance.timeline" %}
         <div id="time-focus-chart" class="w-full h-[220px]"></div>
         <div id="time-range-chart" style="display: none;"></div>
+        <p class="text-[10px] text-gray-400 mt-1 italic leading-tight">{% translate "Open & Active covers New, Assigned, In Progress, On Hold and For Approval; Closed is shown separately." %}</p>
     </div>
 
     <!-- Main Charts -->
@@ -43,6 +68,7 @@
         <div class="bg-white rounded-xl shadow-2xs border border-gray-200 p-3.5">
             <h3 class="text-sm font-bold text-gray-900 mb-2">{% translate "Tickets by priority" %}</h3>
             {% chart_info "grievance.priority" %}
+            <p class="text-[10px] text-gray-400 mb-1 italic leading-tight">{% translate "Priority is an optional field in HOPE; tickets without a priority appear as Not Set." %}</p>
             <div id="grievance-priority-chart" class="w-full h-[220px] flex justify-center"></div>
         </div>
     </div>

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-03 11:07+0000\n"
+"POT-Creation-Date: 2026-11-03 11:17+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -192,6 +192,7 @@ msgid "Cash disbursed by region"
 msgstr ""
 
 #: src/hope_live/theme/static/js/dashboard_visuals.js:305
+#: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
 msgid "Cash disbursed (paid) by country"
 msgstr "Выплаченные средства по странам"
 
@@ -253,6 +254,7 @@ msgstr "Платежи"
 #: src/hope_live/theme/static/js/dashboard_visuals.js:473
 #: src/hope_live/theme/static/js/dashboard_visuals.js:608
 #: src/hope_live/theme/static/js/dashboard_visuals.js:622
+#: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
 msgid "Other"
 msgstr "Прочее"
 
@@ -274,10 +276,6 @@ msgstr ""
 #| msgid "Spending Timeline"
 msgid "Pending in pipeline"
 msgstr "График расходов"
-
-#: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
-msgid "Cash disbursed by country"
-msgstr ""
 
 #: src/hope_live/theme/static/js/demographic_visuals.js:16
 #: src/hope_live/theme/static/js/demographic_visuals.js:457
@@ -357,35 +355,41 @@ msgid "Individuals"
 msgstr "Физические лица"
 
 #: src/hope_live/theme/static/js/grievance_visuals.js:6
+#: src/hope_live/theme/static/js/grievance_visuals.js:188
 #: src/hope_live/theme/static/js/grievance_visuals.min.js:1
 msgid "New"
 msgstr "Новый"
 
 #: src/hope_live/theme/static/js/grievance_visuals.js:7
+#: src/hope_live/theme/static/js/grievance_visuals.js:189
 #: src/hope_live/theme/static/js/grievance_visuals.min.js:1
 msgid "Assigned"
 msgstr "Назначен"
 
 #: src/hope_live/theme/static/js/grievance_visuals.js:8
+#: src/hope_live/theme/static/js/grievance_visuals.js:190
 #: src/hope_live/theme/static/js/grievance_visuals.min.js:1
 msgid "In Progress"
 msgstr "В процессе"
 
 #: src/hope_live/theme/static/js/grievance_visuals.js:9
+#: src/hope_live/theme/static/js/grievance_visuals.js:191
 #: src/hope_live/theme/static/js/grievance_visuals.min.js:1
 msgid "On Hold"
 msgstr "На удержании"
 
 #: src/hope_live/theme/static/js/grievance_visuals.js:10
+#: src/hope_live/theme/static/js/grievance_visuals.js:192
 #: src/hope_live/theme/static/js/grievance_visuals.min.js:1
 msgid "For Approval"
 msgstr "На утверждении"
 
 #: src/hope_live/theme/static/js/grievance_visuals.js:11
-#: src/hope_live/theme/static/js/grievance_visuals.js:200
-#: src/hope_live/theme/static/js/grievance_visuals.js:219
-#: src/hope_live/theme/static/js/grievance_visuals.js:460
-#: src/hope_live/theme/static/js/grievance_visuals.js:484
+#: src/hope_live/theme/static/js/grievance_visuals.js:193
+#: src/hope_live/theme/static/js/grievance_visuals.js:236
+#: src/hope_live/theme/static/js/grievance_visuals.js:255
+#: src/hope_live/theme/static/js/grievance_visuals.js:500
+#: src/hope_live/theme/static/js/grievance_visuals.js:524
 #: src/hope_live/theme/static/js/grievance_visuals.min.js:1
 msgid "Closed"
 msgstr "Закрыт"
@@ -596,16 +600,16 @@ msgstr "Сходство биометрических данных"
 msgid "Update Delegate"
 msgstr "Обновить представителя"
 
-#: src/hope_live/theme/static/js/grievance_visuals.js:194
-#: src/hope_live/theme/static/js/grievance_visuals.js:454
+#: src/hope_live/theme/static/js/grievance_visuals.js:230
+#: src/hope_live/theme/static/js/grievance_visuals.js:494
 #: src/hope_live/theme/static/js/grievance_visuals.min.js:1
 msgid "tickets"
 msgstr "обращения"
 
-#: src/hope_live/theme/static/js/grievance_visuals.js:200
-#: src/hope_live/theme/static/js/grievance_visuals.js:234
-#: src/hope_live/theme/static/js/grievance_visuals.js:460
-#: src/hope_live/theme/static/js/grievance_visuals.js:492
+#: src/hope_live/theme/static/js/grievance_visuals.js:236
+#: src/hope_live/theme/static/js/grievance_visuals.js:271
+#: src/hope_live/theme/static/js/grievance_visuals.js:500
+#: src/hope_live/theme/static/js/grievance_visuals.js:532
 #: src/hope_live/theme/static/js/grievance_visuals.min.js:1
 msgid "Open & Active"
 msgstr "Открыто и активно"

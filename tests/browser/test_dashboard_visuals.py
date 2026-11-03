@@ -487,6 +487,14 @@ def test_grievance_dashboard_loads(browser, grievance_aggregates, grievance_stat
     browser.wait_for_element_visible("#grievance-issue-type-chart canvas")
     browser.wait_for_element_visible("#grievance-country-chart canvas")
     browser.wait_for_element_visible("#time-focus-chart canvas")
+    browser.wait_for_element_visible("#status-count-new")
+    browser.wait_for_element_visible("#status-count-closed")
+
+    # Key-status figures reconcile with the status doughnut (fixture: 5 CLOSED +
+    # 5 RESOLVED in the current year).
+    browser.wait_for_text_visible("10", "#status-count-closed")
+    browser.wait_for_text_visible("Open & Active covers")
+    browser.wait_for_text_visible("Priority is an optional field")
 
     # Assert current year totals
     browser.assert_text("50", "#total-tickets")

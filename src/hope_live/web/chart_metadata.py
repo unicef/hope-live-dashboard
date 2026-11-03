@@ -235,8 +235,8 @@ CHART_INFO = {
         "source": _("HOPE grievances — country report grievance feed."),
         "method": _(
             "Counts tickets by created date. Ignored tickets are excluded and business area must "
-            "be set. A ticket is resolved/closed when its status contains RESOLVED or CLOSED; all "
-            "other statuses are open/active."
+            "be set. Closed covers the Closed and Resolved statuses; Open & Active covers New, "
+            "Assigned, In Progress, On Hold and For Approval."
         ),
         "note": _("HOPE integer status codes are mapped to labels before charting."),
     },
@@ -244,13 +244,20 @@ CHART_INFO = {
         "definition": _("Grievance tickets by status."),
         "source": _("HOPE grievances — country report grievance feed."),
         "method": _("Counts tickets by the status value for the selected period and country."),
-        "note": _("Unknown means the source status field was blank."),
+        "note": _(
+            "Unknown means the source status field was blank. This doughnut is used until "
+            "resolution-time data is available, when it will be replaced by Average Grievance "
+            "Resolution Time by Category."
+        ),
     },
     "grievance.priority": {
         "definition": _("Grievance tickets by priority."),
         "source": _("HOPE grievances — country report grievance feed."),
         "method": _("Counts tickets by the priority value for the selected period and country."),
-        "note": _("Not Set is shown when the source priority is 0."),
+        "note": _(
+            "Priority is an optional field in HOPE, so many tickets have none; these are "
+            "reported as Not Set (source value 0)."
+        ),
     },
     "grievance.category": {
         "definition": _("Grievance tickets by category."),
@@ -261,9 +268,12 @@ CHART_INFO = {
     "grievance.subcategory": {
         "definition": _("Grievance tickets by subcategory."),
         "source": _("HOPE grievances — country report grievance feed."),
-        "method": _("Counts tickets by the issue-type value for the selected period and country."),
+        "method": _(
+            "Counts tickets by the subcategory value (stored as issue_type in HOPE) for the "
+            "selected period and country."
+        ),
         "note": _(
-            "The chart shows the top 10 subcategories. Unknown means the issue type was blank. "
+            "The chart shows the top 10 subcategories. Unknown means the subcategory was blank. "
             "HOPE calls this field Subcategory."
         ),
     },
