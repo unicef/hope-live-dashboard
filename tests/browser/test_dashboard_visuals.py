@@ -458,6 +458,15 @@ def test_completion_dashboard_loads(browser, completion_aggregates, financial_ag
     browser.wait_for_element_visible('[data-chart-info="completion.timeline"]')
     browser.wait_for_element_visible('[data-chart-info="completion.quadrant"]')
 
+    # Country chart: absolute default, 100% share toggle flips the axis to percentages.
+    browser.assert_element_not_visible("#verification-card")
+    browser.click("#country-view-share")
+    share_option = browser.execute_script(
+        "return echarts.getInstanceByDom(document.getElementById('status-country-chart')).getOption();"
+    )
+    assert share_option["yAxis"][0]["max"] == 100
+    browser.click("#country-view-absolute")
+
     # Assert current year totals
     browser.assert_text("15 (100.0% out of 15 total)", "#total-reconciled")
 

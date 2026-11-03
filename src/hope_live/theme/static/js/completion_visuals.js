@@ -3,6 +3,29 @@ document.addEventListener('DOMContentLoaded', function () {
     if (!timeFilterContainer) return;
 
     let currentMetric = 'payments'; // Default metric: payments. Can be 'payments' or 'usd'
+    let countryView = 'absolute'; // Country chart: 'absolute' or 'share' (100% stacked)
+
+    // Shared semantic colours: green = reconciled, amber = still open.
+    const RECONCILED_COLOR = '#97b552';
+    const OPEN_COLOR = '#ffb980';
+
+    const formatCompact = (val) => {
+        if (currentMetric === 'usd') {
+            if (Math.abs(val) < 1) return '$0';
+            return '$' + d3.format(".2s")(val).replace('G', 'B');
+        }
+        if (Math.abs(val) < 1000) return d3.format(",")(val);
+        return d3.format(".2s")(val).replace('G', 'B');
+    };
+
+    const formatCountryName = (slug) => {
+        if (!slug) return '';
+        const minorWords = new Set(['of', 'and', 'the', 'for']);
+        return String(slug)
+            .split('-')
+            .map((part, index) => (index > 0 && minorWords.has(part)) ? part : part.charAt(0).toUpperCase() + part.slice(1))
+            .join(' ');
+    };
 
     const formatMetric = (val) => {
         if (currentMetric === 'usd') {
@@ -29,6 +52,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const dateDimension = ndx.dimension(d => d.date);
     const countryDimension = ndx.dimension(d => d.country_slug);
     const beneficiaryGroupDimension = ndx.dimension(d => d.dimension_type === 'beneficiary_group' ? d.dimension_value : '');
+    const verificationDimension = ndx.dimension(d => d.dimension_type === 'verification' ? d.dimension_value : '');
 
     const primaryDimFilter = d => d.dimension_type === 'status';
 
@@ -136,6 +160,26 @@ document.addEventListener('DOMContentLoaded', function () {
         () => ({ payments: 0, usd: 0 })
     );
 
+    // Verification rows (dimension_type = verification) are summed by their
+    // value: SELECTED, VERIFIED, PENDING and DISCREPANCIES.
+    const verificationGroup = verificationDimension.group().reduce(
+        (p, v) => {
+            if (v.dimension_type === 'verification') {
+                p.payments += v.payment_count;
+                p.usd += +v.total_usd;
+            }
+            return p;
+        },
+        (p, v) => {
+            if (v.dimension_type === 'verification') {
+                p.payments -= v.payment_count;
+                p.usd -= +v.total_usd;
+            }
+            return p;
+        },
+        () => ({ payments: 0, usd: 0 })
+    );
+
     // Active filters
     const selectedCountries = new Set();
     const selectedBeneficiaryGroups = new Set();
@@ -195,6 +239,8 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('total-opened').textContent = `${formatFullVal(totalOpened)} (${outOfOpened})`;
         document.getElementById('completion-rate-text').textContent = `${completionRate.toFixed(1)}%`;
 
+        updateVerificationPanel();
+
         // Update ECharts micro-gauge
         completionGauge.setOption({
             series: [{
@@ -230,6 +276,42 @@ document.addEventListener('DOMContentLoaded', function () {
                 data: [{ value: completionRate.toFixed(1) }]
             }]
         }, { notMerge: true });
+    }
+
+    // Payment verification figures. The card stays hidden until the completion
+    // feed emits verification rows (Phase 5 query work).
+    function updateVerificationPanel() {
+        const card = document.getElementById('verification-card');
+        if (!card) return;
+
+        const totals = { selected: 0, verified: 0, pending: 0, discrepancies: 0 };
+        verificationGroup.all().forEach(d => {
+            if (!d.key) return;
+            const key = String(d.key).trim().toUpperCase();
+            if (key === 'SELECTED') totals.selected += d.value.payments;
+            else if (key === 'VERIFIED') totals.verified += d.value.payments;
+            else if (key === 'PENDING') totals.pending += d.value.payments;
+            else if (key === 'DISCREPANCIES' || key === 'DISCREPANCY') totals.discrepancies += d.value.payments;
+        });
+
+        const hasData = totals.selected + totals.verified + totals.pending + totals.discrepancies > 0;
+        card.classList.toggle('hidden', !hasData);
+        if (!hasData) return;
+
+        const setText = (id, value) => {
+            const el = document.getElementById(id);
+            if (el) el.textContent = d3.format(',')(value);
+        };
+        setText('verification-selected', totals.selected);
+        setText('verification-verified', totals.verified);
+        setText('verification-pending', totals.pending);
+        setText('verification-discrepancies', totals.discrepancies);
+
+        const rateEl = document.getElementById('verification-rate');
+        if (rateEl) {
+            const rate = totals.selected > 0 ? (totals.verified / totals.selected) * 100 : 0;
+            rateEl.textContent = `${rate.toFixed(1)}%`;
+        }
     }
 
     function updateAll() {
@@ -288,7 +370,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     name: gettext('Reconciled'),
                     type: 'bar',
                     stack: 'total',
-                    color: '#97b552',
+                    color: RECONCILED_COLOR,
                     barMaxWidth: 35,
                     data: reconciledData
                 },
@@ -296,7 +378,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     name: gettext('Still open'),
                     type: 'bar',
                     stack: 'total',
-                    color: '#5ab1ef',
+                    color: OPEN_COLOR,
                     barMaxWidth: 35,
                     data: openedData
                 }
@@ -305,7 +387,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         timelineChart.setOption(timelineOption, { notMerge: true });
 
-        // 2. Stacked Country Chart (top 10)
+        // 2. Stacked Country Chart (top 10): absolute values or 100% share
         const countryData = countryStatusGroup.all()
             .map(d => {
                 const reconciled = currentMetric === 'usd' ? d.value.reconciled_usd : d.value.reconciled_payments;
@@ -321,13 +403,27 @@ document.addEventListener('DOMContentLoaded', function () {
             .sort((a, b) => b.total - a.total)
             .slice(0, 10);
 
+        const isShareView = countryView === 'share';
         const hasAnyCountrySelection = selectedCountries.size > 0;
+        const reconciledShare = d => d.total > 0 ? (d.reconciled / d.total) * 100 : 0;
+
         const countrySeriesDataReconciled = countryData.map(d => {
             const isSelected = selectedCountries.has(d.key);
             const opacity = isSelected ? 1 : (hasAnyCountrySelection ? 0.35 : 1);
             return {
-                value: d.reconciled,
-                itemStyle: { color: '#97b552', opacity: opacity }
+                value: isShareView ? reconciledShare(d) : d.reconciled,
+                itemStyle: { color: RECONCILED_COLOR, opacity: opacity },
+                // In share view the rate label rides on the reconciled segment;
+                // in absolute view it only labels the total when open is zero
+                // (otherwise the open segment carries the total label).
+                label: {
+                    show: isShareView || d.opened === 0,
+                    position: 'top',
+                    formatter: isShareView ? `${reconciledShare(d).toFixed(1)}%` : formatCompact(d.total),
+                    color: '#0f172a',
+                    fontWeight: 600,
+                    fontSize: 10
+                }
             };
         });
 
@@ -335,8 +431,16 @@ document.addEventListener('DOMContentLoaded', function () {
             const isSelected = selectedCountries.has(d.key);
             const opacity = isSelected ? 1 : (hasAnyCountrySelection ? 0.35 : 1);
             return {
-                value: d.opened,
-                itemStyle: { color: '#5ab1ef', opacity: opacity }
+                value: isShareView ? 100 - reconciledShare(d) : d.opened,
+                itemStyle: { color: OPEN_COLOR, opacity: opacity },
+                label: {
+                    show: !isShareView && d.opened > 0,
+                    position: 'top',
+                    formatter: formatCompact(d.total),
+                    color: '#0f172a',
+                    fontWeight: 600,
+                    fontSize: 10
+                }
             };
         });
 
@@ -345,10 +449,19 @@ document.addEventListener('DOMContentLoaded', function () {
                 trigger: 'axis',
                 axisPointer: { type: 'shadow' },
                 formatter: function (params) {
-                    let tooltipHtml = `${params[0].name}<br/>`;
-                    params.forEach(p => {
-                        tooltipHtml += `${p.marker} ${p.seriesName}: <b>${formatFullVal(p.value)}</b> ${unitName}<br/>`;
-                    });
+                    const d = countryData[params[0].dataIndex];
+                    if (!d) return '';
+                    let tooltipHtml = `${formatCountryName(d.key)}<br/>`;
+                    if (isShareView) {
+                        const pct = reconciledShare(d);
+                        tooltipHtml += `${params[0].marker} ${gettext('Reconciled')}: <b>${pct.toFixed(1)}%</b> (${formatFullVal(d.reconciled)} ${unitName})<br/>`;
+                        tooltipHtml += `${params[1].marker} ${gettext('Still open')}: <b>${(100 - pct).toFixed(1)}%</b> (${formatFullVal(d.opened)} ${unitName})<br/>`;
+                        tooltipHtml += `${gettext('Total')}: ${formatFullVal(d.total)} ${unitName}`;
+                    } else {
+                        params.forEach(p => {
+                            tooltipHtml += `${p.marker} ${p.seriesName}: <b>${formatFullVal(p.value)}</b> ${unitName}<br/>`;
+                        });
+                    }
                     return tooltipHtml;
                 }
             },
@@ -357,23 +470,26 @@ document.addEventListener('DOMContentLoaded', function () {
                 top: 0,
                 right: 20
             },
-            grid: { top: 30, bottom: 55, left: 60, right: 20 },
+            grid: { top: 48, bottom: 55, left: 60, right: 20 },
             xAxis: {
                 type: 'category',
                 data: countryData.map(d => d.key),
                 axisLabel: {
                     rotate: 30,
                     interval: 0,
-                    width: 80,
+                    width: 90,
                     overflow: 'truncate',
+                    formatter: val => formatCountryName(val),
                     color: '#1f2937',
                     fontWeight: 500
                 }
             },
             yAxis: {
                 type: 'value',
+                min: 0,
+                max: isShareView ? 100 : null,
                 axisLabel: {
-                    formatter: val => formatMetric(val),
+                    formatter: val => isShareView ? `${val}%` : formatMetric(val),
                     color: '#64748b'
                 },
                 splitLine: { lineStyle: { color: '#f1f5f9' } }
@@ -384,6 +500,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     type: 'bar',
                     stack: 'total',
                     barMaxWidth: 30,
+                    color: RECONCILED_COLOR,
                     data: countrySeriesDataReconciled,
                     itemStyle: { borderRadius: [0, 0, 0, 0] }
                 },
@@ -392,16 +509,9 @@ document.addEventListener('DOMContentLoaded', function () {
                     type: 'bar',
                     stack: 'total',
                     barMaxWidth: 30,
+                    color: OPEN_COLOR,
                     data: countrySeriesDataOpened,
-                    itemStyle: { borderRadius: [4, 4, 0, 0] },
-                    label: {
-                        show: true,
-                        position: 'top',
-                        formatter: params => formatMetric(countryData[params.dataIndex] ? countryData[params.dataIndex].total : params.value),
-                        color: '#0f172a',
-                        fontWeight: 600,
-                        fontSize: 10
-                    }
+                    itemStyle: { borderRadius: [4, 4, 0, 0] }
                 }
             ]
         }, { notMerge: true });
@@ -462,7 +572,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     show: true,
                     position: 'right',
                     distance: 6,
-                    formatter: params => formatMetric(params.value),
+                    formatter: params => formatCompact(params.value),
                     color: '#0f172a',
                     fontWeight: 600,
                     fontSize: 11
@@ -511,7 +621,7 @@ document.addEventListener('DOMContentLoaded', function () {
             if (totalDelivery <= 0) return;
 
             points.push({
-                name: country,
+                name: formatCountryName(country),
                 value: [
                     (rec.reconciled / totalReconciled) * 100,
                     (deliv.delivered / totalDelivery) * 100,
@@ -677,6 +787,21 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
+    // Country chart view toggle: absolute values or 100% stacked shares
+    const countryViewTabs = document.querySelectorAll('.country-view-tab');
+    countryViewTabs.forEach(btn => {
+        btn.addEventListener('click', function() {
+            countryView = this.id === 'country-view-share' ? 'share' : 'absolute';
+            countryViewTabs.forEach(b => {
+                b.classList.remove('bg-white', 'shadow', 'text-blue-800');
+                b.classList.add('text-gray-600');
+            });
+            this.classList.add('bg-white', 'shadow', 'text-blue-800');
+            this.classList.remove('text-gray-600');
+            updateAll();
+        });
+    });
+
     // --- Load Data ---
     async function loadRange(startDate, endDate) {
         try {
@@ -714,6 +839,7 @@ document.addEventListener('DOMContentLoaded', function () {
             selectedBeneficiaryGroups.clear();
             countryDimension.filterAll();
             beneficiaryGroupDimension.filterAll();
+            verificationDimension.filterAll();
             dateDimension.filterAll();
 
             ndx.remove();

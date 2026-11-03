@@ -193,7 +193,8 @@ CHART_INFO = {
             "failed, removed and conflicted payments are excluded. USD is entitlement USD."
         ),
         "note": _(
-            "The status mapping is applied when the report rows are loaded. Still open includes "
+            "Reconciled is green and Still open is amber across the timeline and country charts. "
+            "The status mapping is applied when the report rows are loaded; Still open includes "
             "pending and other non-reconciled statuses."
         ),
     },
@@ -205,7 +206,10 @@ CHART_INFO = {
             "area country. Each bar is the stacked total of reconciled and still-open values for "
             "the active metric."
         ),
-        "note": _("The chart shows the top 10 countries by total volume."),
+        "note": _(
+            "Top 10 countries by total volume. Absolute values is the default; 100% share shows "
+            "each country's reconciled and still-open split as percentages."
+        ),
     },
     "completion.beneficiary_group": {
         "definition": _("Reconciled payments by beneficiary group."),
@@ -226,6 +230,15 @@ CHART_INFO = {
             "Only countries present in both feeds are plotted."
         ),
         "note": _("The dashed 80% lines are reference guides, not thresholds."),
+    },
+    "completion.verification": {
+        "definition": _("Payment verification outcomes: selected, verified, pending and discrepancies."),
+        "source": _("HOPE payments — verification records in the country report completion feed."),
+        "method": _(
+            "Counts payments by verification outcome for the selected period. The completion rate "
+            "is successfully verified payments divided by payments selected for verification."
+        ),
+        "note": _("Appears once the completion feed provides verification rows (dimension type verification)."),
     },
     # ------------------------------------------------------------------
     # Grievance
