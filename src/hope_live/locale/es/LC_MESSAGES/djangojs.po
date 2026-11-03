@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-03 10:57+0000\n"
+"POT-Creation-Date: 2026-11-03 11:07+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -34,7 +34,7 @@ msgstr "pagos"
 #: src/hope_live/theme/static/js/completion_visuals.js:356
 #: src/hope_live/theme/static/js/completion_visuals.js:383
 #: src/hope_live/theme/static/js/completion_visuals.min.js:1
-#: src/hope_live/theme/static/js/dashboard_visuals.js:666
+#: src/hope_live/theme/static/js/dashboard_visuals.js:673
 #: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
 msgid "Reconciled"
 msgstr "Conciliado"
@@ -122,151 +122,160 @@ msgstr "Estado de conciliación por país"
 
 #: src/hope_live/theme/static/js/completion_visuals.js:672
 #: src/hope_live/theme/static/js/completion_visuals.min.js:1
-#: src/hope_live/theme/static/js/dashboard_visuals.js:271
+#: src/hope_live/theme/static/js/dashboard_visuals.js:308
 #: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
 msgid "Cash disbursed by beneficiary group"
 msgstr ""
 
 #: src/hope_live/theme/static/js/completion_visuals.js:673
 #: src/hope_live/theme/static/js/completion_visuals.min.js:1
-#: src/hope_live/theme/static/js/dashboard_visuals.js:280
+#: src/hope_live/theme/static/js/dashboard_visuals.js:317
 #: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
 msgid "Payments by beneficiary group"
 msgstr ""
 
-#: src/hope_live/theme/static/js/dashboard_visuals.js:60
+#: src/hope_live/theme/static/js/dashboard_visuals.js:59
 #: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
 msgid "Middle East and North Africa (MENA)"
 msgstr ""
 
-#: src/hope_live/theme/static/js/dashboard_visuals.js:61
+#: src/hope_live/theme/static/js/dashboard_visuals.js:60
 #: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
 msgid "Eastern and Southern Africa (ESA)"
 msgstr ""
 
-#: src/hope_live/theme/static/js/dashboard_visuals.js:62
+#: src/hope_live/theme/static/js/dashboard_visuals.js:61
 #: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
 msgid "Europe and Central Asia (ECA)"
 msgstr ""
 
-#: src/hope_live/theme/static/js/dashboard_visuals.js:63
+#: src/hope_live/theme/static/js/dashboard_visuals.js:62
 #: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
 msgid "West and Central Africa (WCA)"
 msgstr ""
 
-#: src/hope_live/theme/static/js/dashboard_visuals.js:64
+#: src/hope_live/theme/static/js/dashboard_visuals.js:63
 #: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
 msgid "Latin America and Caribbean (LAC)"
 msgstr ""
 
-#: src/hope_live/theme/static/js/dashboard_visuals.js:65
+#: src/hope_live/theme/static/js/dashboard_visuals.js:64
 #: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
 msgid "East Asia and Pacific (EAP)"
 msgstr ""
 
-#: src/hope_live/theme/static/js/dashboard_visuals.js:66
+#: src/hope_live/theme/static/js/dashboard_visuals.js:65
 #: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
 msgid "South Asia (SA)"
 msgstr ""
 
-#: src/hope_live/theme/static/js/dashboard_visuals.js:264
+#: src/hope_live/theme/static/js/dashboard_visuals.js:301
 #: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
 msgid "Spending timeline"
 msgstr "Cronograma de gastos"
 
-#: src/hope_live/theme/static/js/dashboard_visuals.js:265
+#: src/hope_live/theme/static/js/dashboard_visuals.js:302
 #: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
 msgid "Cash disbursed by sector"
 msgstr ""
 
-#: src/hope_live/theme/static/js/dashboard_visuals.js:266
+#: src/hope_live/theme/static/js/dashboard_visuals.js:303
 #: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
 msgid "Cash disbursed by delivery type"
 msgstr ""
 
-#: src/hope_live/theme/static/js/dashboard_visuals.js:267
+#: src/hope_live/theme/static/js/dashboard_visuals.js:304
 #: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
 msgid "Cash disbursed by region"
 msgstr ""
 
-#: src/hope_live/theme/static/js/dashboard_visuals.js:268
-#: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
-msgid "Cash disbursed by country"
-msgstr ""
+#: src/hope_live/theme/static/js/dashboard_visuals.js:305
+msgid "Cash disbursed (paid) by country"
+msgstr "Fondos desembolsados (pagados) por país"
 
-#: src/hope_live/theme/static/js/dashboard_visuals.js:269
+#: src/hope_live/theme/static/js/dashboard_visuals.js:306
 #: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
 msgid "Cash disbursed by programme"
 msgstr ""
 
-#: src/hope_live/theme/static/js/dashboard_visuals.js:270
+#: src/hope_live/theme/static/js/dashboard_visuals.js:307
 #: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
 msgid "Cash disbursed by financial service provider (FSP)"
 msgstr ""
 
-#: src/hope_live/theme/static/js/dashboard_visuals.js:273
+#: src/hope_live/theme/static/js/dashboard_visuals.js:310
 #: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
 msgid "Payments timeline"
 msgstr "Cronología de pagos"
 
-#: src/hope_live/theme/static/js/dashboard_visuals.js:274
+#: src/hope_live/theme/static/js/dashboard_visuals.js:311
 #: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
 msgid "Payments by sector"
 msgstr ""
 
-#: src/hope_live/theme/static/js/dashboard_visuals.js:275
+#: src/hope_live/theme/static/js/dashboard_visuals.js:312
 #: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
 msgid "Payments by delivery type"
 msgstr ""
 
-#: src/hope_live/theme/static/js/dashboard_visuals.js:276
+#: src/hope_live/theme/static/js/dashboard_visuals.js:313
 #: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
 msgid "Payments by region"
 msgstr ""
 
-#: src/hope_live/theme/static/js/dashboard_visuals.js:277
+#: src/hope_live/theme/static/js/dashboard_visuals.js:314
 #: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
 msgid "Payments by country"
 msgstr ""
 
-#: src/hope_live/theme/static/js/dashboard_visuals.js:278
+#: src/hope_live/theme/static/js/dashboard_visuals.js:315
 #: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
 msgid "Payments by programme"
 msgstr ""
 
-#: src/hope_live/theme/static/js/dashboard_visuals.js:279
+#: src/hope_live/theme/static/js/dashboard_visuals.js:316
 #: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
 msgid "Payments by financial service provider (FSP)"
 msgstr ""
 
-#: src/hope_live/theme/static/js/dashboard_visuals.js:306
+#: src/hope_live/theme/static/js/dashboard_visuals.js:343
 #: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
 msgid "Spending"
 msgstr "Gastos"
 
-#: src/hope_live/theme/static/js/dashboard_visuals.js:306
+#: src/hope_live/theme/static/js/dashboard_visuals.js:343
 #: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
 msgid "Payments"
 msgstr "Pagos"
 
-#: src/hope_live/theme/static/js/dashboard_visuals.js:664
+#: src/hope_live/theme/static/js/dashboard_visuals.js:473
+#: src/hope_live/theme/static/js/dashboard_visuals.js:608
+#: src/hope_live/theme/static/js/dashboard_visuals.js:622
+msgid "Other"
+msgstr "Otros"
+
+#: src/hope_live/theme/static/js/dashboard_visuals.js:671
 #: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
 #, fuzzy
 #| msgid "Spending Timeline"
 msgid "In pipeline"
 msgstr "Cronograma de gastos"
 
-#: src/hope_live/theme/static/js/dashboard_visuals.js:665
+#: src/hope_live/theme/static/js/dashboard_visuals.js:672
 #: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
 msgid "Delivered"
 msgstr ""
 
-#: src/hope_live/theme/static/js/dashboard_visuals.js:707
+#: src/hope_live/theme/static/js/dashboard_visuals.js:714
 #: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
 #, fuzzy
 #| msgid "Spending Timeline"
 msgid "Pending in pipeline"
 msgstr "Cronograma de gastos"
+
+#: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
+msgid "Cash disbursed by country"
+msgstr ""
 
 #: src/hope_live/theme/static/js/demographic_visuals.js:16
 #: src/hope_live/theme/static/js/demographic_visuals.js:457

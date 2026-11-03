@@ -22,7 +22,8 @@ CHART_INFO = {
         ),
         "note": _(
             "The metric toggle switches between USD and payment count. The selected programme "
-            "cohort and chart filters apply."
+            "cohort and chart filters apply. Quantity (QTY) is retained for reconciliation and "
+            "is not displayed as a separate metric on this page."
         ),
     },
     "financial.pipeline": {
@@ -63,15 +64,20 @@ CHART_INFO = {
             "Payment rows are grouped by the business area region name using the same date and "
             "status filters as the financial timeline."
         ),
+        "note": _(
+            "Bars are ordered by value and shaded from dark (highest) to light (lowest). Axis "
+            "abbreviations are defined in the footnote below the chart; full region names appear "
+            "in the tooltip."
+        ),
     },
     "financial.country": {
-        "definition": _("Cash disbursed or payments by country."),
+        "definition": _("Cash disbursed (paid) or payments by country."),
         "source": _("HOPE payments — country report financial feed."),
         "method": _(
             "Payment rows are grouped by the business area country slug using the same date and "
             "status filters as the financial timeline."
         ),
-        "note": _("The chart shows the top 10 countries ranked by the active metric."),
+        "note": _("Top 10 countries plus an Other bucket; outstanding is shown beside it."),
     },
     "financial.program": {
         "definition": _("Cash disbursed or payments by programme."),
@@ -80,7 +86,7 @@ CHART_INFO = {
             "Payment rows are grouped by programme name using the same date and status filters as "
             "the financial timeline."
         ),
-        "note": _("The chart shows the top 10 programmes ranked by the active metric."),
+        "note": _("The chart shows the top 10 programmes, plus an Other bucket."),
     },
     "financial.fsp": {
         "definition": _("Cash disbursed or payments by financial service provider."),
@@ -89,7 +95,7 @@ CHART_INFO = {
             "Payment rows are grouped by financial service provider name using the same date and "
             "status filters as the financial timeline."
         ),
-        "note": _("The chart shows the top 10 providers ranked by the active metric."),
+        "note": _("The chart shows the top 10 providers, plus an Other bucket."),
     },
     "financial.beneficiary_group": {
         "definition": _("Cash disbursed or payments by beneficiary group."),
@@ -98,7 +104,32 @@ CHART_INFO = {
             "Payment rows are grouped by the programme's beneficiary group label using the same "
             "date and status filters as the financial timeline."
         ),
-        "note": _("The chart shows the top 10 groups ranked by the active metric."),
+        "note": _("The chart shows the top 10 groups, plus an Other bucket."),
+    },
+    "financial.outstanding_country": {
+        "definition": _("Outstanding payment amount by country, in USD."),
+        "source": _("HOPE payments — country report financial feed (status dimension)."),
+        "method": _(
+            "Sums the entitlement quantity in USD for payments still in pending statuses "
+            "(SENT TO PAYMENT GATEWAY, SENT TO FSP, PENDING), grouped by country. Payments in "
+            "successful statuses have already been paid and are excluded."
+        ),
+        "note": _(
+            "Always shown in USD, independent of the amount/payment-count toggle. Top 10 "
+            "countries plus an Other bucket."
+        ),
+    },
+    "financial.implementing_partner": {
+        "definition": _("Cash disbursed or payments by implementing partner."),
+        "source": _("HOPE payments — country report financial feed."),
+        "method": _(
+            "Payment rows are grouped by the programme's implementing partner using the same "
+            "date and status filters as the financial timeline."
+        ),
+        "note": _(
+            "The card appears once the financial feed provides the implementing-partner "
+            "dimension. Top 10 partners plus an Other bucket."
+        ),
     },
     # ------------------------------------------------------------------
     # Demographic

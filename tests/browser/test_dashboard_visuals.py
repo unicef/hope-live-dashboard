@@ -373,6 +373,7 @@ def test_financial_dashboard_loads(browser, financial_aggregates):
     browser.wait_for_element_visible("#time-focus-chart canvas")
     browser.wait_for_element_visible("#sector-chart canvas")
     browser.wait_for_element_visible("#country-chart canvas")
+    browser.wait_for_element_visible("#outstanding-country-chart canvas")
     browser.wait_for_element_visible("#total-amount-paid")
     browser.wait_for_element_visible("#total-payments")
     browser.wait_for_element_visible("#delivery-chart canvas")
@@ -384,7 +385,7 @@ def test_financial_dashboard_loads(browser, financial_aggregates):
     browser.assert_text("Cash disbursed by sector", "#sector-title")
     browser.assert_text("Cash disbursed by delivery type", "#delivery-title")
     browser.assert_text("Cash disbursed by region", "#region-title")
-    browser.assert_text("Cash disbursed by country", "#country-title")
+    browser.assert_text("Cash disbursed (paid) by country", "#country-title")
     browser.assert_text("Cash disbursed by programme", "#program-title")
     browser.assert_text("Cash disbursed by financial service provider (FSP)", "#fsp-title")
 
@@ -547,8 +548,8 @@ def test_completion_quality_quadrant_loads(browser, completion_aggregates, finan
     browser.wait_for_element_visible("#quality-quadrant-chart canvas")
 
 
-def test_program_and_country_charts_show_top_ten(browser, db):
-    """The dashboard must show the top 10 categories without an Other bucket."""
+def test_program_and_country_charts_show_top_ten_with_other(browser, db):
+    """The dashboard must show the top 10 categories plus an Other bucket."""
     year = datetime.datetime.now().year
     for i in range(12):
         FinancialAggregateFactory(
@@ -579,15 +580,15 @@ def test_program_and_country_charts_show_top_ten(browser, db):
         "return echarts.getInstanceByDom(document.getElementById('program-chart')).getOption();"
     )
     program_names = [item["name"] for item in program_option["series"][0]["data"]]
-    assert len(program_names) == 10, program_names
-    assert "Other" not in program_names, program_names
+    assert len(program_names) == 11, program_names
+    assert "Other" in program_names, program_names
 
     country_option = browser.execute_script(
         "return echarts.getInstanceByDom(document.getElementById('country-chart')).getOption();"
     )
     country_names = [item["name"] for item in country_option["series"][0]["data"]]
-    assert len(country_names) == 10, country_names
-    assert "Other" not in country_names, country_names
+    assert len(country_names) == 11, country_names
+    assert "Other" in country_names, country_names
 
 
 def test_risk_filters_are_searchable(browser, risk_aggregates):
