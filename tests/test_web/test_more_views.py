@@ -175,7 +175,7 @@ def test_index_view_dynamic_context(user_factory):
     assert context["total_programs_glance"] == 1  # DCT-Somalia
     assert context["total_sources_glance"] == "HOPE Database"
     assert context["latest_data_str"] == "June 2026"
-    assert context["verification_success_rate"] == 80.0
+    assert context["reconciliation_rate"] == 80.0
 
 
 @pytest.mark.django_db
@@ -186,6 +186,18 @@ def test_landing_page_shows_social_workers_kpi(client, user_factory):
     content = response.content.decode("utf-8")
     assert "Social Workers Reached" in content
     assert "Frontline workforce assisted" in content
+    assert "Reconciled Transactions" in content
+    assert "Reconciliation rate" in content
+    assert "Verified Transactions" not in content
+
+
+@pytest.mark.django_db
+def test_landing_reconciliation_rate_without_completion_data(client):
+    response = client.get("/")
+
+    assert response.status_code == 200
+    assert response.context["reconciliation_rate"] is None
+    assert "98.7" not in response.content.decode("utf-8")
 
 
 @pytest.mark.django_db

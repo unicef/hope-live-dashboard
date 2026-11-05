@@ -253,7 +253,7 @@ class IndexView(TemplateView):
         context["total_households"] = format_large_number(total_households)
         context["total_social_workers"] = format_large_number(total_social_workers)
         context["total_countries"] = total_countries
-        # Calculate verification success rate from CompletionAggregate status counts
+        # Calculate the reconciliation rate from CompletionAggregate status counts
         reconciled_sum = (
             CompletionAggregate.objects.filter(dimension_type="status", dimension_value="RECONCILED").aggregate(
                 total=Sum("payment_count")
@@ -267,10 +267,9 @@ class IndexView(TemplateView):
             or 0
         )
         total_payments = reconciled_sum + open_sum
-        if total_payments > 0:
-            context["verification_success_rate"] = round((reconciled_sum / total_payments) * 100, 1)
-        else:
-            context["verification_success_rate"] = 98.7
+        context["reconciliation_rate"] = (
+            round((reconciled_sum / total_payments) * 100, 1) if total_payments > 0 else None
+        )
 
         context["total_countries_glance"] = total_countries_glance or 170
         context["total_programs_glance"] = total_programs_glance or 450

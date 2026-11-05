@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-03 12:16+0000\n"
+"POT-Creation-Date: 2026-11-05 04:40+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -246,6 +246,7 @@ msgid "Still open"
 msgstr ""
 
 #: src/hope_live/templates/pages/completion.html:46
+#: src/hope_live/templates/pages/landing.html:164
 msgid "Reconciliation rate"
 msgstr "معدل المطابقة"
 
@@ -469,7 +470,8 @@ msgstr ""
 
 #: src/hope_live/templates/pages/demographic.html:92
 msgid "Note: children and PWD figures rely on recorded household composition."
-msgstr "ملاحظة: تعتمد أرقام الأطفال والأشخاص ذوي الإعاقة على التركيبة المسجلة للأسر."
+msgstr ""
+"ملاحظة: تعتمد أرقام الأطفال والأشخاص ذوي الإعاقة على التركيبة المسجلة للأسر."
 
 #: src/hope_live/templates/pages/demographic.html:96
 msgid "Country share of reached population"
@@ -642,12 +644,8 @@ msgid "Direct cash transfers"
 msgstr "التحويلات النقدية المباشرة"
 
 #: src/hope_live/templates/pages/landing.html:162
-msgid "Verified Transactions"
-msgstr "المعاملات التي تم التحقق منها"
-
-#: src/hope_live/templates/pages/landing.html:164
-msgid "Verification success rate"
-msgstr "معدل نجاح التحقق"
+msgid "Reconciled Transactions"
+msgstr "المعاملات المسوّاة"
 
 #: src/hope_live/templates/pages/landing.html:174
 #, fuzzy
@@ -1646,6 +1644,9 @@ msgid ""
 "month has no demographic record, the reached series are estimated from "
 "payment volume."
 msgstr ""
+
+#~ msgid "Verification success rate"
+#~ msgstr "معدل نجاح التحقق"
 
 #~ msgid "Financial dashboard"
 #~ msgstr "لوحة المعلومات المالية"
