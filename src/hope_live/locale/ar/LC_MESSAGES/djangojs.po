@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-05 04:40+0000\n"
+"POT-Creation-Date: 2026-11-05 05:30+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -354,41 +354,41 @@ msgid "Individuals"
 msgstr "الأفراد"
 
 #: src/hope_live/theme/static/js/grievance_visuals.js:6
-#: src/hope_live/theme/static/js/grievance_visuals.js:188
+#: src/hope_live/theme/static/js/grievance_visuals.js:221
 #: src/hope_live/theme/static/js/grievance_visuals.min.js:1
 msgid "New"
 msgstr "جديد"
 
 #: src/hope_live/theme/static/js/grievance_visuals.js:7
-#: src/hope_live/theme/static/js/grievance_visuals.js:189
+#: src/hope_live/theme/static/js/grievance_visuals.js:222
 #: src/hope_live/theme/static/js/grievance_visuals.min.js:1
 msgid "Assigned"
 msgstr "مُسنَد"
 
 #: src/hope_live/theme/static/js/grievance_visuals.js:8
-#: src/hope_live/theme/static/js/grievance_visuals.js:190
+#: src/hope_live/theme/static/js/grievance_visuals.js:223
 #: src/hope_live/theme/static/js/grievance_visuals.min.js:1
 msgid "In Progress"
 msgstr "قيد المعالجة"
 
 #: src/hope_live/theme/static/js/grievance_visuals.js:9
-#: src/hope_live/theme/static/js/grievance_visuals.js:191
+#: src/hope_live/theme/static/js/grievance_visuals.js:224
 #: src/hope_live/theme/static/js/grievance_visuals.min.js:1
 msgid "On Hold"
 msgstr "معلَّق"
 
 #: src/hope_live/theme/static/js/grievance_visuals.js:10
-#: src/hope_live/theme/static/js/grievance_visuals.js:192
+#: src/hope_live/theme/static/js/grievance_visuals.js:225
 #: src/hope_live/theme/static/js/grievance_visuals.min.js:1
 msgid "For Approval"
 msgstr "للموافقة"
 
 #: src/hope_live/theme/static/js/grievance_visuals.js:11
-#: src/hope_live/theme/static/js/grievance_visuals.js:193
-#: src/hope_live/theme/static/js/grievance_visuals.js:236
-#: src/hope_live/theme/static/js/grievance_visuals.js:255
-#: src/hope_live/theme/static/js/grievance_visuals.js:500
-#: src/hope_live/theme/static/js/grievance_visuals.js:524
+#: src/hope_live/theme/static/js/grievance_visuals.js:226
+#: src/hope_live/theme/static/js/grievance_visuals.js:270
+#: src/hope_live/theme/static/js/grievance_visuals.js:289
+#: src/hope_live/theme/static/js/grievance_visuals.js:610
+#: src/hope_live/theme/static/js/grievance_visuals.js:634
 #: src/hope_live/theme/static/js/grievance_visuals.min.js:1
 msgid "Closed"
 msgstr "مغلق"
@@ -596,19 +596,32 @@ msgstr "تشابه البيانات البيومترية"
 msgid "Update Delegate"
 msgstr "تحديث المفوض"
 
-#: src/hope_live/theme/static/js/grievance_visuals.js:230
-#: src/hope_live/theme/static/js/grievance_visuals.js:494
+#: src/hope_live/theme/static/js/grievance_visuals.js:227
+msgid "Not specified"
+msgstr "غير محدد"
+
+#: src/hope_live/theme/static/js/grievance_visuals.js:264
+#: src/hope_live/theme/static/js/grievance_visuals.js:604
 #: src/hope_live/theme/static/js/grievance_visuals.min.js:1
 msgid "tickets"
 msgstr "تذاكر"
 
-#: src/hope_live/theme/static/js/grievance_visuals.js:236
-#: src/hope_live/theme/static/js/grievance_visuals.js:271
-#: src/hope_live/theme/static/js/grievance_visuals.js:500
-#: src/hope_live/theme/static/js/grievance_visuals.js:532
+#: src/hope_live/theme/static/js/grievance_visuals.js:270
+#: src/hope_live/theme/static/js/grievance_visuals.js:305
+#: src/hope_live/theme/static/js/grievance_visuals.js:610
+#: src/hope_live/theme/static/js/grievance_visuals.js:642
 #: src/hope_live/theme/static/js/grievance_visuals.min.js:1
 msgid "Open & Active"
 msgstr "مفتوحة ونشطة"
+
+#: src/hope_live/theme/static/js/grievance_visuals.js:371
+#: src/hope_live/theme/static/js/grievance_visuals.js:409
+msgid "days"
+msgstr "أيام"
+
+#: src/hope_live/theme/static/js/grievance_visuals.js:372
+msgid "closed tickets"
+msgstr "التذاكر المغلقة"
 
 #: src/hope_live/theme/static/js/risk_visuals.js:6
 #: src/hope_live/theme/static/js/risk_visuals.min.js:1

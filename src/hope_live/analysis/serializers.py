@@ -62,6 +62,8 @@ class GrievanceAggregateSerializer(serializers.ModelSerializer):  # type: ignore
             "dimension_value",
             "program_type",
             "ticket_count",
+            "avg_resolution_days",
+            "ticket_source",
         ]
 
 

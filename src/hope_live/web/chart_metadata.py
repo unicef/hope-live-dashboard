@@ -282,16 +282,33 @@ CHART_INFO = {
             "be set. Closed covers the Closed and Resolved statuses; Open & Active covers New, "
             "Assigned, In Progress, On Hold and For Approval."
         ),
-        "note": _("HOPE integer status codes are mapped to labels before charting."),
+        "note": _(
+            "HOPE integer status codes are mapped to labels before charting. System flags are a "
+            "separate source and are excluded by default; use the ticket-source toggle to include "
+            "them."
+        ),
     },
     "grievance.status": {
         "definition": _("Grievance tickets by status."),
         "source": _("HOPE grievances — country report grievance feed."),
-        "method": _("Counts tickets by the status value for the selected period and country."),
+        "method": _("Counts tickets by the status value for the active ticket source and period."),
         "note": _(
-            "Unknown means the source status field was blank. This doughnut is used until "
-            "resolution-time data is available, when it will be replaced by Average Grievance "
+            "Not specified means the source status field was blank. The doughnut is used until "
+            "resolution-time data is available, when it is replaced by Average Grievance "
             "Resolution Time by Category."
+        ),
+    },
+    "grievance.resolution": {
+        "definition": _("Average grievance resolution time by category."),
+        "source": _("HOPE grievances — country report grievance feed."),
+        "method": _(
+            "Average days between ticket creation and last update for closed tickets (status 6) "
+            "created in the selected period, grouped by category. updated_at is used as the "
+            "closure proxy because HOPE does not expose a dedicated closure timestamp."
+        ),
+        "note": _(
+            "Only closed tickets with both timestamps are included. The status doughnut is shown "
+            "instead until resolution rows exist."
         ),
     },
     "grievance.priority": {
@@ -307,7 +324,7 @@ CHART_INFO = {
         "definition": _("Grievance tickets by category."),
         "source": _("HOPE grievances — country report grievance feed."),
         "method": _("Counts tickets by the category value for the selected period and country."),
-        "note": _("The chart shows the top 10 categories. Unknown means the category was blank."),
+        "note": _("The chart shows the top 10 categories. Not specified means the category was blank."),
     },
     "grievance.subcategory": {
         "definition": _("Grievance tickets by subcategory."),
@@ -317,8 +334,9 @@ CHART_INFO = {
             "selected period and country."
         ),
         "note": _(
-            "The chart shows the top 10 subcategories. Unknown means the subcategory was blank. "
-            "HOPE calls this field Subcategory."
+            "The chart shows the top 10 subcategories. Not specified means the subcategory was "
+            "blank; system flags are excluded by default and account for most blank values. HOPE "
+            "calls this field Subcategory."
         ),
     },
     "grievance.country": {

@@ -71,8 +71,32 @@ class CompletionAggregate(BaseAggregate):
     total_usd = models.DecimalField(max_digits=20, decimal_places=2, default=0)
 
 
+class GrievanceSource(models.TextChoices):
+    GRIEVANCE = "GRIEVANCE", "Grievance"
+    SYSTEM_FLAG = "SYSTEM_FLAG", "System flag"
+
+
 class GrievanceAggregate(BaseAggregate):
     ticket_count = models.IntegerField(default=0)
+    avg_resolution_days = models.FloatField(default=0)
+    ticket_source = models.CharField(
+        max_length=20,
+        choices=GrievanceSource.choices,
+        default=GrievanceSource.GRIEVANCE,
+        db_index=True,
+    )
+
+    class Meta(BaseAggregate.Meta):
+        abstract = False
+        unique_together = (
+            "date",
+            "time_grain",
+            "country_slug",
+            "dimension_type",
+            "dimension_value",
+            "program_type",
+            "ticket_source",
+        )
 
 
 class RiskSeverity(models.TextChoices):

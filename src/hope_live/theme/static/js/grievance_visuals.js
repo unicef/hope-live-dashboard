@@ -78,6 +78,8 @@ document.addEventListener('DOMContentLoaded', function () {
     const issueTypeDimension = ndx.dimension(d => d.dimension_type === 'issue_type' ? d.dimension_value : '');
     const priorityDimension = ndx.dimension(d => d.dimension_type === 'priority' ? d.dimension_value : '');
     const countryDimension = ndx.dimension(d => d.country_slug);
+    const ticketSourceDimension = ndx.dimension(d => d.ticket_source || 'GRIEVANCE');
+    const resolutionDimension = ndx.dimension(d => d.dimension_type === 'resolution' ? d.dimension_value : '');
 
     const primaryDimFilter = d => d.dimension_type === 'category';
 
@@ -116,6 +118,26 @@ document.addEventListener('DOMContentLoaded', function () {
     const issueTypeGroup = issueTypeDimension.group().reduceSum(d => d.dimension_type === 'issue_type' ? d.ticket_count : 0);
     const priorityGroup = priorityDimension.group().reduceSum(d => d.dimension_type === 'priority' ? d.ticket_count : 0);
 
+    // Weighted average resolution days by category: each feed row carries an
+    // average plus the number of closed tickets it covers.
+    const resolutionGroup = resolutionDimension.group().reduce(
+        (p, v) => {
+            if (v.dimension_type === 'resolution') {
+                p.days += (+v.avg_resolution_days || 0) * (+v.ticket_count || 0);
+                p.count += +v.ticket_count || 0;
+            }
+            return p;
+        },
+        (p, v) => {
+            if (v.dimension_type === 'resolution') {
+                p.days -= (+v.avg_resolution_days || 0) * (+v.ticket_count || 0);
+                p.count -= +v.ticket_count || 0;
+            }
+            return p;
+        },
+        () => ({ days: 0, count: 0 })
+    );
+
     // Custom reduction to split Open vs Resolved tickets by country
     const countryGroup = countryDimension.group().reduce(
         (p, v) => {
@@ -149,10 +171,12 @@ document.addEventListener('DOMContentLoaded', function () {
     const selectedIssueTypes = new Set();
     const selectedPriorities = new Set();
     const selectedCountries = new Set();
+    let activeSource = 'GRIEVANCE';
 
     // Initialize ECharts instances with macarons theme
     const timelineChart = echarts.init(document.getElementById('time-focus-chart'), 'macarons');
     const statusChart = echarts.init(document.getElementById('grievance-status-chart'), 'macarons');
+    let resolutionChart = null;
     const priorityChart = echarts.init(document.getElementById('grievance-priority-chart'), 'macarons');
     const categoryChart = echarts.init(document.getElementById('grievance-category-chart'), 'macarons');
     const issueTypeChart = echarts.init(document.getElementById('grievance-issue-type-chart'), 'macarons');
@@ -162,11 +186,20 @@ document.addEventListener('DOMContentLoaded', function () {
     window.addEventListener('resize', function () {
         timelineChart.resize();
         statusChart.resize();
+        if (resolutionChart) resolutionChart.resize();
         priorityChart.resize();
         categoryChart.resize();
         issueTypeChart.resize();
         countryChart.resize();
     });
+
+    function applySourceFilter() {
+        if (activeSource === 'ALL') {
+            ticketSourceDimension.filterAll();
+        } else {
+            ticketSourceDimension.filterFunction(d => d === activeSource);
+        }
+    }
 
     function updateTotals() {
         const totalTickets = ndx.groupAll().reduceSum(d => primaryDimFilter(d) ? d.ticket_count : 0).value();
@@ -191,6 +224,7 @@ document.addEventListener('DOMContentLoaded', function () {
             ['status-count-on-hold', gettext('On Hold'), ['ON HOLD', 'ON_HOLD']],
             ['status-count-for-approval', gettext('For Approval'), ['FOR APPROVAL', 'FOR_APPROVAL']],
             ['status-count-closed', gettext('Closed'), ['CLOSED', 'RESOLVED']],
+            ['status-count-not-specified', gettext('Not specified'), ['NOT SPECIFIED']],
         ];
 
         statusCards.forEach(([id, label, aliases]) => {
@@ -304,6 +338,82 @@ document.addEventListener('DOMContentLoaded', function () {
                 data: statusData.map(d => ({ name: d.key, value: d.value }))
             }]
         }, { notMerge: true });
+
+        // 2b. Resolution time by category, when the feed provides it. The
+        // status doughnut stays as the fallback until resolution rows exist.
+        const resolutionData = resolutionGroup.all()
+            .map(d => ({
+                key: d.key,
+                days: d.value.count > 0 ? d.value.days / d.value.count : 0,
+                count: d.value.count
+            }))
+            .filter(d => d.key !== '' && d.key !== null && d.count > 0)
+            .sort((a, b) => b.days - a.days);
+
+        const hasResolution = resolutionData.length > 0;
+        const statusCard = document.getElementById('status-card');
+        const resolutionCard = document.getElementById('resolution-card');
+        if (statusCard) statusCard.classList.toggle('hidden', hasResolution);
+        if (resolutionCard) resolutionCard.classList.toggle('hidden', !hasResolution);
+
+        if (hasResolution) {
+            if (!resolutionChart) {
+                resolutionChart = echarts.init(document.getElementById('grievance-resolution-chart'), 'macarons');
+            }
+            resolutionChart.resize();
+            resolutionChart.setOption({
+                tooltip: {
+                    trigger: 'axis',
+                    axisPointer: { type: 'shadow' },
+                    formatter: params => {
+                        const d = resolutionData[params[0].dataIndex];
+                        if (!d) return '';
+                        return `${params[0].name}: <b>${d.days.toFixed(1)} ${gettext('days')}</b> `
+                            + `(${d3.format(',')(d.count)} ${gettext('closed tickets')})`;
+                    }
+                },
+                grid: { top: 15, bottom: 25, left: 220, right: 80 },
+                xAxis: {
+                    type: 'value',
+                    axisLabel: { formatter: val => `${val}d`, color: '#64748b', fontSize: 10 },
+                    splitLine: { lineStyle: { color: '#f1f5f9' } }
+                },
+                yAxis: {
+                    type: 'category',
+                    data: resolutionData.map(d => d.key),
+                    inverse: true,
+                    axisTick: { show: false },
+                    axisLine: { show: true, lineStyle: { color: '#f1f5f9' } },
+                    axisLabel: {
+                        show: true,
+                        width: 200,
+                        overflow: 'truncate',
+                        color: '#374151',
+                        fontSize: 10
+                    }
+                },
+                series: [{
+                    type: 'bar',
+                    data: resolutionData.map(d => ({
+                        value: Number(d.days.toFixed(2)),
+                        itemStyle: { color: getStableColor(d.key) }
+                    })),
+                    barMaxWidth: 22,
+                    showBackground: true,
+                    backgroundStyle: { color: 'rgba(241, 245, 249, 0.75)', borderRadius: [0, 4, 4, 0] },
+                    itemStyle: { borderRadius: [0, 4, 4, 0] },
+                    label: {
+                        show: true,
+                        position: 'right',
+                        distance: 6,
+                        formatter: params => `${Number(params.value).toFixed(1)} ${gettext('days')}`,
+                        color: '#0f172a',
+                        fontWeight: 600,
+                        fontSize: 11
+                    }
+                }]
+            }, { notMerge: true });
+        }
 
         // 3. Priority Chart (Donut Pie)
         const priorityData = priorityGroup.all().filter(d => d.key !== '' && d.key !== null && d.value > 0);
@@ -637,10 +747,14 @@ document.addEventListener('DOMContentLoaded', function () {
             data.forEach(d => {
                 d.date = dateFormat(d.date);
                 d.ticket_count = +d.ticket_count;
+                d.avg_resolution_days = +d.avg_resolution_days || 0;
+                d.ticket_source = d.ticket_source || 'GRIEVANCE';
 
                 // Map numeric choices to human-readable strings
                 const valStr = String(d.dimension_value);
-                if (d.dimension_type === 'status' && statusMap[valStr]) {
+                if (valStr === 'NOT SPECIFIED') {
+                    d.dimension_value = gettext('Not specified');
+                } else if (d.dimension_type === 'status' && statusMap[valStr]) {
                     d.dimension_value = statusMap[valStr];
                 } else if (d.dimension_type === 'category' && categoryMap[valStr]) {
                     d.dimension_value = categoryMap[valStr];
@@ -648,6 +762,8 @@ document.addEventListener('DOMContentLoaded', function () {
                     d.dimension_value = priorityMap[valStr];
                 } else if (d.dimension_type === 'issue_type' && issueTypeMap[valStr]) {
                     d.dimension_value = issueTypeMap[valStr];
+                } else if (d.dimension_type === 'resolution' && categoryMap[valStr]) {
+                    d.dimension_value = categoryMap[valStr];
                 }
             });
 
@@ -663,10 +779,12 @@ document.addEventListener('DOMContentLoaded', function () {
             issueTypeDimension.filterAll();
             priorityDimension.filterAll();
             countryDimension.filterAll();
+            ticketSourceDimension.filterAll();
             dateDimension.filterAll();
 
             ndx.remove();
             ndx.add(data);
+            applySourceFilter();
 
             timeFilter.setBuffer(startDate, endDate);
             updateAll();
@@ -674,6 +792,22 @@ document.addEventListener('DOMContentLoaded', function () {
             console.error('Error loading grievance data:', error);
         }
     }
+
+    // --- Source Toggle ---
+    const sourceTabs = document.querySelectorAll('.source-tab');
+    sourceTabs.forEach(btn => {
+        btn.addEventListener('click', function () {
+            sourceTabs.forEach(b => {
+                b.classList.remove('bg-white', 'shadow', 'text-blue-800');
+                b.classList.add('text-gray-600');
+            });
+            this.classList.add('bg-white', 'shadow', 'text-blue-800');
+            this.classList.remove('text-gray-600');
+            activeSource = this.dataset.source || 'GRIEVANCE';
+            applySourceFilter();
+            updateAll();
+        });
+    });
 
     // --- Time Filter Controller ---
     const timeFilter = new DashboardTimeFilter({

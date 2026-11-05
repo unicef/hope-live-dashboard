@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-05 04:40+0000\n"
+"POT-Creation-Date: 2026-11-05 05:30+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -490,67 +490,95 @@ msgstr "Панель управления жалобами"
 msgid "Overview of feedback and grievance tickets"
 msgstr "Обзор заявок на обратную связь и жалобы"
 
-#: src/hope_live/templates/pages/grievance.html:22
+#: src/hope_live/templates/pages/grievance.html:21
+#, fuzzy
+#| msgid "Data source"
+msgid "Ticket source:"
+msgstr "Источник данных"
+
+#: src/hope_live/templates/pages/grievance.html:24
+#, fuzzy
+#| msgid "Grievance dashboard"
+msgid "Grievances"
+msgstr "Панель управления жалобами"
+
+#: src/hope_live/templates/pages/grievance.html:27
+msgid "Include system flags"
+msgstr "Включить системные отметки"
+
+#: src/hope_live/templates/pages/grievance.html:35
 msgid "Total tickets"
 msgstr "Всего билетов"
 
-#: src/hope_live/templates/pages/grievance.html:27
+#: src/hope_live/templates/pages/grievance.html:40
 msgid "New"
 msgstr "Новый"
 
-#: src/hope_live/templates/pages/grievance.html:31
+#: src/hope_live/templates/pages/grievance.html:44
 msgid "Assigned"
 msgstr "Назначен"
 
-#: src/hope_live/templates/pages/grievance.html:35
+#: src/hope_live/templates/pages/grievance.html:48
 msgid "In Progress"
 msgstr "В процессе"
 
-#: src/hope_live/templates/pages/grievance.html:39
+#: src/hope_live/templates/pages/grievance.html:52
 msgid "On Hold"
 msgstr "На удержании"
 
-#: src/hope_live/templates/pages/grievance.html:43
+#: src/hope_live/templates/pages/grievance.html:56
 msgid "For Approval"
 msgstr "На утверждении"
 
-#: src/hope_live/templates/pages/grievance.html:47
+#: src/hope_live/templates/pages/grievance.html:60
 msgid "Closed"
 msgstr "Закрыт"
 
-#: src/hope_live/templates/pages/grievance.html:54
+#: src/hope_live/templates/pages/grievance.html:64
+msgid "Not specified"
+msgstr "Не указано"
+
+#: src/hope_live/templates/pages/grievance.html:71
 msgid "Tickets timeline"
 msgstr "Билеты"
 
-#: src/hope_live/templates/pages/grievance.html:58
+#: src/hope_live/templates/pages/grievance.html:75
 msgid ""
 "Open & Active covers New, Assigned, In Progress, On Hold and For Approval; "
 "Closed is shown separately."
 msgstr ""
 
-#: src/hope_live/templates/pages/grievance.html:64
+#: src/hope_live/templates/pages/grievance.html:81
 msgid "Tickets by status"
 msgstr ""
 
-#: src/hope_live/templates/pages/grievance.html:69
+#: src/hope_live/templates/pages/grievance.html:86
+msgid "Average grievance resolution time by category"
+msgstr "Среднее время решения обращений по категориям"
+
+#: src/hope_live/templates/pages/grievance.html:88
+msgid "Average days from ticket creation to the last update for closed tickets."
+msgstr "Среднее число дней с момента создания обращения до последнего обновления для закрытых обращений."
+
+#: src/hope_live/templates/pages/grievance.html:92
 msgid "Tickets by priority"
 msgstr ""
 
-#: src/hope_live/templates/pages/grievance.html:71
+#: src/hope_live/templates/pages/grievance.html:94
 msgid ""
 "Priority is an optional field in HOPE; tickets without a priority appear as "
 "Not Set."
 msgstr ""
 
-#: src/hope_live/templates/pages/grievance.html:78
+#: src/hope_live/templates/pages/grievance.html:101
 msgid "Tickets by category"
 msgstr ""
 
-#: src/hope_live/templates/pages/grievance.html:83
+#: src/hope_live/templates/pages/grievance.html:106
 msgid "Tickets by subcategory"
 msgstr ""
 
-#: src/hope_live/templates/pages/grievance.html:91
+#: src/hope_live/templates/pages/grievance.html:114
 msgid "Tickets by status and country"
 msgstr ""
 
@@ -1525,11 +1553,12 @@ msgid ""
 msgstr ""
 
 #: src/hope_live/web/chart_metadata.py:279
-#: src/hope_live/web/chart_metadata.py:289
-#: src/hope_live/web/chart_metadata.py:299
-#: src/hope_live/web/chart_metadata.py:308
-#: src/hope_live/web/chart_metadata.py:314
-#: src/hope_live/web/chart_metadata.py:326
+#: src/hope_live/web/chart_metadata.py:293
+#: src/hope_live/web/chart_metadata.py:303
+#: src/hope_live/web/chart_metadata.py:316
+#: src/hope_live/web/chart_metadata.py:325
+#: src/hope_live/web/chart_metadata.py:331
+#: src/hope_live/web/chart_metadata.py:344
 msgid "HOPE grievances — country report grievance feed."
 msgstr ""
 
@@ -1540,99 +1569,123 @@ msgid ""
 "Active covers New, Assigned, In Progress, On Hold and For Approval."
 msgstr ""
 
-#: src/hope_live/web/chart_metadata.py:285
-msgid "HOPE integer status codes are mapped to labels before charting."
-msgstr ""
-
-#: src/hope_live/web/chart_metadata.py:288
-msgid "Grievance tickets by status."
-msgstr ""
-
-#: src/hope_live/web/chart_metadata.py:290
-msgid "Counts tickets by the status value for the selected period and country."
+#: src/hope_live/web/chart_metadata.py:286
+msgid ""
+"HOPE integer status codes are mapped to labels before charting. System flags "
+"are a separate source and are excluded by default; use the ticket-source "
+"toggle to include them."
 msgstr ""
 
 #: src/hope_live/web/chart_metadata.py:292
+msgid "Grievance tickets by status."
+msgstr ""
+
+#: src/hope_live/web/chart_metadata.py:294
 msgid ""
-"Unknown means the source status field was blank. This doughnut is used until "
-"resolution-time data is available, when it will be replaced by Average "
+"Counts tickets by the status value for the active ticket source and period."
+msgstr ""
+
+#: src/hope_live/web/chart_metadata.py:296
+msgid ""
+"Not specified means the source status field was blank. The doughnut is used "
+"until resolution-time data is available, when it is replaced by Average "
 "Grievance Resolution Time by Category."
 msgstr ""
 
-#: src/hope_live/web/chart_metadata.py:298
+#: src/hope_live/web/chart_metadata.py:302
+msgid "Average grievance resolution time by category."
+msgstr "Среднее время решения обращений по категориям."
+
+#: src/hope_live/web/chart_metadata.py:305
+msgid ""
+"Average days between ticket creation and last update for closed tickets "
+"(status 6) created in the selected period, grouped by category. updated_at "
+"is used as the closure proxy because HOPE does not expose a dedicated "
+"closure timestamp."
+msgstr ""
+
+#: src/hope_live/web/chart_metadata.py:310
+msgid ""
+"Only closed tickets with both timestamps are included. The status doughnut "
+"is shown instead until resolution rows exist."
+msgstr ""
+
+#: src/hope_live/web/chart_metadata.py:315
 msgid "Grievance tickets by priority."
 msgstr ""
 
-#: src/hope_live/web/chart_metadata.py:300
+#: src/hope_live/web/chart_metadata.py:317
 msgid ""
 "Counts tickets by the priority value for the selected period and country."
 msgstr ""
 
-#: src/hope_live/web/chart_metadata.py:302
+#: src/hope_live/web/chart_metadata.py:319
 msgid ""
 "Priority is an optional field in HOPE, so many tickets have none; these are "
 "reported as Not Set (source value 0)."
 msgstr ""
 
-#: src/hope_live/web/chart_metadata.py:307
+#: src/hope_live/web/chart_metadata.py:324
 msgid "Grievance tickets by category."
 msgstr ""
 
-#: src/hope_live/web/chart_metadata.py:309
+#: src/hope_live/web/chart_metadata.py:326
 msgid ""
 "Counts tickets by the category value for the selected period and country."
 msgstr ""
 
-#: src/hope_live/web/chart_metadata.py:310
+#: src/hope_live/web/chart_metadata.py:327
 msgid ""
-"The chart shows the top 10 categories. Unknown means the category was blank."
+"The chart shows the top 10 categories. Not specified means the category was "
+"blank."
 msgstr ""
 
-#: src/hope_live/web/chart_metadata.py:313
+#: src/hope_live/web/chart_metadata.py:330
 msgid "Grievance tickets by subcategory."
 msgstr ""
 
-#: src/hope_live/web/chart_metadata.py:316
+#: src/hope_live/web/chart_metadata.py:333
 msgid ""
 "Counts tickets by the subcategory value (stored as issue_type in HOPE) for "
 "the selected period and country."
 msgstr ""
 
-#: src/hope_live/web/chart_metadata.py:320
+#: src/hope_live/web/chart_metadata.py:337
 msgid ""
-"The chart shows the top 10 subcategories. Unknown means the subcategory was "
-"blank. HOPE calls this field Subcategory."
+"The chart shows the top 10 subcategories. Not specified means the "
+"subcategory was blank; system flags are excluded by default and account for "
+"most blank values. HOPE calls this field Subcategory."
 msgstr ""
 
-#: src/hope_live/web/chart_metadata.py:325
+#: src/hope_live/web/chart_metadata.py:343
 msgid ""
 "Grievance tickets by country, split into closed/resolved and open/active."
 msgstr ""
 
-#: src/hope_live/web/chart_metadata.py:328
+#: src/hope_live/web/chart_metadata.py:346
 msgid ""
 "Uses the same ticket base as the grievance timeline, grouped by business "
 "area country. Each bar is the stacked total of closed/resolved and open/"
 "active tickets."
 msgstr ""
 
-#: src/hope_live/web/chart_metadata.py:331
+#: src/hope_live/web/chart_metadata.py:349
 msgid "The chart shows the top 10 countries by total tickets."
 msgstr ""
 
-#: src/hope_live/web/chart_metadata.py:338
+#: src/hope_live/web/chart_metadata.py:356
 msgid ""
 "Global delivery over time: cash disbursed, payment count, and the number of "
 "individuals, households and children reached by household programmes."
 msgstr ""
 
-#: src/hope_live/web/chart_metadata.py:341
+#: src/hope_live/web/chart_metadata.py:359
 msgid ""
 "HOPE payments and household registration data, aggregated by the country "
 "report."
 msgstr ""
 
-#: src/hope_live/web/chart_metadata.py:343
+#: src/hope_live/web/chart_metadata.py:361
 msgid ""
 "Total Cash Disbursed sums delivered quantity in USD. Payments Count counts "
 "payment records — not payment plans, unique recipients or only completed "
@@ -1642,7 +1695,7 @@ msgid ""
 "workers are reported separately and are not part of these series."
 msgstr ""
 
-#: src/hope_live/web/chart_metadata.py:351
+#: src/hope_live/web/chart_metadata.py:369
 msgid ""
 "All years is the default. Last 5 years shows the current year and the "
 "previous four. Selecting a year shows its monthly data. Where a year or "
@@ -1655,11 +1708,6 @@ msgstr ""
 
 #~ msgid "Financial dashboard"
 #~ msgstr "Финансовая панель управления"
-
-#, fuzzy
-#~| msgid "Data source"
-#~ msgid "Data sources"
-#~ msgstr "Источник данных"
 
 #~ msgid "1 year"
 #~ msgstr "1 год"

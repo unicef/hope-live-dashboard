@@ -679,3 +679,41 @@ def test_risk_table_uses_the_filtered_country(browser, risk_shared_code):
     assert "Kenya Programme" not in table
     assert "Critical" not in table
     assert "80%" not in table
+
+
+def test_grievance_resolution_and_source_filter(browser, grievance_aggregates, grievance_status_aggregates):
+    year = datetime.datetime.now().year
+    GrievanceAggregateFactory(
+        date=datetime.date(year, 1, 1),
+        time_grain="daily",
+        country_slug="country-test",
+        dimension_type="resolution",
+        dimension_value="1",
+        ticket_count=10,
+        avg_resolution_days=3.5,
+        ticket_source="GRIEVANCE",
+    )
+    GrievanceAggregateFactory(
+        date=datetime.date(year, 1, 1),
+        time_grain="daily",
+        country_slug="country-test",
+        dimension_type="category",
+        dimension_value="9",
+        ticket_count=100,
+        ticket_source="SYSTEM_FLAG",
+    )
+
+    browser.login_as_user()
+    browser.open("/grievance/")
+    browser.wait_for_element_visible("#time-filter-container")
+    browser.wait_for_element_visible("#resolution-card")
+    browser.assert_element_not_visible("#status-card")
+    browser.assert_text("50", "#total-tickets")
+
+    option = browser.execute_script(
+        "return echarts.getInstanceByDom(document.getElementById('grievance-resolution-chart')).getOption();"
+    )
+    assert option["series"][0]["type"] == "bar"
+
+    browser.click("#source-all")
+    browser.wait_for_text_visible("150", "#total-tickets")

@@ -16,8 +16,21 @@
     <!-- Time Filter -->
     {% include "includes/time_filter.html" with granularity="daily" %}
 
+    <!-- Ticket source filter -->
+    <div class="mb-3 flex flex-wrap gap-2 items-center justify-between">
+        <div class="text-xs font-bold text-gray-500">{% translate "Ticket source:" %}</div>
+        <div class="flex bg-gray-100 p-0.5 rounded-lg space-x-1 border border-gray-200">
+            <button id="source-grievance" type="button" class="source-tab px-3 py-1 text-xs font-bold rounded-md bg-white shadow text-blue-800 transition-all duration-200 cursor-pointer" data-source="GRIEVANCE">
+                {% translate "Grievances" %}
+            </button>
+            <button id="source-all" type="button" class="source-tab px-3 py-1 text-xs font-bold rounded-md text-gray-600 hover:text-gray-900 transition-all duration-200 cursor-pointer" data-source="ALL">
+                {% translate "Include system flags" %}
+            </button>
+        </div>
+    </div>
+
     <!-- Stats Cards: total plus key statuses (above timeline) -->
-    <div class="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-7 gap-3 mb-3.5">
+    <div class="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-8 gap-3 mb-3.5">
         <div class="bg-white rounded-xl shadow-2xs border border-gray-200 p-3 border-l-4 border-unicef-blue flex flex-col justify-center min-h-[84px]">
             <h3 class="text-gray-500 text-[10px] sm:text-[11px] font-bold">{% translate "Total tickets" %}</h3>
             <p id="total-tickets" class="text-xl sm:text-2xl font-black text-blue-700 mt-0.5 leading-none">0</p>
@@ -47,6 +60,10 @@
             <h3 class="text-gray-500 text-[10px] font-bold">{% translate "Closed" %}</h3>
             <p id="status-count-closed" class="text-lg font-black text-emerald-600 mt-0.5 leading-none">0</p>
         </div>
+        <div class="bg-white rounded-xl shadow-2xs border border-gray-200 p-3 flex flex-col justify-center min-h-[84px]">
+            <h3 class="text-gray-500 text-[10px] font-bold">{% translate "Not specified" %}</h3>
+            <p id="status-count-not-specified" class="text-lg font-black text-slate-600 mt-0.5 leading-none">0</p>
+        </div>
     </div>
 
     <!-- Timeline Filter (Full Width) -->
@@ -60,10 +77,16 @@
 
     <!-- Main Charts -->
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
-        <div class="bg-white rounded-xl shadow-2xs border border-gray-200 p-3.5">
+        <div id="status-card" class="bg-white rounded-xl shadow-2xs border border-gray-200 p-3.5">
             <h3 class="text-sm font-bold text-gray-900 mb-2">{% translate "Tickets by status" %}</h3>
             {% chart_info "grievance.status" %}
             <div id="grievance-status-chart" class="w-full h-[220px] flex justify-center"></div>
+        </div>
+        <div id="resolution-card" class="bg-white rounded-xl shadow-2xs border border-gray-200 p-3.5 hidden">
+            <h3 class="text-sm font-bold text-gray-900 mb-2">{% translate "Average grievance resolution time by category" %}</h3>
+            {% chart_info "grievance.resolution" %}
+            <p class="text-[10px] text-gray-400 mb-1 italic leading-tight">{% translate "Average days from ticket creation to the last update for closed tickets." %}</p>
+            <div id="grievance-resolution-chart" class="w-full h-[260px]"></div>
         </div>
         <div class="bg-white rounded-xl shadow-2xs border border-gray-200 p-3.5">
             <h3 class="text-sm font-bold text-gray-900 mb-2">{% translate "Tickets by priority" %}</h3>

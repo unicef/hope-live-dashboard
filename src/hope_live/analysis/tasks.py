@@ -140,7 +140,11 @@ def sync_daily_aggregates(
                 ["total_beneficiaries", "total_children", "total_pwd", "total_households"],
             ),
             (config.HOPE_COMPLETION_REPORT_QUERY_ID, "CompletionAggregate", ["payment_count", "total_usd"]),
-            (config.HOPE_GRIEVANCE_REPORT_QUERY_ID, "GrievanceAggregate", ["ticket_count"]),
+            (
+                config.HOPE_GRIEVANCE_REPORT_QUERY_ID,
+                "GrievanceAggregate",
+                ["ticket_count", "avg_resolution_days", "ticket_source"],
+            ),
             (
                 getattr(config, "HOPE_RISK_REPORT_QUERY_ID", 10),
                 "RiskAggregate",
