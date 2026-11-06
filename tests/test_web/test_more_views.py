@@ -1,3 +1,5 @@
+import datetime as dt
+
 import pytest
 import responses
 from django.test import RequestFactory
@@ -173,7 +175,7 @@ def test_index_view_dynamic_context(user_factory):
     assert context["total_programs_glance"] == 1  # DCT-Somalia
     assert context["total_sources_glance"] == "HOPE Database"
     assert context["latest_data_str"] == "June 2026"
-    assert context["verification_success_rate"] == 80.0
+    assert context["reconciliation_rate"] == 80.0
 
 
 @pytest.mark.django_db
@@ -184,6 +186,18 @@ def test_landing_page_shows_social_workers_kpi(client, user_factory):
     content = response.content.decode("utf-8")
     assert "Social Workers Reached" in content
     assert "Frontline workforce assisted" in content
+    assert "Reconciled Transactions" in content
+    assert "Reconciliation rate" in content
+    assert "Verified Transactions" not in content
+
+
+@pytest.mark.django_db
+def test_landing_reconciliation_rate_without_completion_data(client):
+    response = client.get("/")
+
+    assert response.status_code == 200
+    assert response.context["reconciliation_rate"] is None
+    assert "98.7" not in response.content.decode("utf-8")
 
 
 @pytest.mark.django_db
@@ -244,3 +258,57 @@ def test_fetch_hope_news():
     assert len(news) == 1
     assert news[0]["version"] == "HOPE v2025.4.15.0"
     assert news[0]["snippet"] == "New features 1. Added bio details."
+
+    # The cached list keeps every update; the limit only slices what callers show.
+    assert news[0]["slug"] == "hope-v20254150"
+    assert len(fetch_hope_news(limit=None)) == 1
+    assert fetch_hope_news(limit=0) == []
+
+
+def _fake_update() -> dict:
+    return {
+        "version": "HOPE v2025.4.15.0",
+        "slug": "hope-v20254150",
+        "date": dt.date(2026, 5, 19),
+        "snippet": "New features 1. Added bio details.",
+        "description": "New features and enhancements 1. Added bio details.",
+    }
+
+
+@pytest.mark.django_db
+def test_landing_updates_link_to_the_entry_detail(client, monkeypatch):
+    from hope_live.web import views
+
+    monkeypatch.setattr(views, "fetch_hope_news", lambda limit=3: [_fake_update()])
+
+    response = client.get("/")
+    content = response.content.decode()
+
+    assert "Latest updates" in content
+    assert "Latest updates & alerts" not in content
+    assert 'href="/updates/hope-v20254150/"' in content
+
+
+@pytest.mark.django_db
+def test_update_detail_view_renders_the_full_release_note(client, monkeypatch):
+    from hope_live.web import views
+
+    monkeypatch.setattr(views, "fetch_hope_news", lambda limit=None: [_fake_update()])
+
+    response = client.get("/updates/hope-v20254150/")
+    content = response.content.decode()
+
+    assert response.status_code == 200
+    assert "HOPE v2025.4.15.0" in content
+    assert "New features and enhancements 1. Added bio details." in content
+
+
+@pytest.mark.django_db
+def test_update_detail_view_returns_404_for_unknown_slug(client, monkeypatch):
+    from hope_live.web import views
+
+    monkeypatch.setattr(views, "fetch_hope_news", lambda limit=None: [_fake_update()])
+
+    response = client.get("/updates/not-a-real-update/")
+
+    assert response.status_code == 404

@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', function () {
     if (!timeFilterContainer) return;
 
     const statusMap = {
-        "1": gettext("New"),
+        "1": gettext("New (Not Assigned)"),
         "2": gettext("Assigned"),
         "3": gettext("In Progress"),
         "4": gettext("On Hold"),
@@ -60,22 +60,13 @@ document.addEventListener('DOMContentLoaded', function () {
         "26": gettext("Update Delegate")
     };
 
-    const colorPalette = [
-        '#2ec7c9', '#b6a2de', '#5ab1ef', '#ffb980', '#d87a80',
-        '#8d98b3', '#e5cf0d', '#97b552', '#95706d', '#dc69aa',
-        '#07a2a4', '#9a7fd1', '#588dd5', '#f5994e', '#c05050',
-        '#59678c', '#c9ab00', '#76933c', '#bc65a6'
-    ];
+    const chartHelpers = window.HopeChart || {};
+    const getStableColor = chartHelpers.getStableColor || (() => '#5470c6');
 
-    function getStableColor(name) {
-        if (!name) return '#5470c6';
-        let hash = 0;
-        for (let i = 0; i < name.length; i++) {
-            hash = name.charCodeAt(i) + (Math.imul(hash, 32) - hash); // == ((hash << 5) - hash); avoids a shift, which breaks gettext extraction
-        }
-        const index = Math.abs(hash) % colorPalette.length;
-        return colorPalette[index];
-    }
+    const formatCompactCount = val => {
+        if (Math.abs(val) < 1000) return d3.format(",")(val);
+        return d3.format(".2s")(val).replace('G', 'B');
+    };
 
     // Initialize empty Crossfilter
     let ndx = crossfilter([]);
@@ -87,6 +78,8 @@ document.addEventListener('DOMContentLoaded', function () {
     const issueTypeDimension = ndx.dimension(d => d.dimension_type === 'issue_type' ? d.dimension_value : '');
     const priorityDimension = ndx.dimension(d => d.dimension_type === 'priority' ? d.dimension_value : '');
     const countryDimension = ndx.dimension(d => d.country_slug);
+    const ticketSourceDimension = ndx.dimension(d => d.ticket_source || 'GRIEVANCE');
+    const resolutionDimension = ndx.dimension(d => d.dimension_type === 'resolution' ? d.dimension_value : '');
 
     const primaryDimFilter = d => d.dimension_type === 'category';
 
@@ -125,6 +118,26 @@ document.addEventListener('DOMContentLoaded', function () {
     const issueTypeGroup = issueTypeDimension.group().reduceSum(d => d.dimension_type === 'issue_type' ? d.ticket_count : 0);
     const priorityGroup = priorityDimension.group().reduceSum(d => d.dimension_type === 'priority' ? d.ticket_count : 0);
 
+    // Weighted average resolution days by category: each feed row carries an
+    // average plus the number of closed tickets it covers.
+    const resolutionGroup = resolutionDimension.group().reduce(
+        (p, v) => {
+            if (v.dimension_type === 'resolution') {
+                p.days += (+v.avg_resolution_days || 0) * (+v.ticket_count || 0);
+                p.count += +v.ticket_count || 0;
+            }
+            return p;
+        },
+        (p, v) => {
+            if (v.dimension_type === 'resolution') {
+                p.days -= (+v.avg_resolution_days || 0) * (+v.ticket_count || 0);
+                p.count -= +v.ticket_count || 0;
+            }
+            return p;
+        },
+        () => ({ days: 0, count: 0 })
+    );
+
     // Custom reduction to split Open vs Resolved tickets by country
     const countryGroup = countryDimension.group().reduce(
         (p, v) => {
@@ -158,10 +171,12 @@ document.addEventListener('DOMContentLoaded', function () {
     const selectedIssueTypes = new Set();
     const selectedPriorities = new Set();
     const selectedCountries = new Set();
+    let activeSource = 'GRIEVANCE';
 
     // Initialize ECharts instances with macarons theme
     const timelineChart = echarts.init(document.getElementById('time-focus-chart'), 'macarons');
     const statusChart = echarts.init(document.getElementById('grievance-status-chart'), 'macarons');
+    let resolutionChart = null;
     const priorityChart = echarts.init(document.getElementById('grievance-priority-chart'), 'macarons');
     const categoryChart = echarts.init(document.getElementById('grievance-category-chart'), 'macarons');
     const issueTypeChart = echarts.init(document.getElementById('grievance-issue-type-chart'), 'macarons');
@@ -171,11 +186,20 @@ document.addEventListener('DOMContentLoaded', function () {
     window.addEventListener('resize', function () {
         timelineChart.resize();
         statusChart.resize();
+        if (resolutionChart) resolutionChart.resize();
         priorityChart.resize();
         categoryChart.resize();
         issueTypeChart.resize();
         countryChart.resize();
     });
+
+    function applySourceFilter() {
+        if (activeSource === 'ALL') {
+            ticketSourceDimension.filterAll();
+        } else {
+            ticketSourceDimension.filterFunction(d => d === activeSource);
+        }
+    }
 
     function updateTotals() {
         const totalTickets = ndx.groupAll().reduceSum(d => primaryDimFilter(d) ? d.ticket_count : 0).value();
@@ -183,6 +207,37 @@ document.addEventListener('DOMContentLoaded', function () {
         if (totalTicketsElement) {
             totalTicketsElement.textContent = d3.format(',')(totalTickets);
         }
+
+        // Key-status figures: the same status bucket as the doughnut, so the
+        // two always reconcile with each other.
+        const statusTotals = {};
+        statusGroup.all().forEach(d => {
+            if (d.key !== '' && d.key !== null) {
+                statusTotals[String(d.key).trim().toUpperCase()] = d.value;
+            }
+        });
+
+        const statusCards = [
+            ['status-count-new', gettext('New (Not Assigned)'), ['NEW', 'NEW (NOT ASSIGNED)']],
+            ['status-count-assigned', gettext('Assigned'), ['ASSIGNED']],
+            ['status-count-in-progress', gettext('In Progress'), ['IN PROGRESS', 'IN_PROGRESS']],
+            ['status-count-on-hold', gettext('On Hold'), ['ON HOLD', 'ON_HOLD']],
+            ['status-count-for-approval', gettext('For Approval'), ['FOR APPROVAL', 'FOR_APPROVAL']],
+            ['status-count-closed', gettext('Closed'), ['CLOSED', 'RESOLVED']],
+            ['status-count-not-specified', gettext('Not specified'), ['NOT SPECIFIED']],
+        ];
+
+        statusCards.forEach(([id, label, aliases]) => {
+            const el = document.getElementById(id);
+            if (!el) return;
+            const key = String(label).trim().toUpperCase();
+            let value = 0;
+            Object.keys(statusTotals).forEach(status => {
+                if (status === key || aliases.includes(status)) value += statusTotals[status];
+            });
+            const share = totalTickets > 0 ? (value / totalTickets) * 100 : 0;
+            el.textContent = `${d3.format(',')(value)} (${share.toFixed(1)}%)`;
+        });
     }
 
     function updateAll() {
@@ -198,6 +253,8 @@ document.addEventListener('DOMContentLoaded', function () {
             .map(d => [d.key.getTime(), d.value.resolved]);
 
         const timelineOption = {
+            // Explicit palette so the legend swatches match the line colours.
+            color: ['#97b552', '#d87a80'],
             tooltip: {
                 trigger: 'axis',
                 formatter: function (params) {
@@ -212,13 +269,14 @@ document.addEventListener('DOMContentLoaded', function () {
             },
             legend: {
                 data: [gettext('Closed'), gettext('Open & Active')],
-                bottom: 0,
+                top: 0,
+                right: 20,
                 icon: 'roundRect'
             },
-            grid: { top: 15, bottom: 30, left: 60, right: 20 },
+            grid: { top: 30, bottom: 25, left: 60, right: 20 },
             xAxis: {
                 type: 'time',
-                axisLabel: { color: '#64748b', formatter: value => d3.timeFormat('%b')(new Date(value)) }
+                axisLabel: { color: '#64748b', formatter: value => d3.timeFormat('%b %Y')(new Date(value)) }
             },
             yAxis: {
                 type: 'value',
@@ -236,6 +294,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     smooth: true,
                     symbol: 'none',
                     lineStyle: { color: '#97b552', width: 2 },
+                    itemStyle: { color: '#97b552' },
                     areaStyle: {
                         color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
                             { offset: 0, color: 'rgba(151, 181, 82, 0.4)' },
@@ -251,6 +310,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     smooth: true,
                     symbol: 'none',
                     lineStyle: { color: '#d87a80', width: 2 },
+                    itemStyle: { color: '#d87a80' },
                     areaStyle: {
                         color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
                             { offset: 0, color: 'rgba(216, 122, 128, 0.4)' },
@@ -274,12 +334,88 @@ document.addEventListener('DOMContentLoaded', function () {
                 center: ['50%', '50%'],
                 avoidLabelOverlap: true,
                 itemStyle: { borderRadius: 6, borderColor: '#fff', borderWidth: 2 },
-                label: { show: true, position: 'outside', formatter: '{b}: {c}', fontSize: 11, color: '#374151' },
+                label: { show: true, position: 'outside', formatter: '{b}: {c} ({d}%)', fontSize: 11, color: '#374151' },
                 labelLine: { show: true, length: 15, length2: 10, smooth: false },
                 emphasis: { label: { show: true, fontSize: 13, fontWeight: 'bold' } },
                 data: statusData.map(d => ({ name: d.key, value: d.value }))
             }]
         }, { notMerge: true });
+
+        // 2b. Resolution time by category, when the feed provides it. The
+        // status doughnut stays as the fallback until resolution rows exist.
+        const resolutionData = resolutionGroup.all()
+            .map(d => ({
+                key: d.key,
+                days: d.value.count > 0 ? d.value.days / d.value.count : 0,
+                count: d.value.count
+            }))
+            .filter(d => d.key !== '' && d.key !== null && d.count > 0)
+            .sort((a, b) => b.days - a.days);
+
+        const hasResolution = resolutionData.length > 0;
+        const statusCard = document.getElementById('status-card');
+        const resolutionCard = document.getElementById('resolution-card');
+        if (statusCard) statusCard.classList.toggle('hidden', hasResolution);
+        if (resolutionCard) resolutionCard.classList.toggle('hidden', !hasResolution);
+
+        if (hasResolution) {
+            if (!resolutionChart) {
+                resolutionChart = echarts.init(document.getElementById('grievance-resolution-chart'), 'macarons');
+            }
+            resolutionChart.resize();
+            resolutionChart.setOption({
+                tooltip: {
+                    trigger: 'axis',
+                    axisPointer: { type: 'shadow' },
+                    formatter: params => {
+                        const d = resolutionData[params[0].dataIndex];
+                        if (!d) return '';
+                        return `${params[0].name}: <b>${d.days.toFixed(1)} ${gettext('days')}</b> `
+                            + `(${d3.format(',')(d.count)} ${gettext('closed tickets')})`;
+                    }
+                },
+                grid: { top: 15, bottom: 25, left: 220, right: 80 },
+                xAxis: {
+                    type: 'value',
+                    axisLabel: { formatter: val => `${val}d`, color: '#64748b', fontSize: 10 },
+                    splitLine: { lineStyle: { color: '#f1f5f9' } }
+                },
+                yAxis: {
+                    type: 'category',
+                    data: resolutionData.map(d => d.key),
+                    inverse: true,
+                    axisTick: { show: false },
+                    axisLine: { show: true, lineStyle: { color: '#f1f5f9' } },
+                    axisLabel: {
+                        show: true,
+                        width: 200,
+                        overflow: 'truncate',
+                        color: '#374151',
+                        fontSize: 10
+                    }
+                },
+                series: [{
+                    type: 'bar',
+                    data: resolutionData.map(d => ({
+                        value: Number(d.days.toFixed(2)),
+                        itemStyle: { color: getStableColor(d.key) }
+                    })),
+                    barMaxWidth: 22,
+                    showBackground: true,
+                    backgroundStyle: { color: 'rgba(241, 245, 249, 0.75)', borderRadius: [0, 4, 4, 0] },
+                    itemStyle: { borderRadius: [0, 4, 4, 0] },
+                    label: {
+                        show: true,
+                        position: 'right',
+                        distance: 6,
+                        formatter: params => `${Number(params.value).toFixed(1)} ${gettext('days')}`,
+                        color: '#0f172a',
+                        fontWeight: 600,
+                        fontSize: 11
+                    }
+                }]
+            }, { notMerge: true });
+        }
 
         // 3. Priority Chart (Donut Pie)
         const priorityData = priorityGroup.all().filter(d => d.key !== '' && d.key !== null && d.value > 0);
@@ -291,33 +427,39 @@ document.addEventListener('DOMContentLoaded', function () {
                 center: ['50%', '50%'],
                 avoidLabelOverlap: true,
                 itemStyle: { borderRadius: 6, borderColor: '#fff', borderWidth: 2 },
-                label: { show: true, position: 'outside', formatter: '{b}: {c}', fontSize: 11, color: '#374151' },
+                label: { show: true, position: 'outside', formatter: '{b}: {c} ({d}%)', fontSize: 11, color: '#374151' },
                 labelLine: { show: true, length: 15, length2: 10, smooth: false },
                 emphasis: { label: { show: true, fontSize: 13, fontWeight: 'bold' } },
                 data: priorityData.map(d => ({ name: d.key, value: d.value }))
             }]
         }, { notMerge: true });
 
-        // 4. Category Chart (Horizontal Bar / Row)
-        const categoryData = categoryGroup.all().filter(d => d.key !== '' && d.key !== null && d.value > 0);
-        categoryData.sort((a, b) => b.value - a.value);
+        // 4. Category Chart (top 10)
+        const categoryData = categoryGroup.all()
+            .map(d => ({ key: d.key, value: d.value }))
+            .filter(d => d.key !== '' && d.key !== null && d.value > 0)
+            .sort((a, b) => b.value - a.value)
+            .slice(0, 10);
 
         const hasAnyCategorySelection = selectedCategories.size > 0;
         const categorySeriesData = categoryData.map(d => {
+            const stableColor = getStableColor(d.key);
             return {
                 name: d.key,
                 value: d.value,
                 itemStyle: {
-                    color: selectedCategories.has(d.key)
-                        ? getStableColor(d.key)
-                        : (hasAnyCategorySelection ? '#cbd5e1' : getStableColor(d.key))
+                    color: selectedCategories.has(d.key) ? stableColor : (hasAnyCategorySelection ? '#cbd5e1' : stableColor)
                 }
             };
         });
 
         categoryChart.setOption({
-            tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' }, formatter: params => `${params[0].name}: <b>${d3.format(",")(params[0].value)}</b>` },
-            grid: { top: 15, bottom: 25, left: 15, right: 25 },
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: { type: 'shadow' },
+                formatter: params => `${params[0].name}: <b>${d3.format(",")(params[0].value)}</b>`
+            },
+            grid: { top: 15, bottom: 25, left: 220, right: 60 },
             xAxis: {
                 type: 'value',
                 axisLabel: { formatter: val => d3.format(".2s")(val).replace('G', 'B'), color: '#64748b', fontSize: 10 },
@@ -329,49 +471,59 @@ document.addEventListener('DOMContentLoaded', function () {
                 inverse: true,
                 axisTick: { show: false },
                 axisLine: { show: true, lineStyle: { color: '#f1f5f9' } },
-                axisLabel: { show: false }
+                axisLabel: {
+                    show: true,
+                    width: 200,
+                    overflow: 'truncate',
+                    color: '#374151',
+                    fontSize: 10
+                }
             },
             series: [{
                 type: 'bar',
                 data: categorySeriesData,
-                barMaxWidth: 24,
+                barMaxWidth: 22,
                 showBackground: true,
                 backgroundStyle: { color: 'rgba(241, 245, 249, 0.75)', borderRadius: [0, 4, 4, 0] },
                 itemStyle: { borderRadius: [0, 4, 4, 0] },
                 label: {
                     show: true,
-                    position: 'insideLeft',
-                    distance: 8,
-                    formatter: params => `${params.name}  •  ${d3.format(",")(params.value)}`,
+                    position: 'right',
+                    distance: 6,
+                    formatter: params => formatCompactCount(params.value),
                     color: '#0f172a',
                     fontWeight: 600,
-                    fontSize: 11,
-                    textBorderColor: '#ffffff',
-                    textBorderWidth: 2.5
+                    fontSize: 11
                 }
             }]
         }, { notMerge: true });
 
-        // 5. Issue Type Chart (Horizontal Bar / Row)
-        const issueTypeData = issueTypeGroup.all().filter(d => d.key !== '' && d.key !== null && d.value > 0);
-        issueTypeData.sort((a, b) => b.value - a.value);
+        // 5. Subcategory Chart (top 10; HOPE stores this as issue_type)
+        const issueTypeData = issueTypeGroup.all()
+            .map(d => ({ key: d.key, value: d.value }))
+            .filter(d => d.key !== '' && d.key !== null && d.value > 0)
+            .sort((a, b) => b.value - a.value)
+            .slice(0, 10);
 
         const hasAnyIssueTypeSelection = selectedIssueTypes.size > 0;
         const issueTypeSeriesData = issueTypeData.map(d => {
+            const stableColor = getStableColor(d.key);
             return {
                 name: d.key,
                 value: d.value,
                 itemStyle: {
-                    color: selectedIssueTypes.has(d.key)
-                        ? getStableColor(d.key)
-                        : (hasAnyIssueTypeSelection ? '#cbd5e1' : getStableColor(d.key))
+                    color: selectedIssueTypes.has(d.key) ? stableColor : (hasAnyIssueTypeSelection ? '#cbd5e1' : stableColor)
                 }
             };
         });
 
         issueTypeChart.setOption({
-            tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' }, formatter: params => `${params[0].name}: <b>${d3.format(",")(params[0].value)}</b>` },
-            grid: { top: 15, bottom: 25, left: 15, right: 25 },
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: { type: 'shadow' },
+                formatter: params => `${params[0].name}: <b>${d3.format(",")(params[0].value)}</b>`
+            },
+            grid: { top: 15, bottom: 25, left: 220, right: 60 },
             xAxis: {
                 type: 'value',
                 axisLabel: { formatter: val => d3.format(".2s")(val).replace('G', 'B'), color: '#64748b', fontSize: 10 },
@@ -383,30 +535,34 @@ document.addEventListener('DOMContentLoaded', function () {
                 inverse: true,
                 axisTick: { show: false },
                 axisLine: { show: true, lineStyle: { color: '#f1f5f9' } },
-                axisLabel: { show: false }
+                axisLabel: {
+                    show: true,
+                    width: 200,
+                    overflow: 'truncate',
+                    color: '#374151',
+                    fontSize: 10
+                }
             },
             series: [{
                 type: 'bar',
                 data: issueTypeSeriesData,
-                barMaxWidth: 24,
+                barMaxWidth: 22,
                 showBackground: true,
                 backgroundStyle: { color: 'rgba(241, 245, 249, 0.75)', borderRadius: [0, 4, 4, 0] },
                 itemStyle: { borderRadius: [0, 4, 4, 0] },
                 label: {
                     show: true,
-                    position: 'insideLeft',
-                    distance: 8,
-                    formatter: params => `${params.name}  •  ${d3.format(",")(params.value)}`,
+                    position: 'right',
+                    distance: 6,
+                    formatter: params => formatCompactCount(params.value),
                     color: '#0f172a',
                     fontWeight: 600,
-                    fontSize: 11,
-                    textBorderColor: '#ffffff',
-                    textBorderWidth: 2.5
+                    fontSize: 11
                 }
             }]
         }, { notMerge: true });
 
-        // 6. Country Chart (Stacked status bar)
+        // 6. Country Chart (top 10)
         const countryData = countryGroup.all()
             .map(d => ({
                 key: d.key,
@@ -416,7 +572,7 @@ document.addEventListener('DOMContentLoaded', function () {
             }))
             .filter(d => d.key !== null && d.total > 0)
             .sort((a, b) => b.total - a.total)
-            .slice(0, 15);
+            .slice(0, 10);
 
         const hasAnyCountrySelection = selectedCountries.size > 0;
 
@@ -439,6 +595,8 @@ document.addEventListener('DOMContentLoaded', function () {
         });
 
         countryChart.setOption({
+            // Legend swatches must match the stacked bar colours.
+            color: ['#97b552', '#d87a80'],
             tooltip: {
                 trigger: 'axis',
                 axisPointer: { type: 'shadow' },
@@ -455,11 +613,18 @@ document.addEventListener('DOMContentLoaded', function () {
                 top: 0,
                 right: 20
             },
-            grid: { top: 30, bottom: 55, left: 60, right: 20 },
+            grid: { top: 30, bottom: 75, left: 60, right: 20 },
             xAxis: {
                 type: 'category',
                 data: countryData.map(d => d.key),
-                axisLabel: { rotate: 30, interval: 0, color: '#1f2937', fontWeight: 500 }
+                axisLabel: {
+                    rotate: 30,
+                    interval: 0,
+                    width: 115,
+                    overflow: 'truncate',
+                    color: '#1f2937',
+                    fontWeight: 500
+                }
             },
             yAxis: {
                 type: 'value',
@@ -473,7 +638,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     stack: 'status',
                     barMaxWidth: 30,
                     data: countrySeriesDataResolved,
-                    itemStyle: { borderRadius: [0, 0, 0, 0] }
+                    itemStyle: { color: '#97b552', borderRadius: [0, 0, 0, 0] }
                 },
                 {
                     name: gettext('Open & Active'),
@@ -481,7 +646,15 @@ document.addEventListener('DOMContentLoaded', function () {
                     stack: 'status',
                     barMaxWidth: 30,
                     data: countrySeriesDataOpen,
-                    itemStyle: { borderRadius: [4, 4, 0, 0] }
+                    itemStyle: { color: '#d87a80', borderRadius: [4, 4, 0, 0] },
+                    label: {
+                        show: true,
+                        position: 'top',
+                        formatter: params => formatCompactCount(countryData[params.dataIndex] ? countryData[params.dataIndex].total : params.value),
+                        color: '#0f172a',
+                        fontWeight: 600,
+                        fontSize: 10
+                    }
                 }
             ]
         }, { notMerge: true });
@@ -576,10 +749,14 @@ document.addEventListener('DOMContentLoaded', function () {
             data.forEach(d => {
                 d.date = dateFormat(d.date);
                 d.ticket_count = +d.ticket_count;
+                d.avg_resolution_days = +d.avg_resolution_days || 0;
+                d.ticket_source = d.ticket_source || 'GRIEVANCE';
 
                 // Map numeric choices to human-readable strings
                 const valStr = String(d.dimension_value);
-                if (d.dimension_type === 'status' && statusMap[valStr]) {
+                if (valStr === 'NOT SPECIFIED') {
+                    d.dimension_value = gettext('Not specified');
+                } else if (d.dimension_type === 'status' && statusMap[valStr]) {
                     d.dimension_value = statusMap[valStr];
                 } else if (d.dimension_type === 'category' && categoryMap[valStr]) {
                     d.dimension_value = categoryMap[valStr];
@@ -587,6 +764,8 @@ document.addEventListener('DOMContentLoaded', function () {
                     d.dimension_value = priorityMap[valStr];
                 } else if (d.dimension_type === 'issue_type' && issueTypeMap[valStr]) {
                     d.dimension_value = issueTypeMap[valStr];
+                } else if (d.dimension_type === 'resolution' && categoryMap[valStr]) {
+                    d.dimension_value = categoryMap[valStr];
                 }
             });
 
@@ -602,10 +781,13 @@ document.addEventListener('DOMContentLoaded', function () {
             issueTypeDimension.filterAll();
             priorityDimension.filterAll();
             countryDimension.filterAll();
+            ticketSourceDimension.filterAll();
             dateDimension.filterAll();
 
             ndx.remove();
             ndx.add(data);
+            if (chartHelpers.setDataAsOf) chartHelpers.setDataAsOf(data);
+            applySourceFilter();
 
             timeFilter.setBuffer(startDate, endDate);
             updateAll();
@@ -613,6 +795,22 @@ document.addEventListener('DOMContentLoaded', function () {
             console.error('Error loading grievance data:', error);
         }
     }
+
+    // --- Source Toggle ---
+    const sourceTabs = document.querySelectorAll('.source-tab');
+    sourceTabs.forEach(btn => {
+        btn.addEventListener('click', function () {
+            sourceTabs.forEach(b => {
+                b.classList.remove('bg-white', 'shadow', 'text-blue-800');
+                b.classList.add('text-gray-600');
+            });
+            this.classList.add('bg-white', 'shadow', 'text-blue-800');
+            this.classList.remove('text-gray-600');
+            activeSource = this.dataset.source || 'GRIEVANCE';
+            applySourceFilter();
+            updateAll();
+        });
+    });
 
     // --- Time Filter Controller ---
     const timeFilter = new DashboardTimeFilter({

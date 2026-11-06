@@ -1,15 +1,16 @@
 {% extends "layout.html" %}
-{% load i18n js static %}
+{% load chart_info i18n js static %}
 
 {% block content %}
 <div class="container mx-auto px-4 lg:px-6 py-4 lg:py-5">
     <div class="mb-3 flex flex-wrap justify-between items-center gap-2">
         <div>
-            <h1 class="text-xl lg:text-2xl font-black text-gray-900 leading-tight">{% translate "Completion rate dashboard" %}</h1>
+            <h1 class="text-xl lg:text-2xl font-black text-gray-900 leading-tight">{% translate "Payment reconciliation dashboard" %}</h1>
             <p class="text-xs text-gray-500">{% translate "Payment reconciliation and completion status tracking" %}</p>
         </div>
-        <div>
+        <div class="flex items-center gap-2">
             <span class="bg-unicef-blue text-white text-[11px] font-bold px-2 py-0.5 rounded">{% translate "Live data" %}</span>
+            <span class="text-[10px] text-gray-400 font-semibold">{% translate "Data as of" %} <span id="data-as-of">—</span></span>
         </div>
     </div>
 
@@ -31,15 +32,15 @@
 
     <!-- Stats Cards (Headline KPIs - Above Timeline!) -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-3.5">
-        <div class="bg-white rounded-xl shadow-2xs border border-gray-200 p-3 border-l-4 border-unicef-blue flex flex-col justify-center min-h-[84px]">
+        <div class="bg-white rounded-xl shadow-2xs border border-gray-200 p-3 border-l-4 border-green-500 flex flex-col justify-center min-h-[84px]">
             <h3 id="reconciled-card-title" class="text-gray-500 text-[10px] sm:text-[11px] font-bold">{% translate "Reconciled payments" %}</h3>
-            <p id="total-reconciled" class="text-xl sm:text-2xl font-black text-blue-700 mt-0.5 leading-none">0</p>
+            <p id="total-reconciled" class="text-xl sm:text-2xl font-black text-emerald-600 mt-0.5 leading-none">0</p>
             {% include "includes/chart_info.html" with definition="Payments that have been reconciled." source="HOPE payments" method="Count of payments with reconciled status." %}
         </div>
-        <div class="bg-white rounded-xl shadow-2xs border border-gray-200 p-3 border-l-4 border-unicef-primary flex flex-col justify-center min-h-[84px]">
-            <h3 id="opened-card-title" class="text-gray-500 text-[10px] sm:text-[11px] font-bold">{% translate "Still opened" %}</h3>
+        <div class="bg-white rounded-xl shadow-2xs border border-gray-200 p-3 border-l-4 border-amber-500 flex flex-col justify-center min-h-[84px]">
+            <h3 id="opened-card-title" class="text-gray-500 text-[10px] sm:text-[11px] font-bold">{% translate "Pending Reconciliation" %}</h3>
             <p id="total-opened" class="text-xl sm:text-2xl font-black text-amber-600 mt-0.5 leading-none">0</p>
-            {% include "includes/chart_info.html" with definition="Payments still open." source="HOPE payments" method="Count of payments with open status." %}
+            {% include "includes/chart_info.html" with definition="Payments pending reconciliation." source="HOPE payments" method="Count of payments still awaiting reconciliation." %}
         </div>
         <div class="bg-white rounded-xl shadow-2xs border border-gray-200 p-3 border-l-4 border-green-500 flex justify-between items-center min-h-[84px]">
             <div>
@@ -54,27 +55,64 @@
     <!-- Timeline Filter (Full Width) -->
     <div class="bg-white rounded-xl shadow-2xs border border-gray-200 p-3.5 mb-4">
         <h3 id="timeline-title" class="text-sm font-bold text-gray-900 mb-1">{% translate "Reconciliation timeline" %}</h3>
+        {% chart_info "completion.timeline" %}
         <div id="time-focus-chart" class="w-full h-[220px]"></div>
         <div id="time-range-chart" style="display: none;"></div>
     </div>
 
-    <!-- Country & Beneficiary Group Breakdown -->
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
+    <!-- Reconciliation status by country -->
+    <div class="grid grid-cols-1 gap-4 mb-4">
         <div class="bg-white rounded-xl shadow-2xs border border-gray-200 p-3.5">
-            <h3 id="country-chart-title" class="text-sm font-bold text-gray-900 mb-2">{% translate "Reconciliation status by country" %}</h3>
+            <div class="flex flex-wrap justify-between items-center gap-2 mb-2">
+                <h3 id="country-chart-title" class="text-sm font-bold text-gray-900">{% translate "Reconciliation status by country" %}</h3>
+                <div class="flex bg-gray-100 p-0.5 rounded-lg space-x-1 border border-gray-200">
+                    <button id="country-view-absolute" type="button" class="country-view-tab px-2.5 py-1 text-[11px] font-bold rounded-md bg-white shadow text-blue-800 transition-all duration-200 cursor-pointer">
+                        {% translate "Absolute values" %}
+                    </button>
+                    <button id="country-view-share" type="button" class="country-view-tab px-2.5 py-1 text-[11px] font-bold rounded-md text-gray-600 hover:text-gray-900 transition-all duration-200 cursor-pointer">
+                        {% translate "Percentages" %}
+                    </button>
+                </div>
+            </div>
+            {% chart_info "completion.country" %}
             <div id="status-country-chart" class="w-full h-[260px]"></div>
-        </div>
-        <div class="bg-white rounded-xl shadow-2xs border border-gray-200 p-3.5">
-            <h3 id="bg-title" class="text-sm font-bold text-gray-900 mb-2">{% translate "Payments by beneficiary group" %}</h3>
-            <div id="beneficiary-group-chart" class="w-full h-[260px]"></div>
         </div>
     </div>
 
-    <!-- Quality Quadrant -->
+    <!-- Payment verification (appears once the feed provides verification rows) -->
+    <div id="verification-card" class="bg-white rounded-xl shadow-2xs border border-gray-200 p-3.5 mb-4 hidden">
+        <h3 class="text-sm font-bold text-gray-900 mb-2">{% translate "Payment verification" %}</h3>
+        {% chart_info "completion.verification" %}
+        <div class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-3 mt-2">
+            <div class="p-3 bg-slate-50 rounded-lg border border-slate-100">
+                <div class="text-[10px] text-slate-500 uppercase tracking-wider font-bold mb-1">{% translate "Selected for verification" %}</div>
+                <p id="verification-selected" class="text-lg font-black text-slate-800 leading-none">0</p>
+            </div>
+            <div class="p-3 bg-slate-50 rounded-lg border border-slate-100">
+                <div class="text-[10px] text-slate-500 uppercase tracking-wider font-bold mb-1">{% translate "Successfully verified" %}</div>
+                <p id="verification-verified" class="text-lg font-black text-emerald-600 leading-none">0</p>
+            </div>
+            <div class="p-3 bg-slate-50 rounded-lg border border-slate-100">
+                <div class="text-[10px] text-slate-500 uppercase tracking-wider font-bold mb-1">{% translate "Pending verification" %}</div>
+                <p id="verification-pending" class="text-lg font-black text-amber-600 leading-none">0</p>
+            </div>
+            <div class="p-3 bg-slate-50 rounded-lg border border-slate-100">
+                <div class="text-[10px] text-slate-500 uppercase tracking-wider font-bold mb-1">{% translate "With discrepancies" %}</div>
+                <p id="verification-discrepancies" class="text-lg font-black text-rose-600 leading-none">0</p>
+            </div>
+            <div class="p-3 bg-slate-50 rounded-lg border border-slate-100">
+                <div class="text-[10px] text-slate-500 uppercase tracking-wider font-bold mb-1">{% translate "Verification completion rate" %}</div>
+                <p id="verification-rate" class="text-lg font-black text-blue-700 leading-none">0%</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Reconciliation and delivery success rates -->
     <div class="bg-white rounded-xl shadow-2xs border border-gray-200 p-3.5 mb-4">
-        <h3 class="text-sm font-bold text-gray-900 mb-1">{% translate "Quality Quadrant" %}</h3>
-        <p class="text-[11px] text-gray-400 mb-2 italic">{% translate "Delivery success rate versus reconciliation rate, by country. Bubble size reflects reconciled volume." %}</p>
-        <div id="quality-quadrant-chart" class="w-full h-[380px]"></div>
+        <h3 class="text-sm font-bold text-gray-900 mb-1">{% translate "Reconciliation and delivery success by country" %}</h3>
+        <p class="text-[11px] text-gray-400 mb-2 italic">{% translate "Two rates per country, sorted by reconciliation rate. The dashed line is the 80 percent reference." %}</p>
+        {% chart_info "completion.rates" %}
+        <div id="completion-rates-chart" class="w-full h-[420px]"></div>
     </div>
 </div>
 

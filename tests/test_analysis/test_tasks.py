@@ -1,3 +1,4 @@
+from datetime import date
 from unittest.mock import patch
 
 import pytest
@@ -16,7 +17,10 @@ from hope_live.analysis.models import (
     RiskTrend,
 )
 from hope_live.analysis.tasks import (
+    _determine_target_years,
     _find_dataset_id_for_year,
+    _invalidate_aggregates_cache,
+    _is_year_partitioned,
     clear_daily_aggregates,
     save_aggregates,
     sync_daily_aggregates,
@@ -75,6 +79,40 @@ def test_find_dataset_id_for_year():
     datasets = [{"id": 1, "arguments": {"year": 2023}}, {"id": 2, "arguments": {"year": 2024}}]
     assert _find_dataset_id_for_year(datasets, 2023) == 1
     assert _find_dataset_id_for_year(datasets, 2025) is None
+
+
+def test_is_year_partitioned():
+    assert _is_year_partitioned([{"id": 1, "arguments": {"year": 2025}}]) is True
+    assert _is_year_partitioned([{"id": 1, "arguments": {}}]) is False
+    assert _is_year_partitioned([]) is False
+
+
+def test_determine_target_years():
+    assert _determine_target_years([{"arguments": {"year": 2024}}, {"arguments": {"year": 2025}}], None) == [2024, 2025]
+    assert _determine_target_years([{"arguments": {"year": 2024}}], [2030]) == [2030]
+    # Un-partitioned queries are processed once, whatever year was requested.
+    assert _determine_target_years([{"arguments": {}}], [2030]) == [date.today().year]
+
+
+def test_find_dataset_id_for_year_unpartitioned():
+    """A query with a single dataset and no `year` argument is processed once."""
+    datasets = [{"id": 7, "arguments": {}}]
+    assert _find_dataset_id_for_year(datasets, 2026) == 7
+
+
+def test_find_dataset_id_for_year_multiple_unpartitioned_is_ambiguous():
+    datasets = [{"id": 7, "arguments": {}}, {"id": 8, "arguments": {}}]
+    assert _find_dataset_id_for_year(datasets, 2026) is None
+
+
+def test_invalidate_aggregates_cache():
+    with patch("hope_live.analysis.tasks.cache.delete_pattern") as delete_pattern:
+        _invalidate_aggregates_cache()
+
+    assert delete_pattern.call_count == 2
+    arguments = [call.args[0] for call in delete_pattern.call_args_list]
+    assert "cache_page" in arguments[0]
+    assert "cache_header" in arguments[1]
 
 
 @pytest.mark.django_db
@@ -219,6 +257,53 @@ def test_sync_daily_aggregates_no_data_for_year(mocked_responses):
 
     assert FinancialAggregate.objects.count() == 0
     assert "Successfully synced 0 rows" in result
+
+
+@pytest.mark.django_db
+def test_sync_daily_aggregates_unpartitioned_query(mocked_responses):
+    """Queries that are not split by year (e.g. the risk feed) are still synced."""
+    api_url = config.HOPE_COUNTRY_REPORT_API_URL
+    query_id = config.HOPE_RISK_REPORT_QUERY_ID
+
+    mocked_responses.add(
+        responses.GET,
+        f"{api_url}queries/{query_id}/dataset",
+        json={"results": [{"id": 99, "arguments": {}}]},
+        status=200,
+    )
+    mocked_responses.add(
+        responses.GET,
+        f"{api_url}queries/{query_id}/dataset/99/data/?page_size=1000",
+        json={
+            "results": [
+                {
+                    "date": "2024-01-01",
+                    "time_grain": "daily",
+                    "country_slug": "test",
+                    "dimension_type": "risk_code",
+                    "dimension_value": "CODE_A",
+                    "module": "registration",
+                    "risk_code": "CODE_A",
+                    "risk_name": "Risk A",
+                    "program_name": "Program X",
+                    "issue_count": 5,
+                    "severity": "critical",
+                    "trend": "up",
+                    "unit_label": "payments",
+                    "threshold_info": ">=150%",
+                }
+            ],
+            "next": None,
+        },
+        status=200,
+    )
+
+    with patch.object(sync_daily_aggregates, "update_state"):
+        result = sync_daily_aggregates(target_years=[2024])
+
+    assert RiskAggregate.objects.count() == 1
+    assert RiskAggregate.objects.get().risk_code == "CODE_A"
+    assert "Successfully synced 1 rows" in result
 
 
 # ---- Risk aggregate tests ----

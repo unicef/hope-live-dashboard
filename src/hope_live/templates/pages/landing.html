@@ -1,5 +1,5 @@
 {% extends "layout.html" %}
-{% load i18n js static %}
+{% load chart_info i18n js static %}
 
 {% block content %}
 <!-- 1. Hero Section -->
@@ -76,7 +76,7 @@
                 </div>
                 <div>
                     <div class="font-bold text-gray-900 text-sm leading-none mb-0.5">{{ total_programs_glance }}+</div>
-                    <div class="text-[11px] text-gray-500">{% translate "Programs" %}</div>
+                    <div class="text-[11px] text-gray-500">{% translate "Programmes" %}</div>
                 </div>
             </li>
 
@@ -86,7 +86,7 @@
                 </div>
                 <div>
                     <div class="font-bold text-gray-900 text-sm leading-none mb-0.5">{{ total_sources_glance }}</div>
-                    <div class="text-[11px] text-gray-500">{% translate "Data sources" %}</div>
+                    <div class="text-[11px] text-gray-500">{% translate "Aggregated data behind every dashboard figure" %}</div>
                 </div>
             </li>
 
@@ -107,7 +107,7 @@
     <div class="max-w-7xl mx-auto px-4 lg:px-6">
 
         <!-- 2. Global KPI Strip (Compact) -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4 mb-8">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-7 gap-4 mb-8">
             <!-- Card 1 -->
             <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-2xs flex items-center justify-between">
                 <div>
@@ -132,12 +132,24 @@
                 </div>
             </div>
 
-            <!-- Card 3 -->
+            <!-- Card 3: Individuals -->
+            <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-2xs flex items-center justify-between">
+                <div>
+                    <div class="text-[10px] text-slate-500 uppercase tracking-wider font-bold mb-1">{% translate "Individuals Reached" %}</div>
+                    <div class="text-2xl font-black text-[#00adef] mb-0.5 leading-tight">{{ total_individuals_reached|default:"0" }}</div>
+                    <div class="text-[10px] text-slate-400 font-semibold">{% translate "People reached" %}</div>
+                </div>
+                <div class="w-10 h-10 rounded-lg bg-sky-50 flex items-center justify-center shrink-0">
+                    <svg class="w-5 h-5 text-[#00adef]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>
+                </div>
+            </div>
+
+            <!-- Card 4 -->
             <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-2xs flex items-center justify-between">
                 <div>
                     <div class="text-[10px] text-slate-500 uppercase tracking-wider font-bold mb-1">{% translate "Active Countries" %}</div>
                     <div class="text-2xl font-black text-[#00adef] mb-0.5 leading-tight">{{ total_countries|default:"32" }}</div>
-                    <div class="text-[10px] text-slate-400 font-semibold">{% translate "Global cash operations" %}</div>
+                    <div class="text-[10px] text-slate-400 font-semibold">{% translate "HOPE Deployments" %}</div>
                 </div>
                 <div class="w-10 h-10 rounded-lg bg-sky-50 flex items-center justify-center shrink-0">
                     <svg class="w-5 h-5 text-[#00adef]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
@@ -159,9 +171,9 @@
             <!-- Card 5 -->
             <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-2xs flex items-center justify-between">
                 <div>
-                    <div class="text-[10px] text-slate-500 uppercase tracking-wider font-bold mb-1">{% translate "Verified Transactions" %}</div>
-                    <div class="text-2xl font-black text-[#00adef] mb-0.5 leading-tight">{{ verification_success_rate|default:"98.7" }}%</div>
-                    <div class="text-[10px] text-slate-400 font-semibold">{% translate "Verification success rate" %}</div>
+                    <div class="text-[10px] text-slate-500 uppercase tracking-wider font-bold mb-1">{% translate "Reconciled Transactions" %}</div>
+                    <div class="text-2xl font-black text-[#00adef] mb-0.5 leading-tight">{% if reconciliation_rate is not None %}{{ reconciliation_rate }}%{% else %}—{% endif %}</div>
+                    <div class="text-[10px] text-slate-400 font-semibold">{% translate "Reconciliation rate" %}</div>
                 </div>
                 <div class="w-10 h-10 rounded-lg bg-sky-50 flex items-center justify-center shrink-0">
                     <svg class="w-5 h-5 text-[#00adef]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>
@@ -245,11 +257,12 @@
                             <h3 class="text-base font-bold text-gray-900">{% translate "Trends over time" %}</h3>
                             <p class="text-xs text-gray-400">{% translate "Selected indicators (global delivery)" %}</p>
                         </div>
-                        <select id="trends-timeframe" class="text-xs border-gray-300 rounded-md text-gray-700 py-1 pl-2.5 pr-7 focus:ring-[#00adef] focus:border-[#00adef] shadow-2xs font-semibold">
-                            <option value="5y">{% translate "5 years" %}</option>
-                            <option value="1y">{% translate "1 year" %}</option>
+                        <select id="trends-timeframe" aria-label="{% translate 'Trend period' %}" class="text-xs border-gray-300 rounded-md text-gray-700 py-1 pl-2.5 pr-7 focus:ring-[#00adef] focus:border-[#00adef] shadow-2xs font-semibold">
+                            <option value="all" selected>{% translate "All years" %}</option>
+                            <option value="5y">{% translate "Last 5 years" %}</option>
                         </select>
                     </div>
+                    {% chart_info "landing.trends" %}
                 </div>
                 <div class="flex-grow h-[350px] mt-2">
                     <div id="trends-chart" class="w-full h-full"></div>
@@ -263,7 +276,7 @@
             {% if user.is_authenticated %}
             <!-- Dashboards Grid (7 cols) -->
             <div class="lg:col-span-7">
-                <h3 class="text-base font-bold text-gray-900 mb-3">{% translate "Explore Dashboards" %}</h3>
+                <h3 class="text-base font-bold text-gray-900 mb-3">{% translate "Explore the Dashboard" %}</h3>
                 <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
                     <a href="{% url 'web:dashboard' %}" class="bg-white p-4 rounded-xl border border-gray-200 shadow-2xs hover:border-[#00adef] hover:shadow-xs transition-all group">
                         <h4 class="font-bold text-gray-800 text-sm group-hover:text-[#00adef]">{% translate "Financial" %}</h4>
@@ -334,10 +347,10 @@
             </div>
             {% endif %}
 
-            <!-- Latest Updates & Alerts (5 cols) -->
-            <div class="lg:col-span-5 bg-white rounded-xl border border-gray-200 shadow-2xs p-5 flex flex-col">
+            <!-- Latest updates (5 cols) -->
+            <div id="latest-updates" class="lg:col-span-5 bg-white rounded-xl border border-gray-200 shadow-2xs p-5 flex flex-col scroll-mt-6">
                 <div class="flex justify-between items-center mb-3">
-                    <h3 class="text-base font-bold text-slate-900">{% translate "Latest updates & alerts" %}</h3>
+                    <h3 class="text-base font-bold text-slate-900">{% translate "Latest updates" %}</h3>
                     <a href="https://www.unicef.org/hope-hct/" target="_blank" class="text-xs text-[#00adef] font-semibold hover:underline flex items-center gap-1">
                         <span>{% translate "View all" %}</span>
                         <svg class="w-3 h-3 rtl:rotate-180" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/></svg>
@@ -358,7 +371,7 @@
                                     {% endif %}
                                 </div>
                                 <p class="text-xs text-slate-700 font-medium leading-snug">{{ update.snippet }}</p>
-                                <a href="https://www.unicef.org/hope-hct/" target="_blank" class="text-[11px] text-[#00adef] hover:underline font-semibold mt-0.5 inline-flex items-center gap-1">
+                                <a href="{% url 'web:update-detail' update.slug %}" class="text-[11px] text-[#00adef] hover:underline font-semibold mt-0.5 inline-flex items-center gap-1">
                                     <span>{% translate "Read details" %}</span>
                                     <svg class="w-2.5 h-2.5 rtl:rotate-180" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/></svg>
                                 </a>
@@ -472,7 +485,7 @@
     <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center text-sm font-medium">
         <p>UNICEF © {% now "Y" %}</p>
         <div class="space-x-8 mt-4 md:mt-0">
-            <a href="{% url 'web:about' %}" class="hover:text-[#00adef] transition-colors">{% translate "About HOPE" %}</a>
+            <a href="https://www.unicef.org/hope-hct" target="_blank" rel="noopener" class="hover:text-[#00adef] transition-colors">{% translate "About HOPE" %}</a>
             <a href="https://www.unicef.org/about/contact-us" class="hover:text-[#00adef] transition-colors">{% translate "Contact Us" %}</a>
         </div>
     </div>
@@ -614,10 +627,27 @@
             });
 
             // --- 2b. Group trends data by year ---
-            const targetYears = [2021, 2022, 2023, 2024, 2025, 2026];
+            // Household series exclude frontline (SOCIAL) cohorts: a worker row
+            // represents one person, not a household member.
+            const isHouseholdRow = d => d.program_type !== 'SOCIAL';
+
+            const yearSet = new Set();
+            finData.forEach(d => {
+                const y = new Date(d.date).getFullYear();
+                if (!Number.isNaN(y)) yearSet.add(y);
+            });
+            demoData.filter(isHouseholdRow).forEach(d => {
+                const y = new Date(d.date).getFullYear();
+                if (!Number.isNaN(y)) yearSet.add(y);
+            });
+            if (yearSet.size === 0) {
+                [2021, 2022, 2023, 2024, 2025, 2026].forEach(y => yearSet.add(y));
+            }
+            const availableYears = Array.from(yearSet).sort((a, b) => a - b);
+
             const yearlyFin = {};
             const yearlyDemo = {};
-            targetYears.forEach(y => {
+            availableYears.forEach(y => {
                 yearlyFin[y] = { total_usd: 0, payment_count: 0 };
                 yearlyDemo[y] = { total_beneficiaries: 0, total_households: 0, total_children: 0 };
             });
@@ -630,7 +660,7 @@
                 }
             });
 
-            demoData.filter(d => d.dimension_type === 'sector').forEach(d => {
+            demoData.filter(d => d.dimension_type === 'sector' && isHouseholdRow(d)).forEach(d => {
                 const yr = new Date(d.date).getFullYear();
                 if (yearlyDemo[yr]) {
                     yearlyDemo[yr].total_beneficiaries += parseInt(d.total_beneficiaries || 0, 10);
@@ -639,14 +669,21 @@
                 }
             });
 
-            // Calculate 2026 ratios for projection where demographic values are absent
-            const baseYear = 2026;
+            // Project demographic series for years without a demographic record,
+            // using the latest year that has both payments and demographics.
+            let baseYear = availableYears[availableYears.length - 1];
+            for (let i = availableYears.length - 1; i >= 0; i -= 1) {
+                if (yearlyDemo[availableYears[i]].total_beneficiaries > 0) {
+                    baseYear = availableYears[i];
+                    break;
+                }
+            }
             const basePayments = yearlyFin[baseYear].payment_count || 1;
             const ratioBeneficiaries = (yearlyDemo[baseYear].total_beneficiaries || 9393478) / basePayments;
             const ratioHouseholds = (yearlyDemo[baseYear].total_households || 3142162) / basePayments;
             const ratioChildren = (yearlyDemo[baseYear].total_children || 7134629) / basePayments;
 
-            targetYears.forEach(yr => {
+            availableYears.forEach(yr => {
                 if (yearlyDemo[yr].total_beneficiaries === 0) {
                     const p = yearlyFin[yr].payment_count;
                     yearlyDemo[yr].total_beneficiaries = Math.round(p * ratioBeneficiaries);
@@ -655,46 +692,47 @@
                 }
             });
 
-            // --- 2c. Group trends data by month for latest year (2026) ---
-            const monthLabels = ['Jan', 'Feb', 'Mar', 'Apr', 'May'];
+            // --- 2c. Monthly series for every available year ---
+            const monthLabels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
             const monthlyFin = {};
             const monthlyDemo = {};
-            monthLabels.forEach((m, idx) => {
-                monthlyFin[idx] = { total_usd: 0, payment_count: 0 };
-                monthlyDemo[idx] = { total_beneficiaries: 0, total_households: 0, total_children: 0 };
+            availableYears.forEach(yr => {
+                monthLabels.forEach((m, idx) => {
+                    monthlyFin[`${yr}-${idx}`] = { total_usd: 0, payment_count: 0 };
+                    monthlyDemo[`${yr}-${idx}`] = { total_beneficiaries: 0, total_households: 0, total_children: 0 };
+                });
             });
 
             finData.filter(d => d.dimension_type === 'sector').forEach(d => {
                 const dt = new Date(d.date);
-                if (dt.getFullYear() === 2026) {
-                    const mIdx = dt.getMonth(); // 0-11
-                    if (monthlyFin[mIdx] !== undefined) {
-                        monthlyFin[mIdx].total_usd += parseFloat(d.total_usd || 0);
-                        monthlyFin[mIdx].payment_count += parseInt(d.payment_count || 0, 10);
-                    }
+                const key = `${dt.getFullYear()}-${dt.getMonth()}`;
+                if (monthlyFin[key]) {
+                    monthlyFin[key].total_usd += parseFloat(d.total_usd || 0);
+                    monthlyFin[key].payment_count += parseInt(d.payment_count || 0, 10);
                 }
             });
 
-            demoData.filter(d => d.dimension_type === 'sector').forEach(d => {
+            demoData.filter(d => d.dimension_type === 'sector' && isHouseholdRow(d)).forEach(d => {
                 const dt = new Date(d.date);
-                if (dt.getFullYear() === 2026) {
-                    const mIdx = dt.getMonth();
-                    if (monthlyDemo[mIdx] !== undefined) {
-                        monthlyDemo[mIdx].total_beneficiaries += parseInt(d.total_beneficiaries || 0, 10);
-                        monthlyDemo[mIdx].total_households += parseInt(d.total_households || 0, 10);
-                        monthlyDemo[mIdx].total_children += parseInt(d.total_children || 0, 10);
-                    }
+                const key = `${dt.getFullYear()}-${dt.getMonth()}`;
+                if (monthlyDemo[key]) {
+                    monthlyDemo[key].total_beneficiaries += parseInt(d.total_beneficiaries || 0, 10);
+                    monthlyDemo[key].total_households += parseInt(d.total_households || 0, 10);
+                    monthlyDemo[key].total_children += parseInt(d.total_children || 0, 10);
                 }
             });
 
-            // Ratios for monthly demographic projection in 2026 where missing
-            monthLabels.forEach((m, idx) => {
-                if (monthlyDemo[idx].total_beneficiaries === 0) {
-                    const p = monthlyFin[idx].payment_count;
-                    monthlyDemo[idx].total_beneficiaries = Math.round(p * ratioBeneficiaries);
-                    monthlyDemo[idx].total_households = Math.round(p * ratioHouseholds);
-                    monthlyDemo[idx].total_children = Math.round(p * ratioChildren);
-                }
+            // Project demographic values for months without a demographic record.
+            availableYears.forEach(yr => {
+                monthLabels.forEach((m, idx) => {
+                    const key = `${yr}-${idx}`;
+                    if (monthlyDemo[key].total_beneficiaries === 0) {
+                        const p = monthlyFin[key].payment_count;
+                        monthlyDemo[key].total_beneficiaries = Math.round(p * ratioBeneficiaries);
+                        monthlyDemo[key].total_households = Math.round(p * ratioHouseholds);
+                        monthlyDemo[key].total_children = Math.round(p * ratioChildren);
+                    }
+                });
             });
 
             // Hide loading states
@@ -737,30 +775,55 @@
             // Option generator for Trends
             function getTrendsOption(timeframe) {
                 let categories = [];
+                let years = [];
+                let selectedYear = null;
+
+                if (timeframe === 'all') {
+                    years = availableYears.slice();
+                } else if (timeframe === '5y') {
+                    const lastYear = availableYears[availableYears.length - 1];
+                    years = availableYears.filter(y => y > lastYear - 5);
+                } else {
+                    selectedYear = parseInt(timeframe, 10);
+                    if (Number.isNaN(selectedYear)) {
+                        selectedYear = availableYears[availableYears.length - 1];
+                    }
+                }
+
                 let cashData = [];
                 let paymentsData = [];
                 let individualsData = [];
                 let householdsData = [];
                 let childrenData = [];
 
-                if (timeframe === '5y') {
-                    categories = ['2021', '2022', '2023', '2024', '2025', '2026'];
-                    categories.forEach(yr => {
-                        cashData.push(yearlyFin[yr].total_usd);
-                        paymentsData.push(yearlyFin[yr].payment_count);
-                        individualsData.push(yearlyDemo[yr].total_beneficiaries);
-                        householdsData.push(yearlyDemo[yr].total_households);
-                        childrenData.push(yearlyDemo[yr].total_children);
-                    });
+                const pushPoint = (fin, demo) => {
+                    cashData.push(fin.total_usd);
+                    paymentsData.push(fin.payment_count);
+                    individualsData.push(demo.total_beneficiaries);
+                    householdsData.push(demo.total_households);
+                    childrenData.push(demo.total_children);
+                };
+
+                if (selectedYear === null) {
+                    categories = years.map(String);
+                    years.forEach(yr => pushPoint(yearlyFin[yr], yearlyDemo[yr]));
                 } else {
-                    categories = ['Jan 26', 'Feb 26', 'Mar 26', 'Apr 26', 'May 26'];
-                    [0, 1, 2, 3, 4].forEach(idx => {
-                        cashData.push(monthlyFin[idx].total_usd);
-                        paymentsData.push(monthlyFin[idx].payment_count);
-                        individualsData.push(monthlyDemo[idx].total_beneficiaries);
-                        householdsData.push(monthlyDemo[idx].total_households);
-                        childrenData.push(monthlyDemo[idx].total_children);
+                    // Monthly view for one year: show the months that carry data.
+                    const months = [];
+                    monthLabels.forEach((label, idx) => {
+                        const fin = monthlyFin[`${selectedYear}-${idx}`];
+                        const demo = monthlyDemo[`${selectedYear}-${idx}`];
+                        if (!fin || !demo) return;
+                        if (fin.payment_count > 0 || fin.total_usd > 0 || demo.total_beneficiaries > 0) {
+                            months.push(idx);
+                        }
                     });
+                    if (!months.length) months.push(0);
+                    categories = months.map(idx => `${monthLabels[idx]} ${String(selectedYear).slice(-2)}`);
+                    months.forEach(idx => pushPoint(
+                        monthlyFin[`${selectedYear}-${idx}`],
+                        monthlyDemo[`${selectedYear}-${idx}`]
+                    ));
                 }
 
                 return {
@@ -900,18 +963,25 @@
                 };
             }
 
-            // Set Initial Options for Trends
-            trendsChart.setOption(getTrendsOption('5y'));
-
-            // Handle timeframe toggles
+            // Populate the period selector: All years (default), Last 5 years,
+            // then every year present in the data.
             const selectDom = document.getElementById('trends-timeframe');
             if (selectDom) {
+                availableYears.forEach(yr => {
+                    const opt = document.createElement('option');
+                    opt.value = String(yr);
+                    opt.textContent = String(yr);
+                    selectDom.appendChild(opt);
+                });
                 const newSelectDom = selectDom.cloneNode(true);
                 selectDom.parentNode.replaceChild(newSelectDom, selectDom);
                 newSelectDom.addEventListener('change', function () {
                     trendsChart.setOption(getTrendsOption(this.value), true);
                 });
             }
+
+            // Initial view: all available years (the agreed default).
+            trendsChart.setOption(getTrendsOption('all'));
 
             // Map visual settings
             mapChart.setOption({
