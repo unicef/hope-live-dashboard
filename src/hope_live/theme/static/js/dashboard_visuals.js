@@ -90,7 +90,6 @@ document.addEventListener('DOMContentLoaded', function () {
     const regionDimension = ndx.dimension(d => d.region);
     const statusDimension = ndx.dimension(d => d.dimension_type === 'status' ? d.dimension_value : '');
     const countryDimension = ndx.dimension(d => d.country_slug);
-    const beneficiaryGroupDimension = ndx.dimension(d => d.dimension_type === 'beneficiary_group' ? d.dimension_value : '');
     const ipDimension = ndx.dimension(d => d.dimension_type === 'implementing_partner' ? d.dimension_value : '');
     const programTypeDimension = ndx.dimension(d => d.program_type || 'STANDARD');
 
@@ -180,7 +179,6 @@ document.addEventListener('DOMContentLoaded', function () {
     const fspGroup = fspDimension.group().reduce(reduceMetric('financial_service_provider').add, reduceMetric('financial_service_provider').remove, reduceMetric('financial_service_provider').init);
     const countryGroup = countryDimension.group().reduce(reduceMetric().add, reduceMetric().remove, reduceMetric().init);
     const regionGroup = regionDimension.group().reduce(reduceMetric().add, reduceMetric().remove, reduceMetric().init);
-    const beneficiaryGroupGroup = beneficiaryGroupDimension.group().reduce(reduceMetric('beneficiary_group').add, reduceMetric('beneficiary_group').remove, reduceMetric('beneficiary_group').init);
     const ipGroup = ipDimension.group().reduce(reduceMetric('implementing_partner').add, reduceMetric('implementing_partner').remove, reduceMetric('implementing_partner').init);
 
     // Outstanding by country: entitlement of payments still pending. Used by
@@ -229,7 +227,6 @@ document.addEventListener('DOMContentLoaded', function () {
     const selectedFsps = new Set();
     const selectedRegions = new Set();
     const selectedCountries = new Set();
-    const selectedBeneficiaryGroups = new Set();
     const selectedIps = new Set();
 
     // Initialize ECharts instances with macarons theme
@@ -241,7 +238,6 @@ document.addEventListener('DOMContentLoaded', function () {
     const regionChart = echarts.init(document.getElementById('region-chart'), 'macarons');
     const countryChart = echarts.init(document.getElementById('country-chart'), 'macarons');
     const outstandingCountryChart = echarts.init(document.getElementById('outstanding-country-chart'), 'macarons');
-    const beneficiaryGroupChart = echarts.init(document.getElementById('beneficiary-group-chart'), 'macarons');
     const ipCard = document.getElementById('ip-card');
     const ipChartEl = document.getElementById('ip-chart');
     let ipChart = null;
@@ -258,7 +254,6 @@ document.addEventListener('DOMContentLoaded', function () {
         regionChart.resize();
         countryChart.resize();
         outstandingCountryChart.resize();
-        beneficiaryGroupChart.resize();
         if (ipChart) ipChart.resize();
         if (pipelineChart) pipelineChart.resize();
     });
@@ -305,7 +300,6 @@ document.addEventListener('DOMContentLoaded', function () {
             'country-title': gettext('Cash disbursed (paid) by country'),
             'program-title': gettext('Cash disbursed by programme'),
             'fsp-title': gettext('Cash disbursed by financial service provider (FSP)'),
-            'bg-title': gettext('Cash disbursed by beneficiary group')
         } : {
             'timeline-title': gettext('Payments timeline'),
             'sector-title': gettext('Payments by sector'),
@@ -314,7 +308,6 @@ document.addEventListener('DOMContentLoaded', function () {
             'country-title': gettext('Payments by country'),
             'program-title': gettext('Payments by programme'),
             'fsp-title': gettext('Payments by financial service provider (FSP)'),
-            'bg-title': gettext('Payments by beneficiary group')
         };
         Object.keys(titles).forEach(id => {
             const el = document.getElementById(id);
@@ -600,7 +593,6 @@ document.addEventListener('DOMContentLoaded', function () {
             tooltipLabelFor: key => getRegionName(key),
             percentTotal: regionRows.reduce((sum, row) => sum + row.value, 0)
         });
-        updateHorizontalBarChart(beneficiaryGroupChart, beneficiaryGroupGroup, selectedBeneficiaryGroups, 220);
 
         // Country Charts: cash disbursed (paid) and outstanding, side by side.
         const countryRows = countryGroup.all()
@@ -745,7 +737,6 @@ document.addEventListener('DOMContentLoaded', function () {
     bindFilterToggle(regionChart, selectedRegions, regionDimension);
     bindFilterToggle(countryChart, selectedCountries, countryDimension);
     bindFilterToggle(outstandingCountryChart, selectedCountries, countryDimension);
-    bindFilterToggle(beneficiaryGroupChart, selectedBeneficiaryGroups, beneficiaryGroupDimension);
 
     // Metric selector tab clicks
     const metricTabs = document.querySelectorAll('.metric-tab');
@@ -876,7 +867,6 @@ document.addEventListener('DOMContentLoaded', function () {
             selectedFsps.clear();
             selectedRegions.clear();
             selectedCountries.clear();
-            selectedBeneficiaryGroups.clear();
             selectedIps.clear();
 
             sectorDimension.filterAll();
@@ -885,7 +875,6 @@ document.addEventListener('DOMContentLoaded', function () {
             fspDimension.filterAll();
             regionDimension.filterAll();
             countryDimension.filterAll();
-            beneficiaryGroupDimension.filterAll();
             ipDimension.filterAll();
             dateDimension.filterAll();
 

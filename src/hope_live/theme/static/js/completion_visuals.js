@@ -53,10 +53,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const dateDimension = ndx.dimension(d => d.date);
     const countryDimension = ndx.dimension(d => d.country_slug);
-    const beneficiaryGroupDimension = ndx.dimension(d => d.dimension_type === 'beneficiary_group' ? d.dimension_value : '');
-    const bgStatusDimension = ndx.dimension(d => (
-        d.dimension_type === 'beneficiary_group_reconciled' || d.dimension_type === 'beneficiary_group_open'
-    ) ? d.dimension_value : '');
     const verificationDimension = ndx.dimension(d => d.dimension_type === 'verification' ? d.dimension_value : '');
 
     const primaryDimFilter = d => d.dimension_type === 'status';
@@ -147,49 +143,6 @@ document.addEventListener('DOMContentLoaded', function () {
         () => ({ reconciled_payments: 0, reconciled_usd: 0, opened_payments: 0, opened_usd: 0 })
     );
 
-    const beneficiaryGroupGroup = beneficiaryGroupDimension.group().reduce(
-        (p, v) => {
-            if (v.dimension_type === 'beneficiary_group') {
-                p.payments += v.payment_count;
-                p.usd += +v.total_usd;
-            }
-            return p;
-        },
-        (p, v) => {
-            if (v.dimension_type === 'beneficiary_group') {
-                p.payments -= v.payment_count;
-                p.usd -= +v.total_usd;
-            }
-            return p;
-        },
-        () => ({ payments: 0, usd: 0 })
-    );
-
-    // Beneficiary group split by reconciliation outcome.
-    const bgStatusGroup = bgStatusDimension.group().reduce(
-        (p, v) => {
-            if (v.dimension_type === 'beneficiary_group_reconciled') {
-                p.reconciled_payments += v.payment_count;
-                p.reconciled_usd += +v.total_usd;
-            } else if (v.dimension_type === 'beneficiary_group_open') {
-                p.open_payments += v.payment_count;
-                p.open_usd += +v.total_usd;
-            }
-            return p;
-        },
-        (p, v) => {
-            if (v.dimension_type === 'beneficiary_group_reconciled') {
-                p.reconciled_payments -= v.payment_count;
-                p.reconciled_usd -= +v.total_usd;
-            } else if (v.dimension_type === 'beneficiary_group_open') {
-                p.open_payments -= v.payment_count;
-                p.open_usd -= +v.total_usd;
-            }
-            return p;
-        },
-        () => ({ reconciled_payments: 0, reconciled_usd: 0, open_payments: 0, open_usd: 0 })
-    );
-
     // Verification rows (dimension_type = verification) are summed by their
     // value: SELECTED, VERIFIED, PENDING and DISCREPANCIES.
     const verificationGroup = verificationDimension.group().reduce(
@@ -212,13 +165,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Active filters
     const selectedCountries = new Set();
-    const selectedBeneficiaryGroups = new Set();
 
     // Initialize ECharts instances with macarons theme
     const timelineChart = echarts.init(document.getElementById('time-focus-chart'), 'macarons');
     const countryChart = echarts.init(document.getElementById('status-country-chart'), 'macarons');
     const completionGauge = echarts.init(document.getElementById('completion-gauge'), 'macarons');
-    const beneficiaryGroupChart = echarts.init(document.getElementById('beneficiary-group-chart'), 'macarons');
     const ratesEl = document.getElementById('completion-rates-chart');
     const ratesChart = ratesEl ? echarts.init(ratesEl, 'macarons') : null;
 
@@ -227,7 +178,6 @@ document.addEventListener('DOMContentLoaded', function () {
         timelineChart.resize();
         countryChart.resize();
         completionGauge.resize();
-        beneficiaryGroupChart.resize();
         if (ratesChart) ratesChart.resize();
     });
 
@@ -373,7 +323,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
             },
             legend: {
-                data: [gettext('Reconciled'), gettext('Still open')],
+                data: [gettext('Reconciled'), gettext('Pending Reconciliation')],
                 top: 0,
                 right: 20,
                 icon: 'roundRect'
@@ -406,7 +356,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     data: reconciledData
                 },
                 {
-                    name: gettext('Still open'),
+                    name: gettext('Pending Reconciliation'),
                     type: 'bar',
                     stack: 'total',
                     color: OPEN_COLOR,
@@ -486,7 +436,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     if (isShareView) {
                         const pct = reconciledShare(d);
                         tooltipHtml += `${params[0].marker} ${gettext('Reconciled')}: <b>${pct.toFixed(1)}%</b> (${formatFullVal(d.reconciled)} ${unitName})<br/>`;
-                        tooltipHtml += `${params[1].marker} ${gettext('Still open')}: <b>${(100 - pct).toFixed(1)}%</b> (${formatFullVal(d.opened)} ${unitName})<br/>`;
+                        tooltipHtml += `${params[1].marker} ${gettext('Pending Reconciliation')}: <b>${(100 - pct).toFixed(1)}%</b> (${formatFullVal(d.opened)} ${unitName})<br/>`;
                         tooltipHtml += `${gettext('Total')}: ${formatFullVal(d.total)} ${unitName}`;
                     } else {
                         params.forEach(p => {
@@ -497,7 +447,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
             },
             legend: {
-                data: [gettext('Reconciled'), gettext('Still open')],
+                data: [gettext('Reconciled'), gettext('Pending Reconciliation')],
                 top: 0,
                 right: 20
             },
@@ -536,7 +486,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     itemStyle: { borderRadius: [0, 0, 0, 0] }
                 },
                 {
-                    name: gettext('Still open'),
+                    name: gettext('Pending Reconciliation'),
                     type: 'bar',
                     stack: 'total',
                     barMaxWidth: 30,
@@ -547,120 +497,6 @@ document.addEventListener('DOMContentLoaded', function () {
             ]
         }, { notMerge: true });
 
-        // Beneficiary Group Chart (top 10), stacked reconciled / still open.
-        const bgData = bgStatusGroup.all()
-            .map(d => ({
-                key: d.key,
-                reconciled: currentMetric === 'usd' ? d.value.reconciled_usd : d.value.reconciled_payments,
-                open: currentMetric === 'usd' ? d.value.open_usd : d.value.open_payments
-            }))
-            .map(d => ({ ...d, total: d.reconciled + d.open }))
-            .filter(d => d.key !== '' && d.key !== null && d.total > 0)
-            .sort((a, b) => b.total - a.total)
-            .slice(0, 10);
-
-        const bgTitle = document.getElementById('bg-title');
-        if (bgTitle) {
-            bgTitle.textContent = currentMetric === 'usd'
-                ? gettext('Amount by beneficiary group')
-                : gettext('Payments by beneficiary group');
-        }
-
-        const hasAnyBgSelection = selectedBeneficiaryGroups.size > 0;
-        const bgOpacity = key => selectedBeneficiaryGroups.has(key) ? 1 : (hasAnyBgSelection ? 0.35 : 1);
-        const bgTotalLabel = d => formatCompact(d.total);
-        const bgSeriesDataReconciled = bgData.map(d => ({
-            value: d.reconciled,
-            itemStyle: { color: RECONCILED_COLOR, opacity: bgOpacity(d.key) },
-            label: { show: d.open === 0, formatter: bgTotalLabel(d) }
-        }));
-        const bgSeriesDataOpen = bgData.map(d => ({
-            value: d.open,
-            itemStyle: { color: OPEN_COLOR, opacity: bgOpacity(d.key) },
-            label: { show: d.open > 0, formatter: bgTotalLabel(d) }
-        }));
-
-        beneficiaryGroupChart.setOption({
-            tooltip: {
-                trigger: 'axis',
-                axisPointer: { type: 'shadow' },
-                formatter: params => {
-                    const d = bgData[params[0].dataIndex];
-                    if (!d) return '';
-                    return `<b>${d.key}</b><br/>` +
-                        `${gettext('Reconciled')}: <b>${formatFullVal(d.reconciled)}</b> ${unitName}<br/>` +
-                        `${gettext('Still open')}: <b>${formatFullVal(d.open)}</b> ${unitName}<br/>` +
-                        `${gettext('Total')}: <b>${formatFullVal(d.total)}</b> ${unitName}`;
-                }
-            },
-            legend: {
-                data: [gettext('Reconciled'), gettext('Still open')],
-                top: 0,
-                right: 20
-            },
-            grid: { top: 30, bottom: 40, left: 220, right: 70 },
-            xAxis: {
-                type: 'value',
-                name: currentMetric === 'usd' ? gettext('Amount (USD)') : gettext('Payments'),
-                nameLocation: 'middle',
-                nameGap: 28,
-                nameTextStyle: { color: '#475569', fontSize: 11 },
-                axisLabel: { formatter: val => formatMetric(val), color: '#64748b', fontSize: 10 },
-                splitLine: { lineStyle: { color: '#f1f5f9' } }
-            },
-            yAxis: {
-                type: 'category',
-                data: bgData.map(d => d.key),
-                inverse: true,
-                axisTick: { show: false },
-                axisLine: { show: true, lineStyle: { color: '#f1f5f9' } },
-                axisLabel: {
-                    show: true,
-                    width: 200,
-                    overflow: 'truncate',
-                    color: '#374151',
-                    fontSize: 10
-                }
-            },
-            series: [
-                {
-                    name: gettext('Reconciled'),
-                    type: 'bar',
-                    stack: 'total',
-                    barMaxWidth: 22,
-                    itemStyle: { borderRadius: [0, 0, 0, 0] },
-                    showBackground: true,
-                    backgroundStyle: { color: 'rgba(241, 245, 249, 0.75)' },
-                    data: bgSeriesDataReconciled,
-                    label: {
-                        show: true,
-                        position: 'right',
-                        distance: 6,
-                        formatter: params => `${Number(params.value).toFixed(0)}`,
-                        color: '#0f172a',
-                        fontWeight: 600,
-                        fontSize: 11
-                    }
-                },
-                {
-                    name: gettext('Still open'),
-                    type: 'bar',
-                    stack: 'total',
-                    barMaxWidth: 22,
-                    itemStyle: { borderRadius: [0, 4, 4, 0] },
-                    data: bgSeriesDataOpen,
-                    label: {
-                        show: true,
-                        position: 'right',
-                        distance: 6,
-                        formatter: params => `${Number(params.value).toFixed(0)}`,
-                        color: '#0f172a',
-                        fontWeight: 600,
-                        fontSize: 11
-                    }
-                }
-            ]
-        }, { notMerge: true });
 
         updateRatesChart();
     }
@@ -871,22 +707,6 @@ document.addEventListener('DOMContentLoaded', function () {
         updateAll();
     });
 
-    beneficiaryGroupChart.on('click', function (params) {
-        const name = params.name;
-        if (selectedBeneficiaryGroups.has(name)) {
-            selectedBeneficiaryGroups.delete(name);
-        } else {
-            selectedBeneficiaryGroups.add(name);
-        }
-        if (selectedBeneficiaryGroups.size === 0) {
-            beneficiaryGroupDimension.filterAll();
-        } else {
-            beneficiaryGroupDimension.filterFunction(d => selectedBeneficiaryGroups.has(d));
-        }
-        updateAll();
-    });
-
-    // Metric selector toggler
     const metricTabs = document.querySelectorAll('.metric-tab');
     metricTabs.forEach(btn => {
         btn.addEventListener('click', function() {
@@ -906,22 +726,16 @@ document.addEventListener('DOMContentLoaded', function () {
 
             if (currentMetric === 'usd') {
                 if (reconciledTitle) reconciledTitle.textContent = gettext('Reconciled amount (USD)');
-                if (openedTitle) openedTitle.textContent = gettext('Still open amount (USD)');
+                if (openedTitle) openedTitle.textContent = gettext('Pending Reconciliation amount (USD)');
                 if (timelineTitle) timelineTitle.textContent = gettext('Reconciliation timeline (USD)');
                 if (countryTitle) countryTitle.textContent = gettext('Reconciliation status by country (USD)');
             } else {
                 if (reconciledTitle) reconciledTitle.textContent = gettext('Reconciled payments');
-                if (openedTitle) openedTitle.textContent = gettext('Still open payments');
+                if (openedTitle) openedTitle.textContent = gettext('Pending Reconciliation payments');
                 if (timelineTitle) timelineTitle.textContent = gettext('Reconciliation timeline');
                 if (countryTitle) countryTitle.textContent = gettext('Reconciliation status by country');
             }
 
-            const bgTitle = document.getElementById('bg-title');
-            if (bgTitle) {
-                bgTitle.textContent = currentMetric === 'usd'
-                    ? gettext('Cash disbursed by beneficiary group')
-                    : gettext('Payments by beneficiary group');
-            }
 
             updateAll();
         });
@@ -976,9 +790,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             // Clean state (clear filters FIRST, then remove old data)
             selectedCountries.clear();
-            selectedBeneficiaryGroups.clear();
             countryDimension.filterAll();
-            beneficiaryGroupDimension.filterAll();
             verificationDimension.filterAll();
             dateDimension.filterAll();
 

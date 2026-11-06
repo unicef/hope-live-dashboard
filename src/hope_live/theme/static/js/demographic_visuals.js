@@ -30,7 +30,6 @@ document.addEventListener('DOMContentLoaded', function () {
     const dateDimension = ndx.dimension(d => d.date);
     const sectorDimension = ndx.dimension(d => primaryDimFilter(d) ? d.dimension_value : '');
     const countryDimension = ndx.dimension(d => d.country_slug);
-    const beneficiaryGroupDimension = ndx.dimension(d => d.dimension_type === 'beneficiary_group' ? d.dimension_value : '');
     const programTypeDimension = ndx.dimension(d => d.program_type || 'STANDARD');
 
     function applyCohortFilter() {
@@ -102,29 +101,21 @@ document.addEventListener('DOMContentLoaded', function () {
         reduceDemographics('sector').init
     );
 
-    const beneficiaryGroupGroup = beneficiaryGroupDimension.group().reduce(
-        reduceDemographics('beneficiary_group').add,
-        reduceDemographics('beneficiary_group').remove,
-        reduceDemographics('beneficiary_group').init
-    );
 
     // Active Filters Sets
     const selectedSectors = new Set();
     const selectedCountries = new Set();
-    const selectedBeneficiaryGroups = new Set();
 
     // Initialize ECharts instances with macarons theme
     const timelineChart = echarts.init(document.getElementById('time-focus-chart'), 'macarons');
     const sectorChildChart = echarts.init(document.getElementById('sector-children-chart'), 'macarons');
     const countryPwdChart = echarts.init(document.getElementById('country-pwd-chart'), 'macarons');
-    const beneficiaryGroupChart = echarts.init(document.getElementById('beneficiary-group-chart'), 'macarons');
 
     // Resize Handler
     window.addEventListener('resize', function () {
         timelineChart.resize();
         sectorChildChart.resize();
         countryPwdChart.resize();
-        beneficiaryGroupChart.resize();
     });
 
     function updateTotals() {
@@ -271,70 +262,6 @@ document.addEventListener('DOMContentLoaded', function () {
             }]
         }, { notMerge: true });
 
-        // 6. Beneficiary Group Chart (top 10)
-        const bgData = beneficiaryGroupGroup.all()
-            .map(d => ({ key: d.key, value: d.value[activeField] }))
-            .filter(d => d.key !== null && d.value > 0)
-            .sort((a, b) => b.value - a.value)
-            .slice(0, 10);
-
-        const bgCategories = bgData.map(d => d.key);
-        const hasAnyBgSelection = selectedBeneficiaryGroups.size > 0;
-        const bgSeriesData = bgData.map(d => {
-            const isSelected = selectedBeneficiaryGroups.has(d.key);
-            return {
-                name: d.key,
-                value: d.value,
-                itemStyle: {
-                    color: isSelected ? getStableColor(d.key) : (hasAnyBgSelection ? '#cbd5e1' : getStableColor(d.key))
-                }
-            };
-        });
-
-        beneficiaryGroupChart.setOption({
-            tooltip: {
-                trigger: 'axis',
-                axisPointer: { type: 'shadow' },
-                formatter: params => `${params[0].name}: <b>${d3.format(",")(params[0].value)}</b>`
-            },
-            grid: { top: 15, bottom: 25, left: 220, right: 60 },
-            xAxis: {
-                type: 'value',
-                axisLabel: { formatter: val => d3.format(".2s")(val).replace('G', 'B'), color: '#64748b', fontSize: 10 },
-                splitLine: { lineStyle: { color: '#f1f5f9' } }
-            },
-            yAxis: {
-                type: 'category',
-                data: bgCategories,
-                inverse: true,
-                axisTick: { show: false },
-                axisLine: { show: true, lineStyle: { color: '#f1f5f9' } },
-                axisLabel: {
-                    show: true,
-                    width: 200,
-                    overflow: 'truncate',
-                    color: '#374151',
-                    fontSize: 10
-                }
-            },
-            series: [{
-                type: 'bar',
-                data: bgSeriesData,
-                barMaxWidth: 22,
-                showBackground: true,
-                backgroundStyle: { color: 'rgba(241, 245, 249, 0.75)', borderRadius: [0, 4, 4, 0] },
-                itemStyle: { borderRadius: [0, 4, 4, 0] },
-                label: {
-                    show: true,
-                    position: 'right',
-                    distance: 6,
-                    formatter: params => d3.format(".2s")(params.value).replace('G', 'B'),
-                    color: '#0f172a',
-                    fontWeight: 600,
-                    fontSize: 11
-                }
-            }]
-        }, { notMerge: true });
     }
 
     // --- Interactive Filters Bindings ---
@@ -378,22 +305,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
     countryPwdChart.on('click', handleCountryClick);
 
-    beneficiaryGroupChart.on('click', function (params) {
-        const name = params.name;
-        if (selectedBeneficiaryGroups.has(name)) {
-            selectedBeneficiaryGroups.delete(name);
-        } else {
-            selectedBeneficiaryGroups.add(name);
-        }
-        if (selectedBeneficiaryGroups.size === 0) {
-            beneficiaryGroupDimension.filterAll();
-        } else {
-            beneficiaryGroupDimension.filterFunction(d => selectedBeneficiaryGroups.has(d));
-        }
-        updateAll();
-    });
-
-    // Metric Toggle Tab Selection
     const metricTabs = document.querySelectorAll('.metric-tab');
 
     function setActiveMetricTab(metric) {
@@ -420,14 +331,6 @@ document.addEventListener('DOMContentLoaded', function () {
         const countryShareTitle = document.getElementById('country-share-title');
         if (countryShareTitle) countryShareTitle.textContent = `${gettext('Country share of')} ${activeLabel}`;
 
-        const bgTitleMap = {
-            individuals: gettext('Individuals reached by beneficiary group'),
-            households: gettext('Households reached by beneficiary group'),
-            children: gettext('Children reached by beneficiary group'),
-            pwd: gettext('Persons with disabilities reached by beneficiary group')
-        };
-        const bgTitle = document.getElementById('bg-title');
-        if (bgTitle) bgTitle.textContent = bgTitleMap[currentMetric];
     }
 
     metricTabs.forEach(btn => {
@@ -521,10 +424,8 @@ document.addEventListener('DOMContentLoaded', function () {
             // Clean existing state and filters (clear filters FIRST, then remove old data)
             selectedSectors.clear();
             selectedCountries.clear();
-            selectedBeneficiaryGroups.clear();
             sectorDimension.filterAll();
             countryDimension.filterAll();
-            beneficiaryGroupDimension.filterAll();
             dateDimension.filterAll();
 
             ndx.remove();

@@ -53,12 +53,11 @@ def financial_aggregates(db):
             total_usd=20000,
             payment_count=10,
         )
-    # Additional dimensions (program, delivery_type, financial_service_provider, beneficiary_group)
+    # Additional dimensions (program, delivery_type, financial_service_provider)
     for dim_type, prefix in [
         ("program", "Program"),
         ("delivery_type", "Delivery"),
         ("financial_service_provider", "FSP"),
-        ("beneficiary_group", "Group"),
     ]:
         for i, country in enumerate(countries[:3]):
             FinancialAggregateFactory(
@@ -111,30 +110,6 @@ def demographic_aggregates(db):
             total_pwd=20,
             total_households=300,
         )
-    # Beneficiary groups
-    for i, country in enumerate(countries[:3]):
-        DemographicAggregateFactory(
-            date=datetime.date(year, 1, i + 1),
-            time_grain="monthly",
-            country_slug=country,
-            dimension_type="beneficiary_group",
-            dimension_value=f"Group-{i}",
-            total_beneficiaries=50,
-            total_children=25,
-            total_pwd=5,
-            total_households=40,
-        )
-        DemographicAggregateFactory(
-            date=datetime.date(year - 1, 1, i + 1),
-            time_grain="monthly",
-            country_slug=country,
-            dimension_type="beneficiary_group",
-            dimension_value=f"Group-{i}",
-            total_beneficiaries=100,
-            total_children=50,
-            total_pwd=10,
-            total_households=80,
-        )
 
 
 @pytest.fixture
@@ -162,44 +137,6 @@ def completion_aggregates(db):
             dimension_value=f"RECONCILED-{i}",
             payment_count=6,
             total_usd=10000,
-        )
-    # Beneficiary groups
-    for i, country in enumerate(countries[:3]):
-        CompletionAggregateFactory(
-            date=datetime.date(year, 1, i + 1),
-            time_grain="daily",
-            country_slug=country,
-            dimension_type="beneficiary_group",
-            dimension_value=f"Group-{i}",
-            payment_count=2,
-            total_usd=2000,
-        )
-        CompletionAggregateFactory(
-            date=datetime.date(year - 1, 1, i + 1),
-            time_grain="daily",
-            country_slug=country,
-            dimension_type="beneficiary_group",
-            dimension_value=f"Group-{i}",
-            payment_count=4,
-            total_usd=4000,
-        )
-        CompletionAggregateFactory(
-            date=datetime.date(year, 1, i + 1),
-            time_grain="daily",
-            country_slug=country,
-            dimension_type="beneficiary_group_reconciled",
-            dimension_value=f"Group-{i}",
-            payment_count=2,
-            total_usd=2000,
-        )
-        CompletionAggregateFactory(
-            date=datetime.date(year, 1, i + 1),
-            time_grain="daily",
-            country_slug=country,
-            dimension_type="beneficiary_group_open",
-            dimension_value=f"Group-{i}",
-            payment_count=1,
-            total_usd=500,
         )
 
 
@@ -398,7 +335,6 @@ def test_financial_dashboard_loads(browser, financial_aggregates):
     browser.wait_for_element_visible("#region-chart canvas")
     browser.wait_for_element_visible("#program-chart canvas")
     browser.wait_for_element_visible("#fsp-chart canvas")
-    browser.wait_for_element_visible("#beneficiary-group-chart canvas")
 
     browser.assert_text("Cash disbursed by sector", "#sector-title")
     browser.assert_text("Cash disbursed by delivery type", "#delivery-title")
@@ -437,7 +373,6 @@ def test_demographic_dashboard_loads(browser, demographic_aggregates, financial_
     browser.wait_for_element_visible("#sector-children-chart canvas")
     browser.wait_for_element_visible("#country-pwd-chart canvas")
     browser.wait_for_element_visible("#time-focus-chart canvas")
-    browser.wait_for_element_visible("#beneficiary-group-chart canvas")
 
     browser.assert_text("Children reached", "#card-children h3")
     browser.assert_text("Persons with disabilities reached", "#card-pwd h3")
@@ -471,9 +406,8 @@ def test_completion_dashboard_loads(browser, completion_aggregates, financial_ag
     browser.wait_for_element_visible("#time-focus-chart canvas")
     browser.wait_for_element_visible("#status-country-chart canvas")
     browser.wait_for_element_visible("#completion-gauge canvas")
-    browser.wait_for_element_visible("#beneficiary-group-chart canvas")
 
-    browser.assert_text("Still open", "#opened-card-title")
+    browser.assert_text("Pending Reconciliation", "#opened-card-title")
     browser.assert_text("Payment reconciliation dashboard", "h1")
 
     browser.wait_for_element_visible('[data-chart-info="completion.timeline"]')
@@ -490,11 +424,6 @@ def test_completion_dashboard_loads(browser, completion_aggregates, financial_ag
 
     # Assert current year totals
     browser.assert_text("15 (100.0% out of 15 total)", "#total-reconciled")
-    bg_option = browser.execute_script(
-        "return echarts.getInstanceByDom(document.getElementById('beneficiary-group-chart')).getOption();"
-    )
-    assert [s.get("name") for s in bg_option["series"]] == ["Reconciled", "Still open"]
-
     # Apply a custom period covering the previous year
     prev_year = datetime.datetime.now().year - 1
     _apply_custom_range(browser, f"{prev_year}-01-01", f"{prev_year}-12-31")

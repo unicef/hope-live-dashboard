@@ -97,15 +97,6 @@ CHART_INFO = {
         ),
         "note": _("The chart shows the top 10 providers, plus an Other bucket."),
     },
-    "financial.beneficiary_group": {
-        "definition": _("Cash disbursed or payments by beneficiary group."),
-        "source": _("HOPE payments — country report financial feed."),
-        "method": _(
-            "Payment rows are grouped by the programme's beneficiary group label using the same "
-            "date and status filters as the financial timeline."
-        ),
-        "note": _("The chart shows the top 10 groups, plus an Other bucket."),
-    },
     "financial.outstanding_country": {
         "definition": _("Outstanding payment amount by country, in USD."),
         "source": _("HOPE payments — country report financial feed (status dimension)."),
@@ -199,15 +190,6 @@ CHART_INFO = {
         ),
         "note": _("The chart shows the top 10 countries. Children and PWD caveats apply."),
     },
-    "demographic.beneficiary_group": {
-        "definition": _("Reached population by beneficiary group."),
-        "source": _("HOPE households and payments — country report demographic feed."),
-        "method": _(
-            "Uses the same demographic base as the reach timeline, grouped by the programme's "
-            "beneficiary group label. Values follow the active metric."
-        ),
-        "note": _("The chart shows the top 10 groups. Children and PWD caveats apply."),
-    },
     # ------------------------------------------------------------------
     # Completion
     # ------------------------------------------------------------------
@@ -217,12 +199,12 @@ CHART_INFO = {
         "method": _(
             "Reconciled includes Sent to Payment Gateway, Sent to FSP, Distribution Successful, "
             "Partially Distributed and Transaction Successful. All other non-failed statuses are "
-            "Still open. Only payments in accepted, finished or closed plans are included; "
+            "Pending Reconciliation. Only payments in accepted, finished or closed plans are included; "
             "failed, removed and conflicted payments are excluded. USD is entitlement USD."
         ),
         "note": _(
-            "Reconciled is green and Still open is amber across the timeline and country charts. "
-            "The status mapping is applied when the report rows are loaded; Still open includes "
+            "Reconciled is green and Pending Reconciliation is amber across the timeline and country charts. "
+            "The status mapping is applied when the report rows are loaded; Pending Reconciliation includes "
             "pending and other non-reconciled statuses."
         ),
     },
@@ -239,24 +221,11 @@ CHART_INFO = {
             "each country's reconciled and still-open split as percentages."
         ),
     },
-    "completion.beneficiary_group": {
-        "definition": _("Reconciled and still-open payments by beneficiary group."),
-        "source": _("HOPE payments — country report completion feed."),
-        "method": _(
-            "Uses the same completion base as the reconciliation timeline, grouped by the "
-            "programme's beneficiary group and split into reconciled and still open values. "
-            "The chart is stacked, so each bar shows the reconciled and open portions."
-        ),
-        "note": _(
-            "The chart shows the top 10 groups. The title and horizontal axis follow the active "
-            "metric (payment count or amount in USD)."
-        ),
-    },
     "completion.rates": {
         "definition": _("Reconciliation and delivery success rates by country."),
         "source": _("HOPE payments — financial and completion feeds."),
         "method": _(
-            "Reconciliation rate is reconciled divided by reconciled plus still open in the "
+            "Reconciliation rate is reconciled divided by reconciled plus pending reconciliation in the "
             "completion feed. Delivery success rate is successful statuses divided by successful "
             "plus pending statuses in the financial feed. Only countries present in both feeds "
             "are shown."
