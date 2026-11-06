@@ -237,12 +237,17 @@ CHART_INFO = {
     },
     "completion.verification": {
         "definition": _("Payment verification outcomes: selected, verified, pending and discrepancies."),
-        "source": _("HOPE payments — verification records in the country report completion feed."),
+        "source": _("HOPE payment verification plans — country report completion feed."),
         "method": _(
-            "Counts payments by verification outcome for the selected period. The completion rate "
-            "is successfully verified payments divided by payments selected for verification."
+            "Uses the verification-plan summaries: selected is the sample size, verified is the "
+            "received count, pending is the sample size minus the responded count, and "
+            "discrepancies are not-received plus received-with-issues. The date basis is the "
+            "verification-plan activation date, falling back to the completion date."
         ),
-        "note": _("Appears once the completion feed provides verification rows (dimension type verification)."),
+        "note": _(
+            "The completion rate is verified payments divided by selected payments. The panel "
+            "appears when verification plans exist for the period."
+        ),
     },
     # ------------------------------------------------------------------
     # Grievance
