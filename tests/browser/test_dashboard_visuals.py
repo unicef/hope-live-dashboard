@@ -183,6 +183,24 @@ def completion_aggregates(db):
             payment_count=4,
             total_usd=4000,
         )
+        CompletionAggregateFactory(
+            date=datetime.date(year, 1, i + 1),
+            time_grain="daily",
+            country_slug=country,
+            dimension_type="beneficiary_group_reconciled",
+            dimension_value=f"Group-{i}",
+            payment_count=2,
+            total_usd=2000,
+        )
+        CompletionAggregateFactory(
+            date=datetime.date(year, 1, i + 1),
+            time_grain="daily",
+            country_slug=country,
+            dimension_type="beneficiary_group_open",
+            dimension_value=f"Group-{i}",
+            payment_count=1,
+            total_usd=500,
+        )
 
 
 @pytest.fixture
@@ -472,6 +490,10 @@ def test_completion_dashboard_loads(browser, completion_aggregates, financial_ag
 
     # Assert current year totals
     browser.assert_text("15 (100.0% out of 15 total)", "#total-reconciled")
+    bg_option = browser.execute_script(
+        "return echarts.getInstanceByDom(document.getElementById('beneficiary-group-chart')).getOption();"
+    )
+    assert [s.get("name") for s in bg_option["series"]] == ["Reconciled", "Still open"]
 
     # Apply a custom period covering the previous year
     prev_year = datetime.datetime.now().year - 1
@@ -588,6 +610,29 @@ def test_completion_rates_chart_loads(browser, completion_aggregates, financial_
     assert rates_option["xAxis"][0]["max"] == 100
 
 
+def test_completion_verification_panel(browser, completion_aggregates, financial_aggregates):
+    year = datetime.datetime.now().year
+    for i, (value, count) in enumerate([("SELECTED", 100), ("VERIFIED", 92), ("PENDING", 5), ("DISCREPANCIES", 3)]):
+        CompletionAggregateFactory(
+            date=datetime.date(year, 1, i + 1),
+            time_grain="daily",
+            country_slug="kenya",
+            dimension_type="verification",
+            dimension_value=value,
+            payment_count=count,
+            total_usd=count * 100,
+        )
+
+    browser.login_as_user()
+    browser.open("/completion/")
+    browser.wait_for_element_visible("#verification-card")
+    browser.assert_text("100", "#verification-selected")
+    browser.assert_text("92", "#verification-verified")
+    browser.assert_text("5", "#verification-pending")
+    browser.assert_text("3", "#verification-discrepancies")
+    browser.assert_text("92.0%", "#verification-rate")
+
+
 def test_program_and_country_charts_show_top_ten_with_other(browser, db):
     """The dashboard must show the top 10 categories plus an Other bucket."""
     year = datetime.datetime.now().year
@@ -613,6 +658,8 @@ def test_program_and_country_charts_show_top_ten_with_other(browser, db):
 
     browser.login_as_user()
     browser.open("/dashboard/")
+    browser.wait_for_element_visible("#time-filter-container")
+    browser.wait_for_element_visible("#total-payments")
     browser.wait_for_element_visible("#program-chart canvas")
     browser.wait_for_element_visible("#country-chart canvas")
 

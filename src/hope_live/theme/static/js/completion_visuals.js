@@ -54,6 +54,9 @@ document.addEventListener('DOMContentLoaded', function () {
     const dateDimension = ndx.dimension(d => d.date);
     const countryDimension = ndx.dimension(d => d.country_slug);
     const beneficiaryGroupDimension = ndx.dimension(d => d.dimension_type === 'beneficiary_group' ? d.dimension_value : '');
+    const bgStatusDimension = ndx.dimension(d => (
+        d.dimension_type === 'beneficiary_group_reconciled' || d.dimension_type === 'beneficiary_group_open'
+    ) ? d.dimension_value : '');
     const verificationDimension = ndx.dimension(d => d.dimension_type === 'verification' ? d.dimension_value : '');
 
     const primaryDimFilter = d => d.dimension_type === 'status';
@@ -160,6 +163,31 @@ document.addEventListener('DOMContentLoaded', function () {
             return p;
         },
         () => ({ payments: 0, usd: 0 })
+    );
+
+    // Beneficiary group split by reconciliation outcome.
+    const bgStatusGroup = bgStatusDimension.group().reduce(
+        (p, v) => {
+            if (v.dimension_type === 'beneficiary_group_reconciled') {
+                p.reconciled_payments += v.payment_count;
+                p.reconciled_usd += +v.total_usd;
+            } else if (v.dimension_type === 'beneficiary_group_open') {
+                p.open_payments += v.payment_count;
+                p.open_usd += +v.total_usd;
+            }
+            return p;
+        },
+        (p, v) => {
+            if (v.dimension_type === 'beneficiary_group_reconciled') {
+                p.reconciled_payments -= v.payment_count;
+                p.reconciled_usd -= +v.total_usd;
+            } else if (v.dimension_type === 'beneficiary_group_open') {
+                p.open_payments -= v.payment_count;
+                p.open_usd -= +v.total_usd;
+            }
+            return p;
+        },
+        () => ({ reconciled_payments: 0, reconciled_usd: 0, open_payments: 0, open_usd: 0 })
     );
 
     // Verification rows (dimension_type = verification) are summed by their
@@ -519,34 +547,64 @@ document.addEventListener('DOMContentLoaded', function () {
             ]
         }, { notMerge: true });
 
-        // Beneficiary Group Chart (top 10)
-        const bgData = beneficiaryGroupGroup.all()
-            .map(d => ({ key: d.key, value: d.value[currentMetric] }))
-            .filter(d => d.key !== '' && d.key !== null && d.value > 0)
-            .sort((a, b) => b.value - a.value)
+        // Beneficiary Group Chart (top 10), stacked reconciled / still open.
+        const bgData = bgStatusGroup.all()
+            .map(d => ({
+                key: d.key,
+                reconciled: currentMetric === 'usd' ? d.value.reconciled_usd : d.value.reconciled_payments,
+                open: currentMetric === 'usd' ? d.value.open_usd : d.value.open_payments
+            }))
+            .map(d => ({ ...d, total: d.reconciled + d.open }))
+            .filter(d => d.key !== '' && d.key !== null && d.total > 0)
+            .sort((a, b) => b.total - a.total)
             .slice(0, 10);
 
+        const bgTitle = document.getElementById('bg-title');
+        if (bgTitle) {
+            bgTitle.textContent = currentMetric === 'usd'
+                ? gettext('Amount by beneficiary group')
+                : gettext('Payments by beneficiary group');
+        }
+
         const hasAnyBgSelection = selectedBeneficiaryGroups.size > 0;
-        const bgSeriesData = bgData.map(d => {
-            const stableColor = getStableColor(d.key);
-            return {
-                name: d.key,
-                value: d.value,
-                itemStyle: {
-                    color: selectedBeneficiaryGroups.has(d.key) ? stableColor : (hasAnyBgSelection ? '#cbd5e1' : stableColor)
-                }
-            };
-        });
+        const bgOpacity = key => selectedBeneficiaryGroups.has(key) ? 1 : (hasAnyBgSelection ? 0.35 : 1);
+        const bgTotalLabel = d => formatCompact(d.total);
+        const bgSeriesDataReconciled = bgData.map(d => ({
+            value: d.reconciled,
+            itemStyle: { color: RECONCILED_COLOR, opacity: bgOpacity(d.key) },
+            label: { show: d.open === 0, formatter: bgTotalLabel(d) }
+        }));
+        const bgSeriesDataOpen = bgData.map(d => ({
+            value: d.open,
+            itemStyle: { color: OPEN_COLOR, opacity: bgOpacity(d.key) },
+            label: { show: d.open > 0, formatter: bgTotalLabel(d) }
+        }));
 
         beneficiaryGroupChart.setOption({
             tooltip: {
                 trigger: 'axis',
                 axisPointer: { type: 'shadow' },
-                formatter: params => `${params[0].name}: <b>${formatFullVal(params[0].value)}</b> ${unitName}`
+                formatter: params => {
+                    const d = bgData[params[0].dataIndex];
+                    if (!d) return '';
+                    return `<b>${d.key}</b><br/>` +
+                        `${gettext('Reconciled')}: <b>${formatFullVal(d.reconciled)}</b> ${unitName}<br/>` +
+                        `${gettext('Still open')}: <b>${formatFullVal(d.open)}</b> ${unitName}<br/>` +
+                        `${gettext('Total')}: <b>${formatFullVal(d.total)}</b> ${unitName}`;
+                }
             },
-            grid: { top: 15, bottom: 25, left: 220, right: 60 },
+            legend: {
+                data: [gettext('Reconciled'), gettext('Still open')],
+                top: 0,
+                right: 20
+            },
+            grid: { top: 30, bottom: 40, left: 220, right: 70 },
             xAxis: {
                 type: 'value',
+                name: currentMetric === 'usd' ? gettext('Amount (USD)') : gettext('Payments'),
+                nameLocation: 'middle',
+                nameGap: 28,
+                nameTextStyle: { color: '#475569', fontSize: 11 },
                 axisLabel: { formatter: val => formatMetric(val), color: '#64748b', fontSize: 10 },
                 splitLine: { lineStyle: { color: '#f1f5f9' } }
             },
@@ -564,23 +622,44 @@ document.addEventListener('DOMContentLoaded', function () {
                     fontSize: 10
                 }
             },
-            series: [{
-                type: 'bar',
-                data: bgSeriesData,
-                barMaxWidth: 22,
-                showBackground: true,
-                backgroundStyle: { color: 'rgba(241, 245, 249, 0.75)', borderRadius: [0, 4, 4, 0] },
-                itemStyle: { borderRadius: [0, 4, 4, 0] },
-                label: {
-                    show: true,
-                    position: 'right',
-                    distance: 6,
-                    formatter: params => formatCompact(params.value),
-                    color: '#0f172a',
-                    fontWeight: 600,
-                    fontSize: 11
+            series: [
+                {
+                    name: gettext('Reconciled'),
+                    type: 'bar',
+                    stack: 'total',
+                    barMaxWidth: 22,
+                    itemStyle: { borderRadius: [0, 0, 0, 0] },
+                    showBackground: true,
+                    backgroundStyle: { color: 'rgba(241, 245, 249, 0.75)' },
+                    data: bgSeriesDataReconciled,
+                    label: {
+                        show: true,
+                        position: 'right',
+                        distance: 6,
+                        formatter: params => `${Number(params.value).toFixed(0)}`,
+                        color: '#0f172a',
+                        fontWeight: 600,
+                        fontSize: 11
+                    }
+                },
+                {
+                    name: gettext('Still open'),
+                    type: 'bar',
+                    stack: 'total',
+                    barMaxWidth: 22,
+                    itemStyle: { borderRadius: [0, 4, 4, 0] },
+                    data: bgSeriesDataOpen,
+                    label: {
+                        show: true,
+                        position: 'right',
+                        distance: 6,
+                        formatter: params => `${Number(params.value).toFixed(0)}`,
+                        color: '#0f172a',
+                        fontWeight: 600,
+                        fontSize: 11
+                    }
                 }
-            }]
+            ]
         }, { notMerge: true });
 
         updateRatesChart();

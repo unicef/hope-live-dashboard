@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-06 06:51+0000\n"
+"POT-Creation-Date: 2026-11-06 07:11+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -584,7 +584,11 @@ msgstr ""
 msgid "Tickets by subcategory"
 msgstr ""
 
-#: src/hope_live/templates/pages/grievance.html:115
+#: src/hope_live/templates/pages/grievance.html:109
+msgid "Subcategories apply to Data Change, Sensitive Grievance, Grievance Complaint and Needs Adjudication; other categories have no subcategory."
+msgstr "تنطبق الفئات الفرعية على تغيير البيانات والشكاوى الحساسة وشكاوى التظلم والحاجة إلى البت؛ ولا تحتوي الفئات الأخرى على فئة فرعية."
+
+#: src/hope_live/templates/pages/grievance.html:116
 msgid "Tickets by status and country"
 msgstr ""
 
@@ -1497,28 +1501,32 @@ msgid ""
 msgstr ""
 
 #: src/hope_live/web/chart_metadata.py:243
-msgid "Reconciled payments by beneficiary group."
+msgid "Reconciled and still-open payments by beneficiary group."
 msgstr ""
 
 #: src/hope_live/web/chart_metadata.py:246
 msgid ""
 "Uses the same completion base as the reconciliation timeline, grouped by the "
-"programme's beneficiary group label. Values follow the active metric."
+"programme's beneficiary group and split into reconciled and still open "
+"values. The chart is stacked, so each bar shows the reconciled and open "
+"portions."
 msgstr ""
 
-#: src/hope_live/web/chart_metadata.py:249
-msgid "The chart shows the top 10 groups."
+#: src/hope_live/web/chart_metadata.py:251
+msgid ""
+"The chart shows the top 10 groups. The title and horizontal axis follow the "
+"active metric (payment count or amount in USD)."
 msgstr ""
 
-#: src/hope_live/web/chart_metadata.py:252
+#: src/hope_live/web/chart_metadata.py:256
 msgid "Reconciliation and delivery success rates by country."
 msgstr ""
 
-#: src/hope_live/web/chart_metadata.py:253
+#: src/hope_live/web/chart_metadata.py:257
 msgid "HOPE payments — financial and completion feeds."
 msgstr ""
 
-#: src/hope_live/web/chart_metadata.py:255
+#: src/hope_live/web/chart_metadata.py:259
 msgid ""
 "Reconciliation rate is reconciled divided by reconciled plus still open in "
 "the completion feed. Delivery success rate is successful statuses divided by "
@@ -1526,87 +1534,87 @@ msgid ""
 "present in both feeds are shown."
 msgstr ""
 
-#: src/hope_live/web/chart_metadata.py:261
+#: src/hope_live/web/chart_metadata.py:265
 #, python-format
 msgid ""
 "Top 12 countries by completion volume, sorted by reconciliation rate. The "
 "dashed 80% line is a reference guide, not a threshold."
 msgstr ""
 
-#: src/hope_live/web/chart_metadata.py:266
+#: src/hope_live/web/chart_metadata.py:270
 msgid ""
 "Payment verification outcomes: selected, verified, pending and discrepancies."
 msgstr ""
 
-#: src/hope_live/web/chart_metadata.py:267
+#: src/hope_live/web/chart_metadata.py:271
 msgid ""
 "HOPE payments — verification records in the country report completion feed."
 msgstr ""
 
-#: src/hope_live/web/chart_metadata.py:269
+#: src/hope_live/web/chart_metadata.py:273
 msgid ""
 "Counts payments by verification outcome for the selected period. The "
 "completion rate is successfully verified payments divided by payments "
 "selected for verification."
 msgstr ""
 
-#: src/hope_live/web/chart_metadata.py:272
+#: src/hope_live/web/chart_metadata.py:276
 msgid ""
 "Appears once the completion feed provides verification rows (dimension type "
 "verification)."
 msgstr ""
 
-#: src/hope_live/web/chart_metadata.py:278
+#: src/hope_live/web/chart_metadata.py:282
 msgid ""
 "Grievance ticket volume over time, split into closed/resolved and open/"
 "active."
 msgstr ""
 
-#: src/hope_live/web/chart_metadata.py:279
-#: src/hope_live/web/chart_metadata.py:293
-#: src/hope_live/web/chart_metadata.py:303
-#: src/hope_live/web/chart_metadata.py:316
-#: src/hope_live/web/chart_metadata.py:325
-#: src/hope_live/web/chart_metadata.py:331
-#: src/hope_live/web/chart_metadata.py:344
+#: src/hope_live/web/chart_metadata.py:283
+#: src/hope_live/web/chart_metadata.py:297
+#: src/hope_live/web/chart_metadata.py:307
+#: src/hope_live/web/chart_metadata.py:320
+#: src/hope_live/web/chart_metadata.py:329
+#: src/hope_live/web/chart_metadata.py:335
+#: src/hope_live/web/chart_metadata.py:350
 msgid "HOPE grievances — country report grievance feed."
 msgstr ""
 
-#: src/hope_live/web/chart_metadata.py:281
+#: src/hope_live/web/chart_metadata.py:285
 msgid ""
 "Counts tickets by created date. Ignored tickets are excluded and business "
 "area must be set. Closed covers the Closed and Resolved statuses; Open & "
 "Active covers New, Assigned, In Progress, On Hold and For Approval."
 msgstr ""
 
-#: src/hope_live/web/chart_metadata.py:286
+#: src/hope_live/web/chart_metadata.py:290
 msgid ""
 "HOPE integer status codes are mapped to labels before charting. System flags "
 "are a separate source and are excluded by default; use the ticket-source "
 "toggle to include them."
 msgstr ""
 
-#: src/hope_live/web/chart_metadata.py:292
+#: src/hope_live/web/chart_metadata.py:296
 msgid "Grievance tickets by status."
 msgstr ""
 
-#: src/hope_live/web/chart_metadata.py:294
+#: src/hope_live/web/chart_metadata.py:298
 msgid ""
 "Counts tickets by the status value for the active ticket source and period."
 msgstr ""
 
-#: src/hope_live/web/chart_metadata.py:296
+#: src/hope_live/web/chart_metadata.py:300
 msgid ""
 "Not specified means the source status field was blank. The doughnut is used "
 "until resolution-time data is available, when it is replaced by Average "
 "Grievance Resolution Time by Category."
 msgstr ""
 
-#: src/hope_live/web/chart_metadata.py:302
+#: src/hope_live/web/chart_metadata.py:306
 msgid "Average grievance resolution time by category."
 msgstr "متوسط وقت معالجة الشكاوى حسب الفئة."
 
-#: src/hope_live/web/chart_metadata.py:305
+#: src/hope_live/web/chart_metadata.py:309
 msgid ""
 "Average days between ticket creation and last update for closed tickets "
 "(status 6) created in the selected period, grouped by category. updated_at "
@@ -1614,88 +1622,90 @@ msgid ""
 "closure timestamp."
 msgstr ""
 
-#: src/hope_live/web/chart_metadata.py:310
+#: src/hope_live/web/chart_metadata.py:314
 msgid ""
 "Only closed tickets with both timestamps are included. The status doughnut "
 "is shown instead until resolution rows exist."
 msgstr ""
 
-#: src/hope_live/web/chart_metadata.py:315
+#: src/hope_live/web/chart_metadata.py:319
 msgid "Grievance tickets by priority."
 msgstr ""
 
-#: src/hope_live/web/chart_metadata.py:317
+#: src/hope_live/web/chart_metadata.py:321
 msgid ""
 "Counts tickets by the priority value for the selected period and country."
 msgstr ""
 
-#: src/hope_live/web/chart_metadata.py:319
+#: src/hope_live/web/chart_metadata.py:323
 msgid ""
 "Priority is an optional field in HOPE, so many tickets have none; these are "
 "reported as Not Set (source value 0)."
 msgstr ""
 
-#: src/hope_live/web/chart_metadata.py:324
+#: src/hope_live/web/chart_metadata.py:328
 msgid "Grievance tickets by category."
 msgstr ""
 
-#: src/hope_live/web/chart_metadata.py:326
+#: src/hope_live/web/chart_metadata.py:330
 msgid ""
 "Counts tickets by the category value for the selected period and country."
 msgstr ""
 
-#: src/hope_live/web/chart_metadata.py:327
+#: src/hope_live/web/chart_metadata.py:331
 msgid ""
 "The chart shows the top 10 categories. Not specified means the category was "
 "blank."
 msgstr ""
 
-#: src/hope_live/web/chart_metadata.py:330
+#: src/hope_live/web/chart_metadata.py:334
 msgid "Grievance tickets by subcategory."
-msgstr ""
-
-#: src/hope_live/web/chart_metadata.py:333
-msgid ""
-"Counts tickets by the subcategory value (stored as issue_type in HOPE) for "
-"the selected period and country."
 msgstr ""
 
 #: src/hope_live/web/chart_metadata.py:337
 msgid ""
-"The chart shows the top 10 subcategories. Not specified means the "
-"subcategory was blank; system flags are excluded by default and account for "
-"most blank values. HOPE calls this field Subcategory."
+"Counts tickets by the subcategory value (stored as issue_type in HOPE) for "
+"categories that define subcategories: Data Change, Sensitive Grievance, "
+"Grievance Complaint and Needs Adjudication."
 msgstr ""
 
-#: src/hope_live/web/chart_metadata.py:343
+#: src/hope_live/web/chart_metadata.py:342
+msgid ""
+"The chart shows the top 10 subcategories. Payment Verification, feedback, "
+"referral, system-flagging and beneficiary categories have no subcategory and "
+"are excluded, so the chart total is lower than total tickets. HOPE calls "
+"this field Subcategory."
+msgstr ""
+
+#: src/hope_live/web/chart_metadata.py:349
 msgid ""
 "Grievance tickets by country, split into closed/resolved and open/active."
 msgstr ""
 
-#: src/hope_live/web/chart_metadata.py:346
+#: src/hope_live/web/chart_metadata.py:352
 msgid ""
 "Uses the same ticket base as the grievance timeline, grouped by business "
 "area country. Each bar is the stacked total of closed/resolved and open/"
 "active tickets."
 msgstr ""
 
-#: src/hope_live/web/chart_metadata.py:349
+#: src/hope_live/web/chart_metadata.py:355
 msgid "The chart shows the top 10 countries by total tickets."
 msgstr ""
 
-#: src/hope_live/web/chart_metadata.py:356
+#: src/hope_live/web/chart_metadata.py:362
 msgid ""
 "Global delivery over time: cash disbursed, payment count, and the number of "
 "individuals, households and children reached by household programmes."
 msgstr ""
 
-#: src/hope_live/web/chart_metadata.py:359
+#: src/hope_live/web/chart_metadata.py:365
 msgid ""
 "HOPE payments and household registration data, aggregated by the country "
 "report."
 msgstr ""
 
-#: src/hope_live/web/chart_metadata.py:361
+#: src/hope_live/web/chart_metadata.py:367
 msgid ""
 "Total Cash Disbursed sums delivered quantity in USD. Payments Count counts "
 "payment records — not payment plans, unique recipients or only completed "
@@ -1705,7 +1715,7 @@ msgid ""
 "workers are reported separately and are not part of these series."
 msgstr ""
 
-#: src/hope_live/web/chart_metadata.py:369
+#: src/hope_live/web/chart_metadata.py:375
 msgid ""
 "All years is the default. Last 5 years shows the current year and the "
 "previous four. Selecting a year shows its monthly data. Where a year or "

@@ -401,7 +401,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 colorFor = getStableColor,
                 axisLabelFor = key => key,
                 tooltipLabelFor = key => key,
-                percentTotal = null
+                percentTotal = null,
+                wrapLabels = false
             } = options;
             const percentSuffix = value => percentTotal > 0 ? ` (${((value / percentTotal) * 100).toFixed(1)}%)` : '';
 
@@ -439,7 +440,8 @@ document.addEventListener('DOMContentLoaded', function () {
                     axisLabel: {
                         show: true,
                         width: leftMargin - 20,
-                        overflow: 'truncate',
+                        overflow: wrapLabels ? 'break' : 'truncate',
+                        lineHeight: 12,
                         formatter: val => axisLabelFor(val),
                         color: '#374151',
                         fontSize: 10
@@ -466,7 +468,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         // Group-backed bars (programme, FSP, beneficiary group): top 10 + Other.
-        function updateHorizontalBarChart(chartObj, group, activeFiltersSet, leftMargin = 220, maxBars = 10) {
+        function updateHorizontalBarChart(chartObj, group, activeFiltersSet, leftMargin = 220, maxBars = 10, wrapLabels = false) {
             const rows = group.all()
                 .map(d => ({ key: d.key, value: d.value[currentMetric] }))
                 .filter(d => d.key !== '' && d.key !== null && d.value > 0)
@@ -474,7 +476,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
             renderHorizontalBars(chartObj, collapseTopBars(rows, maxBars, gettext('Other')), {
                 leftMargin,
-                activeSet: activeFiltersSet
+                activeSet: activeFiltersSet,
+                wrapLabels
             });
         }
 
@@ -526,7 +529,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 data: sectorDonutData
             }]
         }, { notMerge: true });
-        updateHorizontalBarChart(programChart, programGroup, selectedPrograms, 220, 10);
+        updateHorizontalBarChart(programChart, programGroup, selectedPrograms, 260, 10, true);
         // Delivery Donut Chart with outside labels
         const deliveryRawData = deliveryGroup.all()
             .map(d => ({ name: d.key, value: d.value[currentMetric] }))
@@ -574,7 +577,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 data: deliverySeriesData
             }]
         }, { notMerge: true });
-        updateHorizontalBarChart(fspChart, fspGroup, selectedFsps, 220, 10);
+        updateHorizontalBarChart(fspChart, fspGroup, selectedFsps, 260, 10, true);
         // Region Chart: single-hue scale (dark = highest), abbreviations on the
         // axis with full names in the tooltip and in the footnote below.
         const regionRows = regionGroup.all()

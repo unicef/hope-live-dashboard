@@ -240,13 +240,17 @@ CHART_INFO = {
         ),
     },
     "completion.beneficiary_group": {
-        "definition": _("Reconciled payments by beneficiary group."),
+        "definition": _("Reconciled and still-open payments by beneficiary group."),
         "source": _("HOPE payments — country report completion feed."),
         "method": _(
             "Uses the same completion base as the reconciliation timeline, grouped by the "
-            "programme's beneficiary group label. Values follow the active metric."
+            "programme's beneficiary group and split into reconciled and still open values. "
+            "The chart is stacked, so each bar shows the reconciled and open portions."
         ),
-        "note": _("The chart shows the top 10 groups."),
+        "note": _(
+            "The chart shows the top 10 groups. The title and horizontal axis follow the active "
+            "metric (payment count or amount in USD)."
+        ),
     },
     "completion.rates": {
         "definition": _("Reconciliation and delivery success rates by country."),
@@ -330,13 +334,15 @@ CHART_INFO = {
         "definition": _("Grievance tickets by subcategory."),
         "source": _("HOPE grievances — country report grievance feed."),
         "method": _(
-            "Counts tickets by the subcategory value (stored as issue_type in HOPE) for the "
-            "selected period and country."
+            "Counts tickets by the subcategory value (stored as issue_type in HOPE) for "
+            "categories that define subcategories: Data Change, Sensitive Grievance, "
+            "Grievance Complaint and Needs Adjudication."
         ),
         "note": _(
-            "The chart shows the top 10 subcategories. Not specified means the subcategory was "
-            "blank; system flags are excluded by default and account for most blank values. HOPE "
-            "calls this field Subcategory."
+            "The chart shows the top 10 subcategories. Payment Verification, feedback, "
+            "referral, system-flagging and beneficiary categories have no subcategory and are "
+            "excluded, so the chart total is lower than total tickets. HOPE calls this field "
+            "Subcategory."
         ),
     },
     "grievance.country": {
