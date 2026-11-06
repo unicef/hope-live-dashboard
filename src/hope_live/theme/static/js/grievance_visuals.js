@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', function () {
     if (!timeFilterContainer) return;
 
     const statusMap = {
-        "1": gettext("New"),
+        "1": gettext("New (Not Assigned)"),
         "2": gettext("Assigned"),
         "3": gettext("In Progress"),
         "4": gettext("On Hold"),
@@ -218,7 +218,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
 
         const statusCards = [
-            ['status-count-new', gettext('New'), ['NEW']],
+            ['status-count-new', gettext('New (Not Assigned)'), ['NEW', 'NEW (NOT ASSIGNED)']],
             ['status-count-assigned', gettext('Assigned'), ['ASSIGNED']],
             ['status-count-in-progress', gettext('In Progress'), ['IN PROGRESS', 'IN_PROGRESS']],
             ['status-count-on-hold', gettext('On Hold'), ['ON HOLD', 'ON_HOLD']],
@@ -235,7 +235,8 @@ document.addEventListener('DOMContentLoaded', function () {
             Object.keys(statusTotals).forEach(status => {
                 if (status === key || aliases.includes(status)) value += statusTotals[status];
             });
-            el.textContent = d3.format(',')(value);
+            const share = totalTickets > 0 ? (value / totalTickets) * 100 : 0;
+            el.textContent = `${d3.format(',')(value)} (${share.toFixed(1)}%)`;
         });
     }
 
@@ -268,13 +269,14 @@ document.addEventListener('DOMContentLoaded', function () {
             },
             legend: {
                 data: [gettext('Closed'), gettext('Open & Active')],
-                bottom: 0,
+                top: 0,
+                right: 20,
                 icon: 'roundRect'
             },
-            grid: { top: 15, bottom: 30, left: 60, right: 20 },
+            grid: { top: 30, bottom: 25, left: 60, right: 20 },
             xAxis: {
                 type: 'time',
-                axisLabel: { color: '#64748b', formatter: value => d3.timeFormat('%b')(new Date(value)) }
+                axisLabel: { color: '#64748b', formatter: value => d3.timeFormat('%b %Y')(new Date(value)) }
             },
             yAxis: {
                 type: 'value',
@@ -332,7 +334,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 center: ['50%', '50%'],
                 avoidLabelOverlap: true,
                 itemStyle: { borderRadius: 6, borderColor: '#fff', borderWidth: 2 },
-                label: { show: true, position: 'outside', formatter: '{b}: {c}', fontSize: 11, color: '#374151' },
+                label: { show: true, position: 'outside', formatter: '{b}: {c} ({d}%)', fontSize: 11, color: '#374151' },
                 labelLine: { show: true, length: 15, length2: 10, smooth: false },
                 emphasis: { label: { show: true, fontSize: 13, fontWeight: 'bold' } },
                 data: statusData.map(d => ({ name: d.key, value: d.value }))
@@ -425,7 +427,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 center: ['50%', '50%'],
                 avoidLabelOverlap: true,
                 itemStyle: { borderRadius: 6, borderColor: '#fff', borderWidth: 2 },
-                label: { show: true, position: 'outside', formatter: '{b}: {c}', fontSize: 11, color: '#374151' },
+                label: { show: true, position: 'outside', formatter: '{b}: {c} ({d}%)', fontSize: 11, color: '#374151' },
                 labelLine: { show: true, length: 15, length2: 10, smooth: false },
                 emphasis: { label: { show: true, fontSize: 13, fontWeight: 'bold' } },
                 data: priorityData.map(d => ({ name: d.key, value: d.value }))
@@ -784,6 +786,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             ndx.remove();
             ndx.add(data);
+            if (chartHelpers.setDataAsOf) chartHelpers.setDataAsOf(data);
             applySourceFilter();
 
             timeFilter.setBuffer(startDate, endDate);

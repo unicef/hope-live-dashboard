@@ -39,10 +39,30 @@
         return regionColors[code] || getStableColor(code);
     }
 
+    function timeAxisLabel(value) {
+        return d3.timeFormat('%b %Y')(new Date(value));
+    }
+
+    function setDataAsOf(rows) {
+        const el = document.getElementById('data-as-of');
+        if (!el) return;
+        const dates = (rows || [])
+            .map(row => (row && row.date instanceof Date ? row.date : new Date(row && row.date)))
+            .filter(date => !Number.isNaN(date.getTime()));
+        if (dates.length === 0) {
+            el.textContent = '—';
+            return;
+        }
+        const latest = new Date(Math.max(...dates.map(date => date.getTime())));
+        el.textContent = d3.timeFormat('%d %b %Y')(latest);
+    }
+
     window.HopeChart = {
         palette: palette,
         regionColors: regionColors,
         getStableColor: getStableColor,
-        getRegionColor: getRegionColor
+        getRegionColor: getRegionColor,
+        timeAxisLabel: timeAxisLabel,
+        setDataAsOf: setDataAsOf
     };
 })();

@@ -9,8 +9,9 @@
             <p class="text-xs text-gray-500">{% translate "Breakdown of individuals, children, and persons with disabilities reached" %}</p>
             {% chart_info "demographic.reached" %}
         </div>
-        <div>
+        <div class="flex items-center gap-2">
             <span class="bg-unicef-blue text-white text-[11px] font-bold px-2 py-0.5 rounded">{% translate "Live data" %}</span>
+            <span class="text-[10px] text-gray-400 font-semibold">{% translate "Data as of" %} <span id="data-as-of">—</span></span>
         </div>
     </div>
 
@@ -38,16 +39,16 @@
 
     <!-- Cohort Selector -->
     <div class="mb-3 flex flex-wrap gap-2 items-center justify-between">
-        <div class="text-xs font-bold text-gray-500">{% translate "Programme cohort:" %}</div>
+        <div class="text-xs font-bold text-gray-500">{% translate "Payee Type:" %}</div>
         <div class="flex bg-gray-100 p-0.5 rounded-lg space-x-1 border border-gray-200">
             <button type="button" class="cohort-tab px-3 py-1 text-xs font-bold rounded-md bg-white shadow text-blue-800 transition-all duration-200 cursor-pointer" data-cohort="ALL">
                 {% translate "All" %}
             </button>
             <button type="button" class="cohort-tab px-3 py-1 text-xs font-bold rounded-md text-gray-600 hover:text-gray-900 transition-all duration-200 cursor-pointer" data-cohort="STANDARD">
-                {% translate "Standard" %}
+                {% translate "Household" %}
             </button>
             <button type="button" class="cohort-tab px-3 py-1 text-xs font-bold rounded-md text-gray-600 hover:text-gray-900 transition-all duration-200 cursor-pointer" data-cohort="SOCIAL">
-                {% translate "Social workers" %}
+                {% translate "Social Worker" %}
             </button>
         </div>
     </div>

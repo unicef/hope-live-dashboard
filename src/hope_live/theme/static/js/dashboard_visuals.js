@@ -354,7 +354,7 @@ document.addEventListener('DOMContentLoaded', function () {
             grid: { top: 15, bottom: 25, left: 60, right: 20 },
             xAxis: {
                 type: 'time',
-                axisLabel: { color: '#64748b', formatter: value => d3.timeFormat('%b')(new Date(value)) }
+                axisLabel: { color: '#64748b', formatter: value => d3.timeFormat('%b %Y')(new Date(value)) }
             },
             yAxis: {
                 type: 'value',
@@ -400,8 +400,10 @@ document.addEventListener('DOMContentLoaded', function () {
                 activeSet = null,
                 colorFor = getStableColor,
                 axisLabelFor = key => key,
-                tooltipLabelFor = key => key
+                tooltipLabelFor = key => key,
+                percentTotal = null
             } = options;
+            const percentSuffix = value => percentTotal > 0 ? ` (${((value / percentTotal) * 100).toFixed(1)}%)` : '';
 
             const hasAnySelection = activeSet && activeSet.size > 0;
             const seriesData = rows.map((d, idx) => {
@@ -420,9 +422,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 tooltip: {
                     trigger: 'axis',
                     axisPointer: { type: 'shadow' },
-                    formatter: params => `${tooltipLabelFor(params[0].name)}: <b>${formatFullVal(params[0].value, metric)}</b>`
+                    formatter: params => `${tooltipLabelFor(params[0].name)}: <b>${formatFullVal(params[0].value, metric)}</b>${percentSuffix(params[0].value)}`
                 },
-                grid: { top: 15, bottom: 25, left: leftMargin, right: 70 },
+                grid: { top: 15, bottom: 25, left: leftMargin, right: percentTotal ? 110 : 70 },
                 xAxis: {
                     type: 'value',
                     axisLabel: { formatter: val => formatMetric(val, metric), color: '#64748b', fontSize: 10 },
@@ -454,7 +456,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         show: true,
                         position: 'right',
                         distance: 6,
-                        formatter: params => formatMetric(params.value, metric),
+                        formatter: params => `${formatMetric(params.value, metric)}${percentSuffix(params.value)}`,
                         color: '#0f172a',
                         fontWeight: 600,
                         fontSize: 11
@@ -592,7 +594,8 @@ document.addEventListener('DOMContentLoaded', function () {
             activeSet: selectedRegions,
             colorFor: (key, idx) => regionScale(idx),
             axisLabelFor: key => key,
-            tooltipLabelFor: key => getRegionName(key)
+            tooltipLabelFor: key => getRegionName(key),
+            percentTotal: regionRows.reduce((sum, row) => sum + row.value, 0)
         });
         updateHorizontalBarChart(beneficiaryGroupChart, beneficiaryGroupGroup, selectedBeneficiaryGroups, 220);
 
@@ -885,6 +888,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             ndx.remove();
             ndx.add(data);
+            if (chartHelpers.setDataAsOf) chartHelpers.setDataAsOf(data);
             applyCohortFilter();
 
             await loadReconciliation(from, to);

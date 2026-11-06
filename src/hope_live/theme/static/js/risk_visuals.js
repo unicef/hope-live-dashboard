@@ -416,7 +416,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     }
                 },
                 grid: { top: 15, bottom: 25, left: 45, right: 15 },
-                xAxis: { type: 'time', axisLabel: { color: '#64748b', fontSize: 10, formatter: value => d3.timeFormat('%b')(new Date(value)) } },
+                xAxis: { type: 'time', axisLabel: { color: '#64748b', fontSize: 10, formatter: value => d3.timeFormat('%b %Y')(new Date(value)) } },
                 yAxis: {
                     type: 'value',
                     axisLabel: { color: '#64748b', fontSize: 10 },
@@ -475,6 +475,9 @@ document.addEventListener('DOMContentLoaded', function () {
             dateDimension.filterAll();
             ndx.remove();
             ndx.add(data);
+            if (window.HopeChart && window.HopeChart.setDataAsOf) {
+                window.HopeChart.setDataAsOf(data);
+            }
 
             timeFilter.setBuffer(startDate, endDate);
             populateFilters(data);

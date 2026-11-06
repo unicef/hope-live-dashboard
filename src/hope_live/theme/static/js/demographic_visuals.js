@@ -168,7 +168,7 @@ document.addEventListener('DOMContentLoaded', function () {
             },
             xAxis: {
                 type: 'time',
-                axisLabel: { color: '#64748b', formatter: value => d3.timeFormat('%b')(new Date(value)) }
+                axisLabel: { color: '#64748b', formatter: value => d3.timeFormat('%b %Y')(new Date(value)) }
             },
             yAxis: {
                 type: 'value',
@@ -226,7 +226,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 center: ['50%', '50%'],
                 avoidLabelOverlap: true,
                 itemStyle: { borderRadius: 6, borderColor: '#fff', borderWidth: 2 },
-                label: { show: true, position: 'outside', formatter: '{b}\n({d}%)', fontSize: 11, color: '#374151' },
+                label: { show: true, position: 'outside', formatter: params => `${params.name}\n${d3.format(',')(params.value)} (${params.percent}%)`, fontSize: 11, color: '#374151' },
                 labelLine: { show: true, length: 15, length2: 10, smooth: false },
                 emphasis: { label: { show: true, fontSize: 13, fontWeight: 'bold' } },
                 data: sectorDonutData
@@ -264,7 +264,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 center: ['50%', '50%'],
                 avoidLabelOverlap: true,
                 itemStyle: { borderRadius: 6, borderColor: '#fff', borderWidth: 2 },
-                label: { show: true, position: 'outside', formatter: '{b}\n({d}%)', fontSize: 11, color: '#374151' },
+                label: { show: true, position: 'outside', formatter: params => `${params.name}\n${d3.format(',')(params.value)} (${params.percent}%)`, fontSize: 11, color: '#374151' },
                 labelLine: { show: true, length: 15, length2: 10, smooth: false },
                 emphasis: { label: { show: true, fontSize: 13, fontWeight: 'bold' } },
                 data: countryDonutData
@@ -529,6 +529,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             ndx.remove();
             ndx.add(data);
+            if (chartHelpers.setDataAsOf) chartHelpers.setDataAsOf(data);
             applyCohortFilter();
 
             timeFilter.setBuffer(startDate, endDate);

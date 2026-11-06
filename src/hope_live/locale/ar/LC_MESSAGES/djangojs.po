@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-05 05:30+0000\n"
+"POT-Creation-Date: 2026-11-06 06:51+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -31,104 +31,104 @@ msgid "payments"
 msgstr "المدفوعات"
 
 #: src/hope_live/theme/static/js/completion_visuals.js:348
-#: src/hope_live/theme/static/js/completion_visuals.js:372
-#: src/hope_live/theme/static/js/completion_visuals.js:459
-#: src/hope_live/theme/static/js/completion_visuals.js:471
-#: src/hope_live/theme/static/js/completion_visuals.js:501
+#: src/hope_live/theme/static/js/completion_visuals.js:373
+#: src/hope_live/theme/static/js/completion_visuals.js:460
+#: src/hope_live/theme/static/js/completion_visuals.js:472
+#: src/hope_live/theme/static/js/completion_visuals.js:502
 #: src/hope_live/theme/static/js/completion_visuals.min.js:1
-#: src/hope_live/theme/static/js/dashboard_visuals.js:673
+#: src/hope_live/theme/static/js/dashboard_visuals.js:676
 #: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
 msgid "Reconciled"
 msgstr "مسواة"
 
 #: src/hope_live/theme/static/js/completion_visuals.js:348
-#: src/hope_live/theme/static/js/completion_visuals.js:380
-#: src/hope_live/theme/static/js/completion_visuals.js:460
-#: src/hope_live/theme/static/js/completion_visuals.js:471
-#: src/hope_live/theme/static/js/completion_visuals.js:510
+#: src/hope_live/theme/static/js/completion_visuals.js:381
+#: src/hope_live/theme/static/js/completion_visuals.js:461
+#: src/hope_live/theme/static/js/completion_visuals.js:472
+#: src/hope_live/theme/static/js/completion_visuals.js:511
 #: src/hope_live/theme/static/js/completion_visuals.min.js:1
 msgid "Still open"
 msgstr ""
 
-#: src/hope_live/theme/static/js/completion_visuals.js:461
+#: src/hope_live/theme/static/js/completion_visuals.js:462
 #: src/hope_live/theme/static/js/completion_visuals.min.js:1
 msgid "Total"
 msgstr ""
 
-#: src/hope_live/theme/static/js/completion_visuals.js:649
+#: src/hope_live/theme/static/js/completion_visuals.js:650
 #: src/hope_live/theme/static/js/completion_visuals.min.js:1
 msgid "No country has both completion and financial data for this period."
 msgstr "لا يوجد بلد تتوفر له بيانات الإنجاز والبيانات المالية لهذه الفترة."
 
-#: src/hope_live/theme/static/js/completion_visuals.js:668
-#: src/hope_live/theme/static/js/completion_visuals.js:675
-#: src/hope_live/theme/static/js/completion_visuals.js:703
+#: src/hope_live/theme/static/js/completion_visuals.js:669
+#: src/hope_live/theme/static/js/completion_visuals.js:676
+#: src/hope_live/theme/static/js/completion_visuals.js:704
 #: src/hope_live/theme/static/js/completion_visuals.min.js:1
 msgid "Reconciliation rate"
 msgstr "معدل التسوية"
 
-#: src/hope_live/theme/static/js/completion_visuals.js:670
-#: src/hope_live/theme/static/js/completion_visuals.js:675
-#: src/hope_live/theme/static/js/completion_visuals.js:733
+#: src/hope_live/theme/static/js/completion_visuals.js:671
+#: src/hope_live/theme/static/js/completion_visuals.js:676
+#: src/hope_live/theme/static/js/completion_visuals.js:734
 #: src/hope_live/theme/static/js/completion_visuals.min.js:1
 msgid "Delivery success rate"
 msgstr "معدل نجاح التسليم"
 
-#: src/hope_live/theme/static/js/completion_visuals.js:723
+#: src/hope_live/theme/static/js/completion_visuals.js:724
 #: src/hope_live/theme/static/js/completion_visuals.min.js:1
 msgid "80% reference"
 msgstr "مرجع 80%"
 
-#: src/hope_live/theme/static/js/completion_visuals.js:828
+#: src/hope_live/theme/static/js/completion_visuals.js:829
 #: src/hope_live/theme/static/js/completion_visuals.min.js:1
 msgid "Reconciled amount (USD)"
 msgstr "المبلغ المسوّى (بالدولار الأمريكي)"
 
-#: src/hope_live/theme/static/js/completion_visuals.js:829
+#: src/hope_live/theme/static/js/completion_visuals.js:830
 #: src/hope_live/theme/static/js/completion_visuals.min.js:1
 msgid "Still open amount (USD)"
 msgstr ""
 
-#: src/hope_live/theme/static/js/completion_visuals.js:830
+#: src/hope_live/theme/static/js/completion_visuals.js:831
 #: src/hope_live/theme/static/js/completion_visuals.min.js:1
 msgid "Reconciliation timeline (USD)"
 msgstr "الخط الزمني للتسوية (بالدولار الأمريكي)"
 
-#: src/hope_live/theme/static/js/completion_visuals.js:831
+#: src/hope_live/theme/static/js/completion_visuals.js:832
 #: src/hope_live/theme/static/js/completion_visuals.min.js:1
 msgid "Reconciliation status by country (USD)"
 msgstr "حالة التسوية حسب البلد (بالدولار الأمريكي)"
 
-#: src/hope_live/theme/static/js/completion_visuals.js:833
+#: src/hope_live/theme/static/js/completion_visuals.js:834
 #: src/hope_live/theme/static/js/completion_visuals.min.js:1
 msgid "Reconciled payments"
 msgstr "المدفوعات التوفيقية"
 
-#: src/hope_live/theme/static/js/completion_visuals.js:834
+#: src/hope_live/theme/static/js/completion_visuals.js:835
 #: src/hope_live/theme/static/js/completion_visuals.min.js:1
 msgid "Still open payments"
 msgstr ""
 
-#: src/hope_live/theme/static/js/completion_visuals.js:835
+#: src/hope_live/theme/static/js/completion_visuals.js:836
 #: src/hope_live/theme/static/js/completion_visuals.min.js:1
 #, fuzzy
 #| msgid "Reconciliation Timeline (USD)"
 msgid "Reconciliation timeline"
 msgstr "الخط الزمني للتسوية (بالدولار الأمريكي)"
 
-#: src/hope_live/theme/static/js/completion_visuals.js:836
+#: src/hope_live/theme/static/js/completion_visuals.js:837
 #: src/hope_live/theme/static/js/completion_visuals.min.js:1
 msgid "Reconciliation status by country"
 msgstr "حالة المطابقة حسب البلد"
 
-#: src/hope_live/theme/static/js/completion_visuals.js:842
+#: src/hope_live/theme/static/js/completion_visuals.js:843
 #: src/hope_live/theme/static/js/completion_visuals.min.js:1
 #: src/hope_live/theme/static/js/dashboard_visuals.js:308
 #: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
 msgid "Cash disbursed by beneficiary group"
 msgstr ""
 
-#: src/hope_live/theme/static/js/completion_visuals.js:843
+#: src/hope_live/theme/static/js/completion_visuals.js:844
 #: src/hope_live/theme/static/js/completion_visuals.min.js:1
 #: src/hope_live/theme/static/js/dashboard_visuals.js:317
 #: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
@@ -250,26 +250,26 @@ msgstr "الإنفاق"
 msgid "Payments"
 msgstr "المدفوعات"
 
-#: src/hope_live/theme/static/js/dashboard_visuals.js:473
-#: src/hope_live/theme/static/js/dashboard_visuals.js:608
-#: src/hope_live/theme/static/js/dashboard_visuals.js:622
+#: src/hope_live/theme/static/js/dashboard_visuals.js:475
+#: src/hope_live/theme/static/js/dashboard_visuals.js:611
+#: src/hope_live/theme/static/js/dashboard_visuals.js:625
 #: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
 msgid "Other"
 msgstr "أخرى"
 
-#: src/hope_live/theme/static/js/dashboard_visuals.js:671
+#: src/hope_live/theme/static/js/dashboard_visuals.js:674
 #: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
 #, fuzzy
 #| msgid "Spending Timeline"
 msgid "In pipeline"
 msgstr "الجدول الزمني للإنفاق"
 
-#: src/hope_live/theme/static/js/dashboard_visuals.js:672
+#: src/hope_live/theme/static/js/dashboard_visuals.js:675
 #: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
 msgid "Delivered"
 msgstr ""
 
-#: src/hope_live/theme/static/js/dashboard_visuals.js:714
+#: src/hope_live/theme/static/js/dashboard_visuals.js:717
 #: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
 #, fuzzy
 #| msgid "Spending Timeline"
@@ -355,9 +355,8 @@ msgstr "الأفراد"
 
 #: src/hope_live/theme/static/js/grievance_visuals.js:6
 #: src/hope_live/theme/static/js/grievance_visuals.js:221
-#: src/hope_live/theme/static/js/grievance_visuals.min.js:1
-msgid "New"
-msgstr "جديد"
+msgid "New (Not Assigned)"
+msgstr "جديد (غير معيّن)"
 
 #: src/hope_live/theme/static/js/grievance_visuals.js:7
 #: src/hope_live/theme/static/js/grievance_visuals.js:222
@@ -385,10 +384,10 @@ msgstr "للموافقة"
 
 #: src/hope_live/theme/static/js/grievance_visuals.js:11
 #: src/hope_live/theme/static/js/grievance_visuals.js:226
-#: src/hope_live/theme/static/js/grievance_visuals.js:270
-#: src/hope_live/theme/static/js/grievance_visuals.js:289
-#: src/hope_live/theme/static/js/grievance_visuals.js:610
-#: src/hope_live/theme/static/js/grievance_visuals.js:634
+#: src/hope_live/theme/static/js/grievance_visuals.js:271
+#: src/hope_live/theme/static/js/grievance_visuals.js:291
+#: src/hope_live/theme/static/js/grievance_visuals.js:612
+#: src/hope_live/theme/static/js/grievance_visuals.js:636
 #: src/hope_live/theme/static/js/grievance_visuals.min.js:1
 msgid "Closed"
 msgstr "مغلق"
@@ -597,31 +596,39 @@ msgid "Update Delegate"
 msgstr "تحديث المفوض"
 
 #: src/hope_live/theme/static/js/grievance_visuals.js:227
+#: src/hope_live/theme/static/js/grievance_visuals.js:758
+#: src/hope_live/theme/static/js/grievance_visuals.min.js:1
 msgid "Not specified"
 msgstr "غير محدد"
 
-#: src/hope_live/theme/static/js/grievance_visuals.js:264
-#: src/hope_live/theme/static/js/grievance_visuals.js:604
+#: src/hope_live/theme/static/js/grievance_visuals.js:265
+#: src/hope_live/theme/static/js/grievance_visuals.js:606
 #: src/hope_live/theme/static/js/grievance_visuals.min.js:1
 msgid "tickets"
 msgstr "تذاكر"
 
-#: src/hope_live/theme/static/js/grievance_visuals.js:270
-#: src/hope_live/theme/static/js/grievance_visuals.js:305
-#: src/hope_live/theme/static/js/grievance_visuals.js:610
-#: src/hope_live/theme/static/js/grievance_visuals.js:642
+#: src/hope_live/theme/static/js/grievance_visuals.js:271
+#: src/hope_live/theme/static/js/grievance_visuals.js:307
+#: src/hope_live/theme/static/js/grievance_visuals.js:612
+#: src/hope_live/theme/static/js/grievance_visuals.js:644
 #: src/hope_live/theme/static/js/grievance_visuals.min.js:1
 msgid "Open & Active"
 msgstr "مفتوحة ونشطة"
 
-#: src/hope_live/theme/static/js/grievance_visuals.js:371
-#: src/hope_live/theme/static/js/grievance_visuals.js:409
+#: src/hope_live/theme/static/js/grievance_visuals.js:373
+#: src/hope_live/theme/static/js/grievance_visuals.js:411
+#: src/hope_live/theme/static/js/grievance_visuals.min.js:1
 msgid "days"
 msgstr "أيام"
 
-#: src/hope_live/theme/static/js/grievance_visuals.js:372
+#: src/hope_live/theme/static/js/grievance_visuals.js:374
+#: src/hope_live/theme/static/js/grievance_visuals.min.js:1
 msgid "closed tickets"
 msgstr "التذاكر المغلقة"
+
+#: src/hope_live/theme/static/js/grievance_visuals.min.js:1
+msgid "New"
+msgstr "جديد"
 
 #: src/hope_live/theme/static/js/risk_visuals.js:6
 #: src/hope_live/theme/static/js/risk_visuals.min.js:1
@@ -788,7 +795,7 @@ msgstr ""
 msgid "Download PNG"
 msgstr ""
 
-#: src/hope_live/theme/static/js/risk_visuals.js:574
+#: src/hope_live/theme/static/js/risk_visuals.js:577
 #: src/hope_live/theme/static/js/risk_visuals.min.js:1
 msgid "No matching results"
 msgstr ""

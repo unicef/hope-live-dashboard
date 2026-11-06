@@ -394,6 +394,9 @@ def test_financial_dashboard_loads(browser, financial_aggregates):
     browser.click('[data-chart-info="financial.program"] summary')
     browser.wait_for_text_visible("top 10 programmes")
 
+    # The header shows the latest aggregate date once the data is loaded.
+    assert browser.get_text("#data-as-of") != "—"
+
     # Assert current year totals (default "This Year" preset)
     browser.assert_text("25", "#total-payments")
 
@@ -501,7 +504,7 @@ def test_grievance_dashboard_loads(browser, grievance_aggregates, grievance_stat
 
     # Key-status figures reconcile with the status doughnut (fixture: 5 CLOSED +
     # 5 RESOLVED in the current year).
-    browser.wait_for_text_visible("10", "#status-count-closed")
+    browser.wait_for_text_visible("10 (20.0%)", "#status-count-closed")
     browser.wait_for_text_visible("Open & Active covers")
     browser.wait_for_text_visible("Priority is an optional field")
 

@@ -346,18 +346,19 @@ document.addEventListener('DOMContentLoaded', function () {
             },
             legend: {
                 data: [gettext('Reconciled'), gettext('Still open')],
-                bottom: 0,
+                top: 0,
+                right: 20,
                 icon: 'roundRect'
             },
             grid: {
-                top: 15,
-                bottom: 30,
+                top: 30,
+                bottom: 25,
                 left: 60,
                 right: 20
             },
             xAxis: {
                 type: 'time',
-                axisLabel: { color: '#64748b', formatter: value => d3.timeFormat('%b')(new Date(value)) }
+                axisLabel: { color: '#64748b', formatter: value => d3.timeFormat('%b %Y')(new Date(value)) }
             },
             yAxis: {
                 type: 'value',
@@ -904,6 +905,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             ndx.remove();
             ndx.add(data);
+            if (chartHelpers.setDataAsOf) chartHelpers.setDataAsOf(data);
 
             await loadFinancialForRates(from, to);
 
