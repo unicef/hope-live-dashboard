@@ -115,17 +115,11 @@
             <h3 id="country-title" class="text-sm font-bold text-gray-900 mb-1">{% translate "Cash disbursed (paid) by country" %}</h3>
             {% chart_info "financial.country" %}
             <div id="country-chart" class="w-full h-[300px]"></div>
-            <div class="flex justify-end mt-1">
-                <button type="button" class="show-all-toggle text-[11px] font-semibold text-[#00adef] hover:underline" data-chart="country" aria-expanded="false">{% translate "Show all" %}</button>
-            </div>
         </div>
         <div class="bg-white rounded-xl shadow-2xs border border-gray-200 p-3.5">
             <h3 id="outstanding-country-title" class="text-sm font-bold text-gray-900 mb-1">{% translate "Outstanding by country (USD)" %}</h3>
             {% chart_info "financial.outstanding_country" %}
             <div id="outstanding-country-chart" class="w-full h-[300px]"></div>
-            <div class="flex justify-end mt-1">
-                <button type="button" class="show-all-toggle text-[11px] font-semibold text-[#00adef] hover:underline" data-chart="outstanding" aria-expanded="false">{% translate "Show all" %}</button>
-            </div>
         </div>
     </div>
 

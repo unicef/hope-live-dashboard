@@ -454,7 +454,6 @@ def test_demographic_dashboard_loads(browser, demographic_aggregates, financial_
     browser.wait_for_element_visible("#sector-children-chart canvas")
     browser.wait_for_element_visible("#country-pwd-chart canvas")
     browser.wait_for_element_visible("#region-share-chart canvas")
-    browser.wait_for_element_visible("#demographic-country-show-all")
     browser.wait_for_element_visible("#time-focus-chart canvas")
 
     browser.assert_text("Children reached", "#card-children h3")
@@ -593,6 +592,44 @@ def test_grievance_dashboard_loads(browser, grievance_aggregates, grievance_stat
     browser.wait_for_text_visible("100", "#total-tickets")
 
 
+def test_grievance_country_chart_shows_every_country(browser, db):
+    year = datetime.datetime.now().year
+    for i in range(15):
+        country = f"country-{i}"
+        GrievanceAggregateFactory(
+            date=datetime.date(year, 1, i + 1),
+            time_grain="daily",
+            country_slug=country,
+            dimension_type="status",
+            dimension_value="NEW",
+            ticket_count=5,
+        )
+        GrievanceAggregateFactory(
+            date=datetime.date(year, 1, i + 1),
+            time_grain="daily",
+            country_slug=country,
+            dimension_type="status",
+            dimension_value="CLOSED",
+            ticket_count=5,
+        )
+        GrievanceAggregateFactory(
+            date=datetime.date(year, 1, i + 1),
+            time_grain="daily",
+            country_slug=country,
+            dimension_type="category",
+            dimension_value="Data Change",
+            ticket_count=10,
+        )
+
+    browser.login_as_user()
+    browser.open("/grievance/")
+    browser.wait_for_element_visible("#grievance-country-chart canvas")
+    country_option = browser.execute_script(
+        "return echarts.getInstanceByDom(document.getElementById('grievance-country-chart')).getOption();"
+    )
+    assert len(country_option["xAxis"][0]["data"]) == 15
+
+
 def test_financial_dashboard_cohort_toggle_and_pipeline(browser, financial_aggregates, social_worker_aggregates):
     browser.login_as_user()
     browser.open("/dashboard/")
@@ -662,6 +699,45 @@ def test_completion_rates_chart_loads(browser, completion_aggregates, financial_
     assert rates_option["xAxis"][0]["max"] == 100
 
 
+def test_completion_country_charts_show_every_country(browser, db):
+    year = datetime.datetime.now().year
+    countries = [f"country-{i}" for i in range(15)]
+    for i, country in enumerate(countries):
+        CompletionAggregateFactory(
+            date=datetime.date(year, 1, i + 1),
+            time_grain="daily",
+            country_slug=country,
+            dimension_type="status",
+            dimension_value="RECONCILED",
+            payment_count=10,
+            total_usd=1000,
+        )
+        FinancialAggregateFactory(
+            date=datetime.date(year, 1, i + 1),
+            time_grain="daily",
+            country_slug=country,
+            dimension_type="status",
+            dimension_value="DISTRIBUTION SUCCESSFUL",
+            payment_count=10,
+            total_usd=1000,
+        )
+
+    browser.login_as_user()
+    browser.open("/completion/")
+    browser.wait_for_element_visible("#status-country-chart canvas")
+    browser.wait_for_element_visible("#completion-rates-chart canvas")
+
+    status_option = browser.execute_script(
+        "return echarts.getInstanceByDom(document.getElementById('status-country-chart')).getOption();"
+    )
+    assert len(status_option["xAxis"][0]["data"]) == 15
+
+    rates_option = browser.execute_script(
+        "return echarts.getInstanceByDom(document.getElementById('completion-rates-chart')).getOption();"
+    )
+    assert len(rates_option["yAxis"][0]["data"]) == 15
+
+
 def test_completion_verification_panel(browser, completion_aggregates, financial_aggregates):
     year = datetime.datetime.now().year
     for i, (value, count) in enumerate([("SELECTED", 100), ("VERIFIED", 92), ("PENDING", 5), ("DISCREPANCIES", 3)]):
@@ -685,8 +761,8 @@ def test_completion_verification_panel(browser, completion_aggregates, financial
     browser.assert_text("92.0%", "#verification-rate")
 
 
-def test_program_and_country_charts_show_top_ten_with_other(browser, db):
-    """The dashboard must show the top 10 categories plus an Other bucket."""
+def test_program_chart_uses_top_ten_and_country_chart_shows_all(browser, db):
+    """Programmes use top 10 + Other; country charts must show every country."""
     year = datetime.datetime.now().year
     for i in range(12):
         FinancialAggregateFactory(
@@ -726,8 +802,8 @@ def test_program_and_country_charts_show_top_ten_with_other(browser, db):
         "return echarts.getInstanceByDom(document.getElementById('country-chart')).getOption();"
     )
     country_names = [item["name"] for item in country_option["series"][0]["data"]]
-    assert len(country_names) == 11, country_names
-    assert "Other" in country_names, country_names
+    assert len(country_names) == 12, country_names
+    assert "Other" not in country_names, country_names
 
     # Expanding a chart replaces the Other bucket with every underlying category.
     browser.click('.show-all-toggle[data-chart="program"]')

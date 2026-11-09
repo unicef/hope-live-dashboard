@@ -377,7 +377,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         timelineChart.setOption(timelineOption, { notMerge: true });
 
-        // 2. Stacked Country Chart (top 10): absolute values or 100% share
+        // 2. Country chart (all countries): absolute values or 100% share
         const countryData = countryStatusGroup.all()
             .map(d => {
                 const reconciled = currentMetric === 'usd' ? d.value.reconciled_usd : d.value.reconciled_payments;
@@ -390,8 +390,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 };
             })
             .filter(d => d.key !== '' && d.key !== null && d.total > 0)
-            .sort((a, b) => b.total - a.total)
-            .slice(0, 10);
+            .sort((a, b) => b.total - a.total);
 
         const isShareView = countryView === 'share';
         const hasAnyCountrySelection = selectedCountries.size > 0;
@@ -464,7 +463,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 data: countryData.map(d => d.key),
                 axisLabel: {
                     rotate: 30,
-                    interval: 0,
+                    interval: 'auto',
                     width: 115,
                     overflow: 'truncate',
                     formatter: val => formatCountryName(val),
@@ -560,13 +559,15 @@ document.addEventListener('DOMContentLoaded', function () {
             });
         });
 
-        // Keep the largest countries so the chart stays readable, then order
-        // by reconciliation rate (category axes render bottom-up, so the
-        // highest rate ends up at the top).
-        const visible = points
-            .sort((a, b) => b.totalReconciled - a.totalReconciled)
-            .slice(0, 12)
-            .sort((a, b) => a.reconciliationRate - b.reconciliationRate);
+        // Order every country by reconciliation rate (category axes render
+        // bottom-up, so the highest rate ends up at the top).
+        const visible = points.sort((a, b) => a.reconciliationRate - b.reconciliationRate);
+
+        const ratesEl = document.getElementById('completion-rates-chart');
+        if (ratesEl) {
+            ratesEl.style.height = `${Math.max(420, visible.length * 26 + 80)}px`;
+            ratesChart.resize();
+        }
 
         if (visible.length === 0) {
             ratesChart.setOption({

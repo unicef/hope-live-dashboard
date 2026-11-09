@@ -470,6 +470,15 @@ document.addEventListener('DOMContentLoaded', function () {
             }, { notMerge: true });
         }
 
+        // Country charts are never truncated: grow the canvas so every country
+        // remains readable instead of collapsing the tail into "Other".
+        function resizeCountryChart(chartObj, count) {
+            const el = chartObj.getDom();
+            if (!el) return;
+            el.style.height = `${Math.max(300, count * 22 + 60)}px`;
+            chartObj.resize();
+        }
+
         // Group-backed bars (programme, FSP, beneficiary group): top 10 + Other.
         function updateHorizontalBarChart(chartObj, group, activeFiltersSet, leftMargin = 220, maxBars = 10, wrapLabels = false) {
             const rows = group.all()
@@ -627,7 +636,8 @@ document.addEventListener('DOMContentLoaded', function () {
             .filter(d => d.key !== '' && d.key !== null && d.value > 0)
             .sort((a, b) => b.value - a.value);
 
-        renderHorizontalBars(countryChart, collapseTopBars(countryRows, expandedCharts.has('country') ? Infinity : 10, gettext('Other')), {
+        resizeCountryChart(countryChart, countryRows.length);
+        renderHorizontalBars(countryChart, countryRows, {
             leftMargin: 150,
             activeSet: selectedCountries,
             axisLabelFor: formatCountryName,
@@ -641,7 +651,8 @@ document.addEventListener('DOMContentLoaded', function () {
             .filter(d => d.key !== '' && d.key !== null && d.value > 0)
             .sort((a, b) => b.value - a.value);
 
-        renderHorizontalBars(outstandingCountryChart, collapseTopBars(outstandingRows, expandedCharts.has('outstanding') ? Infinity : 10, gettext('Other')), {
+        resizeCountryChart(outstandingCountryChart, outstandingRows.length);
+        renderHorizontalBars(outstandingCountryChart, outstandingRows, {
             leftMargin: 150,
             metric: 'usd',
             activeSet: selectedCountries,

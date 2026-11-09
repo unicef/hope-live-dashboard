@@ -113,7 +113,6 @@ document.addEventListener('DOMContentLoaded', function () {
     // Active Filters Sets
     const selectedSectors = new Set();
     const selectedCountries = new Set();
-    let showAllCountries = false;
     const countryFilter = chartHelpers.initCountryFilter({
         dimension: countryDimension,
         onChange: value => {
@@ -250,14 +249,14 @@ document.addEventListener('DOMContentLoaded', function () {
             .filter(d => d.key && d.value > 0)
             .sort((a, b) => b.value - a.value);
         const countryTotal = allCountryData.reduce((sum, d) => sum + d.value, 0);
-        const visibleCountries = showAllCountries ? allCountryData : allCountryData.slice(0, 10);
-        const countryBars = visibleCountries.map(d => ({ ...d, name: formatCountry(d.key) }));
-        const otherCountryValue = showAllCountries ? 0 : allCountryData.slice(10).reduce((sum, d) => sum + d.value, 0);
-        if (otherCountryValue > 0) {
-            countryBars.push({ key: gettext('Other'), name: gettext('Other'), value: otherCountryValue, isOther: true });
-        }
+        const countryBars = allCountryData.map(d => ({ ...d, name: formatCountry(d.key) }));
         const countryShare = value => countryTotal > 0 ? (value / countryTotal) * 100 : 0;
         const hasAnyCountrySelection = selectedCountries.size > 0;
+        const countryChartEl = countryPwdChart.getDom();
+        if (countryChartEl) {
+            countryChartEl.style.height = `${Math.max(300, countryBars.length * 22 + 40)}px`;
+            countryPwdChart.resize();
+        }
 
         countryPwdChart.setOption({
             tooltip: {
@@ -375,26 +374,6 @@ document.addEventListener('DOMContentLoaded', function () {
         }, { notMerge: true });
 
     }
-
-    function syncCountryShowAllButton() {
-        const btn = document.getElementById('demographic-country-show-all');
-        if (!btn) return;
-        btn.textContent = showAllCountries ? gettext('Show top 10') : gettext('Show all');
-        btn.setAttribute('aria-expanded', showAllCountries ? 'true' : 'false');
-    }
-
-    const countryShowAllBtn = document.getElementById('demographic-country-show-all');
-    if (countryShowAllBtn) {
-        countryShowAllBtn.addEventListener('click', () => {
-            showAllCountries = !showAllCountries;
-            const chartEl = document.getElementById('country-pwd-chart');
-            if (chartEl) chartEl.style.height = showAllCountries ? '520px' : '';
-            updateAll();
-            syncCountryShowAllButton();
-            countryPwdChart.resize();
-        });
-    }
-    syncCountryShowAllButton();
 
     // --- Interactive Filters Bindings ---
 

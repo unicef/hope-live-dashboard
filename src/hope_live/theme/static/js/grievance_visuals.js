@@ -590,7 +590,7 @@ document.addEventListener('DOMContentLoaded', function () {
             }]
         }, { notMerge: true });
 
-        // 6. Country Chart (top 10)
+        // 6. Country Chart (all countries)
         const countryData = countryGroup.all()
             .map(d => ({
                 key: d.key,
@@ -599,8 +599,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 total: d.value.open + d.value.resolved
             }))
             .filter(d => d.key !== null && d.total > 0)
-            .sort((a, b) => b.total - a.total)
-            .slice(0, 10);
+            .sort((a, b) => b.total - a.total);
 
         const hasAnyCountrySelection = selectedCountries.size > 0;
         const countryTicketTotal = countryGroup.all().reduce(
@@ -637,7 +636,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 formatter: function (params) {
                     const total = params.reduce((sum, p) => sum + (+p.value || 0), 0);
                     const share = (params[0].data && params[0].data.share) || 0;
-                    let tooltipHtml = `${params[0].name}: <b>${d3.format(",")(total)}</b> ${gettext('tickets')} (${share.toFixed(1)}%)<br/>`;
+                    const countryLabel = chartHelpers.formatCountryName ? chartHelpers.formatCountryName(params[0].name) : params[0].name;
+                    let tooltipHtml = `${countryLabel}: <b>${d3.format(",")(total)}</b> ${gettext('tickets')} (${share.toFixed(1)}%)<br/>`;
                     params.forEach(p => {
                         tooltipHtml += `${p.marker} ${p.seriesName}: <b>${d3.format(",")(p.value)}</b><br/>`;
                     });
@@ -655,9 +655,10 @@ document.addEventListener('DOMContentLoaded', function () {
                 data: countryData.map(d => d.key),
                 axisLabel: {
                     rotate: 30,
-                    interval: 0,
+                    interval: 'auto',
                     width: 115,
                     overflow: 'truncate',
+                    formatter: val => (chartHelpers.formatCountryName ? chartHelpers.formatCountryName(val) : val),
                     color: '#1f2937',
                     fontWeight: 500
                 }
