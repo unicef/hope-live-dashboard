@@ -403,12 +403,12 @@ document.addEventListener('DOMContentLoaded', function () {
                 value: isShareView ? reconciledShare(d) : d.reconciled,
                 itemStyle: { color: RECONCILED_COLOR, opacity: opacity },
                 label: {
-                    show: true,
-                    position: 'top',
+                    show: isShareView ? reconciledShare(d) >= 8 : true,
+                    position: 'insideRight',
                     formatter: isShareView ? `${reconciledShare(d).toFixed(1)}%` : formatCompact(d.reconciled),
-                    color: '#0f172a',
+                    color: '#ffffff',
                     fontWeight: 600,
-                    fontSize: 10
+                    fontSize: 9
                 }
             };
         });
@@ -420,15 +420,21 @@ document.addEventListener('DOMContentLoaded', function () {
                 value: isShareView ? 100 - reconciledShare(d) : d.opened,
                 itemStyle: { color: OPEN_COLOR, opacity: opacity },
                 label: {
-                    show: !isShareView && d.opened > 0,
-                    position: 'top',
+                    show: !isShareView && d.opened > 0 && (d.opened / d.total) >= 0.05,
+                    position: 'insideRight',
                     formatter: formatCompact(d.opened),
-                    color: '#0f172a',
+                    color: '#ffffff',
                     fontWeight: 600,
-                    fontSize: 10
+                    fontSize: 9
                 }
             };
         });
+
+        const countryChartEl = countryChart.getDom();
+        if (countryChartEl) {
+            countryChartEl.style.height = `${Math.max(300, countryData.length * 30 + 80)}px`;
+            countryChart.resize();
+        }
 
         countryChart.setOption({
             tooltip: {
@@ -457,21 +463,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 top: 0,
                 right: 20
             },
-            grid: { top: 48, bottom: 75, left: 60, right: 20 },
+            grid: { top: 48, bottom: 20, left: 190, right: 30 },
             xAxis: {
-                type: 'category',
-                data: countryData.map(d => d.key),
-                axisLabel: {
-                    rotate: 30,
-                    interval: 'auto',
-                    width: 115,
-                    overflow: 'truncate',
-                    formatter: val => formatCountryName(val),
-                    color: '#1f2937',
-                    fontWeight: 500
-                }
-            },
-            yAxis: {
                 type: 'value',
                 min: 0,
                 max: isShareView ? 100 : null,
@@ -481,26 +474,32 @@ document.addEventListener('DOMContentLoaded', function () {
                 },
                 splitLine: { lineStyle: { color: '#f1f5f9' } }
             },
+            yAxis: {
+                type: 'category',
+                data: countryData.map(d => formatCountryName(d.key)),
+                inverse: true,
+                axisTick: { show: false },
+                axisLine: { show: true, lineStyle: { color: '#f1f5f9' } },
+                axisLabel: { width: 180, overflow: 'break', color: '#374151', fontSize: 10 }
+            },
             series: [
                 {
                     name: gettext('Reconciled'),
                     type: 'bar',
-                    stack: isShareView ? 'total' : undefined,
-                    barMaxWidth: isShareView ? 30 : 24,
-                    barGap: isShareView ? '0%' : '12%',
+                    stack: 'total',
+                    barMaxWidth: 18,
                     color: RECONCILED_COLOR,
                     data: countrySeriesDataReconciled,
-                    itemStyle: { borderRadius: isShareView ? [0, 0, 0, 0] : [4, 4, 0, 0] }
+                    itemStyle: { borderRadius: [4, 0, 0, 4] }
                 },
                 {
                     name: gettext('Pending Reconciliation'),
                     type: 'bar',
-                    stack: isShareView ? 'total' : undefined,
-                    barMaxWidth: isShareView ? 30 : 24,
-                    barGap: isShareView ? '0%' : '12%',
+                    stack: 'total',
+                    barMaxWidth: 18,
                     color: OPEN_COLOR,
                     data: countrySeriesDataOpened,
-                    itemStyle: { borderRadius: [4, 4, 0, 0] }
+                    itemStyle: { borderRadius: [0, 4, 4, 0] }
                 }
             ]
         }, { notMerge: true });

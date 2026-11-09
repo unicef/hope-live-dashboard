@@ -62,6 +62,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const chartHelpers = window.HopeChart || {};
     const getStableColor = chartHelpers.getStableColor || (() => '#5470c6');
+    const formatCountry = chartHelpers.formatCountryName || (value => value);
 
     const formatCompactCount = val => {
         if (Math.abs(val) < 1000) return d3.format(",")(val);
@@ -623,21 +624,28 @@ document.addEventListener('DOMContentLoaded', function () {
             const opacity = isSelected ? 1 : (hasAnyCountrySelection ? 0.35 : 1);
             return {
                 value: d.open,
+                total: d.total,
+                share: countryTicketTotal > 0 ? (d.total / countryTicketTotal) * 100 : 0,
                 itemStyle: { color: '#d87a80', opacity: opacity }
             };
         });
 
+        const countryChartEl = countryChart.getDom();
+        if (countryChartEl) {
+            countryChartEl.style.height = `${Math.max(320, countryData.length * 30 + 70)}px`;
+            countryChart.resize();
+        }
+
         countryChart.setOption({
-            // Closed and Open & Active are clustered so the smaller series stays visible.
             color: ['#97b552', '#d87a80'],
             tooltip: {
                 trigger: 'axis',
                 axisPointer: { type: 'shadow' },
                 formatter: function (params) {
-                    const total = params.reduce((sum, p) => sum + (+p.value || 0), 0);
-                    const share = (params[0].data && params[0].data.share) || 0;
-                    const countryLabel = chartHelpers.formatCountryName ? chartHelpers.formatCountryName(params[0].name) : params[0].name;
-                    let tooltipHtml = `${countryLabel}: <b>${d3.format(",")(total)}</b> ${gettext('tickets')} (${share.toFixed(1)}%)<br/>`;
+                    const d = countryData[params[0].dataIndex];
+                    if (!d) return '';
+                    const share = countryTicketTotal > 0 ? (d.total / countryTicketTotal) * 100 : 0;
+                    let tooltipHtml = `${formatCountry(d.key)}: <b>${d3.format(",")(d.total)}</b> ${gettext('tickets')} (${share.toFixed(1)}%)<br/>`;
                     params.forEach(p => {
                         tooltipHtml += `${p.marker} ${p.seriesName}: <b>${d3.format(",")(p.value)}</b><br/>`;
                     });
@@ -649,36 +657,40 @@ document.addEventListener('DOMContentLoaded', function () {
                 top: 0,
                 right: 20
             },
-            grid: { top: 45, bottom: 75, left: 60, right: 20 },
+            grid: { top: 45, bottom: 20, left: 190, right: 130 },
             xAxis: {
-                type: 'category',
-                data: countryData.map(d => d.key),
-                axisLabel: {
-                    rotate: 30,
-                    interval: 'auto',
-                    width: 115,
-                    overflow: 'truncate',
-                    formatter: val => (chartHelpers.formatCountryName ? chartHelpers.formatCountryName(val) : val),
-                    color: '#1f2937',
-                    fontWeight: 500
-                }
+                type: 'value',
+                axisLabel: { formatter: val => d3.format(".2s")(val).replace('G', 'B'), color: '#64748b', fontSize: 10 },
+                splitLine: { lineStyle: { color: '#f1f5f9' } }
             },
             yAxis: {
-                type: 'value',
-                axisLabel: { formatter: val => d3.format(".2s")(val).replace('G', 'B'), color: '#64748b' },
-                splitLine: { lineStyle: { color: '#f1f5f9' } }
+                type: 'category',
+                data: countryData.map(d => formatCountry(d.key)),
+                inverse: true,
+                axisTick: { show: false },
+                axisLine: { show: true, lineStyle: { color: '#f1f5f9' } },
+                axisLabel: { width: 180, overflow: 'break', color: '#374151', fontSize: 10 }
             },
             series: [
                 {
                     name: gettext('Closed'),
                     type: 'bar',
-                    barMaxWidth: 26,
-                    barGap: '15%',
+                    stack: 'total',
+                    barMaxWidth: 18,
                     data: countrySeriesDataResolved,
-                    itemStyle: { color: '#97b552', borderRadius: [4, 4, 0, 0] },
+                    itemStyle: { color: '#97b552', borderRadius: [4, 0, 0, 4] }
+                },
+                {
+                    name: gettext('Open & Active'),
+                    type: 'bar',
+                    stack: 'total',
+                    barMaxWidth: 18,
+                    data: countrySeriesDataOpen,
+                    itemStyle: { color: '#d87a80', borderRadius: [0, 4, 4, 0] },
                     label: {
                         show: true,
-                        position: 'top',
+                        position: 'right',
+                        distance: 6,
                         formatter: params => {
                             const data = params.data || {};
                             const total = data.total != null ? data.total : (+params.value || 0);
@@ -689,14 +701,6 @@ document.addEventListener('DOMContentLoaded', function () {
                         fontWeight: 600,
                         fontSize: 10
                     }
-                },
-                {
-                    name: gettext('Open & Active'),
-                    type: 'bar',
-                    barMaxWidth: 26,
-                    data: countrySeriesDataOpen,
-                    itemStyle: { color: '#d87a80', borderRadius: [4, 4, 0, 0] },
-                    label: { show: false }
                 }
             ]
         }, { notMerge: true });

@@ -77,7 +77,9 @@ CHART_INFO = {
             "Payment rows are grouped by the business area country slug using the same date and "
             "status filters as the financial timeline."
         ),
-        "note": _("Top 10 countries plus an Other bucket; outstanding is shown beside it."),
+        "note": _(
+            "All countries with financial data in the period are shown. Outstanding by country is shown beside it."
+        ),
     },
     "financial.program": {
         "definition": _("Cash disbursed or payments by programme."),
@@ -106,8 +108,8 @@ CHART_INFO = {
             "successful statuses have already been paid and are excluded."
         ),
         "note": _(
-            "Always shown in USD, independent of the amount/payment-count toggle. Top 10 "
-            "countries plus an Other bucket."
+            "Always shown in USD, independent of the amount/payment-count toggle. All countries "
+            "with outstanding amounts are shown."
         ),
     },
     "financial.implementing_partner": {
@@ -196,7 +198,7 @@ CHART_INFO = {
             "metrics use recorded composition; social-worker programmes report workforce counts "
             "separately."
         ),
-        "note": _("The chart shows the top 10 countries. Children and PWD caveats apply."),
+        "note": _("All countries with data in the period are shown. Children and PWD caveats apply."),
     },
     "demographic.region": {
         "definition": _("Share of the reached population by region."),
@@ -235,8 +237,8 @@ CHART_INFO = {
             "the active metric."
         ),
         "note": _(
-            "Top 10 countries by total volume. Absolute values is the default; 100% share shows "
-            "each country's reconciled and still-open split as percentages."
+            "All countries with completion data are shown. Absolute values is the default; 100% "
+            "share shows each country's reconciled and pending split as percentages."
         ),
     },
     "completion.rates": {
@@ -249,8 +251,8 @@ CHART_INFO = {
             "are shown."
         ),
         "note": _(
-            "Top 12 countries by completion volume, sorted by reconciliation rate. The dashed "
-            "80% line is a reference guide, not a threshold."
+            "All countries present in both feeds are shown, sorted by reconciliation rate. The "
+            "dashed 80% line is a reference guide, not a threshold."
         ),
     },
     "completion.verification": {
@@ -344,7 +346,7 @@ CHART_INFO = {
             "Uses the same ticket base as the grievance timeline, grouped by business area "
             "country. Each bar is the stacked total of closed/resolved and open/active tickets."
         ),
-        "note": _("The chart shows the top 10 countries by total tickets."),
+        "note": _("All countries with tickets in the period are shown; long country names wrap on the axis."),
     },
     # ------------------------------------------------------------------
     # Landing

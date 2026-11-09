@@ -516,13 +516,14 @@ def test_completion_dashboard_loads(browser, completion_aggregates, financial_ag
     share_option = browser.execute_script(
         "return echarts.getInstanceByDom(document.getElementById('status-country-chart')).getOption();"
     )
-    assert share_option["yAxis"][0]["max"] == 100
+    assert share_option["xAxis"][0]["max"] == 100
     assert share_option["series"][0].get("stack") == "total"
     browser.click("#country-view-absolute")
     absolute_option = browser.execute_script(
         "return echarts.getInstanceByDom(document.getElementById('status-country-chart')).getOption();"
     )
-    assert absolute_option["series"][0].get("stack") in (None, "")
+    assert absolute_option["series"][0].get("stack") == "total"
+    assert absolute_option["yAxis"][0]["type"] == "category"
 
     # Assert current year totals
     browser.assert_text("15 (100.0% out of 15 total)", "#total-reconciled")
@@ -574,12 +575,14 @@ def test_grievance_dashboard_loads(browser, grievance_aggregates, grievance_stat
     country_option = browser.execute_script(
         "return echarts.getInstanceByDom(document.getElementById('grievance-country-chart')).getOption();"
     )
-    assert country_option["series"][0].get("stack") in (None, "")
+    assert country_option["yAxis"][0]["type"] == "category"
+    assert country_option["series"][0].get("stack") == "total"
+    assert country_option["series"][1].get("stack") == "total"
     country_label = browser.execute_script(
         "const o = echarts.getInstanceByDom(document.getElementById('grievance-country-chart')).getOption();"
-        "return o.series[0].label.formatter({dataIndex: 0, value: 5});"
+        "return o.series[1].label.formatter({data: {total: 10, share: 20}});"
     )
-    assert "%" in country_label
+    assert "20.0%" in country_label
 
     # Assert current year totals
     browser.assert_text("50", "#total-tickets")
@@ -627,7 +630,7 @@ def test_grievance_country_chart_shows_every_country(browser, db):
     country_option = browser.execute_script(
         "return echarts.getInstanceByDom(document.getElementById('grievance-country-chart')).getOption();"
     )
-    assert len(country_option["xAxis"][0]["data"]) == 15
+    assert len(country_option["yAxis"][0]["data"]) == 15
 
 
 def test_financial_dashboard_cohort_toggle_and_pipeline(browser, financial_aggregates, social_worker_aggregates):
@@ -730,7 +733,7 @@ def test_completion_country_charts_show_every_country(browser, db):
     status_option = browser.execute_script(
         "return echarts.getInstanceByDom(document.getElementById('status-country-chart')).getOption();"
     )
-    assert len(status_option["xAxis"][0]["data"]) == 15
+    assert len(status_option["yAxis"][0]["data"]) == 15
 
     rates_option = browser.execute_script(
         "return echarts.getInstanceByDom(document.getElementById('completion-rates-chart')).getOption();"
