@@ -171,6 +171,15 @@ document.addEventListener('DOMContentLoaded', function () {
     const selectedIssueTypes = new Set();
     const selectedPriorities = new Set();
     const selectedCountries = new Set();
+    const countryFilter = chartHelpers.initCountryFilter({
+        dimension: countryDimension,
+        onChange: value => {
+            selectedCountries.clear();
+            if (value) selectedCountries.add(value);
+            updateAll();
+        }
+    });
+
     let activeSource = 'GRIEVANCE';
 
     // Initialize ECharts instances with macarons theme
@@ -593,12 +602,18 @@ document.addEventListener('DOMContentLoaded', function () {
             .slice(0, 10);
 
         const hasAnyCountrySelection = selectedCountries.size > 0;
+        const countryTicketTotal = countryGroup.all().reduce(
+            (sum, d) => sum + (+d.value.open || 0) + (+d.value.resolved || 0),
+            0
+        );
 
         const countrySeriesDataResolved = countryData.map(d => {
             const isSelected = selectedCountries.has(d.key);
             const opacity = isSelected ? 1 : (hasAnyCountrySelection ? 0.35 : 1);
             return {
                 value: d.resolved,
+                total: d.total,
+                share: countryTicketTotal > 0 ? (d.total / countryTicketTotal) * 100 : 0,
                 itemStyle: { color: '#97b552', opacity: opacity }
             };
         });
@@ -613,15 +628,17 @@ document.addEventListener('DOMContentLoaded', function () {
         });
 
         countryChart.setOption({
-            // Legend swatches must match the stacked bar colours.
+            // Closed and Open & Active are clustered so the smaller series stays visible.
             color: ['#97b552', '#d87a80'],
             tooltip: {
                 trigger: 'axis',
                 axisPointer: { type: 'shadow' },
                 formatter: function (params) {
-                    let tooltipHtml = `${params[0].name}<br/>`;
+                    const total = params.reduce((sum, p) => sum + (+p.value || 0), 0);
+                    const share = (params[0].data && params[0].data.share) || 0;
+                    let tooltipHtml = `${params[0].name}: <b>${d3.format(",")(total)}</b> ${gettext('tickets')} (${share.toFixed(1)}%)<br/>`;
                     params.forEach(p => {
-                        tooltipHtml += `${p.marker} ${p.seriesName}: <b>${d3.format(",")(p.value)}</b> ${gettext('tickets')}<br/>`;
+                        tooltipHtml += `${p.marker} ${p.seriesName}: <b>${d3.format(",")(p.value)}</b><br/>`;
                     });
                     return tooltipHtml;
                 }
@@ -631,7 +648,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 top: 0,
                 right: 20
             },
-            grid: { top: 30, bottom: 75, left: 60, right: 20 },
+            grid: { top: 45, bottom: 75, left: 60, right: 20 },
             xAxis: {
                 type: 'category',
                 data: countryData.map(d => d.key),
@@ -653,26 +670,31 @@ document.addEventListener('DOMContentLoaded', function () {
                 {
                     name: gettext('Closed'),
                     type: 'bar',
-                    stack: 'status',
-                    barMaxWidth: 30,
+                    barMaxWidth: 26,
+                    barGap: '15%',
                     data: countrySeriesDataResolved,
-                    itemStyle: { color: '#97b552', borderRadius: [0, 0, 0, 0] }
-                },
-                {
-                    name: gettext('Open & Active'),
-                    type: 'bar',
-                    stack: 'status',
-                    barMaxWidth: 30,
-                    data: countrySeriesDataOpen,
-                    itemStyle: { color: '#d87a80', borderRadius: [4, 4, 0, 0] },
+                    itemStyle: { color: '#97b552', borderRadius: [4, 4, 0, 0] },
                     label: {
                         show: true,
                         position: 'top',
-                        formatter: params => formatCompactCount(countryData[params.dataIndex] ? countryData[params.dataIndex].total : params.value),
+                        formatter: params => {
+                            const data = params.data || {};
+                            const total = data.total != null ? data.total : (+params.value || 0);
+                            const share = data.share != null ? data.share : 0;
+                            return `${formatCompactCount(total)} (${share.toFixed(1)}%)`;
+                        },
                         color: '#0f172a',
                         fontWeight: 600,
                         fontSize: 10
                     }
+                },
+                {
+                    name: gettext('Open & Active'),
+                    type: 'bar',
+                    barMaxWidth: 26,
+                    data: countrySeriesDataOpen,
+                    itemStyle: { color: '#d87a80', borderRadius: [4, 4, 0, 0] },
+                    label: { show: false }
                 }
             ]
         }, { notMerge: true });
@@ -804,6 +826,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
             ndx.remove();
             ndx.add(data);
+            countryFilter.populate(data);
+            countryFilter.apply();
+            selectedCountries.clear();
+            if (countryFilter.value) selectedCountries.add(countryFilter.value);
             if (chartHelpers.setDataAsOf) chartHelpers.setDataAsOf(data);
             applySourceFilter();
 

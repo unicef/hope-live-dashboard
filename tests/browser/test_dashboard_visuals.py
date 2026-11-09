@@ -98,6 +98,19 @@ def demographic_aggregates(db):
             total_pwd=10,
             total_households=150,
         )
+    # Region dimension used by the Region Share chart.
+    for i, country in enumerate(countries):
+        DemographicAggregateFactory(
+            date=datetime.date(year, 1, i + 1),
+            time_grain="monthly",
+            country_slug=country,
+            dimension_type="region",
+            dimension_value=["MENAR", "ESAR", "WCAR", "ECAR", "SAR"][i],
+            total_beneficiaries=200,
+            total_children=100,
+            total_pwd=10,
+            total_households=150,
+        )
     # Previous year
     for i, country in enumerate(countries):
         DemographicAggregateFactory(
@@ -345,6 +358,35 @@ def test_landing_kpis_have_definitions_and_exact_date(browser, financial_aggrega
     browser.wait_for_text_visible("Children reached through household programmes")
 
 
+def test_country_filter_is_available_on_dashboards(  # noqa: PLR0917
+    browser,
+    financial_aggregates,
+    demographic_aggregates,
+    completion_aggregates,
+    grievance_aggregates,
+    grievance_status_aggregates,
+):
+    browser.login_as_user()
+
+    expected = {
+        "/dashboard/": "kenya",
+        "/demographic/": "kenya",
+        "/completion/": "kenya",
+        "/grievance/": "country-test",
+    }
+    for path, country in expected.items():
+        browser.open(path)
+        browser.wait_for_element_visible("#country-filter")
+        browser.wait_for_element_visible(f"#country-filter option[value='{country}']")
+
+    browser.open("/dashboard/")
+    browser.wait_for_element_visible("#country-filter option[value='kenya']")
+    browser.select_option_by_value("#country-filter", "kenya")
+    browser.assert_text("5", "#total-payments")
+    browser.select_option_by_text("#country-filter", "All countries")
+    browser.assert_text("25", "#total-payments")
+
+
 def test_financial_dashboard_loads(browser, financial_aggregates):
     browser.login_as_user()
     browser.open("/dashboard/")
@@ -403,10 +445,23 @@ def test_demographic_dashboard_loads(browser, demographic_aggregates, financial_
     browser.wait_for_element_visible("#total-pwd")
     browser.wait_for_element_visible("#sector-children-chart canvas")
     browser.wait_for_element_visible("#country-pwd-chart canvas")
+    browser.wait_for_element_visible("#region-share-chart canvas")
     browser.wait_for_element_visible("#time-focus-chart canvas")
 
     browser.assert_text("Children reached", "#card-children h3")
     browser.assert_text("Persons with disabilities reached", "#card-pwd h3")
+    browser.assert_text("Region share of reached population", "#region-share-title")
+
+    region_option = browser.execute_script(
+        "return echarts.getInstanceByDom(document.getElementById('region-share-chart')).getOption();"
+    )
+    assert len(region_option["series"][0]["data"]) == 5
+
+    country_option = browser.execute_script(
+        "return echarts.getInstanceByDom(document.getElementById('country-pwd-chart')).getOption();"
+    )
+    assert country_option["series"][0]["type"] == "bar"
+    assert len(country_option["series"][0]["data"]) == 5
 
     browser.wait_for_element_visible('[data-chart-info="demographic.timeline"]')
     browser.wait_for_element_visible('[data-chart-info="demographic.country"]')
@@ -454,7 +509,12 @@ def test_completion_dashboard_loads(browser, completion_aggregates, financial_ag
         "return echarts.getInstanceByDom(document.getElementById('status-country-chart')).getOption();"
     )
     assert share_option["yAxis"][0]["max"] == 100
+    assert share_option["series"][0].get("stack") == "total"
     browser.click("#country-view-absolute")
+    absolute_option = browser.execute_script(
+        "return echarts.getInstanceByDom(document.getElementById('status-country-chart')).getOption();"
+    )
+    assert absolute_option["series"][0].get("stack") in (None, "")
 
     # Assert current year totals
     browser.assert_text("15 (100.0% out of 15 total)", "#total-reconciled")
@@ -500,6 +560,16 @@ def test_grievance_dashboard_loads(browser, grievance_aggregates, grievance_stat
             "return o.series[0].label.formatter({value: 10});"
         )
         assert re.search(r"\(\d+\.\d%\)", label), label
+
+    country_option = browser.execute_script(
+        "return echarts.getInstanceByDom(document.getElementById('grievance-country-chart')).getOption();"
+    )
+    assert country_option["series"][0].get("stack") in (None, "")
+    country_label = browser.execute_script(
+        "const o = echarts.getInstanceByDom(document.getElementById('grievance-country-chart')).getOption();"
+        "return o.series[0].label.formatter({dataIndex: 0, value: 5});"
+    )
+    assert "%" in country_label
 
     # Assert current year totals
     browser.assert_text("50", "#total-tickets")

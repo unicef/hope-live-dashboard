@@ -21,6 +21,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const chartHelpers = window.HopeChart || {};
     const getStableColor = chartHelpers.getStableColor || (() => '#5470c6');
+    const formatCountry = chartHelpers.formatCountryName || (value => value);
 
     // Initialize empty Crossfilter
     let ndx = crossfilter([]);
@@ -30,6 +31,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const dateDimension = ndx.dimension(d => d.date);
     const sectorDimension = ndx.dimension(d => primaryDimFilter(d) ? d.dimension_value : '');
     const countryDimension = ndx.dimension(d => d.country_slug);
+    const regionDimension = ndx.dimension(d => d.dimension_type === 'region' ? d.dimension_value : '');
     const programTypeDimension = ndx.dimension(d => d.program_type || 'STANDARD');
 
     function applyCohortFilter() {
@@ -101,21 +103,38 @@ document.addEventListener('DOMContentLoaded', function () {
         reduceDemographics('sector').init
     );
 
+    const regionGroup = regionDimension.group().reduce(
+        reduceDemographics('region').add,
+        reduceDemographics('region').remove,
+        reduceDemographics('region').init
+    );
+
 
     // Active Filters Sets
     const selectedSectors = new Set();
     const selectedCountries = new Set();
+    const countryFilter = chartHelpers.initCountryFilter({
+        dimension: countryDimension,
+        onChange: value => {
+            selectedCountries.clear();
+            if (value) selectedCountries.add(value);
+            updateAll();
+        }
+    });
+
 
     // Initialize ECharts instances with macarons theme
     const timelineChart = echarts.init(document.getElementById('time-focus-chart'), 'macarons');
     const sectorChildChart = echarts.init(document.getElementById('sector-children-chart'), 'macarons');
     const countryPwdChart = echarts.init(document.getElementById('country-pwd-chart'), 'macarons');
+    const regionShareChart = echarts.init(document.getElementById('region-share-chart'), 'macarons');
 
     // Resize Handler
     window.addEventListener('resize', function () {
         timelineChart.resize();
         sectorChildChart.resize();
         countryPwdChart.resize();
+        regionShareChart.resize();
     });
 
     function updateTotals() {
@@ -224,41 +243,132 @@ document.addEventListener('DOMContentLoaded', function () {
             }]
         }, { notMerge: true });
 
-        // 3. Country Distribution Chart (Donut, top 10)
-        const countryData = countryGroup.all()
+        // 3. Country share (horizontal bars, top 10 + Other)
+        const allCountryData = countryGroup.all()
             .map(d => ({ key: d.key, value: d.value[activeField] }))
-            .filter(d => d.key !== null && d.value > 0)
-            .sort((a, b) => b.value - a.value)
-            .slice(0, 10);
-
+            .filter(d => d.key && d.value > 0)
+            .sort((a, b) => b.value - a.value);
+        const countryTotal = allCountryData.reduce((sum, d) => sum + d.value, 0);
+        const countryBars = allCountryData.slice(0, 10).map(d => ({ ...d, name: formatCountry(d.key) }));
+        const otherCountryValue = allCountryData.slice(10).reduce((sum, d) => sum + d.value, 0);
+        if (otherCountryValue > 0) {
+            countryBars.push({ key: gettext('Other'), name: gettext('Other'), value: otherCountryValue, isOther: true });
+        }
+        const countryShare = value => countryTotal > 0 ? (value / countryTotal) * 100 : 0;
         const hasAnyCountrySelection = selectedCountries.size > 0;
-        const countryDonutData = countryData.map(d => {
-            const stableColor = getStableColor(d.key);
-            const isSelected = selectedCountries.has(d.key);
-            return {
-                name: d.key,
-                value: d.value,
-                itemStyle: {
-                    color: isSelected ? stableColor : (hasAnyCountrySelection ? '#cbd5e1' : stableColor)
-                }
-            };
-        }).filter(d => d.value > 0);
 
         countryPwdChart.setOption({
             tooltip: {
-                trigger: 'item',
-                formatter: '{b}: <b>{c}</b> ({d}%)'
+                trigger: 'axis',
+                axisPointer: { type: 'shadow' },
+                formatter: params => {
+                    const d = params[0].data;
+                    return `${d.name}: <b>${d3.format(',')(d.value)}</b> (${countryShare(d.value).toFixed(1)}%)`;
+                }
+            },
+            grid: { top: 15, bottom: 20, left: 170, right: 110 },
+            xAxis: {
+                type: 'value',
+                axisLabel: { formatter: val => d3.format('.2s')(val).replace('G', 'B'), color: '#64748b', fontSize: 10 },
+                splitLine: { lineStyle: { color: '#f1f5f9' } }
+            },
+            yAxis: {
+                type: 'category',
+                data: countryBars.map(d => d.name),
+                inverse: true,
+                axisTick: { show: false },
+                axisLine: { show: true, lineStyle: { color: '#f1f5f9' } },
+                axisLabel: { width: 155, overflow: 'truncate', color: '#374151', fontSize: 10 }
             },
             series: [{
-                type: 'pie',
-                radius: ['45%', '70%'],
-                center: ['50%', '50%'],
-                avoidLabelOverlap: true,
-                itemStyle: { borderRadius: 6, borderColor: '#fff', borderWidth: 2 },
-                label: { show: true, position: 'outside', formatter: params => `${params.name}\n${d3.format(',')(params.value)} (${params.percent}%)`, fontSize: 11, color: '#374151' },
-                labelLine: { show: true, length: 15, length2: 10, smooth: false },
-                emphasis: { label: { show: true, fontSize: 13, fontWeight: 'bold' } },
-                data: countryDonutData
+                type: 'bar',
+                data: countryBars.map(d => {
+                    const isSelected = selectedCountries.has(d.key);
+                    const baseColor = d.isOther ? '#cbd5e1' : getStableColor(d.key);
+                    return {
+                        name: d.name,
+                        value: d.value,
+                        slug: d.key,
+                        isOther: !!d.isOther,
+                        itemStyle: {
+                            color: isSelected ? getStableColor(d.key) : (hasAnyCountrySelection && !d.isOther ? '#cbd5e1' : baseColor)
+                        }
+                    };
+                }),
+                barMaxWidth: 20,
+                showBackground: true,
+                backgroundStyle: { color: 'rgba(241, 245, 249, 0.75)', borderRadius: [0, 4, 4, 0] },
+                itemStyle: { borderRadius: [0, 4, 4, 0] },
+                label: {
+                    show: true,
+                    position: 'right',
+                    distance: 6,
+                    formatter: params => {
+                        const value = +params.value || 0;
+                        return `${d3.format(',')(value)} (${countryShare(value).toFixed(1)}%)`;
+                    },
+                    color: '#0f172a',
+                    fontWeight: 600,
+                    fontSize: 10
+                }
+            }]
+        }, { notMerge: true });
+
+        // 4. Region share (horizontal bars with count + percentage)
+        const regionData = regionGroup.all()
+            .map(d => ({ key: d.key, value: d.value[activeField] }))
+            .filter(d => d.key && d.value > 0)
+            .sort((a, b) => b.value - a.value);
+        const regionTotal = regionData.reduce((sum, d) => sum + d.value, 0);
+        const regionShare = value => regionTotal > 0 ? (value / regionTotal) * 100 : 0;
+
+        regionShareChart.setOption({
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: { type: 'shadow' },
+                formatter: params => {
+                    const value = +params[0].value || 0;
+                    return `${params[0].name}: <b>${d3.format(',')(value)}</b> (${regionShare(value).toFixed(1)}%)`;
+                }
+            },
+            grid: { top: 15, bottom: 25, left: 180, right: 110 },
+            xAxis: {
+                type: 'value',
+                axisLabel: { formatter: val => d3.format('.2s')(val).replace('G', 'B'), color: '#64748b', fontSize: 10 },
+                splitLine: { lineStyle: { color: '#f1f5f9' } }
+            },
+            yAxis: {
+                type: 'category',
+                data: regionData.map(d => d.key),
+                inverse: true,
+                axisTick: { show: false },
+                axisLine: { show: true, lineStyle: { color: '#f1f5f9' } },
+                axisLabel: { width: 160, overflow: 'truncate', color: '#374151', fontSize: 10 }
+            },
+            series: [{
+                type: 'bar',
+                data: regionData.map(d => ({
+                    value: d.value,
+                    itemStyle: {
+                        color: chartHelpers.getRegionColor ? chartHelpers.getRegionColor(d.key) : getStableColor(d.key)
+                    }
+                })),
+                barMaxWidth: 22,
+                showBackground: true,
+                backgroundStyle: { color: 'rgba(241, 245, 249, 0.75)', borderRadius: [0, 4, 4, 0] },
+                itemStyle: { borderRadius: [0, 4, 4, 0] },
+                label: {
+                    show: true,
+                    position: 'right',
+                    distance: 6,
+                    formatter: params => {
+                        const value = +params.value || 0;
+                        return `${d3.format(',')(value)} (${regionShare(value).toFixed(1)}%)`;
+                    },
+                    color: '#0f172a',
+                    fontWeight: 600,
+                    fontSize: 10
+                }
             }]
         }, { notMerge: true });
 
@@ -288,7 +398,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Country Filter Selection Toggle
     const handleCountryClick = function (params) {
-        const countryName = params.name;
+        const countryName = (params.data && params.data.slug) || params.name;
+        if (!countryName || (params.data && params.data.isOther)) return;
         if (selectedCountries.has(countryName)) {
             selectedCountries.delete(countryName);
         } else {
@@ -430,6 +541,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
             ndx.remove();
             ndx.add(data);
+            countryFilter.populate(data);
+            countryFilter.apply();
+            selectedCountries.clear();
+            if (countryFilter.value) selectedCountries.add(countryFilter.value);
             if (chartHelpers.setDataAsOf) chartHelpers.setDataAsOf(data);
             applyCohortFilter();
 

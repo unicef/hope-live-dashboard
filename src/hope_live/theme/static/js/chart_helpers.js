@@ -43,6 +43,60 @@
         return d3.timeFormat('%b %y')(new Date(value));
     }
 
+    function formatCountryName(name) {
+        if (!name) return '';
+        return String(name).replace(/[-_]/g, ' ').replace(/\b\w/g, ch => ch.toUpperCase());
+    }
+
+    function initCountryFilter(options) {
+        const select = document.getElementById(options.selectId || 'country-filter');
+        if (!select || !options.dimension) {
+            return { populate: () => {}, apply: () => {}, get value() { return ''; } };
+        }
+        const dimension = options.dimension;
+        const allLabel = select.dataset.allLabel || (select.options[0] && select.options[0].textContent) || 'All countries';
+        let current = '';
+
+        function apply() {
+            if (current) dimension.filter(current);
+            else dimension.filterAll();
+        }
+
+        function render(values) {
+            select.innerHTML = '';
+            const all = document.createElement('option');
+            all.value = '';
+            all.textContent = allLabel;
+            select.appendChild(all);
+            values.forEach(value => {
+                const option = document.createElement('option');
+                option.value = value;
+                option.textContent = formatCountryName(value);
+                select.appendChild(option);
+            });
+            select.value = current;
+        }
+
+        select.addEventListener('change', () => {
+            current = select.value;
+            apply();
+            if (options.onChange) options.onChange(current);
+        });
+
+        return {
+            populate(rows) {
+                const values = Array.from(new Set((rows || [])
+                    .map(row => row && row.country_slug)
+                    .filter(Boolean)))
+                    .sort((a, b) => formatCountryName(a).localeCompare(formatCountryName(b)));
+                if (current && !values.includes(current)) current = '';
+                render(values);
+            },
+            apply,
+            get value() { return current; }
+        };
+    }
+
     function setDataAsOf(rows) {
         const el = document.getElementById('data-as-of');
         if (!el) return;
@@ -63,6 +117,8 @@
         getStableColor: getStableColor,
         getRegionColor: getRegionColor,
         timeAxisLabel: timeAxisLabel,
+        formatCountryName: formatCountryName,
+        initCountryFilter: initCountryFilter,
         setDataAsOf: setDataAsOf
     };
 })();

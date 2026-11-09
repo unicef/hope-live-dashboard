@@ -198,6 +198,16 @@ CHART_INFO = {
         ),
         "note": _("The chart shows the top 10 countries. Children and PWD caveats apply."),
     },
+    "demographic.region": {
+        "definition": _("Share of the reached population by region."),
+        "source": _("HOPE household, social-worker and payment data — country report demographic feed."),
+        "method": _(
+            "Uses the same payee and qualifying-payment base as the reach timeline, grouped by "
+            "business-area region. Shares are calculated from the active metric (individuals, "
+            "households, children or persons with disabilities)."
+        ),
+        "note": _("This is an intermediate view between the global cards and the country chart."),
+    },
     # ------------------------------------------------------------------
     # Completion
     # ------------------------------------------------------------------

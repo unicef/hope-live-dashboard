@@ -165,6 +165,15 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Active filters
     const selectedCountries = new Set();
+    const countryFilter = chartHelpers.initCountryFilter({
+        dimension: countryDimension,
+        onChange: value => {
+            selectedCountries.clear();
+            if (value) selectedCountries.add(value);
+            updateAll();
+        }
+    });
+
 
     // Initialize ECharts instances with macarons theme
     const timelineChart = echarts.init(document.getElementById('time-focus-chart'), 'macarons');
@@ -394,13 +403,10 @@ document.addEventListener('DOMContentLoaded', function () {
             return {
                 value: isShareView ? reconciledShare(d) : d.reconciled,
                 itemStyle: { color: RECONCILED_COLOR, opacity: opacity },
-                // In share view the rate label rides on the reconciled segment;
-                // in absolute view it only labels the total when open is zero
-                // (otherwise the open segment carries the total label).
                 label: {
-                    show: isShareView || d.opened === 0,
+                    show: true,
                     position: 'top',
-                    formatter: isShareView ? `${reconciledShare(d).toFixed(1)}%` : formatCompact(d.total),
+                    formatter: isShareView ? `${reconciledShare(d).toFixed(1)}%` : formatCompact(d.reconciled),
                     color: '#0f172a',
                     fontWeight: 600,
                     fontSize: 10
@@ -417,7 +423,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 label: {
                     show: !isShareView && d.opened > 0,
                     position: 'top',
-                    formatter: formatCompact(d.total),
+                    formatter: formatCompact(d.opened),
                     color: '#0f172a',
                     fontWeight: 600,
                     fontSize: 10
@@ -442,6 +448,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         params.forEach(p => {
                             tooltipHtml += `${p.marker} ${p.seriesName}: <b>${formatFullVal(p.value)}</b> ${unitName}<br/>`;
                         });
+                        tooltipHtml += `${gettext('Total')}: ${formatFullVal(d.total)} ${unitName}`;
                     }
                     return tooltipHtml;
                 }
@@ -479,17 +486,19 @@ document.addEventListener('DOMContentLoaded', function () {
                 {
                     name: gettext('Reconciled'),
                     type: 'bar',
-                    stack: 'total',
-                    barMaxWidth: 30,
+                    stack: isShareView ? 'total' : undefined,
+                    barMaxWidth: isShareView ? 30 : 24,
+                    barGap: isShareView ? '0%' : '12%',
                     color: RECONCILED_COLOR,
                     data: countrySeriesDataReconciled,
-                    itemStyle: { borderRadius: [0, 0, 0, 0] }
+                    itemStyle: { borderRadius: isShareView ? [0, 0, 0, 0] : [4, 4, 0, 0] }
                 },
                 {
                     name: gettext('Pending Reconciliation'),
                     type: 'bar',
-                    stack: 'total',
-                    barMaxWidth: 30,
+                    stack: isShareView ? 'total' : undefined,
+                    barMaxWidth: isShareView ? 30 : 24,
+                    barGap: isShareView ? '0%' : '12%',
                     color: OPEN_COLOR,
                     data: countrySeriesDataOpened,
                     itemStyle: { borderRadius: [4, 4, 0, 0] }
@@ -796,6 +805,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
             ndx.remove();
             ndx.add(data);
+            countryFilter.populate(data);
+            countryFilter.apply();
+            selectedCountries.clear();
+            if (countryFilter.value) selectedCountries.add(countryFilter.value);
             if (chartHelpers.setDataAsOf) chartHelpers.setDataAsOf(data);
 
             await loadFinancialForRates(from, to);

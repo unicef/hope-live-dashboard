@@ -28,6 +28,12 @@
                 {% translate "Include system flags" %}
             </button>
         </div>
+        <div class="flex items-center gap-2">
+            <label for="country-filter" class="text-xs font-bold text-gray-500">{% translate "Country:" %}</label>
+            <select id="country-filter" data-all-label="{% translate 'All countries' %}" class="text-xs border-gray-300 rounded-md text-gray-700 py-1 pl-2.5 pr-7 focus:ring-[#00adef] focus:border-[#00adef] shadow-2xs font-semibold bg-white">
+                <option value="">{% translate "All countries" %}</option>
+            </select>
+        </div>
     </div>
 
     <!-- Stats Cards: total plus key statuses (above timeline) -->

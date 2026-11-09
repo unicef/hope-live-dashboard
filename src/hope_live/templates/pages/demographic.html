@@ -51,6 +51,12 @@
                 {% translate "Social Worker" %}
             </button>
         </div>
+        <div class="flex items-center gap-2">
+            <label for="country-filter" class="text-xs font-bold text-gray-500">{% translate "Country:" %}</label>
+            <select id="country-filter" data-all-label="{% translate 'All countries' %}" class="text-xs border-gray-300 rounded-md text-gray-700 py-1 pl-2.5 pr-7 focus:ring-[#00adef] focus:border-[#00adef] shadow-2xs font-semibold bg-white">
+                <option value="">{% translate "All countries" %}</option>
+            </select>
+        </div>
     </div>
 
     <!-- Stats Cards (Headline KPIs - Above Timeline!) -->
@@ -96,8 +102,14 @@
         <div class="bg-white rounded-xl shadow-2xs border border-gray-200 p-3.5">
             <h3 id="country-share-title" class="text-sm font-bold text-gray-900 mb-2">{% translate "Country share of reached population" %}</h3>
             {% chart_info "demographic.country" %}
-            <div id="country-pwd-chart" class="w-full h-[250px]"></div>
+            <div id="country-pwd-chart" class="w-full h-[300px]"></div>
         </div>
+    </div>
+
+    <div class="bg-white rounded-xl shadow-2xs border border-gray-200 p-3.5 mb-4">
+        <h3 id="region-share-title" class="text-sm font-bold text-gray-900 mb-1">{% translate "Region share of reached population" %}</h3>
+        {% chart_info "demographic.region" %}
+        <div id="region-share-chart" class="w-full h-[260px]"></div>
     </div>
 
     <details class="bg-white rounded-xl shadow-2xs border border-gray-200 p-3.5 mb-4 text-[11px] text-gray-500">

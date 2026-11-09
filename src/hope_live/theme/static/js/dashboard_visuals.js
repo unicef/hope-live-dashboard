@@ -227,6 +227,15 @@ document.addEventListener('DOMContentLoaded', function () {
     const selectedFsps = new Set();
     const selectedRegions = new Set();
     const selectedCountries = new Set();
+    const countryFilter = chartHelpers.initCountryFilter({
+        dimension: countryDimension,
+        onChange: value => {
+            selectedCountries.clear();
+            if (value) selectedCountries.add(value);
+            updateAll();
+        }
+    });
+
     const selectedIps = new Set();
 
     // Initialize ECharts instances with macarons theme
@@ -880,6 +889,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
             ndx.remove();
             ndx.add(data);
+            countryFilter.populate(data);
+            countryFilter.apply();
+            selectedCountries.clear();
+            if (countryFilter.value) selectedCountries.add(countryFilter.value);
             if (chartHelpers.setDataAsOf) chartHelpers.setDataAsOf(data);
             applyCohortFilter();
 
