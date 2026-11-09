@@ -237,6 +237,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     const selectedIps = new Set();
+    const expandedCharts = new Set();
 
     // Initialize ECharts instances with macarons theme
     const timelineChart = echarts.init(document.getElementById('time-focus-chart'), 'macarons');
@@ -531,7 +532,14 @@ document.addEventListener('DOMContentLoaded', function () {
                 data: sectorDonutData
             }]
         }, { notMerge: true });
-        updateHorizontalBarChart(programChart, programGroup, selectedPrograms, 260, 10, true);
+        updateHorizontalBarChart(
+            programChart,
+            programGroup,
+            selectedPrograms,
+            260,
+            expandedCharts.has('program') ? Infinity : 10,
+            true
+        );
         // Delivery Donut Chart with outside labels
         const deliveryRawData = deliveryGroup.all()
             .map(d => ({ name: d.key, value: d.value[currentMetric] }))
@@ -579,7 +587,14 @@ document.addEventListener('DOMContentLoaded', function () {
                 data: deliverySeriesData
             }]
         }, { notMerge: true });
-        updateHorizontalBarChart(fspChart, fspGroup, selectedFsps, 260, 10, true);
+        updateHorizontalBarChart(
+            fspChart,
+            fspGroup,
+            selectedFsps,
+            260,
+            expandedCharts.has('fsp') ? Infinity : 10,
+            true
+        );
         // Region Chart: single-hue scale (dark = highest), abbreviations on the
         // axis with full names in the tooltip and in the footnote below.
         const regionRows = regionGroup.all()
@@ -612,7 +627,7 @@ document.addEventListener('DOMContentLoaded', function () {
             .filter(d => d.key !== '' && d.key !== null && d.value > 0)
             .sort((a, b) => b.value - a.value);
 
-        renderHorizontalBars(countryChart, collapseTopBars(countryRows, 10, gettext('Other')), {
+        renderHorizontalBars(countryChart, collapseTopBars(countryRows, expandedCharts.has('country') ? Infinity : 10, gettext('Other')), {
             leftMargin: 150,
             activeSet: selectedCountries,
             axisLabelFor: formatCountryName,
@@ -626,7 +641,7 @@ document.addEventListener('DOMContentLoaded', function () {
             .filter(d => d.key !== '' && d.key !== null && d.value > 0)
             .sort((a, b) => b.value - a.value);
 
-        renderHorizontalBars(outstandingCountryChart, collapseTopBars(outstandingRows, 10, gettext('Other')), {
+        renderHorizontalBars(outstandingCountryChart, collapseTopBars(outstandingRows, expandedCharts.has('outstanding') ? Infinity : 10, gettext('Other')), {
             leftMargin: 150,
             metric: 'usd',
             activeSet: selectedCountries,
@@ -746,6 +761,34 @@ document.addEventListener('DOMContentLoaded', function () {
     bindFilterToggle(regionChart, selectedRegions, regionDimension);
     bindFilterToggle(countryChart, selectedCountries, countryDimension);
     bindFilterToggle(outstandingCountryChart, selectedCountries, countryDimension);
+
+    // Expand/collapse the top-10 charts so every category can be inspected.
+    function syncShowAllButtons() {
+        document.querySelectorAll('.show-all-toggle').forEach(btn => {
+            const expanded = expandedCharts.has(btn.dataset.chart);
+            btn.textContent = expanded ? gettext('Show top 10') : gettext('Show all');
+            btn.setAttribute('aria-expanded', expanded ? 'true' : 'false');
+        });
+    }
+
+    document.querySelectorAll('.show-all-toggle').forEach(btn => {
+        btn.addEventListener('click', function () {
+            const key = this.dataset.chart;
+            const expanded = !expandedCharts.has(key);
+            if (expanded) expandedCharts.add(key);
+            else expandedCharts.delete(key);
+
+            const chartEl = document.getElementById(`${key}-chart`);
+            if (chartEl) {
+                chartEl.style.height = expanded ? (key === 'program' || key === 'fsp' ? '620px' : '520px') : '';
+            }
+            updateAll();
+            syncShowAllButtons();
+            const chart = chartEl ? echarts.getInstanceByDom(chartEl) : null;
+            if (chart) chart.resize();
+        });
+    });
+    syncShowAllButtons();
 
     // Metric selector tab clicks
     const metricTabs = document.querySelectorAll('.metric-tab');

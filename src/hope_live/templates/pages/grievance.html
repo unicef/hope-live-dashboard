@@ -108,12 +108,18 @@
             <h3 class="text-sm font-bold text-gray-900 mb-2">{% translate "Tickets by category" %}</h3>
             {% chart_info "grievance.category" %}
             <div id="grievance-category-chart" class="w-full h-[260px]"></div>
+            <div class="flex justify-end mt-1">
+                <button type="button" class="grievance-show-all text-[11px] font-semibold text-[#00adef] hover:underline" data-chart="category" aria-expanded="false">{% translate "Show all" %}</button>
+            </div>
         </div>
         <div class="bg-white rounded-xl shadow-2xs border border-gray-200 p-3.5">
             <h3 class="text-sm font-bold text-gray-900 mb-2">{% translate "Tickets by subcategory" %}</h3>
             {% chart_info "grievance.subcategory" %}
             <p class="text-[10px] text-gray-400 mb-1 italic leading-tight">{% translate "Subcategories apply to Data Change, Sensitive Grievance, Grievance Complaint and Needs Adjudication; other categories have no subcategory." %}</p>
             <div id="grievance-issue-type-chart" class="w-full h-[260px]"></div>
+            <div class="flex justify-end mt-1">
+                <button type="button" class="grievance-show-all text-[11px] font-semibold text-[#00adef] hover:underline" data-chart="issue-type" aria-expanded="false">{% translate "Show all" %}</button>
+            </div>
         </div>
     </div>
 

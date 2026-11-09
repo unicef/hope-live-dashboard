@@ -446,6 +446,7 @@ def test_demographic_dashboard_loads(browser, demographic_aggregates, financial_
     browser.wait_for_element_visible("#sector-children-chart canvas")
     browser.wait_for_element_visible("#country-pwd-chart canvas")
     browser.wait_for_element_visible("#region-share-chart canvas")
+    browser.wait_for_element_visible("#demographic-country-show-all")
     browser.wait_for_element_visible("#time-focus-chart canvas")
 
     browser.assert_text("Children reached", "#card-children h3")
@@ -544,6 +545,8 @@ def test_grievance_dashboard_loads(browser, grievance_aggregates, grievance_stat
     browser.wait_for_element_visible("#grievance-issue-type-chart canvas")
     browser.wait_for_element_visible("#grievance-country-chart canvas")
     browser.wait_for_element_visible("#time-focus-chart canvas")
+    browser.wait_for_element_visible('.grievance-show-all[data-chart="category"]')
+    browser.wait_for_element_visible('.grievance-show-all[data-chart="issue-type"]')
     browser.wait_for_element_visible("#status-count-new")
     browser.wait_for_element_visible("#status-count-closed")
 
@@ -717,6 +720,23 @@ def test_program_and_country_charts_show_top_ten_with_other(browser, db):
     country_names = [item["name"] for item in country_option["series"][0]["data"]]
     assert len(country_names) == 11, country_names
     assert "Other" in country_names, country_names
+
+    # Expanding a chart replaces the Other bucket with every underlying category.
+    browser.click('.show-all-toggle[data-chart="program"]')
+    browser.wait_for_text_visible("Show top 10", '.show-all-toggle[data-chart="program"]')
+    program_option = browser.execute_script(
+        "return echarts.getInstanceByDom(document.getElementById('program-chart')).getOption();"
+    )
+    program_names = [item["name"] for item in program_option["series"][0]["data"]]
+    assert len(program_names) == 12, program_names
+    assert "Other" not in program_names, program_names
+
+    browser.click('.show-all-toggle[data-chart="program"]')
+    browser.wait_for_text_visible("Show all", '.show-all-toggle[data-chart="program"]')
+    program_option = browser.execute_script(
+        "return echarts.getInstanceByDom(document.getElementById('program-chart')).getOption();"
+    )
+    assert len(program_option["series"][0]["data"]) == 11
 
 
 def test_risk_filters_are_searchable(browser, risk_aggregates):

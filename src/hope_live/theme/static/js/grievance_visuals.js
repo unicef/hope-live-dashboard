@@ -171,6 +171,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const selectedIssueTypes = new Set();
     const selectedPriorities = new Set();
     const selectedCountries = new Set();
+    const expandedCategoryCharts = new Set();
     const countryFilter = chartHelpers.initCountryFilter({
         dimension: countryDimension,
         onChange: value => {
@@ -443,12 +444,12 @@ document.addEventListener('DOMContentLoaded', function () {
             }]
         }, { notMerge: true });
 
-        // 4. Category Chart (top 10)
-        const categoryData = categoryGroup.all()
+        // 4. Category Chart (top 10, expandable)
+        const categoryAllData = categoryGroup.all()
             .map(d => ({ key: d.key, value: d.value }))
             .filter(d => d.key !== '' && d.key !== null && d.value > 0)
-            .sort((a, b) => b.value - a.value)
-            .slice(0, 10);
+            .sort((a, b) => b.value - a.value);
+        const categoryData = expandedCategoryCharts.has('category') ? categoryAllData : categoryAllData.slice(0, 10);
 
         const categoryTotal = categoryGroup.all().reduce((sum, d) => sum + (+d.value || 0), 0);
         const categoryShare = value => categoryTotal > 0 ? (value / categoryTotal) * 100 : 0;
@@ -516,12 +517,12 @@ document.addEventListener('DOMContentLoaded', function () {
             }]
         }, { notMerge: true });
 
-        // 5. Subcategory Chart (top 10; HOPE stores this as issue_type)
-        const issueTypeData = issueTypeGroup.all()
+        // 5. Subcategory Chart (top 10, expandable; HOPE stores this as issue_type)
+        const issueTypeAllData = issueTypeGroup.all()
             .map(d => ({ key: d.key, value: d.value }))
             .filter(d => d.key !== '' && d.key !== null && d.value > 0)
-            .sort((a, b) => b.value - a.value)
-            .slice(0, 10);
+            .sort((a, b) => b.value - a.value);
+        const issueTypeData = expandedCategoryCharts.has('issue-type') ? issueTypeAllData : issueTypeAllData.slice(0, 10);
 
         const issueTypeTotal = issueTypeGroup.all().reduce((sum, d) => sum + (+d.value || 0), 0);
         const issueTypeShare = value => issueTypeTotal > 0 ? (value / issueTypeTotal) * 100 : 0;
@@ -699,6 +700,32 @@ document.addEventListener('DOMContentLoaded', function () {
             ]
         }, { notMerge: true });
     }
+
+    function syncGrievanceShowAllButtons() {
+        document.querySelectorAll('.grievance-show-all').forEach(btn => {
+            const expanded = expandedCategoryCharts.has(btn.dataset.chart);
+            btn.textContent = expanded ? gettext('Show top 10') : gettext('Show all');
+            btn.setAttribute('aria-expanded', expanded ? 'true' : 'false');
+        });
+    }
+
+    document.querySelectorAll('.grievance-show-all').forEach(btn => {
+        btn.addEventListener('click', function () {
+            const key = this.dataset.chart;
+            const expanded = !expandedCategoryCharts.has(key);
+            if (expanded) expandedCategoryCharts.add(key);
+            else expandedCategoryCharts.delete(key);
+
+            const chartId = key === 'category' ? 'grievance-category-chart' : 'grievance-issue-type-chart';
+            const chartEl = document.getElementById(chartId);
+            if (chartEl) chartEl.style.height = expanded ? '520px' : '';
+            updateAll();
+            syncGrievanceShowAllButtons();
+            const chart = chartEl ? echarts.getInstanceByDom(chartEl) : null;
+            if (chart) chart.resize();
+        });
+    });
+    syncGrievanceShowAllButtons();
 
     // --- Interactive Filters Bindings ---
     statusChart.on('click', function (params) {
