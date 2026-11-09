@@ -175,6 +175,7 @@ def test_index_view_dynamic_context(user_factory):
     assert context["total_programs_glance"] == 1  # DCT-Somalia
     assert context["total_sources_glance"] == "HOPE Database"
     assert context["latest_data_str"] == "June 2026"
+    assert context["latest_data_exact"] == "01 Jun 2026"
     assert context["reconciliation_rate"] == 80.0
 
 

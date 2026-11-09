@@ -156,37 +156,45 @@ CHART_INFO = {
     },
     "demographic.timeline": {
         "definition": _("Individuals, households, children or persons with disabilities reached over time."),
-        "source": _("HOPE households and payments — country report demographic feed."),
+        "source": _("HOPE household, social-worker and payment data — country report demographic feed."),
         "method": _(
-            "Demographic rows come from households with at least one qualifying payment in the "
-            "month. Payment plans must be accepted, finished or closed; failed, removed, "
-            "conflicted and excluded payments are excluded. Households are counted distinctly. "
-            "Beneficiary, child and PWD counts follow the household's recorded composition; "
-            "missing composition or dates of birth understate the totals."
+            "Metrics are calculated from payees with at least one qualifying payment in the "
+            "selected period. Qualifying payments must belong to accepted, finished or closed "
+            "payment plans; failed, removed, conflicted and excluded payments are not included. "
+            "For household payees, individuals, children and persons with disabilities are "
+            "derived from the recorded household composition. For social-worker payees, one "
+            "record represents one worker, so the beneficiary count is the workforce count and "
+            "household, child and disability metrics do not apply. Organisation payees are "
+            "included only where payee-level demographic data is available. Date basis: payment "
+            "delivery date, then entitlement date, then payment status date."
         ),
         "note": _(
             "Under the current legacy calculation, a household with more than one qualifying "
             "payment in a month can contribute its size, children and PWD counts once per "
-            "payment; total households remains distinct. PWD figures may be under-reported where "
-            "programmes do not collect them."
+            "payment; total households remains distinct. Missing composition or dates of birth "
+            "understate the totals, and PWD figures may be under-reported where programmes do "
+            "not collect them."
         ),
     },
     "demographic.sector": {
         "definition": _("Share of the reached population by programme sector."),
-        "source": _("HOPE households and payments — country report demographic feed."),
+        "source": _("HOPE household, social-worker and payment data — country report demographic feed."),
         "method": _(
-            "Uses the same demographic base as the reach timeline, grouped by programme sector. "
-            "Shares are calculated from the active metric (individuals, households, children or "
-            "persons with disabilities)."
+            "Uses the same payee and qualifying-payment base as the reach timeline, grouped by "
+            "programme sector. Shares are calculated from the active metric (individuals, "
+            "households, children or persons with disabilities). Household metrics use recorded "
+            "composition; social-worker programmes report workforce counts separately."
         ),
         "note": _("Children and PWD under-reporting caveats also apply here."),
     },
     "demographic.country": {
         "definition": _("Share of the reached population by country."),
-        "source": _("HOPE households and payments — country report demographic feed."),
+        "source": _("HOPE household, social-worker and payment data — country report demographic feed."),
         "method": _(
-            "Uses the same demographic base as the reach timeline, grouped by business area "
-            "country. Shares are calculated from the active metric."
+            "Uses the same payee and qualifying-payment base as the reach timeline, grouped by "
+            "business area country. Shares are calculated from the active metric. Household "
+            "metrics use recorded composition; social-worker programmes report workforce counts "
+            "separately."
         ),
         "note": _("The chart shows the top 10 countries. Children and PWD caveats apply."),
     },
@@ -350,5 +358,80 @@ CHART_INFO = {
             "Selecting a year shows its monthly data. Where a year or month has no demographic "
             "record, the reached series are estimated from payment volume."
         ),
+    },
+    "landing.children": {
+        "definition": _("Children reached through household programmes in the current data."),
+        "source": _("HOPE household registration and payment data — country report demographic feed."),
+        "method": _(
+            "Sums the children recorded in the composition of reached households. A household is "
+            "counted when it has at least one qualifying payment in the period; the children count "
+            "follows the household's recorded composition."
+        ),
+        "note": _(
+            "Where household composition or children's dates of birth are missing, the figure is "
+            "understated. This is not an estimate of all children in need."
+        ),
+    },
+    "landing.households": {
+        "definition": _("Households with at least one qualifying payment in the selected period."),
+        "source": _("HOPE household registration and payment data — country report demographic feed."),
+        "method": _(
+            "Counts reached households distinctly. Qualifying payments must belong to accepted, "
+            "finished or closed payment plans; failed, removed, conflicted and excluded payments "
+            "are not included."
+        ),
+        "note": _(
+            "Households are counted from standard (household) programmes; social-worker "
+            "programmes are reported separately."
+        ),
+    },
+    "landing.individuals": {
+        "definition": _("People reached through household programmes in the current data."),
+        "source": _("HOPE household registration and payment data — country report demographic feed."),
+        "method": _(
+            "Sums the registered household size of reached households. A household is counted when "
+            "it has at least one qualifying payment in the period, using the delivery date, then "
+            "the entitlement date, then the payment status date."
+        ),
+        "note": _("Frontline (incentive) workers are reported separately and are not part of this figure."),
+    },
+    "landing.active_countries": {
+        "definition": _(
+            "Countries represented across the dashboard feeds, used as a proxy for active HOPE deployments."
+        ),
+        "source": _("HOPE country report financial, demographic, completion and grievance feeds."),
+        "method": _(
+            "Counts distinct country slugs with at least one aggregate record across the four "
+            "dashboard feeds. It is a data-coverage count, not the official number of HOPE "
+            "deployments."
+        ),
+        "note": _("A country with no records in the current feeds is not counted."),
+    },
+    "landing.assistance": {
+        "definition": _("Cash disbursed directly to beneficiaries in the current data."),
+        "source": _("HOPE payments — country report financial feed."),
+        "method": _(
+            "Sums delivered quantity in USD, grouped by sector to avoid double counting. "
+            "Entitlement quantity is used only when a delivery amount is not recorded."
+        ),
+        "note": _("The figure covers direct cash transfers, not the full operational budget."),
+    },
+    "landing.reconciled": {
+        "definition": _("Share of payment records that have reached a reconciled status."),
+        "source": _("HOPE payments — country report completion feed."),
+        "method": _(
+            "Reconciled payments divided by the sum of reconciled and pending payment records "
+            "in the completion feed. The rate is count-based, not amount-based."
+        ),
+        "note": _("Pending records remain in the denominator, so the rate falls when reconciliation is delayed."),
+    },
+    "landing.social_workers": {
+        "definition": _("Frontline social workers assisted through social-worker programmes."),
+        "source": _("HOPE social-worker programme records — country report demographic feed."),
+        "method": _(
+            "Sums the beneficiaries recorded for social-worker programmes. In these programmes "
+            "each record represents one worker, so the beneficiary total is the workforce count."
+        ),
+        "note": _("Social-worker programmes are not part of household, children or persons-with-disabilities counts."),
     },
 }

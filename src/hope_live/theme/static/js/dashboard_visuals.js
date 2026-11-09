@@ -347,7 +347,7 @@ document.addEventListener('DOMContentLoaded', function () {
             grid: { top: 15, bottom: 25, left: 60, right: 20 },
             xAxis: {
                 type: 'time',
-                axisLabel: { color: '#64748b', formatter: value => d3.timeFormat('%b %Y')(new Date(value)) }
+                axisLabel: { color: '#64748b', formatter: value => d3.timeFormat('%b %y')(new Date(value)) }
             },
             yAxis: {
                 type: 'value',

@@ -1,4 +1,5 @@
 import datetime
+import re
 
 import pytest
 
@@ -321,6 +322,29 @@ def _apply_custom_range(browser, start: str, end: str) -> None:
     browser.click("#btn-apply-custom-range")
 
 
+def test_landing_kpis_have_definitions_and_exact_date(browser, financial_aggregates):
+    browser.login_as_user()
+    browser.open("/")
+    browser.wait_for_element_visible("#latest-data-date")
+
+    latest = browser.get_text("#latest-data-date")
+    assert re.search(r"\d{2} [A-Z][a-z]{2} \d{4}", latest), latest
+
+    for key in (
+        "children",
+        "households",
+        "individuals",
+        "active_countries",
+        "assistance",
+        "reconciled",
+        "social_workers",
+    ):
+        browser.wait_for_element_visible(f'[data-chart-info="landing.{key}"]')
+
+    browser.click('[data-chart-info="landing.children"] summary')
+    browser.wait_for_text_visible("Children reached through household programmes")
+
+
 def test_financial_dashboard_loads(browser, financial_aggregates):
     browser.login_as_user()
     browser.open("/dashboard/")
@@ -347,6 +371,13 @@ def test_financial_dashboard_loads(browser, financial_aggregates):
     browser.wait_for_element_visible('[data-chart-info="financial.program"]')
     browser.click('[data-chart-info="financial.program"] summary')
     browser.wait_for_text_visible("top 10 programmes")
+
+    # Month axes show a short year (Nov 25), while tooltips keep the full date.
+    axis_label = browser.execute_script(
+        "const o = echarts.getInstanceByDom(document.getElementById('time-focus-chart')).getOption();"
+        "return o.xAxis[0].axisLabel.formatter(new Date(2025, 10, 1).getTime());"
+    )
+    assert axis_label == "Nov 25"
 
     # The header shows the latest aggregate date once the data is loaded.
     assert browser.get_text("#data-as-of") != "—"
@@ -379,6 +410,9 @@ def test_demographic_dashboard_loads(browser, demographic_aggregates, financial_
 
     browser.wait_for_element_visible('[data-chart-info="demographic.timeline"]')
     browser.wait_for_element_visible('[data-chart-info="demographic.country"]')
+    browser.wait_for_text_visible("Method and caveats")
+    browser.click("//summary[contains(., 'Method and caveats')]")
+    browser.wait_for_text_visible("Qualifying payments must belong to accepted, finished or closed payment plans")
 
     # Assert current year totals
     browser.assert_text("1,000", "#total-individuals")
@@ -458,6 +492,14 @@ def test_grievance_dashboard_loads(browser, grievance_aggregates, grievance_stat
     browser.wait_for_text_visible("10 (20.0%)", "#status-count-closed")
     browser.wait_for_text_visible("Open & Active covers")
     browser.wait_for_text_visible("Priority is an optional field")
+
+    # Category and subcategory bars show count and share, not only the count.
+    for chart_id in ("grievance-category-chart", "grievance-issue-type-chart"):
+        label = browser.execute_script(
+            f"const o = echarts.getInstanceByDom(document.getElementById('{chart_id}')).getOption();"
+            "return o.series[0].label.formatter({value: 10});"
+        )
+        assert re.search(r"\(\d+\.\d%\)", label), label
 
     # Assert current year totals
     browser.assert_text("50", "#total-tickets")

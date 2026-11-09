@@ -276,7 +276,7 @@ document.addEventListener('DOMContentLoaded', function () {
             grid: { top: 30, bottom: 25, left: 60, right: 20 },
             xAxis: {
                 type: 'time',
-                axisLabel: { color: '#64748b', formatter: value => d3.timeFormat('%b %Y')(new Date(value)) }
+                axisLabel: { color: '#64748b', formatter: value => d3.timeFormat('%b %y')(new Date(value)) }
             },
             yAxis: {
                 type: 'value',
@@ -441,6 +441,9 @@ document.addEventListener('DOMContentLoaded', function () {
             .sort((a, b) => b.value - a.value)
             .slice(0, 10);
 
+        const categoryTotal = categoryGroup.all().reduce((sum, d) => sum + (+d.value || 0), 0);
+        const categoryShare = value => categoryTotal > 0 ? (value / categoryTotal) * 100 : 0;
+
         const hasAnyCategorySelection = selectedCategories.size > 0;
         const categorySeriesData = categoryData.map(d => {
             const stableColor = getStableColor(d.key);
@@ -457,9 +460,12 @@ document.addEventListener('DOMContentLoaded', function () {
             tooltip: {
                 trigger: 'axis',
                 axisPointer: { type: 'shadow' },
-                formatter: params => `${params[0].name}: <b>${d3.format(",")(params[0].value)}</b>`
+                formatter: params => {
+                    const value = +params[0].value || 0;
+                    return `${params[0].name}: <b>${d3.format(",")(value)}</b> (${categoryShare(value).toFixed(1)}%)`;
+                }
             },
-            grid: { top: 15, bottom: 25, left: 220, right: 60 },
+            grid: { top: 15, bottom: 25, left: 220, right: 105 },
             xAxis: {
                 type: 'value',
                 axisLabel: { formatter: val => d3.format(".2s")(val).replace('G', 'B'), color: '#64748b', fontSize: 10 },
@@ -490,10 +496,13 @@ document.addEventListener('DOMContentLoaded', function () {
                     show: true,
                     position: 'right',
                     distance: 6,
-                    formatter: params => formatCompactCount(params.value),
+                    formatter: params => {
+                        const value = +params.value || 0;
+                        return `${formatCompactCount(value)} (${categoryShare(value).toFixed(1)}%)`;
+                    },
                     color: '#0f172a',
                     fontWeight: 600,
-                    fontSize: 11
+                    fontSize: 10
                 }
             }]
         }, { notMerge: true });
@@ -504,6 +513,9 @@ document.addEventListener('DOMContentLoaded', function () {
             .filter(d => d.key !== '' && d.key !== null && d.value > 0)
             .sort((a, b) => b.value - a.value)
             .slice(0, 10);
+
+        const issueTypeTotal = issueTypeGroup.all().reduce((sum, d) => sum + (+d.value || 0), 0);
+        const issueTypeShare = value => issueTypeTotal > 0 ? (value / issueTypeTotal) * 100 : 0;
 
         const hasAnyIssueTypeSelection = selectedIssueTypes.size > 0;
         const issueTypeSeriesData = issueTypeData.map(d => {
@@ -521,9 +533,12 @@ document.addEventListener('DOMContentLoaded', function () {
             tooltip: {
                 trigger: 'axis',
                 axisPointer: { type: 'shadow' },
-                formatter: params => `${params[0].name}: <b>${d3.format(",")(params[0].value)}</b>`
+                formatter: params => {
+                    const value = +params[0].value || 0;
+                    return `${params[0].name}: <b>${d3.format(",")(value)}</b> (${issueTypeShare(value).toFixed(1)}%)`;
+                }
             },
-            grid: { top: 15, bottom: 25, left: 220, right: 60 },
+            grid: { top: 15, bottom: 25, left: 220, right: 105 },
             xAxis: {
                 type: 'value',
                 axisLabel: { formatter: val => d3.format(".2s")(val).replace('G', 'B'), color: '#64748b', fontSize: 10 },
@@ -554,10 +569,13 @@ document.addEventListener('DOMContentLoaded', function () {
                     show: true,
                     position: 'right',
                     distance: 6,
-                    formatter: params => formatCompactCount(params.value),
+                    formatter: params => {
+                        const value = +params.value || 0;
+                        return `${formatCompactCount(value)} (${issueTypeShare(value).toFixed(1)}%)`;
+                    },
                     color: '#0f172a',
                     fontWeight: 600,
-                    fontSize: 11
+                    fontSize: 10
                 }
             }]
         }, { notMerge: true });

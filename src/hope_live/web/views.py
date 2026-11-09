@@ -244,8 +244,10 @@ class IndexView(TemplateView):
 
         if latest_data_date:
             latest_data_str = latest_data_date.strftime("%B %Y")
+            latest_data_exact = latest_data_date.strftime("%d %b %Y")
         else:
             latest_data_str = "May 2026"
+            latest_data_exact = latest_data_str
 
         context["total_cash_disbursed"] = format_large_number(total_usd)
         context["total_individuals_reached"] = format_large_number(total_beneficiaries)
@@ -275,6 +277,7 @@ class IndexView(TemplateView):
         context["total_programs_glance"] = total_programs_glance or 450
         context["total_sources_glance"] = total_sources_glance
         context["latest_data_str"] = latest_data_str
+        context["latest_data_exact"] = latest_data_exact
         context["hope_updates"] = fetch_hope_news()
 
         return context

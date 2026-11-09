@@ -40,7 +40,7 @@
     }
 
     function timeAxisLabel(value) {
-        return d3.timeFormat('%b %Y')(new Date(value));
+        return d3.timeFormat('%b %y')(new Date(value));
     }
 
     function setDataAsOf(rows) {

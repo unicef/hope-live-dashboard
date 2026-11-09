@@ -416,7 +416,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     }
                 },
                 grid: { top: 15, bottom: 25, left: 45, right: 15 },
-                xAxis: { type: 'time', axisLabel: { color: '#64748b', fontSize: 10, formatter: value => d3.timeFormat('%b %Y')(new Date(value)) } },
+                xAxis: { type: 'time', axisLabel: { color: '#64748b', fontSize: 10, formatter: value => d3.timeFormat('%b %y')(new Date(value)) } },
                 yAxis: {
                     type: 'value',
                     axisLabel: { color: '#64748b', fontSize: 10 },
