@@ -383,8 +383,16 @@ def test_country_filter_is_available_on_dashboards(  # noqa: PLR0917
     browser.wait_for_element_visible("#country-filter option[value='kenya']")
     browser.select_option_by_value("#country-filter", "kenya")
     browser.assert_text("5", "#total-payments")
-    browser.select_option_by_text("#country-filter", "All countries")
-    browser.assert_text("25", "#total-payments")
+
+    # The country filter survives navigation to another dashboard.
+    browser.open("/demographic/")
+    browser.wait_for_element_visible("#country-filter option[value='kenya']")
+    assert browser.get_value("#country-filter") == "kenya"
+
+    # The period preset is persisted too.
+    browser.click('button.time-preset-btn[data-preset="this_month"]')
+    browser.open("/completion/")
+    browser.wait_for_element_visible('button.time-preset-btn[data-preset="this_month"].active-preset')
 
 
 def test_financial_dashboard_loads(browser, financial_aggregates):

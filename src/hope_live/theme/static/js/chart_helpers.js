@@ -56,6 +56,13 @@
         const dimension = options.dimension;
         const allLabel = select.dataset.allLabel || (select.options[0] && select.options[0].textContent) || 'All countries';
         let current = '';
+        try {
+            current = window.localStorage.getItem('hopeCountry')
+                || new URLSearchParams(window.location.search).get('country')
+                || '';
+        } catch (error) {
+            current = '';
+        }
 
         function apply() {
             if (current) dimension.filter(current);
@@ -79,6 +86,16 @@
 
         select.addEventListener('change', () => {
             current = select.value;
+            try {
+                if (current) window.localStorage.setItem('hopeCountry', current);
+                else window.localStorage.removeItem('hopeCountry');
+                const url = new URL(window.location.href);
+                if (current) url.searchParams.set('country', current);
+                else url.searchParams.delete('country');
+                window.history.replaceState({}, '', url);
+            } catch (error) {
+                // Private browsing or a blocked storage API: keep the in-memory filter.
+            }
             apply();
             if (options.onChange) options.onChange(current);
         });
@@ -89,7 +106,10 @@
                     .map(row => row && row.country_slug)
                     .filter(Boolean)))
                     .sort((a, b) => formatCountryName(a).localeCompare(formatCountryName(b)));
-                if (current && !values.includes(current)) current = '';
+                if (current && !values.includes(current)) {
+                    current = '';
+                    try { window.localStorage.removeItem('hopeCountry'); } catch (error) { /* ignore */ }
+                }
                 render(values);
             },
             apply,
