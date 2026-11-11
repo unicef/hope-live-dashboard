@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-11 23:09+0000\n"
+"POT-Creation-Date: 2026-11-11 23:42+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -220,7 +220,7 @@ msgstr "实时数据"
 #: src/hope_live/templates/pages/dashboard.html:13
 #: src/hope_live/templates/pages/demographic.html:14
 #: src/hope_live/templates/pages/grievance.html:13
-#: src/hope_live/templates/pages/landing.html:99
+#: src/hope_live/templates/pages/landing.html:100
 #: src/hope_live/templates/pages/risk.html:13
 msgid "Data as of"
 msgstr "数据截至"
@@ -257,8 +257,8 @@ msgstr "国家"
 #: src/hope_live/templates/pages/demographic.html:57
 #: src/hope_live/templates/pages/grievance.html:33
 #: src/hope_live/templates/pages/grievance.html:34
-#: src/hope_live/templates/pages/landing.html:78
-#: src/hope_live/templates/pages/landing.html:279
+#: src/hope_live/templates/pages/landing.html:79
+#: src/hope_live/templates/pages/landing.html:285
 #: src/hope_live/templates/pages/risk.html:49
 msgid "All countries"
 msgstr "所有国家"
@@ -445,9 +445,9 @@ msgid "View demographic metrics by:"
 msgstr "查看仪表板指标，按："
 
 #: src/hope_live/templates/pages/demographic.html:26
-#: src/hope_live/templates/pages/landing.html:163
-#: src/hope_live/templates/pages/landing.html:212
-#: src/hope_live/templates/pages/landing.html:283
+#: src/hope_live/templates/pages/landing.html:169
+#: src/hope_live/templates/pages/landing.html:218
+#: src/hope_live/templates/pages/landing.html:289
 msgid "Individuals"
 msgstr "个人"
 
@@ -458,9 +458,9 @@ msgid "Households"
 msgstr "覆盖家庭"
 
 #: src/hope_live/templates/pages/demographic.html:32
-#: src/hope_live/templates/pages/landing.html:161
-#: src/hope_live/templates/pages/landing.html:210
-#: src/hope_live/templates/pages/landing.html:281
+#: src/hope_live/templates/pages/landing.html:167
+#: src/hope_live/templates/pages/landing.html:216
+#: src/hope_live/templates/pages/landing.html:287
 msgid "Children"
 msgstr "儿童"
 
@@ -577,7 +577,7 @@ msgid "Closed"
 msgstr "已关闭"
 
 #: src/hope_live/templates/pages/grievance.html:71
-#: src/hope_live/templates/pages/landing.html:288
+#: src/hope_live/templates/pages/landing.html:294
 msgid "Not specified"
 msgstr "未指定"
 
@@ -655,12 +655,10 @@ msgid "Cash-based Assistance at a glance"
 msgstr "现金援助概览"
 
 #: src/hope_live/templates/pages/landing.html:42
-#: src/hope_live/templates/pages/landing.html:141
 msgid "Assistance Delivered"
 msgstr "已提供援助"
 
 #: src/hope_live/templates/pages/landing.html:44
-#: src/hope_live/templates/pages/landing.html:144
 msgid "Direct cash transfers"
 msgstr "直接现金转移"
 
@@ -676,236 +674,254 @@ msgstr "项目"
 msgid "HOPE Database"
 msgstr "HOPE 数据库"
 
-#: src/hope_live/templates/pages/landing.html:69
+#: src/hope_live/templates/pages/landing.html:70
 msgid "Year"
 msgstr "年份"
 
-#: src/hope_live/templates/pages/landing.html:71
-#: src/hope_live/templates/pages/landing.html:278
+#: src/hope_live/templates/pages/landing.html:72
+#: src/hope_live/templates/pages/landing.html:284
 msgid "All years"
 msgstr "所有年份"
 
-#: src/hope_live/templates/pages/landing.html:75
+#: src/hope_live/templates/pages/landing.html:76
 #: src/hope_live/templates/pages/risk.html:179
 msgid "Country"
 msgstr "国家"
 
-#: src/hope_live/templates/pages/landing.html:83
 #: src/hope_live/templates/pages/landing.html:84
+#: src/hope_live/templates/pages/landing.html:85
 #, fuzzy
 #| msgid "countries"
 msgid "Search countries"
 msgstr "搜索国家"
 
-#: src/hope_live/templates/pages/landing.html:88
+#: src/hope_live/templates/pages/landing.html:89
 #, fuzzy
 #| msgid "Select Language"
 msgid "Select all"
 msgstr "全选"
 
-#: src/hope_live/templates/pages/landing.html:89
+#: src/hope_live/templates/pages/landing.html:90
 msgid "Clear"
 msgstr "清除"
 
-#: src/hope_live/templates/pages/landing.html:92
+#: src/hope_live/templates/pages/landing.html:93
 #, fuzzy
 #| msgid "countries"
 msgid "No countries found"
 msgstr "未找到国家"
 
-#: src/hope_live/templates/pages/landing.html:96
+#: src/hope_live/templates/pages/landing.html:97
 msgid "Reset"
 msgstr "重置"
 
-#: src/hope_live/templates/pages/landing.html:109
+#: src/hope_live/templates/pages/landing.html:110
 msgid "People & Families"
 msgstr "个人与家庭"
 
-#: src/hope_live/templates/pages/landing.html:112
+#: src/hope_live/templates/pages/landing.html:113
 msgid "Children Reached"
 msgstr "覆盖儿童"
 
-#: src/hope_live/templates/pages/landing.html:114
-#: src/hope_live/templates/pages/landing.html:120
+#: src/hope_live/templates/pages/landing.html:115
+#: src/hope_live/templates/pages/landing.html:121
 msgid "HOPE reach"
 msgstr "HOPE 覆盖"
 
-#: src/hope_live/templates/pages/landing.html:118
+#: src/hope_live/templates/pages/landing.html:119
 msgid "Families Reached"
 msgstr "覆盖家庭"
 
-#: src/hope_live/templates/pages/landing.html:124
+#: src/hope_live/templates/pages/landing.html:125
 msgid "Individuals Reached"
 msgstr "覆盖个人"
 
-#: src/hope_live/templates/pages/landing.html:126
+#: src/hope_live/templates/pages/landing.html:127
 msgid "People reached"
 msgstr "覆盖人数"
 
-#: src/hope_live/templates/pages/landing.html:130
+#: src/hope_live/templates/pages/landing.html:131
 msgid "Social Workers Reached"
 msgstr "覆盖社会工作者"
 
-#: src/hope_live/templates/pages/landing.html:132
+#: src/hope_live/templates/pages/landing.html:133
 msgid "Frontline workforce assisted"
 msgstr "受援一线工作人员"
 
-#: src/hope_live/templates/pages/landing.html:138
-#: src/hope_live/templates/pages/landing.html:164
-#: src/hope_live/templates/pages/landing.html:213
-#: src/hope_live/templates/pages/landing.html:284
+#: src/hope_live/templates/pages/landing.html:139
+#: src/hope_live/templates/pages/landing.html:170
+#: src/hope_live/templates/pages/landing.html:219
+#: src/hope_live/templates/pages/landing.html:290
 msgid "Cash"
 msgstr "现金"
 
-#: src/hope_live/templates/pages/landing.html:155
+#: src/hope_live/templates/pages/landing.html:142
+#| msgid "Direct cash transfers"
+msgid "Cash Transfers"
+msgstr "现金转账"
+
+#: src/hope_live/templates/pages/landing.html:144
+msgid "Payments delivered"
+msgstr "已发放付款"
+
+#: src/hope_live/templates/pages/landing.html:146
+msgid "Average transfer"
+msgstr "平均转账"
+
+#: src/hope_live/templates/pages/landing.html:148
+#| msgid "Direct cash transfers"
+msgid "per transfer"
+msgstr "每笔转账"
+
+#: src/hope_live/templates/pages/landing.html:161
 msgid "Where cash assistance reaches children and families"
 msgstr "现金援助覆盖儿童和家庭的地区"
 
-#: src/hope_live/templates/pages/landing.html:156
+#: src/hope_live/templates/pages/landing.html:162
 msgid "Country-level reach for the selected year"
 msgstr "所选年份的国家覆盖率"
 
-#: src/hope_live/templates/pages/landing.html:159
+#: src/hope_live/templates/pages/landing.html:165
 msgid "Map metric"
 msgstr "地图指标"
 
-#: src/hope_live/templates/pages/landing.html:162
-#: src/hope_live/templates/pages/landing.html:211
-#: src/hope_live/templates/pages/landing.html:282
+#: src/hope_live/templates/pages/landing.html:168
+#: src/hope_live/templates/pages/landing.html:217
+#: src/hope_live/templates/pages/landing.html:288
 msgid "Families"
 msgstr "家庭"
 
-#: src/hope_live/templates/pages/landing.html:167
-#: src/hope_live/templates/pages/landing.html:290
+#: src/hope_live/templates/pages/landing.html:173
+#: src/hope_live/templates/pages/landing.html:296
 msgid "Play years"
 msgstr "播放年份"
 
-#: src/hope_live/templates/pages/landing.html:174
+#: src/hope_live/templates/pages/landing.html:180
 msgid "Reset view"
 msgstr "重置视图"
 
-#: src/hope_live/templates/pages/landing.html:177
+#: src/hope_live/templates/pages/landing.html:183
 msgid "Zoom in"
 msgstr "放大"
 
-#: src/hope_live/templates/pages/landing.html:180
+#: src/hope_live/templates/pages/landing.html:186
 msgid "Zoom out"
 msgstr "缩小"
 
-#: src/hope_live/templates/pages/landing.html:186
+#: src/hope_live/templates/pages/landing.html:192
 msgid ""
 "Darker shading means a higher value. Select a country to open its spotlight."
 msgstr "颜色越深表示数值越高。选择国家以打开其聚焦面板。"
 
-#: src/hope_live/templates/pages/landing.html:196
+#: src/hope_live/templates/pages/landing.html:202
 msgid "Select a country on the map"
 msgstr "在地图上选择国家"
 
-#: src/hope_live/templates/pages/landing.html:197
+#: src/hope_live/templates/pages/landing.html:203
 msgid "Its children, families, individuals and cash figures will appear here."
 msgstr "儿童、家庭、个人和现金数据将显示在此处。"
 
-#: src/hope_live/templates/pages/landing.html:202
+#: src/hope_live/templates/pages/landing.html:208
 msgid "Country spotlight"
 msgstr "国家聚焦"
 
-#: src/hope_live/templates/pages/landing.html:205
+#: src/hope_live/templates/pages/landing.html:211
 msgid "Close country spotlight"
 msgstr "关闭国家聚焦"
 
-#: src/hope_live/templates/pages/landing.html:216
+#: src/hope_live/templates/pages/landing.html:222
 msgid "Source: HOPE Database. Country totals follow the selected year."
 msgstr "来源：HOPE 数据库。国家总计按所选年份统计。"
 
-#: src/hope_live/templates/pages/landing.html:225
+#: src/hope_live/templates/pages/landing.html:231
 msgid "Trends over time"
 msgstr "随时间变化的趋势"
 
-#: src/hope_live/templates/pages/landing.html:226
+#: src/hope_live/templates/pages/landing.html:232
 msgid "Children, families, individuals and cash for the selected country."
 msgstr "所选国家的儿童、家庭、个人和现金数据。"
 
-#: src/hope_live/templates/pages/landing.html:238
+#: src/hope_live/templates/pages/landing.html:244
 msgid "Cash assistance by sector"
 msgstr "按部门划分的现金援助"
 
-#: src/hope_live/templates/pages/landing.html:239
+#: src/hope_live/templates/pages/landing.html:245
 msgid "Share of delivered cash by programme sector."
 msgstr "按项目部门划分的已提供现金援助占比。"
 
-#: src/hope_live/templates/pages/landing.html:239
-#: src/hope_live/templates/pages/landing.html:249
+#: src/hope_live/templates/pages/landing.html:245
+#: src/hope_live/templates/pages/landing.html:255
 msgid "Click a slice to filter."
 msgstr "点击扇区进行筛选。"
 
-#: src/hope_live/templates/pages/landing.html:248
+#: src/hope_live/templates/pages/landing.html:254
 msgid "Payment Mechanism"
 msgstr "支付机制"
 
-#: src/hope_live/templates/pages/landing.html:249
+#: src/hope_live/templates/pages/landing.html:255
 msgid "How cash reaches people: delivery mechanism share."
 msgstr "现金援助如何到达人们手中：按支付机制划分。"
 
-#: src/hope_live/templates/pages/landing.html:261
+#: src/hope_live/templates/pages/landing.html:267
 msgid "Data responsibly"
 msgstr "负责任地使用数据"
 
-#: src/hope_live/templates/pages/landing.html:262
+#: src/hope_live/templates/pages/landing.html:268
 msgid "Read UNICEF's data protection policy."
 msgstr "阅读联合国儿童基金会数据保护政策。"
 
-#: src/hope_live/templates/pages/landing.html:266
+#: src/hope_live/templates/pages/landing.html:272
 #: src/hope_live/templates/public_layout.html:73
 msgid "Methodology"
 msgstr "方法"
 
-#: src/hope_live/templates/pages/landing.html:267
+#: src/hope_live/templates/pages/landing.html:273
 msgid "How HOPE data is produced and the standards applied."
 msgstr "HOPE 数据的生成方式及适用标准。"
 
-#: src/hope_live/templates/pages/landing.html:280
+#: src/hope_live/templates/pages/landing.html:286
 msgid "No data"
 msgstr "无数据"
 
-#: src/hope_live/templates/pages/landing.html:285
+#: src/hope_live/templates/pages/landing.html:291
 msgid "High"
 msgstr "高"
 
-#: src/hope_live/templates/pages/landing.html:286
+#: src/hope_live/templates/pages/landing.html:292
 msgid "Low"
 msgstr "低"
 
-#: src/hope_live/templates/pages/landing.html:287
+#: src/hope_live/templates/pages/landing.html:293
 msgid "Reach"
 msgstr "覆盖"
 
-#: src/hope_live/templates/pages/landing.html:289
+#: src/hope_live/templates/pages/landing.html:295
 msgid "Other"
 msgstr "其他"
 
-#: src/hope_live/templates/pages/landing.html:291
+#: src/hope_live/templates/pages/landing.html:297
 msgid "Pause"
 msgstr "暂停"
 
-#: src/hope_live/templates/pages/landing.html:292
+#: src/hope_live/templates/pages/landing.html:298
 msgid "Data could not be loaded. Please refresh."
 msgstr "无法加载数据。请刷新。"
 
-#: src/hope_live/templates/pages/landing.html:293
+#: src/hope_live/templates/pages/landing.html:299
 #, fuzzy
 #| msgid "countries"
 msgid "countries selected"
 msgstr "个国家已选择"
 
-#: src/hope_live/templates/pages/landing.html:294
+#: src/hope_live/templates/pages/landing.html:300
 msgid "Sector"
 msgstr "部门"
 
-#: src/hope_live/templates/pages/landing.html:295
+#: src/hope_live/templates/pages/landing.html:301
 msgid "Mechanism (cash)"
 msgstr "支付机制（现金）"
 
-#: src/hope_live/templates/pages/landing.html:296
+#: src/hope_live/templates/pages/landing.html:302
 msgid "Remove"
 msgstr "移除"
 
@@ -1173,6 +1189,7 @@ msgstr ""
 #: src/hope_live/web/chart_metadata.py:376
 #: src/hope_live/web/chart_metadata.py:386
 #: src/hope_live/web/chart_metadata.py:432
+#: src/hope_live/web/chart_metadata.py:441
 msgid "HOPE payments — country report financial feed."
 msgstr ""
 
@@ -1834,22 +1851,38 @@ msgid ""
 msgstr ""
 
 #: src/hope_live/web/chart_metadata.py:440
+msgid "Number of cash transfers delivered in the current data."
+msgstr "当前数据中已发放的现金转账数量。"
+
+#: src/hope_live/web/chart_metadata.py:443
+msgid ""
+"Sums payment records grouped by sector to avoid double counting. A payment "
+"record is not a unique recipient or a payment plan."
+msgstr "按部门汇总付款记录以避免重复计算。付款记录不是唯一受益人或付款计划。"
+
+#: src/hope_live/web/chart_metadata.py:446
+msgid ""
+"Average transfer value divides cash disbursed by the number of payment "
+"records."
+msgstr "平均转账金额等于现金发放总额除以付款记录数量。"
+
+#: src/hope_live/web/chart_metadata.py:449
 msgid "Frontline social workers assisted through social-worker programmes."
 msgstr ""
 
-#: src/hope_live/web/chart_metadata.py:441
+#: src/hope_live/web/chart_metadata.py:450
 msgid ""
 "HOPE social-worker programme records — country report demographic feed."
 msgstr ""
 
-#: src/hope_live/web/chart_metadata.py:443
+#: src/hope_live/web/chart_metadata.py:452
 msgid ""
 "Sums the beneficiaries recorded for social-worker programmes. In these "
 "programmes each record represents one worker, so the beneficiary total is "
 "the workforce count."
 msgstr ""
 
-#: src/hope_live/web/chart_metadata.py:446
+#: src/hope_live/web/chart_metadata.py:455
 msgid ""
 "Social-worker programmes are not part of household, children or persons-"
 "with-disabilities counts."

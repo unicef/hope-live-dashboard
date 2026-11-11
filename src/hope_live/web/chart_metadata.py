@@ -436,6 +436,15 @@ CHART_INFO = {
         ),
         "note": _("The figure covers direct cash transfers, not the full operational budget."),
     },
+    "landing.payments": {
+        "definition": _("Number of cash transfers delivered in the current data."),
+        "source": _("HOPE payments — country report financial feed."),
+        "method": _(
+            "Sums payment records grouped by sector to avoid double counting. A payment record "
+            "is not a unique recipient or a payment plan."
+        ),
+        "note": _("Average transfer value divides cash disbursed by the number of payment records."),
+    },
     "landing.social_workers": {
         "definition": _("Frontline social workers assisted through social-worker programmes."),
         "source": _("HOPE social-worker programme records — country report demographic feed."),

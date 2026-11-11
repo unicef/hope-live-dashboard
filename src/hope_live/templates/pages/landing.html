@@ -58,6 +58,7 @@
                 <div class="text-sm font-semibold text-slate-600 mt-4 pt-3 border-t border-slate-100">
                     {% translate "Source" %}: {% translate "HOPE Database" %}
                 </div>
+                {% chart_info "landing.assistance" %}
             </aside>
         </div>
     </section>
@@ -138,11 +139,16 @@
                 <div class="text-base font-black uppercase tracking-wider text-[#0077a8] mb-2">{% translate "Cash" %}</div>
                 <div class="bg-white p-4 rounded-md border border-slate-200 shadow-2xs h-full flex flex-col justify-between">
                     <div>
-                        <div class="text-base text-[#0077a8] uppercase tracking-wider font-black mb-1">{% translate "Assistance Delivered" %}</div>
-                        <div id="kpi-cash" class="text-3xl lg:text-4xl font-black text-[#00adef] leading-tight">${{ total_cash_disbursed|default:"0" }}</div>
+                        <div class="text-base text-[#0077a8] uppercase tracking-wider font-black mb-1">{% translate "Cash Transfers" %}</div>
+                        <div id="kpi-payments" class="text-3xl lg:text-4xl font-black text-[#00adef] leading-tight">{{ total_payments|default:"0" }}</div>
+                        <div class="text-base font-bold text-slate-700 mt-1">{% translate "Payments delivered" %}</div>
+                        <div class="text-sm font-semibold text-slate-600 mt-1">
+                            {% translate "Average transfer" %}
+                            <span id="kpi-average-transfer" class="font-black text-[#0077a8]">${{ average_transfer|default:"0" }}</span>
+                            {% translate "per transfer" %}
+                        </div>
                     </div>
-                    <div class="text-base font-bold text-slate-700 mt-2">{% translate "Direct cash transfers" %}</div>
-                    {% chart_info "landing.assistance" %}
+                    {% chart_info "landing.payments" %}
                 </div>
             </div>
         </div>
@@ -304,6 +310,12 @@ document.addEventListener('DOMContentLoaded', async function () {
         if (Math.abs(v) >= 1e9) return `$${(v / 1e9).toFixed(1)}B`;
         if (Math.abs(v) >= 1e6) return `$${(v / 1e6).toFixed(1)}M`;
         if (Math.abs(v) >= 1e3) return `$${(v / 1e3).toFixed(0)}K`;
+        return `$${Math.round(v).toLocaleString('en')}`;
+    };
+    const averageMoney = value => {
+        const v = Number(value) || 0;
+        if (Math.abs(v) >= 1e6) return `$${(v / 1e6).toFixed(1).replace(/\.0$/, '')}M`;
+        if (Math.abs(v) >= 1e3) return `$${(v / 1e3).toFixed(1).replace(/\.0$/, '')}K`;
         return `$${Math.round(v).toLocaleString('en')}`;
     };
     const count = value => compact.format(Number(value) || 0);
@@ -504,7 +516,10 @@ document.addEventListener('DOMContentLoaded', async function () {
         setText('kpi-families', count(sum(demoRows, 'total_households')));
         setText('kpi-individuals', count(sum(demoRows, 'total_beneficiaries')));
         setText('kpi-social-workers', count(sum(socialRows, 'total_beneficiaries')));
-        setText('kpi-cash', money(sum(finRows, 'total_usd')));
+        const cash = sum(finRows, 'total_usd');
+        const payments = sum(finRows, 'payment_count');
+        setText('kpi-payments', count(payments));
+        setText('kpi-average-transfer', payments > 0 ? averageMoney(cash / payments) : '—');
     }
 
     function countryMetric(slug, metric) {

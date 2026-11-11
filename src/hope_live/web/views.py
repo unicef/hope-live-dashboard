@@ -249,7 +249,13 @@ class IndexView(TemplateView):
             latest_data_str = "May 2026"
             latest_data_exact = latest_data_str
 
+        total_payments = (
+            FinancialAggregate.objects.filter(dimension_type="sector").aggregate(total=Sum("payment_count"))["total"]
+            or 0
+        )
         context["total_cash_disbursed"] = format_large_number(total_usd)
+        context["total_payments"] = format_large_number(total_payments)
+        context["average_transfer"] = format_large_number(total_usd / total_payments) if total_payments else "0"
         context["total_individuals_reached"] = format_large_number(total_beneficiaries)
         context["total_children"] = format_large_number(total_children)
         context["total_households"] = format_large_number(total_households)

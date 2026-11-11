@@ -348,6 +348,7 @@ def test_landing_kpis_have_definitions_and_exact_date(browser, financial_aggrega
         "households",
         "individuals",
         "assistance",
+        "payments",
         "social_workers",
     ):
         browser.wait_for_element_visible(f'[data-chart-info="landing.{key}"]')
@@ -376,7 +377,8 @@ def test_landing_filters_update_kpis_and_country_spotlight(browser, financial_ag
     browser.assert_text("200", "#kpi-children")
     browser.assert_text("300", "#kpi-families")
     browser.assert_text("400", "#kpi-individuals")
-    browser.assert_text("$20K", "#kpi-cash")
+    browser.assert_text("10", "#kpi-payments")
+    browser.assert_text("$2K", "#kpi-average-transfer")
     browser.assert_text("2", "#spotlight-country")
     assert (
         "country=kenya%2Csomalia" in browser.get_current_url() or "country=kenya,somalia" in browser.get_current_url()
@@ -387,14 +389,16 @@ def test_landing_filters_update_kpis_and_country_spotlight(browser, financial_ag
     browser.assert_text("100", "#kpi-children")
     browser.assert_text("150", "#kpi-families")
     browser.assert_text("200", "#kpi-individuals")
-    browser.assert_text("$10K", "#kpi-cash")
+    browser.assert_text("5", "#kpi-payments")
+    browser.assert_text("$2K", "#kpi-average-transfer")
     browser.assert_text("Kenya", "#spotlight-country")
 
     browser.click("#landing-reset")
     browser.assert_text("1.5K", "#kpi-children")
     browser.assert_text("2.3K", "#kpi-families")
     browser.assert_text("3K", "#kpi-individuals")
-    browser.assert_text("$150K", "#kpi-cash")
+    browser.assert_text("75", "#kpi-payments")
+    browser.assert_text("$2K", "#kpi-average-transfer")
 
 
 def test_country_filter_is_available_on_dashboards(  # noqa: PLR0917
@@ -964,26 +968,27 @@ def test_landing_sector_and_mechanism_chart_clicks(browser, financial_aggregates
     browser.wait_for_element_visible("#sector-chart canvas")
     browser.wait_for_element_visible("#mechanism-chart canvas")
     browser.sleep(1)
-    browser.assert_text("$50K", "#kpi-cash")
+    browser.assert_text("25", "#kpi-payments")
     browser.assert_text("500", "#kpi-children")
 
     browser.click_with_offset("#sector-chart canvas", 80, -17, center=True)
     browser.wait_for_element_visible("[data-remove-dimension='sector']")
-    browser.assert_text("$10K", "#kpi-cash")
+    browser.assert_text("5", "#kpi-payments")
     browser.assert_text("0", "#kpi-children")
     browser.assert_text("Sector: Health-", "#country-chips")
     assert "sector=Health-" in browser.get_current_url()
 
     browser.click_with_offset("#mechanism-chart canvas", 80, -17, center=True)
     browser.wait_for_element_visible("[data-remove-dimension='mechanism']")
-    browser.assert_text("$5K", "#kpi-cash")
+    browser.assert_text("2", "#kpi-payments")
+    browser.assert_text("$2.5K", "#kpi-average-transfer")
     browser.assert_text("500", "#kpi-children")
     browser.assert_text("Mechanism (cash): Delivery-", "#country-chips")
     assert "mechanism=Delivery-" in browser.get_current_url()
     assert "sector=" not in browser.get_current_url()
 
     browser.click("[data-remove-dimension='mechanism']")
-    browser.assert_text("$50K", "#kpi-cash")
+    browser.assert_text("25", "#kpi-payments")
     browser.assert_element_not_visible("#country-chips")
     assert "mechanism=" not in browser.get_current_url()
 
@@ -1013,7 +1018,7 @@ def test_landing_map_names_are_derived_from_data(browser):
     browser.login_as_user()
     browser.open(f"/?year={year}&country=democratic-republic-of-congo")
     browser.wait_for_element_visible("#world-map-chart canvas")
-    browser.wait_for_text("$1K", "#kpi-cash")
+    browser.wait_for_text("1", "#kpi-payments")
 
     map_names = browser.execute_script(
         """
