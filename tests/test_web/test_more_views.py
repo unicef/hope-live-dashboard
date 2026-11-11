@@ -210,7 +210,7 @@ def test_language_switch_views(client):
 
     response_fr = client.get("/fr/")
     assert response_fr.status_code == 200
-    assert '<html lang="fr"' in response_fr.content.decode("utf-8")
+    assert "Familles atteintes" in response_fr.content.decode("utf-8")
 
 
 @pytest.mark.django_db

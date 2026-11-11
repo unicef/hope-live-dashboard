@@ -66,11 +66,11 @@ def test_landing_page_unauthenticated_no_private_sections(client):
 
     content = response.content.decode()
 
-    # Unauthenticated visitor must see public evidence CTA and a way to sign in
+    # Unauthenticated visitor sees the public evidence page without a sign-in CTA.
     assert "Explore the evidence" in content
     assert "Cash-based Assistance" in content
-    assert "Sign In" in content
-    assert 'href="/login/"' in content
+    assert "Sign In" not in content
+    assert 'href="/login/"' not in content
 
     # Unauthenticated visitor must NOT see private section grid, links, or mentions
     assert "Explore the Dashboard" not in content
