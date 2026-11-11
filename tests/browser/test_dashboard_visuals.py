@@ -954,3 +954,35 @@ def test_grievance_resolution_and_source_filter(browser, grievance_aggregates, g
 
     browser.click("#source-all")
     browser.wait_for_text_visible("150", "#total-tickets")
+
+
+def test_landing_sector_and_mechanism_chart_clicks(browser, financial_aggregates, demographic_aggregates):
+    year = datetime.datetime.now().year
+    browser.set_window_size(1600, 1400)
+    browser.login_as_user()
+    browser.open(f"/?year={year}")
+    browser.wait_for_element_visible("#sector-chart canvas")
+    browser.wait_for_element_visible("#mechanism-chart canvas")
+    browser.sleep(1)
+    browser.assert_text("$50K", "#kpi-cash")
+    browser.assert_text("500", "#kpi-children")
+
+    browser.click_with_offset("#sector-chart canvas", 80, -17, center=True)
+    browser.wait_for_element_visible("[data-remove-dimension='sector']")
+    browser.assert_text("$10K", "#kpi-cash")
+    browser.assert_text("0", "#kpi-children")
+    browser.assert_text("Sector: Health-", "#country-chips")
+    assert "sector=Health-" in browser.get_current_url()
+
+    browser.click_with_offset("#mechanism-chart canvas", 80, -17, center=True)
+    browser.wait_for_element_visible("[data-remove-dimension='mechanism']")
+    browser.assert_text("$5K", "#kpi-cash")
+    browser.assert_text("500", "#kpi-children")
+    browser.assert_text("Mechanism (cash): Delivery-", "#country-chips")
+    assert "mechanism=Delivery-" in browser.get_current_url()
+    assert "sector=" not in browser.get_current_url()
+
+    browser.click("[data-remove-dimension='mechanism']")
+    browser.assert_text("$50K", "#kpi-cash")
+    browser.assert_element_not_visible("#country-chips")
+    assert "mechanism=" not in browser.get_current_url()
