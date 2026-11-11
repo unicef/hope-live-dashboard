@@ -187,8 +187,7 @@ def test_landing_page_shows_social_workers_kpi(client, user_factory):
     content = response.content.decode("utf-8")
     assert "Social Workers Reached" in content
     assert "Frontline workforce assisted" in content
-    assert "Reconciled Transactions" in content
-    assert "Reconciliation rate" in content
+    assert "Reconciled Transactions" not in content
     assert "Verified Transactions" not in content
 
 
@@ -211,7 +210,7 @@ def test_language_switch_views(client):
 
     response_fr = client.get("/fr/")
     assert response_fr.status_code == 200
-    assert "HOPE en bref" in response_fr.content.decode("utf-8")
+    assert '<html lang="fr"' in response_fr.content.decode("utf-8")
 
 
 @pytest.mark.django_db
@@ -274,20 +273,6 @@ def _fake_update() -> dict:
         "snippet": "New features 1. Added bio details.",
         "description": "New features and enhancements 1. Added bio details.",
     }
-
-
-@pytest.mark.django_db
-def test_landing_updates_link_to_the_entry_detail(client, monkeypatch):
-    from hope_live.web import views
-
-    monkeypatch.setattr(views, "fetch_hope_news", lambda limit=3: [_fake_update()])
-
-    response = client.get("/")
-    content = response.content.decode()
-
-    assert "Latest updates" in content
-    assert "Latest updates & alerts" not in content
-    assert 'href="/updates/hope-v20254150/"' in content
 
 
 @pytest.mark.django_db

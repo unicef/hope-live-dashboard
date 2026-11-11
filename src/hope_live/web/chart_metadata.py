@@ -371,6 +371,26 @@ CHART_INFO = {
             "record, the reached series are estimated from payment volume."
         ),
     },
+    "landing.sector": {
+        "definition": _("Share of cash assistance delivered by programme sector."),
+        "source": _("HOPE payments — country report financial feed."),
+        "method": _(
+            "Sums delivered quantity in USD for the selected year and country, grouped by "
+            "programme sector. The chart shows the largest sectors and groups the remainder "
+            "as Other."
+        ),
+        "note": _("Percentages are of total cash delivered in the selected scope."),
+    },
+    "landing.mechanism": {
+        "definition": _("Share of cash assistance delivered by payment mechanism."),
+        "source": _("HOPE payments — country report financial feed."),
+        "method": _(
+            "Sums delivered quantity in USD for the selected year and country, grouped by "
+            "delivery mechanism. The chart shows the largest mechanisms and groups the "
+            "remainder as Other."
+        ),
+        "note": _("Payment mechanism is the HOPE delivery mechanism attached to the payment."),
+    },
     "landing.children": {
         "definition": _("Children reached through household programmes in the current data."),
         "source": _("HOPE household registration and payment data — country report demographic feed."),
@@ -385,7 +405,7 @@ CHART_INFO = {
         ),
     },
     "landing.households": {
-        "definition": _("Households with at least one qualifying payment in the selected period."),
+        "definition": _("Families with at least one qualifying payment in the selected period."),
         "source": _("HOPE household registration and payment data — country report demographic feed."),
         "method": _(
             "Counts reached households distinctly. Qualifying payments must belong to accepted, "
@@ -393,7 +413,7 @@ CHART_INFO = {
             "are not included."
         ),
         "note": _(
-            "Households are counted from standard (household) programmes; social-worker "
+            "Families are counted from standard (household) programmes; social-worker "
             "programmes are reported separately."
         ),
     },
@@ -407,18 +427,6 @@ CHART_INFO = {
         ),
         "note": _("Frontline (incentive) workers are reported separately and are not part of this figure."),
     },
-    "landing.active_countries": {
-        "definition": _(
-            "Countries represented across the dashboard feeds, used as a proxy for active HOPE deployments."
-        ),
-        "source": _("HOPE country report financial, demographic, completion and grievance feeds."),
-        "method": _(
-            "Counts distinct country slugs with at least one aggregate record across the four "
-            "dashboard feeds. It is a data-coverage count, not the official number of HOPE "
-            "deployments."
-        ),
-        "note": _("A country with no records in the current feeds is not counted."),
-    },
     "landing.assistance": {
         "definition": _("Cash disbursed directly to beneficiaries in the current data."),
         "source": _("HOPE payments — country report financial feed."),
@@ -427,15 +435,6 @@ CHART_INFO = {
             "Entitlement quantity is used only when a delivery amount is not recorded."
         ),
         "note": _("The figure covers direct cash transfers, not the full operational budget."),
-    },
-    "landing.reconciled": {
-        "definition": _("Share of payment records that have reached a reconciled status."),
-        "source": _("HOPE payments — country report completion feed."),
-        "method": _(
-            "Reconciled payments divided by the sum of reconciled and pending payment records "
-            "in the completion feed. The rate is count-based, not amount-based."
-        ),
-        "note": _("Pending records remain in the denominator, so the rate falls when reconciliation is delayed."),
     },
     "landing.social_workers": {
         "definition": _("Frontline social workers assisted through social-worker programmes."),

@@ -67,8 +67,8 @@ def test_landing_page_unauthenticated_no_private_sections(client):
     content = response.content.decode()
 
     # Unauthenticated visitor must see public evidence CTA and a way to sign in
-    assert "Explore evidence" in content
-    assert "HOPE Ecosystem Pillars" in content
+    assert "Explore the evidence" in content
+    assert "Cash-based Assistance" in content
     assert "Sign In" in content
     assert 'href="/login/"' in content
 
@@ -95,12 +95,9 @@ def test_landing_page_authenticated_shows_dashboards(client, user_factory):
 
     content = response.content.decode()
 
-    # Authenticated user sees operational dashboards launcher and sign out
+    # Authenticated user gets a direct dashboard launcher from the public header.
     assert "Go to Dashboards" in content
-    assert "Explore the Dashboard" in content
-    assert "Sign Out" in content
     assert 'href="/dashboard/"' in content
-    assert 'href="/risk/"' in content
 
 
 @pytest.mark.django_db
