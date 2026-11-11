@@ -986,3 +986,71 @@ def test_landing_sector_and_mechanism_chart_clicks(browser, financial_aggregates
     browser.assert_text("$50K", "#kpi-cash")
     browser.assert_element_not_visible("#country-chips")
     assert "mechanism=" not in browser.get_current_url()
+
+
+def test_landing_map_names_are_derived_from_data(browser):
+    year = datetime.datetime.now().year
+    FinancialAggregateFactory(
+        date=datetime.date(year, 1, 1),
+        time_grain="daily",
+        country_slug="democratic-republic-of-congo",
+        dimension_type="sector",
+        dimension_value="HEALTH",
+        total_usd=1000,
+        payment_count=1,
+    )
+    DemographicAggregateFactory(
+        date=datetime.date(year, 1, 1),
+        time_grain="monthly",
+        country_slug="democratic-republic-of-congo",
+        dimension_type="sector",
+        dimension_value="HEALTH",
+        total_beneficiaries=10,
+        total_children=5,
+        total_households=3,
+    )
+
+    browser.login_as_user()
+    browser.open(f"/?year={year}&country=democratic-republic-of-congo")
+    browser.wait_for_element_visible("#world-map-chart canvas")
+    browser.wait_for_text("$1K", "#kpi-cash")
+
+    map_names = browser.execute_script(
+        """
+        const chart = echarts.getInstanceByDom(document.getElementById('world-map-chart'));
+        return chart.getOption().series[0].data.map(item => item.name);
+        """
+    )
+    assert "Dem. Rep. Congo" in map_names
+
+    keys = browser.execute_script(
+        """
+        return {
+            drc: [
+                window.HopeChart.countryKey('democratic-republic-of-congo'),
+                window.HopeChart.countryKey('Dem. Rep. Congo')
+            ],
+            southSudan: [
+                window.HopeChart.countryKey('south-sudan'),
+                window.HopeChart.countryKey('S. Sudan')
+            ],
+            centralAfricanRepublic: [
+                window.HopeChart.countryKey('central-african-republic'),
+                window.HopeChart.countryKey('Central African Rep.')
+            ],
+            palestine: [
+                window.HopeChart.countryKey('palestine-state-of'),
+                window.HopeChart.countryKey('Palestine')
+            ],
+            sudan: [
+                window.HopeChart.countryKey('sudan-old'),
+                window.HopeChart.countryKey('Sudan')
+            ]
+        };
+        """
+    )
+    assert keys["drc"][0] == keys["drc"][1]
+    assert keys["southSudan"][0] == keys["southSudan"][1]
+    assert keys["centralAfricanRepublic"][0] == keys["centralAfricanRepublic"][1]
+    assert keys["palestine"][0] == keys["palestine"][1]
+    assert keys["sudan"][0] == keys["sudan"][1]

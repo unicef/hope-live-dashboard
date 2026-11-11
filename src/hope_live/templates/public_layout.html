@@ -19,7 +19,7 @@
 
 <body class="min-h-screen bg-slate-50 text-slate-900 antialiased">
     <header class="bg-[#00adef] text-white">
-        <div class="max-w-7xl mx-auto px-4 lg:px-6">
+        <div class="max-w-[1600px] mx-auto px-4 lg:px-6">
             <div class="flex items-center justify-between gap-4 py-3">
                 <a href="{% url 'web:index' %}" class="flex items-center gap-3 shrink-0" aria-label="{% translate 'UNICEF Cash-based Assistance home' %}">
                     <img src="{% static 'images/logo-white-trimmed.png' %}" alt="UNICEF" class="h-16 w-auto">
@@ -67,7 +67,7 @@
 
     {% block footer %}
     <footer class="bg-white border-t border-slate-200 py-8">
-        <div class="max-w-7xl mx-auto px-4 lg:px-6 flex flex-col md:flex-row justify-between items-center gap-3 text-sm text-slate-600">
+        <div class="max-w-[1600px] mx-auto px-4 lg:px-6 flex flex-col md:flex-row justify-between items-center gap-3 text-sm text-slate-600">
             <p>UNICEF © {% now "Y" %}</p>
             <div class="flex flex-wrap items-center gap-5">
                 <a href="https://www.unicef.org/hope-hct/resources" target="_blank" rel="noopener" class="hover:text-[#00adef]">{% translate "Methodology" %}</a>

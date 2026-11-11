@@ -43,9 +43,37 @@
         return d3.timeFormat('%b %y')(new Date(value));
     }
 
+    const countryAbbreviations = {
+        dem: 'democratic',
+        rep: 'republic',
+        s: 'south',
+        n: 'north',
+        barb: 'barbuda',
+        st: 'saint'
+    };
+    const countryStopWords = new Set(['of', 'the', 'and', 'state', 'old', 'republic']);
+
     function formatCountryName(name) {
         if (!name) return '';
         return String(name).replace(/[-_]/g, ' ').replace(/\b\w/g, ch => ch.toUpperCase());
+    }
+
+    // Normalise a database slug and a GeoJSON feature name to the same key.
+    // The map uses shortened names ("Dem. Rep. Congo", "S. Sudan") while the
+    // database stores slugs ("democratic-republic-of-congo", "south-sudan").
+    function countryKey(name) {
+        if (!name) return '';
+        return String(name)
+            .normalize('NFKD')
+            .replace(/[\u0300-\u036f]/g, '')
+            .toLowerCase()
+            .replace(/&/g, ' and ')
+            .replace(/[^a-z0-9 ]/g, ' ')
+            .split(/\s+/)
+            .filter(Boolean)
+            .map(token => countryAbbreviations[token] || token)
+            .filter(token => !countryStopWords.has(token))
+            .join(' ');
     }
 
     function initCountryFilter(options) {
@@ -138,6 +166,7 @@
         getRegionColor: getRegionColor,
         timeAxisLabel: timeAxisLabel,
         formatCountryName: formatCountryName,
+        countryKey: countryKey,
         initCountryFilter: initCountryFilter,
         setDataAsOf: setDataAsOf
     };

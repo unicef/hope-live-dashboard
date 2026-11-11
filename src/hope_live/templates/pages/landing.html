@@ -5,24 +5,24 @@
 <div id="global-evidence" tabindex="-1" class="scroll-mt-24">
     <!-- Hero + at a glance -->
     <section class="bg-white border-b border-slate-200">
-        <div class="max-w-7xl mx-auto px-4 lg:px-6 py-8 lg:py-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
-            <div class="lg:col-span-8 relative overflow-hidden rounded-2xl bg-sky-50 min-h-[300px] flex items-center">
+        <div class="max-w-[1600px] mx-auto px-4 lg:px-6 py-8 lg:py-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
+            <div class="lg:col-span-8 relative overflow-hidden rounded-md bg-sky-50 min-h-[300px] flex items-center">
                 <div class="absolute inset-y-0 right-0 w-full md:w-[62%] opacity-30 md:opacity-100 pointer-events-none">
                     <img src="{% static 'images/background.png' %}" class="w-full h-full object-cover" style="object-position: 80% 15%;" alt="">
                     <div class="absolute inset-y-0 left-0 w-40 bg-gradient-to-r from-sky-50 via-sky-50/80 to-transparent"></div>
                 </div>
                 <div class="relative z-10 p-7 lg:p-10 max-w-xl">
-                    <div class="inline-flex items-center mb-5 rounded-xl bg-[#00adef] px-4 py-3">
+                    <div class="inline-flex items-center mb-5 rounded-md bg-[#00adef] px-4 py-3">
                         <img src="{% static 'images/logo-white-trimmed.png' %}" alt="UNICEF" class="h-14 w-auto">
                     </div>
-                    <h1 class="text-5xl sm:text-6xl lg:text-7xl font-black text-[#0077a8] tracking-tight leading-[1.05]">
+                    <h1 class="text-4xl sm:text-5xl lg:text-6xl font-black text-[#0077a8] tracking-tight leading-[1.05]">
                         {% translate "Cash-based Assistance" %}
                     </h1>
                     <p class="mt-4 text-lg font-semibold text-slate-700 leading-relaxed max-w-md">
                         {% translate "Data and evidence to deliver humanitarian cash assistance safely — and to show where it reaches children and families." %}
                     </p>
                     <div class="mt-6 flex flex-wrap items-center gap-3">
-                        <a href="#landing-kpis" class="bg-[#00adef] text-white px-5 py-3 rounded-lg font-black text-base hover:bg-sky-600 transition-colors">
+                        <a href="#landing-kpis" class="bg-[#00adef] text-white px-5 py-3 rounded font-black text-base hover:bg-sky-600 transition-colors">
                             {% translate "Explore the evidence" %}
                         </a>
                         <a href="https://www.unicef.org/hope-hct/resources" target="_blank" rel="noopener"
@@ -33,24 +33,24 @@
                 </div>
             </div>
 
-            <aside class="lg:col-span-4 bg-white border border-slate-200 rounded-2xl p-5 lg:p-6 flex flex-col justify-center">
+            <aside class="lg:col-span-4 bg-white border border-slate-200 rounded-md p-5 lg:p-6 flex flex-col justify-center">
                 <h2 class="text-base font-black uppercase tracking-wider text-[#0077a8] mb-4">
                     {% translate "Cash-based Assistance at a glance" %}
                 </h2>
 
                 <div class="pb-4 border-b border-slate-100">
                     <div class="text-base font-black uppercase tracking-wider text-[#0077a8] mb-1">{% translate "Assistance Delivered" %}</div>
-                    <div id="glance-cash" class="text-5xl lg:text-6xl font-black text-[#00adef] leading-none">${{ total_cash_disbursed|default:"1.2B" }}</div>
+                    <div id="glance-cash" class="text-4xl lg:text-5xl font-black text-[#00adef] leading-none">${{ total_cash_disbursed|default:"1.2B" }}</div>
                     <div class="text-base font-semibold text-slate-600 mt-1">{% translate "Direct cash transfers" %}</div>
                 </div>
 
                 <div class="grid grid-cols-2 gap-4 pt-4">
                     <div>
-                        <div class="text-4xl font-black text-[#0077a8] leading-none">{{ total_countries_glance }}+</div>
+                        <div class="text-3xl font-black text-[#0077a8] leading-none">{{ total_countries_glance }}+</div>
                         <div class="text-base font-bold text-[#0077a8] mt-1">{% translate "Countries & territories" %}</div>
                     </div>
                     <div>
-                        <div class="text-4xl font-black text-[#0077a8] leading-none">{{ total_programs_glance }}+</div>
+                        <div class="text-3xl font-black text-[#0077a8] leading-none">{{ total_programs_glance }}+</div>
                         <div class="text-base font-bold text-[#0077a8] mt-1">{% translate "Programmes" %}</div>
                     </div>
                 </div>
@@ -64,7 +64,7 @@
 
     <!-- Filter bar -->
     <div class="sticky top-0 z-30 bg-white/95 backdrop-blur border-b border-slate-200">
-        <div class="max-w-7xl mx-auto px-4 lg:px-6 py-3 flex flex-wrap items-end gap-3">
+        <div class="max-w-[1600px] mx-auto px-4 lg:px-6 py-3 flex flex-wrap items-end gap-3">
             <div>
                 <label for="landing-year" class="block text-base font-black uppercase tracking-wider text-[#0077a8] mb-1">{% translate "Year" %}</label>
                 <select id="landing-year" class="text-base border-slate-300 rounded-md text-slate-700 py-2.5 pl-3 pr-8 focus:ring-[#00adef] focus:border-[#00adef] shadow-2xs font-bold bg-white">
@@ -78,7 +78,7 @@
                     <span id="country-filter-value">{% translate "All countries" %}</span>
                     <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5"/></svg>
                 </button>
-                <div id="country-filter-panel" class="hidden absolute left-0 top-full mt-1 w-[320px] max-w-[90vw] z-50 bg-white border border-slate-200 rounded-xl shadow-xl">
+                <div id="country-filter-panel" class="hidden absolute left-0 top-full mt-1 w-[320px] max-w-[90vw] z-50 bg-white border border-slate-200 rounded-md shadow-lg">
                     <div class="p-2 border-b border-slate-100">
                         <label for="country-search" class="sr-only">{% translate "Search countries" %}</label>
                         <input id="country-search" type="search" placeholder="{% translate 'Search countries' %}"
@@ -102,33 +102,33 @@
         </div>
     </div>
 
-    <div class="max-w-7xl mx-auto px-4 lg:px-6 py-6 lg:py-8">
+    <div class="max-w-[1600px] mx-auto px-4 lg:px-6 py-6 lg:py-8">
         <!-- KPI strip -->
         <div id="landing-kpis" class="grid grid-cols-1 xl:grid-cols-12 gap-4 mb-6">
             <div class="xl:col-span-9">
                 <div class="text-base font-black uppercase tracking-wider text-[#0077a8] mb-2">{% translate "People & Families" %}</div>
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-                    <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-2xs">
+                    <div class="bg-white p-4 rounded-md border border-slate-200 shadow-2xs">
                         <div class="text-base text-[#0077a8] uppercase tracking-wider font-black mb-1">{% translate "Children Reached" %}</div>
-                        <div id="kpi-children" class="text-4xl lg:text-5xl font-black text-[#00adef] leading-tight">{{ total_children|default:"0" }}</div>
+                        <div id="kpi-children" class="text-3xl lg:text-4xl font-black text-[#00adef] leading-tight">{{ total_children|default:"0" }}</div>
                         <div class="text-base font-bold text-slate-700 mt-1" id="kpi-children-note">{% translate "HOPE reach" %}</div>
                         {% chart_info "landing.children" %}
                     </div>
-                    <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-2xs">
+                    <div class="bg-white p-4 rounded-md border border-slate-200 shadow-2xs">
                         <div class="text-base text-[#0077a8] uppercase tracking-wider font-black mb-1">{% translate "Families Reached" %}</div>
-                        <div id="kpi-families" class="text-4xl lg:text-5xl font-black text-[#00adef] leading-tight">{{ total_households|default:"0" }}</div>
+                        <div id="kpi-families" class="text-3xl lg:text-4xl font-black text-[#00adef] leading-tight">{{ total_households|default:"0" }}</div>
                         <div class="text-base font-bold text-slate-700 mt-1">{% translate "HOPE reach" %}</div>
                         {% chart_info "landing.households" %}
                     </div>
-                    <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-2xs">
+                    <div class="bg-white p-4 rounded-md border border-slate-200 shadow-2xs">
                         <div class="text-base text-[#0077a8] uppercase tracking-wider font-black mb-1">{% translate "Individuals Reached" %}</div>
-                        <div id="kpi-individuals" class="text-4xl lg:text-5xl font-black text-[#00adef] leading-tight">{{ total_individuals_reached|default:"0" }}</div>
+                        <div id="kpi-individuals" class="text-3xl lg:text-4xl font-black text-[#00adef] leading-tight">{{ total_individuals_reached|default:"0" }}</div>
                         <div class="text-base font-bold text-slate-700 mt-1">{% translate "People reached" %}</div>
                         {% chart_info "landing.individuals" %}
                     </div>
-                    <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-2xs">
+                    <div class="bg-white p-4 rounded-md border border-slate-200 shadow-2xs">
                         <div class="text-base text-[#0077a8] uppercase tracking-wider font-black mb-1">{% translate "Social Workers Reached" %}</div>
-                        <div id="kpi-social-workers" class="text-4xl lg:text-5xl font-black text-[#00adef] leading-tight">{{ total_social_workers|default:"0" }}</div>
+                        <div id="kpi-social-workers" class="text-3xl lg:text-4xl font-black text-[#00adef] leading-tight">{{ total_social_workers|default:"0" }}</div>
                         <div class="text-base font-bold text-slate-700 mt-1">{% translate "Frontline workforce assisted" %}</div>
                         {% chart_info "landing.social_workers" %}
                     </div>
@@ -136,10 +136,10 @@
             </div>
             <div class="xl:col-span-3">
                 <div class="text-base font-black uppercase tracking-wider text-[#0077a8] mb-2">{% translate "Cash" %}</div>
-                <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-2xs h-full flex flex-col justify-between">
+                <div class="bg-white p-4 rounded-md border border-slate-200 shadow-2xs h-full flex flex-col justify-between">
                     <div>
                         <div class="text-base text-[#0077a8] uppercase tracking-wider font-black mb-1">{% translate "Assistance Delivered" %}</div>
-                        <div id="kpi-cash" class="text-4xl lg:text-5xl font-black text-[#00adef] leading-tight">${{ total_cash_disbursed|default:"0" }}</div>
+                        <div id="kpi-cash" class="text-3xl lg:text-4xl font-black text-[#00adef] leading-tight">${{ total_cash_disbursed|default:"0" }}</div>
                     </div>
                     <div class="text-base font-bold text-slate-700 mt-2">{% translate "Direct cash transfers" %}</div>
                     {% chart_info "landing.assistance" %}
@@ -149,7 +149,7 @@
 
         <!-- Map + country spotlight -->
         <div class="grid grid-cols-1 xl:grid-cols-12 gap-4 mb-6">
-            <div class="xl:col-span-8 bg-white rounded-xl border border-slate-200 shadow-2xs overflow-hidden">
+            <div class="xl:col-span-8 bg-white rounded-md border border-slate-200 shadow-2xs overflow-hidden">
                 <div class="p-4 lg:p-5 pb-2 flex flex-wrap items-start justify-between gap-3">
                     <div>
                         <h2 class="text-2xl lg:text-3xl font-black text-[#0077a8] tracking-tight">{% translate "Where cash assistance reaches children and families" %}</h2>
@@ -188,9 +188,9 @@
                 <p id="map-summary" class="sr-only" aria-live="polite"></p>
             </div>
 
-            <aside class="xl:col-span-4 bg-white rounded-xl border border-slate-200 shadow-2xs p-5">
+            <aside class="xl:col-span-4 bg-white rounded-md border border-slate-200 shadow-2xs p-5">
                 <div id="spotlight-empty" class="h-full min-h-[280px] flex flex-col items-center justify-center text-center text-slate-400">
-                    <div class="w-10 h-10 rounded-full bg-sky-50 text-[#00adef] flex items-center justify-center mb-3">
+                    <div class="w-10 h-10 rounded-md bg-sky-50 text-[#00adef] flex items-center justify-center mb-3">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 21a9 9 0 100-18 9 9 0 000 18zm0 0v-6m0 0l3-3m-3 3l-3-3"/></svg>
                     </div>
                     <div class="text-base font-bold text-slate-700">{% translate "Select a country on the map" %}</div>
@@ -207,10 +207,10 @@
                         </button>
                     </div>
                     <div class="grid grid-cols-2 gap-3 mt-5">
-                        <div><div class="text-base font-black uppercase tracking-wider text-[#0077a8]">{% translate "Children" %}</div><div id="spotlight-children" class="text-3xl font-black text-[#00adef]"></div></div>
-                        <div><div class="text-base font-black uppercase tracking-wider text-[#0077a8]">{% translate "Families" %}</div><div id="spotlight-families" class="text-3xl font-black text-[#0077a8]"></div></div>
-                        <div><div class="text-base font-black uppercase tracking-wider text-[#0077a8]">{% translate "Individuals" %}</div><div id="spotlight-individuals" class="text-3xl font-black text-[#0077a8]"></div></div>
-                        <div><div class="text-base font-black uppercase tracking-wider text-[#0077a8]">{% translate "Cash" %}</div><div id="spotlight-cash" class="text-3xl font-black text-[#0077a8]"></div></div>
+                        <div><div class="text-base font-black uppercase tracking-wider text-[#0077a8]">{% translate "Children" %}</div><div id="spotlight-children" class="text-2xl font-black text-[#00adef]"></div></div>
+                        <div><div class="text-base font-black uppercase tracking-wider text-[#0077a8]">{% translate "Families" %}</div><div id="spotlight-families" class="text-2xl font-black text-[#0077a8]"></div></div>
+                        <div><div class="text-base font-black uppercase tracking-wider text-[#0077a8]">{% translate "Individuals" %}</div><div id="spotlight-individuals" class="text-2xl font-black text-[#0077a8]"></div></div>
+                        <div><div class="text-base font-black uppercase tracking-wider text-[#0077a8]">{% translate "Cash" %}</div><div id="spotlight-cash" class="text-2xl font-black text-[#0077a8]"></div></div>
                     </div>
                     <div id="spotlight-sparkline" class="w-full h-[110px] mt-4"></div>
                     <div class="text-sm font-semibold text-slate-600 mt-2">{% translate "Source: HOPE Database. Country totals follow the selected year." %}</div>
@@ -219,7 +219,7 @@
         </div>
 
         <!-- Trends -->
-        <div class="bg-white rounded-xl border border-slate-200 shadow-2xs p-5 mb-6">
+        <div class="bg-white rounded-md border border-slate-200 shadow-2xs p-5 mb-6">
             <div class="flex items-start justify-between gap-3 mb-2">
                 <div>
                     <h2 class="text-2xl lg:text-3xl font-black text-[#0077a8] tracking-tight">{% translate "Trends over time" %}</h2>
@@ -232,7 +232,7 @@
 
         <!-- Composition -->
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-            <div class="bg-white rounded-xl border border-slate-200 shadow-2xs p-5">
+            <div class="bg-white rounded-md border border-slate-200 shadow-2xs p-5">
                 <div class="flex items-start justify-between gap-3 mb-1">
                     <div>
                         <h2 class="text-2xl lg:text-3xl font-black text-[#0077a8] tracking-tight">{% translate "Cash assistance by sector" %}</h2>
@@ -242,7 +242,7 @@
                 </div>
                 <div id="sector-chart" class="w-full h-[290px]"></div>
             </div>
-            <div class="bg-white rounded-xl border border-slate-200 shadow-2xs p-5">
+            <div class="bg-white rounded-md border border-slate-200 shadow-2xs p-5">
                 <div class="flex items-start justify-between gap-3 mb-1">
                     <div>
                         <h2 class="text-2xl lg:text-3xl font-black text-[#0077a8] tracking-tight">{% translate "Payment Mechanism" %}</h2>
@@ -257,12 +257,12 @@
         <!-- Trust links -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
             <a href="https://unicef.sharepoint.com/:w:/t/EMOPS-NYHQ-HCT/ETNzq6Frl5JPq6U0YLp7KXEBGRRp4uP23iizPHGmZfa61A?e=NlZoym" target="_blank" rel="noopener"
-               class="bg-white p-5 rounded-xl border border-slate-200 shadow-2xs hover:border-[#00adef] transition-colors group">
+               class="bg-white p-5 rounded-md border border-slate-200 shadow-2xs hover:border-[#00adef] transition-colors group">
                 <h3 class="text-xl font-black text-[#0077a8] group-hover:text-[#00adef]">{% translate "Data responsibly" %}</h3>
                 <p class="text-base font-medium text-slate-600 mt-1">{% translate "Read UNICEF's data protection policy." %}</p>
             </a>
             <a href="https://www.unicef.org/hope-hct/resources" target="_blank" rel="noopener"
-               class="bg-white p-5 rounded-xl border border-slate-200 shadow-2xs hover:border-[#00adef] transition-colors group">
+               class="bg-white p-5 rounded-md border border-slate-200 shadow-2xs hover:border-[#00adef] transition-colors group">
                 <h3 class="text-xl font-black text-[#0077a8] group-hover:text-[#00adef]">{% translate "Methodology" %}</h3>
                 <p class="text-base font-medium text-slate-600 mt-1">{% translate "How HOPE data is produced and the standards applied." %}</p>
             </a>
@@ -295,21 +295,9 @@
 {% translate "Mechanism (cash)" as t_mechanism %}
 {% translate "Remove" as t_remove %}
 document.addEventListener('DOMContentLoaded', async function () {
-    const countryMap = {
-        'afghanistan': 'Afghanistan', 'angola': 'Angola', 'antigua-and-barbuda': 'Antigua and Barb.',
-        'armenia': 'Armenia', 'bangladesh': 'Bangladesh', 'belarus': 'Belarus', 'botswana': 'Botswana',
-        'central-african-republic': 'Central African Rep.', 'chad': 'Chad', 'colombia': 'Colombia',
-        'czech-republic': 'Czech Rep.', 'democratic-republic-of-congo': 'Dem. Rep. Congo', 'egypt': 'Egypt', 'haiti': 'Haiti',
-        'honduras': 'Honduras', 'jordan': 'Jordan', 'kenya': 'Kenya', 'madagascar': 'Madagascar',
-        'mali': 'Mali', 'myanmar': 'Myanmar', 'niger': 'Niger', 'nigeria': 'Nigeria',
-        'palestine-state-of': 'Palestine', 'philippines': 'Philippines', 'republic-of-cameroon': 'Cameroon',
-        'republic-of-mozambique': 'Mozambique', 'senegal': 'Senegal', 'sierra-leone': 'Sierra Leone',
-        'slovakia': 'Slovakia', 'somalia': 'Somalia', 'south-sudan': 'S. Sudan', 'sri-lanka': 'Sri Lanka',
-        'sudan': 'Sudan', 'sudan-old': 'Sudan', 'syria': 'Syria', 'trinidad-tobago': 'Trinidad and Tobago',
-        'ukraine': 'Ukraine', 'vietnam': 'Vietnam', 'yemen': 'Yemen', 'zimbabwe': 'Zimbabwe'
-    };
-
+    const countryKey = window.HopeChart?.countryKey || (value => String(value || '').toLowerCase());
     const formatCountry = window.HopeChart?.formatCountryName || (value => value);
+    const mapFeatureByKey = new Map();
     const compact = new Intl.NumberFormat('en', { notation: 'compact', maximumFractionDigits: 1 });
     const money = value => {
         const v = Number(value) || 0;
@@ -440,9 +428,9 @@ document.addEventListener('DOMContentLoaded', async function () {
 
     function dimensionChip(dimension, label, value) {
         return `
-            <span class="inline-flex items-center gap-1.5 bg-amber-50 border border-amber-200 text-amber-900 rounded-full pl-3 pr-1.5 py-1 text-xs font-bold">
+            <span class="inline-flex items-center gap-1.5 bg-amber-50 border border-amber-200 text-amber-900 rounded pl-3 pr-1.5 py-1 text-xs font-bold">
                 ${escapeHtml(label)}: ${escapeHtml(value)}
-                <button type="button" data-remove-dimension="${dimension}" class="w-5 h-5 rounded-full hover:bg-amber-100 flex items-center justify-center" aria-label="{{ t_remove|escapejs }} ${escapeHtml(label)}: ${escapeHtml(value)}">×</button>
+                <button type="button" data-remove-dimension="${dimension}" class="w-5 h-5 rounded hover:bg-amber-100 flex items-center justify-center" aria-label="{{ t_remove|escapejs }} ${escapeHtml(label)}: ${escapeHtml(value)}">×</button>
             </span>`;
     }
 
@@ -450,9 +438,9 @@ document.addEventListener('DOMContentLoaded', async function () {
         countryValue.textContent = countryLabel();
         const values = Array.from(state.selectedCountries).sort((a, b) => formatCountry(a).localeCompare(formatCountry(b)));
         const chips = values.map(slug => `
-            <span class="inline-flex items-center gap-1.5 bg-sky-50 border border-sky-200 text-[#0077a8] rounded-full pl-3 pr-1.5 py-1 text-xs font-bold">
+            <span class="inline-flex items-center gap-1.5 bg-sky-50 border border-sky-200 text-[#0077a8] rounded pl-3 pr-1.5 py-1 text-xs font-bold">
                 ${formatCountry(slug)}
-                <button type="button" data-remove-country="${slug}" class="w-5 h-5 rounded-full hover:bg-sky-100 flex items-center justify-center" aria-label="{{ t_remove|escapejs }} ${formatCountry(slug)}">×</button>
+                <button type="button" data-remove-country="${slug}" class="w-5 h-5 rounded hover:bg-sky-100 flex items-center justify-center" aria-label="{{ t_remove|escapejs }} ${formatCountry(slug)}">×</button>
             </span>`);
         if (state.sector) chips.push(dimensionChip('sector', '{{ t_sector|escapejs }}', state.sector));
         if (state.mechanism) chips.push(dimensionChip('mechanism', '{{ t_mechanism|escapejs }}', state.mechanism));
@@ -501,6 +489,8 @@ document.addEventListener('DOMContentLoaded', async function () {
         if (state.sector && !sectorValues.has(state.sector)) state.sector = null;
         if (state.mechanism && !mechanismValues.has(state.mechanism)) state.mechanism = null;
         yearSelect.value = state.year;
+        const unmapped = countries.filter(slug => !mapFeatureByKey.has(countryKey(slug)));
+        if (unmapped.length > 0) console.warn('No map feature for countries:', unmapped);
         updateCountryChips();
         renderCountryOptions();
     }
@@ -530,7 +520,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         const data = [];
         const hasSelection = state.selectedCountries.size > 0;
         countries.forEach(slug => {
-            const mapName = countryMap[slug];
+            const mapName = mapFeatureByKey.get(countryKey(slug));
             if (!mapName) return;
             const value = countryMetric(slug, state.metric);
             const selected = state.selectedCountries.has(slug);
@@ -886,6 +876,10 @@ document.addEventListener('DOMContentLoaded', async function () {
         finData = await finResponse.json();
         demoData = await demoResponse.json();
         echarts.registerMap('world', worldJson);
+        worldJson.features.forEach(feature => {
+            const name = feature.properties && feature.properties.name;
+            if (name) mapFeatureByKey.set(countryKey(name), name);
+        });
 
         const allFin = finData.filter(isSector);
         setText('glance-cash', money(sum(allFin, 'total_usd')));
