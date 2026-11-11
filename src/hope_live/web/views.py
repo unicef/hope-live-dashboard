@@ -278,7 +278,6 @@ class IndexView(TemplateView):
         context["total_sources_glance"] = total_sources_glance
         context["latest_data_str"] = latest_data_str
         context["latest_data_exact"] = latest_data_exact
-        context["hope_updates"] = fetch_hope_news()
 
         return context
 
