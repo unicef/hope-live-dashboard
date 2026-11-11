@@ -363,6 +363,7 @@ def test_landing_filters_update_kpis_and_country_spotlight(browser, financial_ag
     browser.wait_for_element_visible("#world-map-chart canvas")
     browser.wait_for_element_visible("#sector-chart canvas")
     browser.wait_for_element_visible("#mechanism-chart canvas")
+    assert browser.get_value("#map-metric") == "families"
 
     year = datetime.datetime.now().year
     browser.select_option_by_value("#landing-year", str(year))

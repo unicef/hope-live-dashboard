@@ -144,7 +144,7 @@
                         <label for="map-metric" class="sr-only">{% translate "Map metric" %}</label>
                         <select id="map-metric" class="text-sm border-slate-300 rounded-md text-slate-700 py-2 pl-2.5 pr-7 focus:ring-[#00adef] focus:border-[#00adef] font-semibold bg-white">
                             <option value="children">{% translate "Children" %}</option>
-                            <option value="families">{% translate "Families" %}</option>
+                            <option value="families" selected>{% translate "Families" %}</option>
                             <option value="individuals">{% translate "Individuals" %}</option>
                             <option value="cash">{% translate "Cash" %}</option>
                         </select>
@@ -308,7 +308,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     const state = {
         year: 'all',
         country: 'all',
-        metric: 'children',
+        metric: 'families',
         selectedCountry: null,
         playTimer: null
     };
