@@ -359,7 +359,7 @@ def test_landing_kpis_have_definitions_and_exact_date(browser, financial_aggrega
 def test_landing_filters_update_kpis_and_country_spotlight(browser, financial_aggregates, demographic_aggregates):
     browser.login_as_user()
     browser.open("/")
-    browser.wait_for_element_visible("#landing-country option[value='kenya']")
+    browser.wait_for_element_visible("#country-filter-button")
     browser.wait_for_element_visible("#world-map-chart canvas")
     browser.wait_for_element_visible("#sector-chart canvas")
     browser.wait_for_element_visible("#mechanism-chart canvas")
@@ -367,20 +367,34 @@ def test_landing_filters_update_kpis_and_country_spotlight(browser, financial_ag
 
     year = datetime.datetime.now().year
     browser.select_option_by_value("#landing-year", str(year))
-    browser.select_option_by_value("#landing-country", "kenya")
+    browser.click("#country-filter-button")
+    browser.wait_for_element_visible("#country-options input[value='kenya']")
+    browser.click("#country-options input[value='kenya']")
+    browser.click("#country-options input[value='somalia']")
+    browser.click("#country-filter-button")
 
+    browser.assert_text("200", "#kpi-children")
+    browser.assert_text("300", "#kpi-families")
+    browser.assert_text("400", "#kpi-individuals")
+    browser.assert_text("$20K", "#kpi-cash")
+    browser.assert_text("2", "#spotlight-country")
+    assert (
+        "country=kenya%2Csomalia" in browser.get_current_url() or "country=kenya,somalia" in browser.get_current_url()
+    )
+
+    browser.wait_for_element_visible("[data-remove-country='somalia']")
+    browser.click("[data-remove-country='somalia']")
     browser.assert_text("100", "#kpi-children")
     browser.assert_text("150", "#kpi-families")
     browser.assert_text("200", "#kpi-individuals")
     browser.assert_text("$10K", "#kpi-cash")
     browser.assert_text("Kenya", "#spotlight-country")
-    browser.assert_text("100", "#spotlight-children")
-    assert "country=kenya" in browser.get_current_url()
 
     browser.click("#landing-reset")
     browser.assert_text("1.5K", "#kpi-children")
     browser.assert_text("2.3K", "#kpi-families")
     browser.assert_text("3K", "#kpi-individuals")
+    browser.assert_text("$150K", "#kpi-cash")
 
 
 def test_country_filter_is_available_on_dashboards(  # noqa: PLR0917

@@ -72,11 +72,26 @@
                     <option value="all">{% translate "All years" %}</option>
                 </select>
             </div>
-            <div>
-                <label for="landing-country" class="block text-sm font-extrabold uppercase tracking-wider text-slate-700 mb-1">{% translate "Country" %}</label>
-                <select id="landing-country" class="text-sm border-slate-300 rounded-md text-slate-700 py-2 pl-2.5 pr-8 focus:ring-[#00adef] focus:border-[#00adef] shadow-2xs font-semibold bg-white min-w-[190px]">
-                    <option value="all">{% translate "All countries" %}</option>
-                </select>
+            <div class="relative">
+                <label id="country-filter-label" class="block text-sm font-extrabold uppercase tracking-wider text-slate-700 mb-1">{% translate "Country" %}</label>
+                <button id="country-filter-button" type="button" aria-haspopup="listbox" aria-expanded="false" aria-controls="country-filter-panel"
+                    class="min-w-[210px] flex items-center justify-between gap-3 text-sm border border-slate-300 rounded-md text-slate-700 py-2 pl-2.5 pr-3 focus:outline-none focus:ring-2 focus:ring-[#00adef] font-semibold bg-white">
+                    <span id="country-filter-value">{% translate "All countries" %}</span>
+                    <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5"/></svg>
+                </button>
+                <div id="country-filter-panel" class="hidden absolute left-0 top-full mt-1 w-[320px] max-w-[90vw] z-50 bg-white border border-slate-200 rounded-xl shadow-xl">
+                    <div class="p-2 border-b border-slate-100">
+                        <label for="country-search" class="sr-only">{% translate "Search countries" %}</label>
+                        <input id="country-search" type="search" placeholder="{% translate 'Search countries' %}"
+                            class="w-full text-sm border border-slate-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#00adef]">
+                    </div>
+                    <div class="flex items-center justify-between px-3 py-2 border-b border-slate-100">
+                        <button id="country-select-all" type="button" class="text-xs font-bold text-[#0077a8] hover:underline">{% translate "Select all" %}</button>
+                        <button id="country-clear" type="button" class="text-xs font-bold text-slate-500 hover:underline">{% translate "Clear" %}</button>
+                    </div>
+                    <div id="country-options" class="max-h-64 overflow-y-auto p-2 space-y-1" role="listbox" aria-multiselectable="true"></div>
+                    <div id="country-empty" class="hidden px-3 py-4 text-sm text-slate-500 text-center">{% translate "No countries found" %}</div>
+                </div>
             </div>
             <button id="landing-reset" type="button" class="text-sm font-extrabold text-[#0077a8] hover:underline px-1 py-2">
                 {% translate "Reset" %}
@@ -84,6 +99,7 @@
             <div class="ml-auto text-sm text-slate-600 font-bold" id="latest-data-date">
                 {% translate "Data as of" %} {{ latest_data_exact|default:latest_data_str }}
             </div>
+            <div id="country-chips" class="basis-full w-full flex flex-wrap gap-2" style="flex-basis:100%;"></div>
         </div>
     </div>
 
@@ -275,6 +291,7 @@
 {% translate "Play years" as t_play_years %}
 {% translate "Pause" as t_pause %}
 {% translate "Data could not be loaded. Please refresh." as t_load_error %}
+{% translate "countries selected" as t_countries_selected %}
 document.addEventListener('DOMContentLoaded', async function () {
     const countryMap = {
         'afghanistan': 'Afghanistan', 'angola': 'Angola', 'antigua-and-barbuda': 'Antigua and Barb.',
@@ -307,14 +324,19 @@ document.addEventListener('DOMContentLoaded', async function () {
 
     const state = {
         year: 'all',
-        country: 'all',
+        selectedCountries: new Set(),
         metric: 'families',
-        selectedCountry: null,
         playTimer: null
     };
 
     const yearSelect = document.getElementById('landing-year');
-    const countrySelect = document.getElementById('landing-country');
+    const countryButton = document.getElementById('country-filter-button');
+    const countryValue = document.getElementById('country-filter-value');
+    const countryPanel = document.getElementById('country-filter-panel');
+    const countrySearch = document.getElementById('country-search');
+    const countryOptions = document.getElementById('country-options');
+    const countryEmpty = document.getElementById('country-empty');
+    const countryChips = document.getElementById('country-chips');
     const resetButton = document.getElementById('landing-reset');
     const mapMetric = document.getElementById('map-metric');
     const mapPlay = document.getElementById('map-play');
@@ -336,13 +358,14 @@ document.addEventListener('DOMContentLoaded', async function () {
     const params = new URLSearchParams(window.location.search);
     if (params.get('year')) state.year = params.get('year');
     if (params.get('country')) {
-        state.country = params.get('country');
-        state.selectedCountry = state.country;
+        params.get('country').split(',').map(value => value.trim()).filter(Boolean).forEach(value => {
+            state.selectedCountries.add(value);
+        });
     }
 
     function matches(row, includeCountry = true) {
         const yearMatch = state.year === 'all' || yearOf(row) === Number(state.year);
-        const countryMatch = !includeCountry || state.country === 'all' || row.country_slug === state.country;
+        const countryMatch = !includeCountry || state.selectedCountries.size === 0 || state.selectedCountries.has(row.country_slug);
         return yearMatch && countryMatch;
     }
 
@@ -358,15 +381,56 @@ document.addEventListener('DOMContentLoaded', async function () {
     function updateUrl() {
         const url = new URL(window.location.href);
         if (state.year === 'all') url.searchParams.delete('year'); else url.searchParams.set('year', state.year);
-        if (state.country === 'all') url.searchParams.delete('country'); else url.searchParams.set('country', state.country);
+        if (state.selectedCountries.size === 0) url.searchParams.delete('country');
+        else url.searchParams.set('country', Array.from(state.selectedCountries).sort().join(','));
         window.history.replaceState({}, '', url);
+    }
+
+    function countryLabel() {
+        const values = Array.from(state.selectedCountries);
+        if (values.length === 0) return '{{ t_all_countries|escapejs }}';
+        if (values.length === 1) return formatCountry(values[0]);
+        return `${values.length} {{ t_countries_selected|escapejs }}`;
     }
 
     function updateScopeSummary() {
         const yearLabel = state.year === 'all' ? '{{ t_all_years|escapejs }}' : state.year;
-        const countryLabel = state.country === 'all' ? '{{ t_all_countries|escapejs }}' : formatCountry(state.country);
         const summary = document.getElementById('map-summary');
-        if (summary) summary.textContent = `${yearLabel} · ${countryLabel}. ${years.length} years of data available.`;
+        if (summary) summary.textContent = `${yearLabel} · ${countryLabel()}. ${years.length} years of data available.`;
+    }
+
+    function updateCountryChips() {
+        countryValue.textContent = countryLabel();
+        const values = Array.from(state.selectedCountries).sort((a, b) => formatCountry(a).localeCompare(formatCountry(b)));
+        countryChips.innerHTML = values.map(slug => `
+            <span class="inline-flex items-center gap-1.5 bg-sky-50 border border-sky-200 text-[#0077a8] rounded-full pl-3 pr-1.5 py-1 text-xs font-bold">
+                ${formatCountry(slug)}
+                <button type="button" data-remove-country="${slug}" class="w-5 h-5 rounded-full hover:bg-sky-100 flex items-center justify-center" aria-label="Remove ${formatCountry(slug)}">×</button>
+            </span>`).join('');
+    }
+
+    function visibleCountryOptions() {
+        const query = (countrySearch.value || '').trim().toLowerCase();
+        if (!query) return countries;
+        return countries.filter(slug => formatCountry(slug).toLowerCase().includes(query));
+    }
+
+    function renderCountryOptions() {
+        const visible = visibleCountryOptions();
+        countryOptions.innerHTML = visible.map(slug => `
+            <label class="flex items-center gap-2 px-2 py-2 rounded-md hover:bg-slate-50 cursor-pointer text-sm text-slate-700 font-semibold">
+                <input type="checkbox" value="${slug}" ${state.selectedCountries.has(slug) ? 'checked' : ''} class="rounded border-slate-300 text-[#00adef] focus:ring-[#00adef]">
+                <span>${formatCountry(slug)}</span>
+            </label>`).join('');
+        countryEmpty.classList.toggle('hidden', visible.length > 0);
+    }
+
+    function toggleCountry(slug, selected) {
+        if (selected) state.selectedCountries.add(slug);
+        else state.selectedCountries.delete(slug);
+        updateCountryChips();
+        renderCountryOptions();
+        updateAll();
     }
 
     function populateFilters() {
@@ -376,16 +440,14 @@ document.addEventListener('DOMContentLoaded', async function () {
 
         yearSelect.innerHTML = '<option value="all">{{ t_all_years|escapejs }}</option>' +
             years.slice().reverse().map(year => `<option value="${year}">${year}</option>`).join('');
-        countrySelect.innerHTML = '<option value="all">{{ t_all_countries|escapejs }}</option>' +
-            countries.map(country => `<option value="${country}">${formatCountry(country)}</option>`).join('');
 
         if (state.year !== 'all' && !years.includes(Number(state.year))) state.year = 'all';
-        if (state.country !== 'all' && !countries.includes(state.country)) {
-            state.country = 'all';
-            state.selectedCountry = null;
-        }
+        Array.from(state.selectedCountries).forEach(slug => {
+            if (!countries.includes(slug)) state.selectedCountries.delete(slug);
+        });
         yearSelect.value = state.year;
-        countrySelect.value = state.country;
+        updateCountryChips();
+        renderCountryOptions();
     }
 
     function updateKpis() {
@@ -411,11 +473,26 @@ document.addEventListener('DOMContentLoaded', async function () {
 
     function updateMap() {
         const data = [];
+        const hasSelection = state.selectedCountries.size > 0;
         countries.forEach(slug => {
             const mapName = countryMap[slug];
             if (!mapName) return;
             const value = countryMetric(slug, state.metric);
-            if (value > 0) data.push({ name: mapName, value, slug });
+            const selected = state.selectedCountries.has(slug);
+            if (value > 0 || selected) {
+                data.push({
+                    name: mapName,
+                    value,
+                    slug,
+                    selected,
+                    itemStyle: hasSelection ? {
+                        areaColor: selected ? '#00adef' : '#e2e8f0',
+                        borderColor: '#ffffff',
+                        borderWidth: selected ? 1.5 : 0.8,
+                        opacity: selected ? 1 : 0.45
+                    } : undefined
+                });
+            }
         });
         const maxValue = Math.max(...data.map(item => item.value), 1);
 
@@ -443,6 +520,7 @@ document.addEventListener('DOMContentLoaded', async function () {
                 }
             },
             visualMap: {
+                show: !hasSelection,
                 min: 0,
                 max: maxValue,
                 left: 18,
@@ -471,7 +549,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     function updateSpotlight() {
         const empty = document.getElementById('spotlight-empty');
         const content = document.getElementById('spotlight-content');
-        if (!state.selectedCountry) {
+        if (state.selectedCountries.size === 0) {
             empty.classList.remove('hidden');
             content.classList.add('hidden');
             spotlightChart.clear();
@@ -480,10 +558,11 @@ document.addEventListener('DOMContentLoaded', async function () {
         empty.classList.add('hidden');
         content.classList.remove('hidden');
         spotlightChart.resize();
-        const slug = state.selectedCountry;
-        const finRows = finData.filter(row => isSector(row) && row.country_slug === slug && yearMatches(row));
-        const demoRows = demoData.filter(row => isSector(row) && row.country_slug === slug && yearMatches(row));
-        setText('spotlight-country', formatCountry(slug));
+        const selection = state.selectedCountries;
+        const finRows = finData.filter(row => isSector(row) && yearMatches(row) && selection.has(row.country_slug));
+        const demoRows = demoData.filter(row => isSector(row) && yearMatches(row) && selection.has(row.country_slug));
+        const label = selection.size === 1 ? formatCountry(Array.from(selection)[0]) : `${selection.size} {{ t_countries_selected|escapejs }}`;
+        setText('spotlight-country', label);
         setText('spotlight-children', count(sum(demoRows, 'total_children')));
         setText('spotlight-families', count(sum(demoRows, 'total_households')));
         setText('spotlight-individuals', count(sum(demoRows, 'total_beneficiaries')));
@@ -491,7 +570,7 @@ document.addEventListener('DOMContentLoaded', async function () {
 
         const seriesYears = years.slice(-6);
         const values = seriesYears.map(year => sum(
-            demoData.filter(row => isSector(row) && row.country_slug === slug && yearOf(row) === year),
+            demoData.filter(row => isSector(row) && selection.has(row.country_slug) && yearOf(row) === year),
             'total_children'
         ));
         spotlightChart.setOption({
@@ -504,7 +583,6 @@ document.addEventListener('DOMContentLoaded', async function () {
     }
 
     function updateTrends() {
-        const selectedCountry = state.country;
         const categories = [];
         const cash = [];
         const individuals = [];
@@ -513,8 +591,8 @@ document.addEventListener('DOMContentLoaded', async function () {
 
         if (state.year === 'all') {
             years.forEach(year => {
-                const finRows = finData.filter(row => isSector(row) && yearOf(row) === year && (selectedCountry === 'all' || row.country_slug === selectedCountry));
-                const demoRows = demoData.filter(row => isSector(row) && yearOf(row) === year && (selectedCountry === 'all' || row.country_slug === selectedCountry));
+                const finRows = finData.filter(row => isSector(row) && yearOf(row) === year && matches(row));
+                const demoRows = demoData.filter(row => isSector(row) && yearOf(row) === year && matches(row));
                 categories.push(String(year));
                 cash.push(sum(finRows, 'total_usd'));
                 individuals.push(sum(demoRows, 'total_beneficiaries'));
@@ -523,8 +601,8 @@ document.addEventListener('DOMContentLoaded', async function () {
             });
         } else {
             for (let month = 1; month <= 12; month++) {
-                const finRows = finData.filter(row => isSector(row) && yearOf(row) === Number(state.year) && monthOf(row) === month && (selectedCountry === 'all' || row.country_slug === selectedCountry));
-                const demoRows = demoData.filter(row => isSector(row) && yearOf(row) === Number(state.year) && monthOf(row) === month && (selectedCountry === 'all' || row.country_slug === selectedCountry));
+                const finRows = finData.filter(row => isSector(row) && yearOf(row) === Number(state.year) && monthOf(row) === month && matches(row));
+                const demoRows = demoData.filter(row => isSector(row) && yearOf(row) === Number(state.year) && monthOf(row) === month && matches(row));
                 categories.push(new Date(Number(state.year), month - 1, 1).toLocaleString('en', { month: 'short' }));
                 cash.push(sum(finRows, 'total_usd'));
                 individuals.push(sum(demoRows, 'total_beneficiaries'));
@@ -605,12 +683,51 @@ document.addEventListener('DOMContentLoaded', async function () {
         updateUrl();
     }
 
-    function selectCountry(slug) {
-        state.country = slug || 'all';
-        state.selectedCountry = slug || null;
-        countrySelect.value = state.country;
-        updateAll();
+    function closeCountryPanel() {
+        countryPanel.classList.add('hidden');
+        countryButton.setAttribute('aria-expanded', 'false');
     }
+
+    function openCountryPanel() {
+        countryPanel.classList.remove('hidden');
+        countryButton.setAttribute('aria-expanded', 'true');
+        renderCountryOptions();
+        countrySearch.focus();
+    }
+
+    countryButton.addEventListener('click', function (event) {
+        event.stopPropagation();
+        if (countryPanel.classList.contains('hidden')) openCountryPanel();
+        else closeCountryPanel();
+    });
+    countrySearch.addEventListener('input', renderCountryOptions);
+    document.getElementById('country-select-all').addEventListener('click', function () {
+        visibleCountryOptions().forEach(slug => state.selectedCountries.add(slug));
+        updateCountryChips();
+        renderCountryOptions();
+        updateAll();
+    });
+    document.getElementById('country-clear').addEventListener('click', function () {
+        state.selectedCountries.clear();
+        updateCountryChips();
+        renderCountryOptions();
+        updateAll();
+    });
+    countryOptions.addEventListener('change', function (event) {
+        if (!event.target.matches('input[type="checkbox"]')) return;
+        toggleCountry(event.target.value, event.target.checked);
+    });
+    countryChips.addEventListener('click', function (event) {
+        const button = event.target.closest('[data-remove-country]');
+        if (!button) return;
+        toggleCountry(button.dataset.removeCountry, false);
+    });
+    document.addEventListener('click', function (event) {
+        if (!countryPanel.contains(event.target) && !countryButton.contains(event.target)) closeCountryPanel();
+    });
+    document.addEventListener('keydown', function (event) {
+        if (event.key === 'Escape') closeCountryPanel();
+    });
 
     yearSelect.addEventListener('change', function () {
         state.year = this.value;
@@ -621,9 +738,6 @@ document.addEventListener('DOMContentLoaded', async function () {
         }
         updateAll();
     });
-    countrySelect.addEventListener('change', function () {
-        selectCountry(this.value === 'all' ? null : this.value);
-    });
     resetButton.addEventListener('click', function () {
         if (state.playTimer) {
             clearInterval(state.playTimer);
@@ -631,10 +745,10 @@ document.addEventListener('DOMContentLoaded', async function () {
             mapPlay.textContent = '{{ t_play_years|escapejs }}';
         }
         state.year = 'all';
-        state.country = 'all';
-        state.selectedCountry = null;
+        state.selectedCountries.clear();
         yearSelect.value = 'all';
-        countrySelect.value = 'all';
+        updateCountryChips();
+        renderCountryOptions();
         updateAll();
     });
     mapMetric.addEventListener('change', function () {
@@ -642,7 +756,10 @@ document.addEventListener('DOMContentLoaded', async function () {
         updateMap();
     });
     document.getElementById('spotlight-close').addEventListener('click', function () {
-        selectCountry(null);
+        state.selectedCountries.clear();
+        updateCountryChips();
+        renderCountryOptions();
+        updateAll();
     });
     mapPlay.addEventListener('click', function () {
         if (state.playTimer) {
@@ -701,7 +818,9 @@ document.addEventListener('DOMContentLoaded', async function () {
         updateAll();
 
         mapChart.on('click', params => {
-            if (params.data && params.data.slug) selectCountry(params.data.slug);
+            if (!params.data || !params.data.slug) return;
+            const slug = params.data.slug;
+            toggleCountry(slug, !state.selectedCountries.has(slug));
         });
     } catch (error) {
         console.error('Landing data failed:', error);

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-11 22:12+0000\n"
+"POT-Creation-Date: 2026-11-11 22:45+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -224,7 +224,7 @@ msgstr "Datos en vivo"
 #: src/hope_live/templates/pages/dashboard.html:13
 #: src/hope_live/templates/pages/demographic.html:14
 #: src/hope_live/templates/pages/grievance.html:13
-#: src/hope_live/templates/pages/landing.html:85
+#: src/hope_live/templates/pages/landing.html:100
 #: src/hope_live/templates/pages/risk.html:13
 msgid "Data as of"
 msgstr "Datos al"
@@ -261,11 +261,9 @@ msgstr "Países"
 #: src/hope_live/templates/pages/demographic.html:57
 #: src/hope_live/templates/pages/grievance.html:33
 #: src/hope_live/templates/pages/grievance.html:34
-#: src/hope_live/templates/pages/landing.html:78
-#: src/hope_live/templates/pages/landing.html:352
-#: src/hope_live/templates/pages/landing.html:364
+#: src/hope_live/templates/pages/landing.html:79
+#: src/hope_live/templates/pages/landing.html:280
 #: src/hope_live/templates/pages/risk.html:49
-#| msgid "countries"
 msgid "All countries"
 msgstr "Todos los países"
 
@@ -453,10 +451,9 @@ msgid "View demographic metrics by:"
 msgstr "Ver métricas del tablero por:"
 
 #: src/hope_live/templates/pages/demographic.html:26
-#: src/hope_live/templates/pages/landing.html:148
-#: src/hope_live/templates/pages/landing.html:197
-#: src/hope_live/templates/pages/landing.html:426
-#: src/hope_live/templates/pages/landing.html:541
+#: src/hope_live/templates/pages/landing.html:164
+#: src/hope_live/templates/pages/landing.html:213
+#: src/hope_live/templates/pages/landing.html:284
 msgid "Individuals"
 msgstr "Personas"
 
@@ -467,11 +464,9 @@ msgid "Households"
 msgstr "Hogares alcanzados"
 
 #: src/hope_live/templates/pages/demographic.html:32
-#: src/hope_live/templates/pages/landing.html:146
-#: src/hope_live/templates/pages/landing.html:195
-#: src/hope_live/templates/pages/landing.html:424
-#: src/hope_live/templates/pages/landing.html:543
-#| msgid "Children Reached"
+#: src/hope_live/templates/pages/landing.html:162
+#: src/hope_live/templates/pages/landing.html:211
+#: src/hope_live/templates/pages/landing.html:282
 msgid "Children"
 msgstr "Niños"
 
@@ -590,7 +585,7 @@ msgid "Closed"
 msgstr "Cerrado"
 
 #: src/hope_live/templates/pages/grievance.html:71
-#: src/hope_live/templates/pages/landing.html:552
+#: src/hope_live/templates/pages/landing.html:289
 msgid "Not specified"
 msgstr "No especificado"
 
@@ -659,8 +654,6 @@ msgid "Cash-based Assistance"
 msgstr "Asistencia en efectivo"
 
 #: src/hope_live/templates/pages/landing.html:23
-#| msgid ""
-#| "Data and evidence to deliver humanitarian cash transfers safely."
 msgid ""
 "Data and evidence to deliver humanitarian cash assistance safely — and to "
 "show where it reaches children and families."
@@ -669,7 +662,6 @@ msgstr ""
 "mostrar dónde llega a niños y familias."
 
 #: src/hope_live/templates/pages/landing.html:27
-#| msgid "Explore the data"
 msgid "Explore the evidence"
 msgstr "Explorar la evidencia"
 
@@ -682,12 +674,12 @@ msgid "Cash-based Assistance at a glance"
 msgstr "Asistencia en efectivo de un vistazo"
 
 #: src/hope_live/templates/pages/landing.html:43
-#: src/hope_live/templates/pages/landing.html:126
+#: src/hope_live/templates/pages/landing.html:142
 msgid "Assistance Delivered"
 msgstr "Asistencia entregada"
 
 #: src/hope_live/templates/pages/landing.html:45
-#: src/hope_live/templates/pages/landing.html:129
+#: src/hope_live/templates/pages/landing.html:145
 msgid "Direct cash transfers"
 msgstr "Transferencias directas en efectivo"
 
@@ -700,7 +692,6 @@ msgid "Programmes"
 msgstr "Programas"
 
 #: src/hope_live/templates/pages/landing.html:60
-#| msgid "HOPE at a glance"
 msgid "HOPE Database"
 msgstr "Base de datos HOPE"
 
@@ -709,208 +700,222 @@ msgid "Year"
 msgstr "Año"
 
 #: src/hope_live/templates/pages/landing.html:72
-#: src/hope_live/templates/pages/landing.html:351
-#: src/hope_live/templates/pages/landing.html:362
+#: src/hope_live/templates/pages/landing.html:279
 msgid "All years"
 msgstr "Todos los años"
 
 #: src/hope_live/templates/pages/landing.html:76
 #: src/hope_live/templates/pages/risk.html:179
-#| msgid "Countries"
 msgid "Country"
 msgstr "País"
 
-#: src/hope_live/templates/pages/landing.html:82
+#: src/hope_live/templates/pages/landing.html:84
+#: src/hope_live/templates/pages/landing.html:85
+#, fuzzy
+#| msgid "countries"
+msgid "Search countries"
+msgstr "Buscar países"
+
+#: src/hope_live/templates/pages/landing.html:89
+#, fuzzy
+#| msgid "Select Language"
+msgid "Select all"
+msgstr "Seleccionar todo"
+
+#: src/hope_live/templates/pages/landing.html:90
+msgid "Clear"
+msgstr "Borrar"
+
+#: src/hope_live/templates/pages/landing.html:93
+#, fuzzy
+#| msgid "countries"
+msgid "No countries found"
+msgstr "No se encontraron países"
+
+#: src/hope_live/templates/pages/landing.html:97
 msgid "Reset"
 msgstr "Restablecer"
 
-#: src/hope_live/templates/pages/landing.html:94
+#: src/hope_live/templates/pages/landing.html:110
 msgid "People & Families"
 msgstr "Personas y familias"
 
-#: src/hope_live/templates/pages/landing.html:97
+#: src/hope_live/templates/pages/landing.html:113
 msgid "Children Reached"
 msgstr "Niños alcanzados"
 
-#: src/hope_live/templates/pages/landing.html:99
-#: src/hope_live/templates/pages/landing.html:105
+#: src/hope_live/templates/pages/landing.html:115
+#: src/hope_live/templates/pages/landing.html:121
 msgid "HOPE reach"
 msgstr "Alcanzados vía HOPE"
 
-#: src/hope_live/templates/pages/landing.html:103
-#| msgid "Children Reached"
+#: src/hope_live/templates/pages/landing.html:119
 msgid "Families Reached"
 msgstr "Familias alcanzadas"
 
-#: src/hope_live/templates/pages/landing.html:109
+#: src/hope_live/templates/pages/landing.html:125
 msgid "Individuals Reached"
 msgstr "Personas alcanzadas"
 
-#: src/hope_live/templates/pages/landing.html:111
+#: src/hope_live/templates/pages/landing.html:127
 msgid "People reached"
 msgstr "Personas alcanzadas"
 
-#: src/hope_live/templates/pages/landing.html:115
-#| msgid "Children Reached"
+#: src/hope_live/templates/pages/landing.html:131
 msgid "Social Workers Reached"
 msgstr "Trabajadores sociales alcanzados"
 
-#: src/hope_live/templates/pages/landing.html:117
+#: src/hope_live/templates/pages/landing.html:133
 msgid "Frontline workforce assisted"
 msgstr "Personal de primera línea asistido"
 
-#: src/hope_live/templates/pages/landing.html:123
-#: src/hope_live/templates/pages/landing.html:149
-#: src/hope_live/templates/pages/landing.html:198
-#: src/hope_live/templates/pages/landing.html:427
-#: src/hope_live/templates/pages/landing.html:527
-#: src/hope_live/templates/pages/landing.html:540
+#: src/hope_live/templates/pages/landing.html:139
+#: src/hope_live/templates/pages/landing.html:165
+#: src/hope_live/templates/pages/landing.html:214
+#: src/hope_live/templates/pages/landing.html:285
 msgid "Cash"
 msgstr "Efectivo"
 
-#: src/hope_live/templates/pages/landing.html:140
+#: src/hope_live/templates/pages/landing.html:156
 msgid "Where cash assistance reaches children and families"
 msgstr "Dónde llega la asistencia en efectivo a niños y familias"
 
-#: src/hope_live/templates/pages/landing.html:141
+#: src/hope_live/templates/pages/landing.html:157
 msgid "Country-level reach for the selected year"
 msgstr "Cobertura por país para el año seleccionado"
 
-#: src/hope_live/templates/pages/landing.html:144
+#: src/hope_live/templates/pages/landing.html:160
 msgid "Map metric"
 msgstr "Indicador del mapa"
 
-#: src/hope_live/templates/pages/landing.html:147
-#: src/hope_live/templates/pages/landing.html:196
-#: src/hope_live/templates/pages/landing.html:425
-#: src/hope_live/templates/pages/landing.html:542
+#: src/hope_live/templates/pages/landing.html:163
+#: src/hope_live/templates/pages/landing.html:212
+#: src/hope_live/templates/pages/landing.html:283
 msgid "Families"
 msgstr "Familias"
 
-#: src/hope_live/templates/pages/landing.html:152
-#: src/hope_live/templates/pages/landing.html:605
-#: src/hope_live/templates/pages/landing.html:616
-#: src/hope_live/templates/pages/landing.html:636
-#: src/hope_live/templates/pages/landing.html:650
-#| msgid "All years"
+#: src/hope_live/templates/pages/landing.html:168
+#: src/hope_live/templates/pages/landing.html:291
 msgid "Play years"
 msgstr "Reproducir años"
 
-#: src/hope_live/templates/pages/landing.html:159
+#: src/hope_live/templates/pages/landing.html:175
 msgid "Reset view"
 msgstr "Restablecer vista"
 
-#: src/hope_live/templates/pages/landing.html:162
+#: src/hope_live/templates/pages/landing.html:178
 msgid "Zoom in"
 msgstr "Acercar"
 
-#: src/hope_live/templates/pages/landing.html:165
+#: src/hope_live/templates/pages/landing.html:181
 msgid "Zoom out"
 msgstr "Alejar"
 
-#: src/hope_live/templates/pages/landing.html:171
+#: src/hope_live/templates/pages/landing.html:187
 msgid ""
 "Darker shading means a higher value. Select a country to open its spotlight."
 msgstr ""
 "Un color más oscuro indica un valor más alto. Seleccione un país para abrir "
 "su foco."
 
-#: src/hope_live/templates/pages/landing.html:181
+#: src/hope_live/templates/pages/landing.html:197
 msgid "Select a country on the map"
 msgstr "Seleccione un país en el mapa"
 
-#: src/hope_live/templates/pages/landing.html:182
+#: src/hope_live/templates/pages/landing.html:198
 msgid "Its children, families, individuals and cash figures will appear here."
 msgstr "Aquí aparecerán las cifras de niños, familias, personas y efectivo."
 
-#: src/hope_live/templates/pages/landing.html:187
+#: src/hope_live/templates/pages/landing.html:203
 msgid "Country spotlight"
 msgstr "Foco del país"
 
-#: src/hope_live/templates/pages/landing.html:190
+#: src/hope_live/templates/pages/landing.html:206
 msgid "Close country spotlight"
 msgstr "Cerrar foco del país"
 
-#: src/hope_live/templates/pages/landing.html:201
+#: src/hope_live/templates/pages/landing.html:217
 msgid "Source: HOPE Database. Country totals follow the selected year."
 msgstr ""
 "Fuente: base de datos HOPE. Los totales por país siguen el año seleccionado."
 
-#: src/hope_live/templates/pages/landing.html:210
+#: src/hope_live/templates/pages/landing.html:226
 msgid "Trends over time"
 msgstr "Tendencias a lo largo del tiempo"
 
-#: src/hope_live/templates/pages/landing.html:211
+#: src/hope_live/templates/pages/landing.html:227
 msgid "Children, families, individuals and cash for the selected country."
 msgstr "Niños, familias, personas y efectivo para el país seleccionado."
 
-#: src/hope_live/templates/pages/landing.html:223
+#: src/hope_live/templates/pages/landing.html:239
 msgid "Cash assistance by sector"
 msgstr "Asistencia en efectivo por sector"
 
-#: src/hope_live/templates/pages/landing.html:224
+#: src/hope_live/templates/pages/landing.html:240
 msgid "Share of delivered cash by programme sector."
 msgstr ""
 "Proporción de la asistencia en efectivo entregada por sector del programa."
 
-#: src/hope_live/templates/pages/landing.html:233
-#| msgid "Payment verification"
+#: src/hope_live/templates/pages/landing.html:249
 msgid "Payment Mechanism"
 msgstr "Mecanismo de pago"
 
-#: src/hope_live/templates/pages/landing.html:234
+#: src/hope_live/templates/pages/landing.html:250
 msgid "How cash reaches people: delivery mechanism share."
 msgstr ""
 "Cómo llega la asistencia en efectivo a las personas: distribución por "
 "mecanismo de pago."
 
-#: src/hope_live/templates/pages/landing.html:246
+#: src/hope_live/templates/pages/landing.html:262
 msgid "Data responsibly"
 msgstr "Datos de forma responsable"
 
-#: src/hope_live/templates/pages/landing.html:247
+#: src/hope_live/templates/pages/landing.html:263
 msgid "Read UNICEF's data protection policy."
 msgstr "Lea la política de protección de datos de UNICEF."
 
-#: src/hope_live/templates/pages/landing.html:251
+#: src/hope_live/templates/pages/landing.html:267
 #: src/hope_live/templates/public_layout.html:73
 msgid "Methodology"
 msgstr "Metodología"
 
-#: src/hope_live/templates/pages/landing.html:252
-#| msgid "Learn how HOPE data is produced and standards applied."
+#: src/hope_live/templates/pages/landing.html:268
 msgid "How HOPE data is produced and the standards applied."
 msgstr "Cómo se producen los datos de HOPE y las normas aplicadas."
 
-#: src/hope_live/templates/pages/landing.html:415
+#: src/hope_live/templates/pages/landing.html:281
 msgid "No data"
 msgstr "Sin datos"
 
-#: src/hope_live/templates/pages/landing.html:435
+#: src/hope_live/templates/pages/landing.html:286
 msgid "High"
 msgstr "Alto"
 
-#: src/hope_live/templates/pages/landing.html:435
+#: src/hope_live/templates/pages/landing.html:287
 msgid "Low"
 msgstr "Bajo"
 
-#: src/hope_live/templates/pages/landing.html:441
-#| msgid "Tickets Timeline"
+#: src/hope_live/templates/pages/landing.html:288
 msgid "Reach"
 msgstr "Cobertura"
 
-#: src/hope_live/templates/pages/landing.html:558
+#: src/hope_live/templates/pages/landing.html:290
 msgid "Other"
 msgstr "Otro"
 
-#: src/hope_live/templates/pages/landing.html:644
+#: src/hope_live/templates/pages/landing.html:292
 msgid "Pause"
 msgstr "Pausa"
 
-#: src/hope_live/templates/pages/landing.html:694
-#| msgid "Failed to load map visualization. Please refresh."
+#: src/hope_live/templates/pages/landing.html:293
 msgid "Data could not be loaded. Please refresh."
 msgstr "No se pudieron cargar los datos. Actualice la página."
+
+#: src/hope_live/templates/pages/landing.html:294
+#, fuzzy
+#| msgid "countries"
+msgid "countries selected"
+msgstr "países seleccionados"
 
 #: src/hope_live/templates/pages/login.html:16
 #, fuzzy
@@ -1120,27 +1125,22 @@ msgid "Public navigation"
 msgstr ""
 
 #: src/hope_live/templates/public_layout.html:32
-#| msgid "Explore the data"
 msgid "Evidence"
 msgstr "Evidencia"
 
 #: src/hope_live/templates/public_layout.html:33
-#| msgid "Data source"
 msgid "Resources"
 msgstr "Recursos"
 
 #: src/hope_live/templates/public_layout.html:34
-#| msgid "Contact Us"
 msgid "Contact"
 msgstr "Contacto"
 
 #: src/hope_live/templates/public_layout.html:43
-#| msgid "Select Language"
 msgid "Language"
 msgstr "Idioma"
 
 #: src/hope_live/templates/public_layout.html:56
-#| msgid "Dashboards"
 msgid "Go to Dashboards"
 msgstr "Ir a los tableros"
 
@@ -1864,6 +1864,9 @@ msgid ""
 "with-disabilities counts."
 msgstr ""
 
+msgid "Remove"
+msgstr "Quitar"
+
 #~ msgid "Humanitarian cash"
 #~ msgstr "Efectivo humanitario"
 
@@ -1882,9 +1885,6 @@ msgstr ""
 
 #~ msgid "Across"
 #~ msgstr "Al otro lado de"
-
-#~ msgid "countries"
-#~ msgstr "países"
 
 #~ msgid "Households Reached"
 #~ msgstr "Hogares alcanzados"
