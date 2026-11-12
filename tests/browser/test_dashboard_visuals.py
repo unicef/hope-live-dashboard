@@ -1059,3 +1059,44 @@ def test_landing_map_names_are_derived_from_data(browser):
     assert keys["centralAfricanRepublic"][0] == keys["centralAfricanRepublic"][1]
     assert keys["palestine"][0] == keys["palestine"][1]
     assert keys["sudan"][0] == keys["sudan"][1]
+
+
+def test_landing_mobile_navigation_and_layout(browser, financial_aggregates, demographic_aggregates):
+    browser.set_window_size(390, 844)
+    browser.login_as_user()
+    browser.open("/")
+    browser.wait_for_element_visible("#world-map-chart canvas")
+    browser.sleep(1)
+
+    overflow = browser.execute_script("return document.documentElement.scrollWidth - window.innerWidth;")
+    assert overflow <= 0
+
+    browser.assert_element_visible("#public-mobile-menu summary")
+    browser.click("#public-mobile-menu summary")
+    browser.wait_for_element_visible("#public-mobile-menu a[href='#global-evidence']")
+    browser.assert_element_visible("#public-mobile-menu a[href*='hope-hct/resources']")
+    browser.assert_element_visible("#public-mobile-menu a[href*='contact-us']")
+    browser.assert_element_visible("#public-mobile-menu a[href='/dashboard/']")
+    browser.click("#public-mobile-menu summary")
+
+    browser.click("#country-filter-button")
+    browser.wait_for_element_visible("#country-filter-panel")
+    panel = browser.execute_script(
+        "return document.getElementById('country-filter-panel').getBoundingClientRect().toJSON();"
+    )
+    assert panel["left"] >= 0
+    assert panel["right"] <= 390
+    browser.execute_script("document.dispatchEvent(new KeyboardEvent('keydown', {key: 'Escape'}));")
+
+    for selector in ("#map-zoom-home", "#map-zoom-in", "#map-zoom-out"):
+        assert browser.get_attribute(selector, "aria-label")
+
+    assert browser.execute_script("return !!document.getElementById('icon-baby');")
+    assert browser.execute_script("return !!document.getElementById('icon-globe');")
+    assert browser.execute_script("return document.querySelectorAll('svg use').length > 5;")
+
+    for width, height in ((360, 800), (768, 1024), (1024, 768)):
+        browser.set_window_size(width, height)
+        browser.sleep(0.5)
+        overflow = browser.execute_script("return document.documentElement.scrollWidth - window.innerWidth;")
+        assert overflow <= 0, f"Horizontal overflow at {width}px: {overflow}px"

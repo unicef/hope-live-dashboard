@@ -1,4 +1,4 @@
-{% load i18n issues js static tailwind_tags %}
+{% load i18n icons issues js static tailwind_tags %}
 {% get_current_language as LANGUAGE_CODE %}
 {% get_current_language_bidi as LANGUAGE_BIDI %}
 <!DOCTYPE html>
@@ -18,17 +18,18 @@
 </head>
 
 <body class="min-h-screen bg-slate-50 text-slate-900 antialiased">
+    {% include "includes/icons_sprite.html" %}
     <header class="bg-[#00adef] text-white">
         <div class="max-w-[1600px] mx-auto px-4 lg:px-6">
-            <div class="flex items-center justify-between gap-4 py-3">
+            <div class="flex items-center justify-between gap-3 py-2 sm:py-3">
                 <a href="{% url 'web:index' %}" class="flex items-center gap-3 shrink-0" aria-label="{% translate 'UNICEF Cash-based Assistance home' %}">
-                    <img src="{% static 'images/logo-white-trimmed.png' %}" alt="UNICEF" class="h-16 w-auto">
-                    <span class="hidden sm:block text-lg lg:text-xl font-black tracking-tight leading-tight border-l border-white/40 pl-3">
+                    <img src="{% static 'images/logo-white-trimmed.png' %}" alt="UNICEF" class="h-12 sm:h-16 w-auto">
+                    <span class="hidden sm:block text-base lg:text-xl font-black tracking-tight leading-tight border-l border-white/40 pl-3">
                         {% translate "UNICEF Cash-based Assistance" %}
                     </span>
                 </a>
 
-                <nav class="hidden md:flex items-center gap-6 text-lg font-black" aria-label="{% translate 'Public navigation' %}">
+                <nav class="hidden lg:flex items-center gap-5 text-base lg:text-lg font-black" aria-label="{% translate 'Public navigation' %}">
                     <a href="#global-evidence" class="hover:text-sky-100 transition-colors">{% translate "Evidence" %}</a>
                     <a href="https://www.unicef.org/hope-hct/resources" target="_blank" rel="noopener" class="hover:text-sky-100 transition-colors">{% translate "Resources" %}</a>
                     <a href="https://www.unicef.org/about/contact-us" target="_blank" rel="noopener" class="hover:text-sky-100 transition-colors">{% translate "Contact" %}</a>
@@ -42,7 +43,7 @@
                         {% get_language_info_list for LANGUAGES as langs %}
                         <label class="sr-only" for="public-language">{% translate "Language" %}</label>
                         <select id="public-language" name="language" onchange="this.form.submit()"
-                            class="text-sm font-black uppercase bg-white/15 border border-white/30 text-white rounded-md px-2 py-1.5 focus:outline-none focus:ring-2 focus:ring-white/60">
+                            class="text-sm font-black uppercase bg-white/15 border border-white/30 text-white rounded px-2 py-1.5 focus:outline-none focus:ring-2 focus:ring-white/60">
                             {% for lang in langs %}
                             <option value="{{ lang.code }}" {% if lang.code == LANGUAGE_CODE %}selected{% endif %} class="text-slate-900">
                                 {{ lang.code }}
@@ -52,10 +53,38 @@
                     </form>
 
                     {% if user.is_authenticated %}
-                    <a href="{% url 'web:dashboard' %}" class="bg-white text-[#0077a8] px-4 py-2.5 rounded-md text-base font-black hover:bg-sky-50 transition-colors">
+                    <a href="{% url 'web:dashboard' %}" class="hidden lg:inline-flex bg-white text-[#0077a8] px-3 py-2 rounded text-sm font-black hover:bg-sky-50 transition-colors">
                         {% translate "Go to Dashboards" %}
                     </a>
                     {% endif %}
+
+                    <details id="public-mobile-menu" class="relative lg:hidden">
+                        <summary class="list-none [&::-webkit-details-marker]:hidden cursor-pointer p-2 -mr-1 rounded hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-white/60"
+                            aria-label="{% translate 'Menu' %}">
+                            {% icon "menu" "h-6 w-6" %}
+                        </summary>
+                        <div class="absolute right-0 top-full mt-2 w-64 max-w-[calc(100vw-2rem)] z-50 rounded-md border border-slate-200 bg-white text-slate-900 shadow-lg p-2">
+                            <a href="#global-evidence" class="flex items-center gap-3 px-3 py-2.5 rounded text-base font-bold hover:bg-sky-50">
+                                {% icon "chart-no-axes-column" "h-5 w-5 text-[#0077a8]" %}
+                                {% translate "Evidence" %}
+                            </a>
+                            <a href="https://www.unicef.org/hope-hct/resources" target="_blank" rel="noopener" class="flex items-center gap-3 px-3 py-2.5 rounded text-base font-bold hover:bg-sky-50">
+                                {% icon "library" "h-5 w-5 text-[#0077a8]" %}
+                                {% translate "Resources" %}
+                            </a>
+                            <a href="https://www.unicef.org/about/contact-us" target="_blank" rel="noopener" class="flex items-center gap-3 px-3 py-2.5 rounded text-base font-bold hover:bg-sky-50">
+                                {% icon "mail" "h-5 w-5 text-[#0077a8]" %}
+                                {% translate "Contact" %}
+                            </a>
+                            {% if user.is_authenticated %}
+                            <div class="my-2 border-t border-slate-100"></div>
+                            <a href="{% url 'web:dashboard' %}" class="flex items-center gap-3 px-3 py-2.5 rounded text-base font-black text-[#0077a8] hover:bg-sky-50">
+                                {% icon "layout-dashboard" "h-5 w-5" %}
+                                {% translate "Go to Dashboards" %}
+                            </a>
+                            {% endif %}
+                        </div>
+                    </details>
                 </div>
             </div>
         </div>
@@ -70,8 +99,14 @@
         <div class="max-w-[1600px] mx-auto px-4 lg:px-6 flex flex-col md:flex-row justify-between items-center gap-3 text-sm text-slate-600">
             <p>UNICEF © {% now "Y" %}</p>
             <div class="flex flex-wrap items-center gap-5">
-                <a href="https://www.unicef.org/hope-hct/resources" target="_blank" rel="noopener" class="hover:text-[#00adef]">{% translate "Methodology" %}</a>
-                <a href="https://unicef.sharepoint.com/:w:/t/EMOPS-NYHQ-HCT/ETNzq6Frl5JPq6U0YLp7KXEBGRRp4uP23iizPHGmZfa61A?e=NlZoym" target="_blank" rel="noopener" class="hover:text-[#00adef]">{% translate "Data protection" %}</a>
+                <a href="https://www.unicef.org/hope-hct/resources" target="_blank" rel="noopener" class="inline-flex items-center gap-1.5 hover:text-[#00adef]">
+                    {% icon "book-open" "h-4 w-4" %}
+                    {% translate "Methodology" %}
+                </a>
+                <a href="https://unicef.sharepoint.com/:w:/t/EMOPS-NYHQ-HCT/ETNzq6Frl5JPq6U0YLp7KXEBGRRp4uP23iizPHGmZfa61A?e=NlZoym" target="_blank" rel="noopener" class="inline-flex items-center gap-1.5 hover:text-[#00adef]">
+                    {% icon "shield-check" "h-4 w-4" %}
+                    {% translate "Data protection" %}
+                </a>
                 <span>{% blocktranslate with version=app.version %}Version {{ version }}{% endblocktranslate %}</span>
             </div>
         </div>

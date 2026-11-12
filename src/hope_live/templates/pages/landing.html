@@ -1,5 +1,5 @@
 {% extends "public_layout.html" %}
-{% load chart_info i18n js static %}
+{% load chart_info i18n icons js static %}
 
 {% block content %}
 <div id="global-evidence" tabindex="-1" class="scroll-mt-24">
@@ -39,19 +39,32 @@
                 </h2>
 
                 <div class="pb-4 border-b border-slate-100">
-                    <div class="text-base font-black uppercase tracking-wider text-[#0077a8] mb-1">{% translate "Assistance Delivered" %}</div>
+                    <div class="flex items-center gap-2 text-base font-black uppercase tracking-wider text-[#0077a8] mb-1">
+                        {% icon "hand-coins" "h-4 w-4" %}
+                        {% translate "Assistance Delivered" %}
+                    </div>
                     <div id="glance-cash" class="text-4xl lg:text-5xl font-black text-[#00adef] leading-none">${{ total_cash_disbursed|default:"1.2B" }}</div>
                     <div class="text-base font-semibold text-slate-600 mt-1">{% translate "Direct cash transfers" %}</div>
                 </div>
 
                 <div class="grid grid-cols-2 gap-4 pt-4">
-                    <div>
-                        <div class="text-3xl font-black text-[#0077a8] leading-none">{{ total_countries_glance }}+</div>
-                        <div class="text-base font-bold text-[#0077a8] mt-1">{% translate "Countries & territories" %}</div>
+                    <div class="flex items-start gap-2">
+                        <span class="w-7 h-7 shrink-0 rounded bg-sky-50 text-[#0077a8] flex items-center justify-center mt-0.5">
+                            {% icon "globe" "h-4 w-4" %}
+                        </span>
+                        <div>
+                            <div class="text-3xl font-black text-[#0077a8] leading-none">{{ total_countries_glance }}+</div>
+                            <div class="text-base font-bold text-[#0077a8] mt-1">{% translate "Countries & territories" %}</div>
+                        </div>
                     </div>
-                    <div>
-                        <div class="text-3xl font-black text-[#0077a8] leading-none">{{ total_programs_glance }}+</div>
-                        <div class="text-base font-bold text-[#0077a8] mt-1">{% translate "Programmes" %}</div>
+                    <div class="flex items-start gap-2">
+                        <span class="w-7 h-7 shrink-0 rounded bg-sky-50 text-[#0077a8] flex items-center justify-center mt-0.5">
+                            {% icon "layers" "h-4 w-4" %}
+                        </span>
+                        <div>
+                            <div class="text-3xl font-black text-[#0077a8] leading-none">{{ total_programs_glance }}+</div>
+                            <div class="text-base font-bold text-[#0077a8] mt-1">{% translate "Programmes" %}</div>
+                        </div>
                     </div>
                 </div>
 
@@ -64,26 +77,31 @@
     </section>
 
     <!-- Filter bar -->
-    <div class="sticky top-0 z-30 bg-white/95 backdrop-blur border-b border-slate-200">
+    <div class="static lg:sticky lg:top-0 z-30 bg-white/95 backdrop-blur border-b border-slate-200">
         <div class="max-w-[1600px] mx-auto px-4 lg:px-6 py-3 flex flex-wrap items-end gap-3">
-            <div>
+            <div class="w-full sm:w-auto">
                 <label for="landing-year" class="block text-base font-black uppercase tracking-wider text-[#0077a8] mb-1">{% translate "Year" %}</label>
-                <select id="landing-year" class="text-base border-slate-300 rounded-md text-slate-700 py-2.5 pl-3 pr-8 focus:ring-[#00adef] focus:border-[#00adef] shadow-2xs font-bold bg-white">
+                <select id="landing-year" class="w-full sm:w-auto text-base border-slate-300 rounded-md text-slate-700 py-2.5 pl-3 pr-8 focus:ring-[#00adef] focus:border-[#00adef] shadow-2xs font-bold bg-white">
                     <option value="all">{% translate "All years" %}</option>
                 </select>
             </div>
-            <div class="relative">
+            <div class="relative w-full sm:w-auto">
                 <label id="country-filter-label" class="block text-base font-black uppercase tracking-wider text-[#0077a8] mb-1">{% translate "Country" %}</label>
                 <button id="country-filter-button" type="button" aria-haspopup="listbox" aria-expanded="false" aria-controls="country-filter-panel"
-                    class="min-w-[210px] flex items-center justify-between gap-3 text-base border border-slate-300 rounded-md text-slate-700 py-2.5 pl-3 pr-3 focus:outline-none focus:ring-2 focus:ring-[#00adef] font-bold bg-white">
+                    class="w-full sm:w-auto sm:min-w-[210px] flex items-center justify-between gap-3 text-base border border-slate-300 rounded-md text-slate-700 py-2.5 pl-3 pr-3 focus:outline-none focus:ring-2 focus:ring-[#00adef] font-bold bg-white">
                     <span id="country-filter-value">{% translate "All countries" %}</span>
-                    <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5"/></svg>
+                    {% icon "chevron-down" "h-4 w-4 text-slate-500" %}
                 </button>
-                <div id="country-filter-panel" class="hidden absolute left-0 top-full mt-1 w-[320px] max-w-[90vw] z-50 bg-white border border-slate-200 rounded-md shadow-lg">
+                <div id="country-filter-panel" class="hidden absolute left-0 right-0 sm:right-auto top-full mt-1 w-auto sm:w-[320px] max-w-none sm:max-w-[90vw] z-50 bg-white border border-slate-200 rounded-md shadow-lg">
                     <div class="p-2 border-b border-slate-100">
                         <label for="country-search" class="sr-only">{% translate "Search countries" %}</label>
-                        <input id="country-search" type="search" placeholder="{% translate 'Search countries' %}"
-                            class="w-full text-sm border border-slate-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#00adef]">
+                        <div class="relative">
+                            <span class="absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none">
+                                {% icon "search" "h-4 w-4" %}
+                            </span>
+                            <input id="country-search" type="search" placeholder="{% translate 'Search countries' %}"
+                                class="w-full text-sm border border-slate-300 rounded-md pl-8 pr-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#00adef]">
+                        </div>
                     </div>
                     <div class="flex items-center justify-between px-3 py-2 border-b border-slate-100">
                         <button id="country-select-all" type="button" class="text-xs font-bold text-[#0077a8] hover:underline">{% translate "Select all" %}</button>
@@ -96,7 +114,7 @@
             <button id="landing-reset" type="button" class="text-base font-black text-[#0077a8] hover:underline px-1 py-2">
                 {% translate "Reset" %}
             </button>
-            <div class="ml-auto text-base font-bold text-slate-700" id="latest-data-date">
+            <div class="ml-auto text-sm sm:text-base font-bold text-slate-700" id="latest-data-date">
                 {% translate "Data as of" %} {{ latest_data_exact|default:latest_data_str }}
             </div>
             <div id="country-chips" class="basis-full w-full flex flex-wrap gap-2"></div>
@@ -107,28 +125,43 @@
         <!-- KPI strip -->
         <div id="landing-kpis" class="grid grid-cols-1 xl:grid-cols-12 gap-4 mb-6">
             <div class="xl:col-span-9">
-                <div class="text-base font-black uppercase tracking-wider text-[#0077a8] mb-2">{% translate "People & Families" %}</div>
+                <div class="flex items-center gap-2 text-base font-black uppercase tracking-wider text-[#0077a8] mb-2">
+                    {% icon "users" "h-4 w-4" %}
+                    {% translate "People & Families" %}
+                </div>
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
                     <div class="bg-white p-4 rounded-md border border-slate-200 shadow-2xs">
-                        <div class="text-base text-[#0077a8] uppercase tracking-wider font-black mb-1">{% translate "Children Reached" %}</div>
+                        <div class="flex items-start justify-between gap-2 mb-1">
+                            <div class="text-base text-[#0077a8] uppercase tracking-wider font-black">{% translate "Children Reached" %}</div>
+                            <span class="w-7 h-7 shrink-0 rounded bg-sky-50 text-[#0077a8] flex items-center justify-center">{% icon "baby" "h-4 w-4" %}</span>
+                        </div>
                         <div id="kpi-children" class="text-3xl lg:text-4xl font-black text-[#00adef] leading-tight">{{ total_children|default:"0" }}</div>
                         <div class="text-base font-bold text-slate-700 mt-1" id="kpi-children-note">{% translate "HOPE reach" %}</div>
                         {% chart_info "landing.children" %}
                     </div>
                     <div class="bg-white p-4 rounded-md border border-slate-200 shadow-2xs">
-                        <div class="text-base text-[#0077a8] uppercase tracking-wider font-black mb-1">{% translate "Families Reached" %}</div>
+                        <div class="flex items-start justify-between gap-2 mb-1">
+                            <div class="text-base text-[#0077a8] uppercase tracking-wider font-black">{% translate "Families Reached" %}</div>
+                            <span class="w-7 h-7 shrink-0 rounded bg-sky-50 text-[#0077a8] flex items-center justify-center">{% icon "house" "h-4 w-4" %}</span>
+                        </div>
                         <div id="kpi-families" class="text-3xl lg:text-4xl font-black text-[#00adef] leading-tight">{{ total_households|default:"0" }}</div>
                         <div class="text-base font-bold text-slate-700 mt-1">{% translate "HOPE reach" %}</div>
                         {% chart_info "landing.households" %}
                     </div>
                     <div class="bg-white p-4 rounded-md border border-slate-200 shadow-2xs">
-                        <div class="text-base text-[#0077a8] uppercase tracking-wider font-black mb-1">{% translate "Individuals Reached" %}</div>
+                        <div class="flex items-start justify-between gap-2 mb-1">
+                            <div class="text-base text-[#0077a8] uppercase tracking-wider font-black">{% translate "Individuals Reached" %}</div>
+                            <span class="w-7 h-7 shrink-0 rounded bg-sky-50 text-[#0077a8] flex items-center justify-center">{% icon "users" "h-4 w-4" %}</span>
+                        </div>
                         <div id="kpi-individuals" class="text-3xl lg:text-4xl font-black text-[#00adef] leading-tight">{{ total_individuals_reached|default:"0" }}</div>
                         <div class="text-base font-bold text-slate-700 mt-1">{% translate "People reached" %}</div>
                         {% chart_info "landing.individuals" %}
                     </div>
                     <div class="bg-white p-4 rounded-md border border-slate-200 shadow-2xs">
-                        <div class="text-base text-[#0077a8] uppercase tracking-wider font-black mb-1">{% translate "Social Workers Reached" %}</div>
+                        <div class="flex items-start justify-between gap-2 mb-1">
+                            <div class="text-base text-[#0077a8] uppercase tracking-wider font-black">{% translate "Social Workers Reached" %}</div>
+                            <span class="w-7 h-7 shrink-0 rounded bg-sky-50 text-[#0077a8] flex items-center justify-center">{% icon "heart-handshake" "h-4 w-4" %}</span>
+                        </div>
                         <div id="kpi-social-workers" class="text-3xl lg:text-4xl font-black text-[#00adef] leading-tight">{{ total_social_workers|default:"0" }}</div>
                         <div class="text-base font-bold text-slate-700 mt-1">{% translate "Frontline workforce assisted" %}</div>
                         {% chart_info "landing.social_workers" %}
@@ -136,13 +169,20 @@
                 </div>
             </div>
             <div class="xl:col-span-3">
-                <div class="text-base font-black uppercase tracking-wider text-[#0077a8] mb-2">{% translate "Cash" %}</div>
+                <div class="flex items-center gap-2 text-base font-black uppercase tracking-wider text-[#0077a8] mb-2">
+                    {% icon "banknote" "h-4 w-4" %}
+                    {% translate "Cash" %}
+                </div>
                 <div class="bg-white p-4 rounded-md border border-slate-200 shadow-2xs h-full flex flex-col justify-between">
                     <div>
-                        <div class="text-base text-[#0077a8] uppercase tracking-wider font-black mb-1">{% translate "Cash Transfers" %}</div>
+                        <div class="flex items-start justify-between gap-2 mb-1">
+                            <div class="text-base text-[#0077a8] uppercase tracking-wider font-black">{% translate "Cash Transfers" %}</div>
+                            <span class="w-7 h-7 shrink-0 rounded bg-sky-50 text-[#0077a8] flex items-center justify-center">{% icon "banknote" "h-4 w-4" %}</span>
+                        </div>
                         <div id="kpi-payments" class="text-3xl lg:text-4xl font-black text-[#00adef] leading-tight">{{ total_payments|default:"0" }}</div>
                         <div class="text-base font-bold text-slate-700 mt-1">{% translate "Payments delivered" %}</div>
-                        <div class="text-sm font-semibold text-slate-600 mt-1">
+                        <div class="flex items-center gap-1 text-sm font-semibold text-slate-600 mt-1">
+                            {% icon "coins" "h-3.5 w-3.5 text-[#0077a8]" %}
                             {% translate "Average transfer" %}
                             <span id="kpi-average-transfer" class="font-black text-[#0077a8]">${{ average_transfer|default:"0" }}</span>
                             {% translate "per transfer" %}
@@ -157,9 +197,14 @@
         <div class="grid grid-cols-1 xl:grid-cols-12 gap-4 mb-6">
             <div class="xl:col-span-8 bg-white rounded-md border border-slate-200 shadow-2xs overflow-hidden">
                 <div class="p-4 lg:p-5 pb-2 flex flex-wrap items-start justify-between gap-3">
-                    <div>
-                        <h2 class="text-2xl lg:text-3xl font-black text-[#0077a8] tracking-tight">{% translate "Where cash assistance reaches children and families" %}</h2>
-                        <p class="text-base font-semibold text-slate-600 mt-1">{% translate "Country-level reach for the selected year" %}</p>
+                    <div class="flex items-start gap-2">
+                        <span class="w-8 h-8 shrink-0 rounded bg-sky-50 text-[#0077a8] flex items-center justify-center mt-0.5">
+                            {% icon "map-pin" "h-4 w-4" %}
+                        </span>
+                        <div>
+                            <h2 class="text-2xl lg:text-3xl font-black text-[#0077a8] tracking-tight">{% translate "Where cash assistance reaches children and families" %}</h2>
+                            <p class="text-base font-semibold text-slate-600 mt-1">{% translate "Country-level reach for the selected year" %}</p>
+                        </div>
                     </div>
                     <div class="flex items-center gap-2">
                         <label for="map-metric" class="sr-only">{% translate "Map metric" %}</label>
@@ -174,17 +219,17 @@
                         </button>
                     </div>
                 </div>
-                <div class="relative h-[380px] lg:h-[430px] px-3 lg:px-5">
+                <div class="relative h-[320px] sm:h-[380px] lg:h-[430px] px-3 lg:px-5">
                     <div id="world-map-chart" class="w-full h-full"></div>
                     <div class="absolute left-6 top-2 flex flex-col gap-1 z-20">
-                        <button id="map-zoom-home" class="w-7 h-7 bg-white/95 border border-slate-200 rounded-md shadow-2xs hover:bg-slate-50 flex items-center justify-center text-slate-600" title="{% translate 'Reset view' %}">
-                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+                        <button id="map-zoom-home" class="w-9 h-9 sm:w-7 sm:h-7 bg-white/95 border border-slate-200 rounded-md shadow-2xs hover:bg-slate-50 flex items-center justify-center text-slate-600" title="{% translate 'Reset view' %}" aria-label="{% translate 'Reset view' %}">
+                            {% icon "rotate-ccw" "h-4 w-4 sm:h-3.5 sm:w-3.5" %}
                         </button>
-                        <button id="map-zoom-in" class="w-7 h-7 bg-white/95 border border-slate-200 rounded-md shadow-2xs hover:bg-slate-50 flex items-center justify-center text-slate-600" title="{% translate 'Zoom in' %}">
-                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
+                        <button id="map-zoom-in" class="w-9 h-9 sm:w-7 sm:h-7 bg-white/95 border border-slate-200 rounded-md shadow-2xs hover:bg-slate-50 flex items-center justify-center text-slate-600" title="{% translate 'Zoom in' %}" aria-label="{% translate 'Zoom in' %}">
+                            {% icon "plus" "h-4 w-4 sm:h-3.5 sm:w-3.5" %}
                         </button>
-                        <button id="map-zoom-out" class="w-7 h-7 bg-white/95 border border-slate-200 rounded-md shadow-2xs hover:bg-slate-50 flex items-center justify-center text-slate-600" title="{% translate 'Zoom out' %}">
-                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M20 12H4"/></svg>
+                        <button id="map-zoom-out" class="w-9 h-9 sm:w-7 sm:h-7 bg-white/95 border border-slate-200 rounded-md shadow-2xs hover:bg-slate-50 flex items-center justify-center text-slate-600" title="{% translate 'Zoom out' %}" aria-label="{% translate 'Zoom out' %}">
+                            {% icon "minus" "h-4 w-4 sm:h-3.5 sm:w-3.5" %}
                         </button>
                     </div>
                 </div>
@@ -197,7 +242,7 @@
             <aside class="xl:col-span-4 bg-white rounded-md border border-slate-200 shadow-2xs p-5">
                 <div id="spotlight-empty" class="h-full min-h-[280px] flex flex-col items-center justify-center text-center text-slate-400">
                     <div class="w-10 h-10 rounded-md bg-sky-50 text-[#00adef] flex items-center justify-center mb-3">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 21a9 9 0 100-18 9 9 0 000 18zm0 0v-6m0 0l3-3m-3 3l-3-3"/></svg>
+                        {% icon "map-pin" "h-5 w-5" %}
                     </div>
                     <div class="text-base font-bold text-slate-700">{% translate "Select a country on the map" %}</div>
                     <div class="text-base mt-1">{% translate "Its children, families, individuals and cash figures will appear here." %}</div>
@@ -208,8 +253,8 @@
                             <div class="text-base uppercase tracking-wider font-black text-slate-700">{% translate "Country spotlight" %}</div>
                             <h3 id="spotlight-country" class="text-3xl font-black text-[#0077a8] mt-1"></h3>
                         </div>
-                        <button id="spotlight-close" type="button" class="text-slate-400 hover:text-slate-700 p-1" aria-label="{% translate 'Close country spotlight' %}">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+                        <button id="spotlight-close" type="button" class="text-slate-400 hover:text-slate-700 p-2" aria-label="{% translate 'Close country spotlight' %}">
+                            {% icon "x" "h-4 w-4" %}
                         </button>
                     </div>
                     <div class="grid grid-cols-2 gap-3 mt-5">
@@ -227,9 +272,14 @@
         <!-- Trends -->
         <div class="bg-white rounded-md border border-slate-200 shadow-2xs p-5 mb-6">
             <div class="flex items-start justify-between gap-3 mb-2">
-                <div>
-                    <h2 class="text-2xl lg:text-3xl font-black text-[#0077a8] tracking-tight">{% translate "Trends over time" %}</h2>
-                    <p class="text-sm text-slate-500">{% translate "Children, families, individuals and cash for the selected country." %}</p>
+                <div class="flex items-start gap-2">
+                    <span class="w-8 h-8 shrink-0 rounded bg-sky-50 text-[#0077a8] flex items-center justify-center mt-0.5">
+                        {% icon "chart-no-axes-column" "h-4 w-4" %}
+                    </span>
+                    <div>
+                        <h2 class="text-2xl lg:text-3xl font-black text-[#0077a8] tracking-tight">{% translate "Trends over time" %}</h2>
+                        <p class="text-sm text-slate-500">{% translate "Children, families, individuals and cash for the selected country." %}</p>
+                    </div>
                 </div>
                 {% chart_info "landing.trends" %}
             </div>
@@ -240,9 +290,14 @@
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
             <div class="bg-white rounded-md border border-slate-200 shadow-2xs p-5">
                 <div class="flex items-start justify-between gap-3 mb-1">
-                    <div>
-                        <h2 class="text-2xl lg:text-3xl font-black text-[#0077a8] tracking-tight">{% translate "Cash assistance by sector" %}</h2>
-                        <p class="text-sm text-slate-500">{% translate "Share of delivered cash by programme sector." %} <span class="font-bold text-[#0077a8]">{% translate "Click a slice to filter." %}</span></p>
+                    <div class="flex items-start gap-2">
+                        <span class="w-8 h-8 shrink-0 rounded bg-sky-50 text-[#0077a8] flex items-center justify-center mt-0.5">
+                            {% icon "layers" "h-4 w-4" %}
+                        </span>
+                        <div>
+                            <h2 class="text-2xl lg:text-3xl font-black text-[#0077a8] tracking-tight">{% translate "Cash assistance by sector" %}</h2>
+                            <p class="text-sm text-slate-500">{% translate "Share of delivered cash by programme sector." %} <span class="font-bold text-[#0077a8]">{% translate "Click a slice to filter." %}</span></p>
+                        </div>
                     </div>
                     {% chart_info "landing.sector" %}
                 </div>
@@ -250,9 +305,14 @@
             </div>
             <div class="bg-white rounded-md border border-slate-200 shadow-2xs p-5">
                 <div class="flex items-start justify-between gap-3 mb-1">
-                    <div>
-                        <h2 class="text-2xl lg:text-3xl font-black text-[#0077a8] tracking-tight">{% translate "Payment Mechanism" %}</h2>
-                        <p class="text-sm text-slate-500">{% translate "How cash reaches people: delivery mechanism share." %} <span class="font-bold text-[#0077a8]">{% translate "Click a slice to filter." %}</span></p>
+                    <div class="flex items-start gap-2">
+                        <span class="w-8 h-8 shrink-0 rounded bg-sky-50 text-[#0077a8] flex items-center justify-center mt-0.5">
+                            {% icon "wallet" "h-4 w-4" %}
+                        </span>
+                        <div>
+                            <h2 class="text-2xl lg:text-3xl font-black text-[#0077a8] tracking-tight">{% translate "Payment Mechanism" %}</h2>
+                            <p class="text-sm text-slate-500">{% translate "How cash reaches people: delivery mechanism share." %} <span class="font-bold text-[#0077a8]">{% translate "Click a slice to filter." %}</span></p>
+                        </div>
                     </div>
                     {% chart_info "landing.mechanism" %}
                 </div>
@@ -264,13 +324,23 @@
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
             <a href="https://unicef.sharepoint.com/:w:/t/EMOPS-NYHQ-HCT/ETNzq6Frl5JPq6U0YLp7KXEBGRRp4uP23iizPHGmZfa61A?e=NlZoym" target="_blank" rel="noopener"
                class="bg-white p-5 rounded-md border border-slate-200 shadow-2xs hover:border-[#00adef] transition-colors group">
-                <h3 class="text-xl font-black text-[#0077a8] group-hover:text-[#00adef]">{% translate "Data responsibly" %}</h3>
-                <p class="text-base font-medium text-slate-600 mt-1">{% translate "Read UNICEF's data protection policy." %}</p>
+                <div class="flex items-center gap-2">
+                    <span class="w-8 h-8 shrink-0 rounded bg-sky-50 text-[#0077a8] flex items-center justify-center">
+                        {% icon "shield-check" "h-4 w-4" %}
+                    </span>
+                    <h3 class="text-xl font-black text-[#0077a8] group-hover:text-[#00adef]">{% translate "Data responsibly" %}</h3>
+                </div>
+                <p class="text-base font-medium text-slate-600 mt-2">{% translate "Read UNICEF's data protection policy." %}</p>
             </a>
             <a href="https://www.unicef.org/hope-hct/resources" target="_blank" rel="noopener"
                class="bg-white p-5 rounded-md border border-slate-200 shadow-2xs hover:border-[#00adef] transition-colors group">
-                <h3 class="text-xl font-black text-[#0077a8] group-hover:text-[#00adef]">{% translate "Methodology" %}</h3>
-                <p class="text-base font-medium text-slate-600 mt-1">{% translate "How HOPE data is produced and the standards applied." %}</p>
+                <div class="flex items-center gap-2">
+                    <span class="w-8 h-8 shrink-0 rounded bg-sky-50 text-[#0077a8] flex items-center justify-center">
+                        {% icon "book-open" "h-4 w-4" %}
+                    </span>
+                    <h3 class="text-xl font-black text-[#0077a8] group-hover:text-[#00adef]">{% translate "Methodology" %}</h3>
+                </div>
+                <p class="text-base font-medium text-slate-600 mt-2">{% translate "How HOPE data is produced and the standards applied." %}</p>
             </a>
         </div>
     </div>
@@ -442,7 +512,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         return `
             <span class="inline-flex items-center gap-1.5 bg-amber-50 border border-amber-200 text-amber-900 rounded pl-3 pr-1.5 py-1 text-xs font-bold">
                 ${escapeHtml(label)}: ${escapeHtml(value)}
-                <button type="button" data-remove-dimension="${dimension}" class="w-5 h-5 rounded hover:bg-amber-100 flex items-center justify-center" aria-label="{{ t_remove|escapejs }} ${escapeHtml(label)}: ${escapeHtml(value)}">×</button>
+                <button type="button" data-remove-dimension="${dimension}" class="w-6 h-6 sm:w-5 sm:h-5 rounded hover:bg-amber-100 flex items-center justify-center" aria-label="{{ t_remove|escapejs }} ${escapeHtml(label)}: ${escapeHtml(value)}">×</button>
             </span>`;
     }
 
@@ -452,7 +522,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         const chips = values.map(slug => `
             <span class="inline-flex items-center gap-1.5 bg-sky-50 border border-sky-200 text-[#0077a8] rounded pl-3 pr-1.5 py-1 text-xs font-bold">
                 ${formatCountry(slug)}
-                <button type="button" data-remove-country="${slug}" class="w-5 h-5 rounded hover:bg-sky-100 flex items-center justify-center" aria-label="{{ t_remove|escapejs }} ${formatCountry(slug)}">×</button>
+                <button type="button" data-remove-country="${slug}" class="w-6 h-6 sm:w-5 sm:h-5 rounded hover:bg-sky-100 flex items-center justify-center" aria-label="{{ t_remove|escapejs }} ${formatCountry(slug)}">×</button>
             </span>`);
         if (state.sector) chips.push(dimensionChip('sector', '{{ t_sector|escapejs }}', state.sector));
         if (state.mechanism) chips.push(dimensionChip('mechanism', '{{ t_mechanism|escapejs }}', state.mechanism));
@@ -694,7 +764,19 @@ document.addEventListener('DOMContentLoaded', async function () {
                 { name: '{{ t_individuals|escapejs }}', type: 'line', smooth: true, yAxisIndex: 1, data: individuals, lineStyle: { color: '#97b552', width: 2 }, itemStyle: { color: '#97b552' } },
                 { name: '{{ t_families|escapejs }}', type: 'line', smooth: true, yAxisIndex: 1, data: families, lineStyle: { color: '#b6a2de', width: 2 }, itemStyle: { color: '#b6a2de' } },
                 { name: '{{ t_children|escapejs }}', type: 'line', smooth: true, yAxisIndex: 1, data: children, lineStyle: { color: '#d87a80', width: 2 }, itemStyle: { color: '#d87a80' } }
-            ]
+            ],
+            media: [{
+                query: { maxWidth: 520 },
+                option: {
+                    legend: { top: 'auto', bottom: 0, left: 'center', right: 'auto', textStyle: { fontSize: 11, color: '#64748b' } },
+                    grid: { top: 20, bottom: 58, left: 45, right: 45 },
+                    xAxis: { axisLabel: { fontSize: 11 } },
+                    yAxis: [
+                        { axisLabel: { fontSize: 10 } },
+                        { axisLabel: { fontSize: 10 } }
+                    ]
+                }
+            }]
         }, { notMerge: true });
         trendsChart.hideLoading();
     }
@@ -733,6 +815,17 @@ document.addEventListener('DOMContentLoaded', async function () {
                 label: { show: true, formatter: params => `${params.name}\n${params.percent}%`, fontSize: 12, color: '#475569' },
                 labelLine: { length: 8, length2: 6 },
                 data
+            }],
+            media: [{
+                query: { maxWidth: 520 },
+                option: {
+                    legend: { type: 'scroll', bottom: 0, left: 'center', right: 'auto', width: '90%', textStyle: { fontSize: 11, color: '#64748b' } },
+                    series: [{
+                        radius: ['48%', '72%'],
+                        label: { show: false },
+                        labelLine: { show: false }
+                    }]
+                }
             }]
         }, { notMerge: true });
         chart.hideLoading();
