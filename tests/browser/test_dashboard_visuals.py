@@ -353,8 +353,25 @@ def test_landing_kpis_have_definitions_and_exact_date(browser, financial_aggrega
     ):
         browser.wait_for_element_visible(f'[data-chart-info="landing.{key}"]')
 
-    browser.click('[data-chart-info="landing.children"] summary')
+    width_before = browser.execute_script(
+        "return document.getElementById('landing-kpis').getBoundingClientRect().width;"
+    )
+    browser.click('[data-chart-info="landing.children"] [data-chart-info-toggle]')
+    browser.wait_for_element_visible("#chart-info-landingchildren")
     browser.wait_for_text_visible("Children reached through household programmes")
+    assert (
+        browser.execute_script(
+            "return getComputedStyle(document.getElementById('chart-info-landingchildren')).position;"
+        )
+        == "fixed"
+    )
+    width_after = browser.execute_script(
+        "return document.getElementById('landing-kpis').getBoundingClientRect().width;"
+    )
+    assert width_after == width_before
+
+    browser.click("#latest-data-date")
+    browser.assert_element_not_visible("#chart-info-landingchildren")
 
 
 def test_landing_filters_update_kpis_and_country_spotlight(browser, financial_aggregates, demographic_aggregates):
@@ -462,7 +479,7 @@ def test_financial_dashboard_loads(browser, financial_aggregates):
 
     browser.wait_for_element_visible('[data-chart-info="financial.timeline"]')
     browser.wait_for_element_visible('[data-chart-info="financial.program"]')
-    browser.click('[data-chart-info="financial.program"] summary')
+    browser.click('[data-chart-info="financial.program"] [data-chart-info-toggle]')
     browser.wait_for_text_visible("top 10 programmes")
 
     # Month axes show a short year (Nov 25), while tooltips keep the full date.

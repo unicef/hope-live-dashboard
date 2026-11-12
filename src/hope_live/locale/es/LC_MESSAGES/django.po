@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-12 00:14+0000\n"
+"POT-Creation-Date: 2026-11-12 00:43+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -68,22 +68,28 @@ msgstr "Cerrar sesión"
 msgid "Open Issue"
 msgstr "Problema abierto"
 
-#: src/hope_live/templates/includes/chart_info.html:3
+#: src/hope_live/templates/includes/chart_info.html:5
+#: src/hope_live/templates/includes/chart_info.html:13
 msgid "Information"
 msgstr ""
 
-#: src/hope_live/templates/includes/chart_info.html:8
+#: src/hope_live/templates/includes/chart_info.html:18
+#| msgid "Closed"
+msgid "Close"
+msgstr "Cerrar"
+
+#: src/hope_live/templates/includes/chart_info.html:20
 #: src/hope_live/templates/pages/landing.html:72
 msgid "Source"
 msgstr "Fuente"
 
-#: src/hope_live/templates/includes/chart_info.html:9
+#: src/hope_live/templates/includes/chart_info.html:21
 #, fuzzy
 #| msgid "Methodology"
 msgid "Method"
 msgstr "Metodología"
 
-#: src/hope_live/templates/includes/chart_info.html:10
+#: src/hope_live/templates/includes/chart_info.html:22
 msgid "Note"
 msgstr ""
 
@@ -676,11 +682,11 @@ msgstr "Asistencia entregada"
 msgid "Direct cash transfers"
 msgstr "Transferencias directas en efectivo"
 
-#: src/hope_live/templates/pages/landing.html:54
+#: src/hope_live/templates/pages/landing.html:57
 msgid "Countries & territories"
 msgstr "Países y territorios"
 
-#: src/hope_live/templates/pages/landing.html:63
+#: src/hope_live/templates/pages/landing.html:66
 msgid "Programmes"
 msgstr "Programas"
 
