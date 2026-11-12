@@ -1000,7 +1000,7 @@ def test_landing_sector_and_mechanism_chart_clicks(browser, financial_aggregates
     browser.assert_text("2", "#kpi-payments")
     browser.assert_text("$2.5K", "#kpi-average-transfer")
     browser.assert_text("500", "#kpi-children")
-    browser.assert_text("Mechanism (cash): Delivery-", "#country-chips")
+    browser.assert_text("Delivery mechanism: Delivery-", "#country-chips")
     assert "mechanism=Delivery-" in browser.get_current_url()
     assert "sector=" not in browser.get_current_url()
 

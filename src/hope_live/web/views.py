@@ -12,6 +12,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.cache import cache
 from django.db.models import Max, Sum
 from django.http import Http404, HttpRequest, HttpResponseRedirect
+from django.utils.formats import date_format
 from django.utils.text import slugify
 from django.utils.translation import activate, get_language_from_path
 from django.views.generic import TemplateView
@@ -243,10 +244,10 @@ class IndexView(TemplateView):
         latest_data_date = max(dates) if dates else None
 
         if latest_data_date:
-            latest_data_str = latest_data_date.strftime("%B %Y")
-            latest_data_exact = latest_data_date.strftime("%d %b %Y")
+            latest_data_str = date_format(latest_data_date, "F Y")
+            latest_data_exact = date_format(latest_data_date, "d M Y")
         else:
-            latest_data_str = "May 2026"
+            latest_data_str = date_format(datetime.date(2026, 5, 1), "F Y")
             latest_data_exact = latest_data_str
 
         total_payments = (

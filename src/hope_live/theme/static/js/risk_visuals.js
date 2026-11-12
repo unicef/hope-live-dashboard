@@ -177,10 +177,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function renderSeverityBadge(sev) {
         const badges = {
-            critical: '<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-red-600 text-white shadow-xs">Critical</span>',
-            warning: '<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-500 text-white shadow-xs">Warning</span>',
-            caution: '<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-yellow-400 text-yellow-950 shadow-xs">Caution</span>',
-            normal: '<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-600 text-white shadow-xs">Normal</span>'
+            critical: `<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-red-600 text-white shadow-xs">${severityLabels.critical}</span>`,
+            warning: `<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-500 text-white shadow-xs">${severityLabels.warning}</span>`,
+            caution: `<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-yellow-400 text-yellow-950 shadow-xs">${severityLabels.caution}</span>`,
+            normal: `<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-600 text-white shadow-xs">${severityLabels.normal}</span>`
         };
         return badges[sev] || `<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-gray-200 text-gray-800">${sev}</span>`;
     }

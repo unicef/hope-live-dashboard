@@ -310,7 +310,7 @@
                             {% icon "wallet" "h-4 w-4" %}
                         </span>
                         <div>
-                            <h2 class="text-2xl lg:text-3xl font-black text-[#0077a8] tracking-tight">{% translate "Payment Mechanism" %}</h2>
+                            <h2 class="text-2xl lg:text-3xl font-black text-[#0077a8] tracking-tight">{% translate "Delivery mechanism" %}</h2>
                             <p class="text-sm text-slate-500">{% translate "How cash reaches people: delivery mechanism share." %} <span class="font-bold text-[#0077a8]">{% translate "Click a slice to filter." %}</span></p>
                         </div>
                     </div>
@@ -328,7 +328,7 @@
                     <span class="w-8 h-8 shrink-0 rounded bg-sky-50 text-[#0077a8] flex items-center justify-center">
                         {% icon "shield-check" "h-4 w-4" %}
                     </span>
-                    <h3 class="text-xl font-black text-[#0077a8] group-hover:text-[#00adef]">{% translate "Data responsibly" %}</h3>
+                    <h3 class="text-xl font-black text-[#0077a8] group-hover:text-[#00adef]">{% translate "Responsible data" %}</h3>
                 </div>
                 <p class="text-base font-medium text-slate-600 mt-2">{% translate "Read UNICEF's data protection policy." %}</p>
             </a>
@@ -368,25 +368,74 @@
 {% translate "Data could not be loaded. Please refresh." as t_load_error %}
 {% translate "countries selected" as t_countries_selected %}
 {% translate "Sector" as t_sector %}
-{% translate "Mechanism (cash)" as t_mechanism %}
+{% translate "Delivery mechanism" as t_mechanism %}
 {% translate "Remove" as t_remove %}
+{% translate "Loading..." as t_loading %}
+{% translate "years of data available." as t_years_available %}
+{% translate "Education" as t_dim_education %}
+{% translate "Health" as t_dim_health %}
+{% translate "WASH" as t_dim_wash %}
+{% translate "Nutrition" as t_dim_nutrition %}
+{% translate "Child Protection" as t_dim_child_protection %}
+{% translate "Social Protection" as t_dim_social_protection %}
+{% translate "Multi-purpose Cash" as t_dim_mpc %}
+{% translate "Winterization" as t_dim_winterization %}
+{% translate "Mobile Money" as t_dim_mobile_money %}
+{% translate "Bank Transfer" as t_dim_bank_transfer %}
+{% translate "Cash in Hand" as t_dim_cash_in_hand %}
+{% translate "Paper Voucher" as t_dim_paper_voucher %}
+{% translate "e-Voucher" as t_dim_evoucher %}
+{% translate "Prepaid Card" as t_dim_prepaid_card %}
 document.addEventListener('DOMContentLoaded', async function () {
+    const docLang = document.documentElement.lang || 'en';
     const countryKey = window.HopeChart?.countryKey || (value => String(value || '').toLowerCase());
     const formatCountry = window.HopeChart?.formatCountryName || (value => value);
     const mapFeatureByKey = new Map();
-    const compact = new Intl.NumberFormat('en', { notation: 'compact', maximumFractionDigits: 1 });
+    const compact = new Intl.NumberFormat(docLang, { notation: 'compact', maximumFractionDigits: 1 });
+    const DIMENSION_LABELS = {
+        'education': '{{ t_dim_education|escapejs }}',
+        'health': '{{ t_dim_health|escapejs }}',
+        'wash': '{{ t_dim_wash|escapejs }}',
+        'nutrition': '{{ t_dim_nutrition|escapejs }}',
+        'child protection': '{{ t_dim_child_protection|escapejs }}',
+        'child_protection': '{{ t_dim_child_protection|escapejs }}',
+        'social protection': '{{ t_dim_social_protection|escapejs }}',
+        'social_protection': '{{ t_dim_social_protection|escapejs }}',
+        'multi-purpose cash': '{{ t_dim_mpc|escapejs }}',
+        'multipurpose cash': '{{ t_dim_mpc|escapejs }}',
+        'mpc': '{{ t_dim_mpc|escapejs }}',
+        'winterization': '{{ t_dim_winterization|escapejs }}',
+        'mobile money': '{{ t_dim_mobile_money|escapejs }}',
+        'mobile_money': '{{ t_dim_mobile_money|escapejs }}',
+        'bank transfer': '{{ t_dim_bank_transfer|escapejs }}',
+        'bank_transfer': '{{ t_dim_bank_transfer|escapejs }}',
+        'cash in hand': '{{ t_dim_cash_in_hand|escapejs }}',
+        'cash_in_hand': '{{ t_dim_cash_in_hand|escapejs }}',
+        'direct cash': '{{ t_dim_cash_in_hand|escapejs }}',
+        'paper voucher': '{{ t_dim_paper_voucher|escapejs }}',
+        'paper_voucher': '{{ t_dim_paper_voucher|escapejs }}',
+        'e-voucher': '{{ t_dim_evoucher|escapejs }}',
+        'electronic voucher': '{{ t_dim_evoucher|escapejs }}',
+        'prepaid card': '{{ t_dim_prepaid_card|escapejs }}',
+        'debit card': '{{ t_dim_prepaid_card|escapejs }}'
+    };
+    const translateDimension = value => {
+        if (!value) return '{{ t_not_specified|escapejs }}';
+        const key = String(value).trim().toLowerCase();
+        return DIMENSION_LABELS[key] || String(value);
+    };
     const money = value => {
         const v = Number(value) || 0;
         if (Math.abs(v) >= 1e9) return `$${(v / 1e9).toFixed(1)}B`;
         if (Math.abs(v) >= 1e6) return `$${(v / 1e6).toFixed(1)}M`;
         if (Math.abs(v) >= 1e3) return `$${(v / 1e3).toFixed(0)}K`;
-        return `$${Math.round(v).toLocaleString('en')}`;
+        return `$${Math.round(v).toLocaleString(docLang)}`;
     };
     const averageMoney = value => {
         const v = Number(value) || 0;
         if (Math.abs(v) >= 1e6) return `$${(v / 1e6).toFixed(1).replace(/\.0$/, '')}M`;
         if (Math.abs(v) >= 1e3) return `$${(v / 1e3).toFixed(1).replace(/\.0$/, '')}K`;
-        return `$${Math.round(v).toLocaleString('en')}`;
+        return `$${Math.round(v).toLocaleString(docLang)}`;
     };
     const count = value => compact.format(Number(value) || 0);
     const sum = (rows, key) => rows.reduce((total, row) => total + (Number(row[key]) || 0), 0);
@@ -421,7 +470,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     const spotlightChart = echarts.init(document.getElementById('spotlight-sparkline'), 'macarons');
 
     [mapChart, trendsChart, sectorChart, mechanismChart].forEach(chart => {
-        chart.showLoading({ text: 'Loading...', color: '#00adef', textColor: '#00adef', maskColor: 'rgba(255,255,255,0.65)' });
+        chart.showLoading({ text: '{{ t_loading|escapejs }}', color: '#00adef', textColor: '#00adef', maskColor: 'rgba(255,255,255,0.65)' });
     });
 
     let finData = [];
@@ -500,19 +549,20 @@ document.addEventListener('DOMContentLoaded', async function () {
     function updateScopeSummary() {
         const yearLabel = state.year === 'all' ? '{{ t_all_years|escapejs }}' : state.year;
         const dimensionLabel = state.sector
-            ? `${'{{ t_sector|escapejs }}'}: ${state.sector}`
+            ? `${'{{ t_sector|escapejs }}'}: ${translateDimension(state.sector)}`
             : state.mechanism
-                ? `${'{{ t_mechanism|escapejs }}'}: ${state.mechanism}`
+                ? `${'{{ t_mechanism|escapejs }}'}: ${translateDimension(state.mechanism)}`
                 : '';
         const summary = document.getElementById('map-summary');
-        if (summary) summary.textContent = `${yearLabel} · ${countryLabel()}${dimensionLabel ? ' · ' + dimensionLabel : ''}. ${years.length} years of data available.`;
+        if (summary) summary.textContent = `${yearLabel} · ${countryLabel()}${dimensionLabel ? ' · ' + dimensionLabel : ''}. ${years.length} {{ t_years_available|escapejs }}`;
     }
 
     function dimensionChip(dimension, label, value) {
+        const displayValue = translateDimension(value);
         return `
             <span class="inline-flex items-center gap-1.5 bg-amber-50 border border-amber-200 text-amber-900 rounded pl-3 pr-1.5 py-1 text-xs font-bold">
-                ${escapeHtml(label)}: ${escapeHtml(value)}
-                <button type="button" data-remove-dimension="${dimension}" class="w-6 h-6 sm:w-5 sm:h-5 rounded hover:bg-amber-100 flex items-center justify-center" aria-label="{{ t_remove|escapejs }} ${escapeHtml(label)}: ${escapeHtml(value)}">×</button>
+                ${escapeHtml(label)}: ${escapeHtml(displayValue)}
+                <button type="button" data-remove-dimension="${dimension}" class="w-6 h-6 sm:w-5 sm:h-5 rounded hover:bg-amber-100 flex items-center justify-center" aria-label="{{ t_remove|escapejs }} ${escapeHtml(label)}: ${escapeHtml(displayValue)}">×</button>
             </span>`;
     }
 
@@ -733,7 +783,7 @@ document.addEventListener('DOMContentLoaded', async function () {
             for (let month = 1; month <= 12; month++) {
                 const finRows = financialRows(row => yearOf(row) === Number(state.year) && monthOf(row) === month && matches(row));
                 const demoRows = demographicRows(row => yearOf(row) === Number(state.year) && monthOf(row) === month && matches(row));
-                categories.push(new Date(Number(state.year), month - 1, 1).toLocaleString('en', { month: 'short' }));
+                categories.push(new Date(Number(state.year), month - 1, 1).toLocaleString(docLang, { month: 'short' }));
                 cash.push(sum(finRows, 'total_usd'));
                 individuals.push(sum(demoRows, 'total_beneficiaries'));
                 families.push(sum(demoRows, 'total_households'));
@@ -794,13 +844,14 @@ document.addEventListener('DOMContentLoaded', async function () {
         if (hasOther) top.push(['{{ t_other|escapejs }}', rest]);
         const data = top.map(([name, value], index) => {
             const isOther = hasOther && index === top.length - 1;
+            const displayName = isOther ? name : translateDimension(name);
             let itemStyle;
             if (selected) {
                 itemStyle = name === selected
                     ? { borderColor: '#0077a8', borderWidth: 3, opacity: 1 }
                     : { opacity: 0.35 };
             }
-            return { name, value, isOther: isOther || undefined, itemStyle };
+            return { name: displayName, rawKey: name, value, isOther: isOther || undefined, itemStyle };
         });
         chart.setOption({
             tooltip: { trigger: 'item', formatter: params => `${params.name}: <b>${metric === 'total_usd' ? money(params.value) : count(params.value)}</b> (${params.percent}%)` },
@@ -1002,7 +1053,8 @@ document.addEventListener('DOMContentLoaded', async function () {
 
         sectorChart.on('click', params => {
             if (!params.data || params.data.isOther) return;
-            state.sector = state.sector === params.data.name ? null : params.data.name;
+            const rawKey = params.data.rawKey || params.data.name;
+            state.sector = state.sector === rawKey ? null : rawKey;
             if (state.sector) state.mechanism = null;
             updateCountryChips();
             updateAll();
@@ -1010,7 +1062,8 @@ document.addEventListener('DOMContentLoaded', async function () {
 
         mechanismChart.on('click', params => {
             if (!params.data || params.data.isOther) return;
-            state.mechanism = state.mechanism === params.data.name ? null : params.data.name;
+            const rawKey = params.data.rawKey || params.data.name;
+            state.mechanism = state.mechanism === rawKey ? null : rawKey;
             if (state.mechanism) state.sector = null;
             updateCountryChips();
             updateAll();

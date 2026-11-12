@@ -43,10 +43,10 @@
                         {% get_language_info_list for LANGUAGES as langs %}
                         <label class="sr-only" for="public-language">{% translate "Language" %}</label>
                         <select id="public-language" name="language" onchange="this.form.submit()"
-                            class="text-sm font-black uppercase bg-white/15 border border-white/30 text-white rounded px-2 py-1.5 focus:outline-none focus:ring-2 focus:ring-white/60">
+                            class="text-sm font-black bg-white/15 border border-white/30 text-white rounded px-2 py-1.5 focus:outline-none focus:ring-2 focus:ring-white/60">
                             {% for lang in langs %}
                             <option value="{{ lang.code }}" {% if lang.code == LANGUAGE_CODE %}selected{% endif %} class="text-slate-900">
-                                {{ lang.code }}
+                                {{ lang.name_local }}
                             </option>
                             {% endfor %}
                         </select>

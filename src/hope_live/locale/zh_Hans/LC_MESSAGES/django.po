@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-12 00:43+0000\n"
+"POT-Creation-Date: 2026-11-12 02:00+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -44,7 +44,9 @@ msgstr "中文"
 
 #: src/hope_live/templates/footer.html:7
 #, python-format
-msgid "Copyright © %(year)s - All right reserved by UNICEF - %(version)s"
+#| msgid ""
+#| "Copyright © %(year)s - All right reserved by UNICEF - %(version)s"
+msgid "Copyright © %(year)s - All rights reserved by UNICEF - %(version)s"
 msgstr "版权所有 © %(year)s - 联合国儿童基金会保留所有权利 - %(version)s"
 
 #: src/hope_live/templates/header.html:26
@@ -53,26 +55,24 @@ msgstr "选择语言"
 
 #: src/hope_live/templates/header.html:55
 msgid "Sign Out"
-msgstr "登出"
+msgstr "退出登录"
 
 #: src/hope_live/templates/header.html:58
 #: src/hope_live/templates/pages/login.html:37
-#, fuzzy
 #| msgid "Sign Out"
 msgid "Sign In"
-msgstr "登出"
+msgstr "登录"
 
 #: src/hope_live/templates/header.html:68
 msgid "Open Issue"
-msgstr "开放问题"
+msgstr "提交问题"
 
 #: src/hope_live/templates/includes/chart_info.html:5
 #: src/hope_live/templates/includes/chart_info.html:13
 msgid "Information"
-msgstr ""
+msgstr "信息说明"
 
 #: src/hope_live/templates/includes/chart_info.html:18
-#| msgid "Closed"
 msgid "Close"
 msgstr "关闭"
 
@@ -82,56 +82,54 @@ msgid "Source"
 msgstr "来源"
 
 #: src/hope_live/templates/includes/chart_info.html:21
-#, fuzzy
 #| msgid "Methodology"
 msgid "Method"
-msgstr "方法论"
+msgstr "计算方法"
 
 #: src/hope_live/templates/includes/chart_info.html:22
 msgid "Note"
-msgstr ""
+msgstr "注"
 
 #: src/hope_live/templates/includes/time_filter.html:7
 msgid "Period:"
-msgstr ""
+msgstr "统计周期："
 
 #: src/hope_live/templates/includes/time_filter.html:9
 msgid "Today"
-msgstr ""
+msgstr "今天"
 
 #: src/hope_live/templates/includes/time_filter.html:12
 msgid "This week"
-msgstr ""
+msgstr "本周"
 
 #: src/hope_live/templates/includes/time_filter.html:15
 msgid "This month"
-msgstr ""
+msgstr "本月"
 
 #: src/hope_live/templates/includes/time_filter.html:18
 msgid "Last 3 months"
-msgstr ""
+msgstr "最近 3 个月"
 
 #: src/hope_live/templates/includes/time_filter.html:21
-#, fuzzy
 #| msgid "1 year"
 msgid "This year"
-msgstr "1年"
+msgstr "今年"
 
 #: src/hope_live/templates/includes/time_filter.html:27
 msgid "Custom period"
-msgstr ""
+msgstr "自定义周期"
 
 #: src/hope_live/templates/includes/time_filter.html:36
 msgid "From"
-msgstr ""
+msgstr "从"
 
 #: src/hope_live/templates/includes/time_filter.html:47
 msgid "To"
-msgstr ""
+msgstr "至"
 
 #: src/hope_live/templates/includes/time_filter.html:57
 msgid "Apply"
-msgstr ""
+msgstr "应用"
 
 #: src/hope_live/templates/layout.html:10
 msgid "HOPE Dashboard"
@@ -158,33 +156,33 @@ msgstr "人口统计"
 
 #: src/hope_live/templates/menu.html:38
 msgid "Accountability"
-msgstr "问责制"
+msgstr "问责机制"
 
 #: src/hope_live/templates/menu.html:44
 msgid "Programme quality"
-msgstr "节目质量"
+msgstr "项目质量"
 
 #: src/hope_live/templates/menu.html:50
 msgid "Risk"
-msgstr ""
+msgstr "风险管理"
 
 #: src/hope_live/templates/menu.html:57
 msgid "User manual"
-msgstr ""
+msgstr "用户手册"
 
 #: src/hope_live/templates/menu.html:63
 msgid "About HOPE"
-msgstr "关于希望"
+msgstr "关于 HOPE 系统"
 
 #: src/hope_live/templates/menu.html:71
 msgid "HOPE in Action"
-msgstr "希望在行动"
+msgstr "HOPE 实践应用"
 
 #: src/hope_live/templates/menu.html:73
 msgid ""
 "HOPE helps countries strengthen evidence for humanitarian action for "
 "children."
-msgstr "HOPE 帮助各国加强针对儿童的人道主义行动的证据。"
+msgstr "HOPE 助力各国强化关爱儿童人道主义行动的数据与实证基础。"
 
 #: src/hope_live/templates/menu.html:76
 #: src/hope_live/templates/pages/about.html:17
@@ -193,26 +191,26 @@ msgstr "了解更多"
 
 #: src/hope_live/templates/menu.html:112
 msgid "Admin"
-msgstr "行政"
+msgstr "系统管理"
 
 #: src/hope_live/templates/menu.html:120 src/hope_live/templates/menu.html:124
 msgid "Sign out"
-msgstr "登出"
+msgstr "退出登录"
 
 #: src/hope_live/templates/pages/about.html:15
 msgid ""
 "HOPE is UNICEF’s solution to collect and process personal data from "
 "beneficiaries and frontline workers to deliver humanitarian cash transfers "
 "safely"
-msgstr ""
+msgstr "HOPE 是联合国儿童基金会用于收集和处理受益人及一线工作人员个人数据、以安全开展人道主义现金转移支付的解决方案"
 
 #: src/hope_live/templates/pages/completion.html:8
 msgid "Payment reconciliation dashboard"
-msgstr ""
+msgstr "付款对账仪表板"
 
 #: src/hope_live/templates/pages/completion.html:9
 msgid "Payment reconciliation and completion status tracking"
-msgstr "付款对账和完成状态跟踪"
+msgstr "付款对账与完成状态跟踪"
 
 #: src/hope_live/templates/pages/completion.html:12
 #: src/hope_live/templates/pages/dashboard.html:12
@@ -233,7 +231,7 @@ msgstr "数据截至"
 
 #: src/hope_live/templates/pages/completion.html:22
 msgid "View reconciliation metrics by:"
-msgstr "查看对账指标，按："
+msgstr "按以下维度查看对账指标："
 
 #: src/hope_live/templates/pages/completion.html:25
 #: src/hope_live/templates/pages/dashboard.html:28
@@ -250,10 +248,9 @@ msgstr "金额 (美元)"
 #: src/hope_live/templates/pages/demographic.html:55
 #: src/hope_live/templates/pages/grievance.html:32
 #: src/hope_live/templates/pages/risk.html:45
-#, fuzzy
 #| msgid "Countries"
 msgid "Country:"
-msgstr "国家"
+msgstr "国家："
 
 #: src/hope_live/templates/pages/completion.html:33
 #: src/hope_live/templates/pages/completion.html:34
@@ -271,19 +268,54 @@ msgstr "所有国家"
 
 #: src/hope_live/templates/pages/completion.html:42
 msgid "Reconciled payments"
-msgstr "核对付款"
+msgstr "已对账付款"
+
+#: src/hope_live/templates/pages/completion.html:44
+msgid "Payments that have been reconciled."
+msgstr "已完成对账的付款。"
+
+#: src/hope_live/templates/pages/completion.html:44
+#: src/hope_live/templates/pages/completion.html:49
+#: src/hope_live/templates/pages/completion.html:55
+#: src/hope_live/templates/pages/dashboard.html:60
+#: src/hope_live/templates/pages/dashboard.html:65
+#: src/hope_live/templates/pages/dashboard.html:70
+#| msgid "HOPE Deployments"
+msgid "HOPE payments"
+msgstr "HOPE 付款数据"
+
+#: src/hope_live/templates/pages/completion.html:44
+msgid "Count of payments with reconciled status."
+msgstr "状态为“已对账”的付款笔数。"
 
 #: src/hope_live/templates/pages/completion.html:47
 msgid "Pending Reconciliation"
 msgstr "待对账"
 
+#: src/hope_live/templates/pages/completion.html:49
+#| msgid "Pending Reconciliation"
+msgid "Payments pending reconciliation."
+msgstr "尚待对账的付款。"
+
+#: src/hope_live/templates/pages/completion.html:49
+msgid "Count of payments still awaiting reconciliation."
+msgstr "仍在等待对账的付款笔数。"
+
 #: src/hope_live/templates/pages/completion.html:53
 msgid "Reconciliation rate"
 msgstr "对账率"
 
+#: src/hope_live/templates/pages/completion.html:55
+msgid "Share of payments reconciled."
+msgstr "已对账付款占比。"
+
+#: src/hope_live/templates/pages/completion.html:55
+msgid "Reconciled payments divided by total payments."
+msgstr "已对账付款笔数除以付款总笔数。"
+
 #: src/hope_live/templates/pages/completion.html:63
 msgid "Reconciliation timeline"
-msgstr "和解时间表"
+msgstr "对账时间线"
 
 #: src/hope_live/templates/pages/completion.html:73
 msgid "Reconciliation status by country"
@@ -332,14 +364,13 @@ msgid ""
 msgstr "每个国家两项比率，按对账率排序。虚线为百分之八十的参考线。"
 
 #: src/hope_live/templates/pages/dashboard.html:9
-#, fuzzy
 #| msgid "Overview of Financial info"
 msgid "Overview of financial information"
 msgstr "财务信息概览"
 
 #: src/hope_live/templates/pages/dashboard.html:22
 msgid "View dashboard metrics by:"
-msgstr "查看仪表板指标，按："
+msgstr "按以下维度查看仪表板指标："
 
 #: src/hope_live/templates/pages/dashboard.html:35
 #: src/hope_live/templates/pages/demographic.html:42
@@ -349,7 +380,7 @@ msgstr "收款人类型："
 #: src/hope_live/templates/pages/dashboard.html:38
 #: src/hope_live/templates/pages/demographic.html:45
 msgid "All"
-msgstr ""
+msgstr "全部"
 
 #: src/hope_live/templates/pages/dashboard.html:41
 #: src/hope_live/templates/pages/demographic.html:48
@@ -363,15 +394,47 @@ msgstr "社会工作者"
 
 #: src/hope_live/templates/pages/dashboard.html:58
 msgid "Total amount paid"
-msgstr "支付总额"
+msgstr "已发放总金额"
+
+#: src/hope_live/templates/pages/dashboard.html:60
+msgid "Cash paid out to beneficiaries in USD."
+msgstr "向受益人发放的现金金额（美元）。"
+
+#: src/hope_live/templates/pages/dashboard.html:60
+msgid ""
+"Sum of delivered quantity (USD) for successful payment statuses "
+"(Distribution Successful, Partially Distributed, Transaction Successful); "
+"entitlement quantity is used when delivery is not recorded."
+msgstr "成功付款状态（发放成功、部分发放、交易成功）下的已发放金额（美元）总和；未记录发放金额时使用应享金额。"
 
 #: src/hope_live/templates/pages/dashboard.html:63
 msgid "Number of Payment Records"
 msgstr "付款记录数"
 
+#: src/hope_live/templates/pages/dashboard.html:65
+#| msgid "Number of Payment Records"
+msgid "Number of payment records in the selected period."
+msgstr "所选周期内的付款记录数量。"
+
+#: src/hope_live/templates/pages/dashboard.html:65
+msgid ""
+"Count of payment records under the active metric, cohort and filters — not "
+"payment plans, unique recipients, or only completed payments."
+msgstr "当前指标、群体及筛选条件下的付款记录数——而非付款计划数、唯一收款人数或仅已完成付款数。"
+
 #: src/hope_live/templates/pages/dashboard.html:68
 msgid "Outstanding payments"
-msgstr ""
+msgstr "待发放款项"
+
+#: src/hope_live/templates/pages/dashboard.html:70
+msgid "Amount not yet paid."
+msgstr "尚未支付的金额。"
+
+#: src/hope_live/templates/pages/dashboard.html:70
+msgid ""
+"Sum of entitlement (USD) for payments still in pending statuses: SENT TO "
+"PAYMENT GATEWAY, SENT TO FSP and PENDING."
+msgstr "仍处于待处理状态（已发送至支付网关、已发送至金融服务提供商及待处理）的付款应享金额（美元）总和。"
 
 #: src/hope_live/templates/pages/dashboard.html:76
 msgid "Spending timeline"
@@ -379,23 +442,23 @@ msgstr "支出时间表"
 
 #: src/hope_live/templates/pages/dashboard.html:84
 msgid "Payment pipeline"
-msgstr ""
+msgstr "付款处理流程"
 
 #: src/hope_live/templates/pages/dashboard.html:86
 msgid "From payments in the pipeline through to reconciled payments."
-msgstr ""
+msgstr "从处理中付款到已对账付款的全流程。"
 
 #: src/hope_live/templates/pages/dashboard.html:93
 msgid "Cash disbursed by delivery type"
-msgstr ""
+msgstr "按发放方式分列的已发放现金"
 
 #: src/hope_live/templates/pages/dashboard.html:98
 msgid "Cash disbursed by sector"
-msgstr ""
+msgstr "按部门分列的已发放现金"
 
 #: src/hope_live/templates/pages/dashboard.html:106
 msgid "Cash disbursed by region"
-msgstr ""
+msgstr "按地区分列的已发放现金"
 
 #: src/hope_live/templates/pages/dashboard.html:109
 msgid ""
@@ -403,6 +466,8 @@ msgid ""
 "Europe & Central Asia · WCAR: West & Central Africa · LACR: Latin America & "
 "Caribbean · EAPR: East Asia & Pacific · SAR: South Asia"
 msgstr ""
+"MENAR：中东和北非 · ESAR：东部和南部非洲 · ECAR：欧洲和中亚 · WCAR：西部和中部非洲 · LACR：拉丁美洲和加勒比地区 · "
+"EAPR：东亚和太平洋地区 · SAR：南亚"
 
 #: src/hope_live/templates/pages/dashboard.html:115
 msgid "Cash disbursed (paid) by country"
@@ -414,41 +479,38 @@ msgstr "按国家分列的未付款项（美元）"
 
 #: src/hope_live/templates/pages/dashboard.html:129
 msgid "Cash disbursed by programme"
-msgstr ""
+msgstr "按项目分列的已发放现金"
 
 #: src/hope_live/templates/pages/dashboard.html:133
 #: src/hope_live/templates/pages/dashboard.html:141
 #: src/hope_live/templates/pages/grievance.html:112
 #: src/hope_live/templates/pages/grievance.html:121
-#, fuzzy
 #| msgid "View all"
 msgid "Show all"
-msgstr "查看全部"
+msgstr "显示全部"
 
 #: src/hope_live/templates/pages/dashboard.html:137
 msgid "Cash disbursed by financial service provider (FSP)"
-msgstr ""
+msgstr "按金融服务提供商 (FSP) 分列的已发放现金"
 
 #: src/hope_live/templates/pages/dashboard.html:148
 msgid "Cash disbursed by implementing partner"
 msgstr "按执行伙伴分列的现金支出"
 
 #: src/hope_live/templates/pages/demographic.html:8
-#, fuzzy
 #| msgid "Demographics"
 msgid "Demographic dashboard"
-msgstr "人口统计"
+msgstr "人口统计仪表板"
 
 #: src/hope_live/templates/pages/demographic.html:9
 msgid ""
 "Breakdown of individuals, children, and persons with disabilities reached"
-msgstr ""
+msgstr "受益个人、儿童及残障人士细分统计"
 
 #: src/hope_live/templates/pages/demographic.html:23
-#, fuzzy
 #| msgid "View Dashboard Metrics by:"
 msgid "View demographic metrics by:"
-msgstr "查看仪表板指标，按："
+msgstr "按以下维度查看人口统计指标："
 
 #: src/hope_live/templates/pages/demographic.html:26
 #: src/hope_live/templates/pages/landing.html:214
@@ -458,10 +520,9 @@ msgid "Individuals"
 msgstr "个人"
 
 #: src/hope_live/templates/pages/demographic.html:29
-#, fuzzy
 #| msgid "Households Reached"
 msgid "Households"
-msgstr "覆盖家庭"
+msgstr "家庭"
 
 #: src/hope_live/templates/pages/demographic.html:32
 #: src/hope_live/templates/pages/landing.html:212
@@ -472,33 +533,67 @@ msgstr "儿童"
 
 #: src/hope_live/templates/pages/demographic.html:35
 msgid "Persons with disabilities"
-msgstr ""
+msgstr "残障人士"
 
 #: src/hope_live/templates/pages/demographic.html:65
 msgid "Individuals reached"
-msgstr ""
+msgstr "受益人数"
+
+#: src/hope_live/templates/pages/demographic.html:67
+#| msgid "Individuals Reached"
+msgid "Number of individuals reached."
+msgstr "受益个人总数。"
+
+#: src/hope_live/templates/pages/demographic.html:67
+#: src/hope_live/templates/pages/demographic.html:72
+#: src/hope_live/templates/pages/demographic.html:82
+#| msgid "Demographics"
+msgid "HOPE demographics"
+msgstr "HOPE 人口统计数据"
+
+#: src/hope_live/templates/pages/demographic.html:67
+msgid "Sum of total_beneficiaries for the sector dimension."
+msgstr "部门维度下 total_beneficiaries（受益人总数）的总和。"
 
 #: src/hope_live/templates/pages/demographic.html:70
 msgid "Households reached"
-msgstr "覆盖家庭"
+msgstr "受益家庭数"
+
+#: src/hope_live/templates/pages/demographic.html:72
+#| msgid "Households reached"
+msgid "Number of households reached."
+msgstr "受益家庭总数。"
+
+#: src/hope_live/templates/pages/demographic.html:72
+msgid "Sum of total_households for the sector dimension."
+msgstr "部门维度下 total_households（家庭总数）的总和。"
 
 #: src/hope_live/templates/pages/demographic.html:75
 msgid "Children reached"
-msgstr ""
+msgstr "受益儿童数"
 
 #: src/hope_live/templates/pages/demographic.html:80
 msgid "Persons with disabilities reached"
-msgstr ""
+msgstr "受益残障人士数"
+
+#: src/hope_live/templates/pages/demographic.html:82
+msgid "Confirmed persons with disabilities reached."
+msgstr "已确认受益的残障人士数量。"
+
+#: src/hope_live/templates/pages/demographic.html:82
+msgid ""
+"Some programmes do not collect this data, so the figure may be under-"
+"represented."
+msgstr "部分项目未收集此项数据，因此该数值可能偏低。"
 
 #: src/hope_live/templates/pages/demographic.html:88
-#, fuzzy
 #| msgid "Tickets Timeline"
 msgid "Reach timeline"
-msgstr "门票时间表"
+msgstr "覆盖人数时间线"
 
 #: src/hope_live/templates/pages/demographic.html:97
 msgid "Sector share of reached population"
-msgstr ""
+msgstr "受益人口部门占比"
 
 #: src/hope_live/templates/pages/demographic.html:99
 msgid "Note: children and PWD figures rely on recorded household composition."
@@ -506,15 +601,15 @@ msgstr "注：儿童和残疾人士数据基于登记的家庭构成。"
 
 #: src/hope_live/templates/pages/demographic.html:103
 msgid "Country share of reached population"
-msgstr ""
+msgstr "受益人口国家占比"
 
 #: src/hope_live/templates/pages/demographic.html:110
 msgid "Region share of reached population"
-msgstr ""
+msgstr "受益人口地区占比"
 
 #: src/hope_live/templates/pages/demographic.html:116
 msgid "Method and caveats"
-msgstr ""
+msgstr "计算方法与注意事项"
 
 #: src/hope_live/templates/pages/demographic.html:117
 msgid ""
@@ -529,26 +624,25 @@ msgid ""
 "date. Missing composition or dates of birth may understate children and "
 "disability figures."
 msgstr ""
+"各项指标基于所选周期内至少有一笔合格付款的收款人计算。合格付款必须属于已接受、已完成或已关闭的付款计划；失败、已移除、冲突及已排除的付款不计入内。家庭指标（个人、儿童和残障人士）使用登记的家庭构成数据；社会工作者项目单独报告人员数量，机构收款人仅在具备收款人层级人口统计数据时才予纳入。时间线依次采用付款发放日期、应享日期及付款状态日期。家庭构成或出生日期缺失可能导致儿童和残障人士数据偏低。"
 
 #: src/hope_live/templates/pages/grievance.html:8
 msgid "Grievance dashboard"
-msgstr "申诉投诉仪表板"
+msgstr "申诉与反馈仪表板"
 
 #: src/hope_live/templates/pages/grievance.html:9
 msgid "Overview of feedback and grievance tickets"
-msgstr "反馈和申诉单概述"
+msgstr "反馈与申诉工单概览"
 
 #: src/hope_live/templates/pages/grievance.html:22
-#, fuzzy
 #| msgid "Data source"
 msgid "Ticket source:"
-msgstr "数据来源"
+msgstr "工单来源："
 
 #: src/hope_live/templates/pages/grievance.html:25
-#, fuzzy
 #| msgid "Grievance dashboard"
 msgid "Grievances"
-msgstr "申诉投诉仪表板"
+msgstr "申诉"
 
 #: src/hope_live/templates/pages/grievance.html:28
 msgid "Include system flags"
@@ -556,7 +650,21 @@ msgstr "包含系统标记"
 
 #: src/hope_live/templates/pages/grievance.html:42
 msgid "Total tickets"
-msgstr "总门票数"
+msgstr "工单总数"
+
+#: src/hope_live/templates/pages/grievance.html:44
+#| msgid "Overview of feedback and grievance tickets"
+msgid "Number of grievance tickets."
+msgstr "申诉与反馈工单数量。"
+
+#: src/hope_live/templates/pages/grievance.html:44
+#| msgid "Grievance dashboard"
+msgid "HOPE grievances"
+msgstr "HOPE 申诉数据"
+
+#: src/hope_live/templates/pages/grievance.html:44
+msgid "Sum of ticket_count."
+msgstr "工单计数 (ticket_count) 的总和。"
 
 #: src/hope_live/templates/pages/grievance.html:47
 msgid "New (Not Assigned)"
@@ -589,17 +697,17 @@ msgstr "未指定"
 
 #: src/hope_live/templates/pages/grievance.html:78
 msgid "Tickets timeline"
-msgstr "门票时间表"
+msgstr "工单时间线"
 
 #: src/hope_live/templates/pages/grievance.html:82
 msgid ""
 "Open & Active covers New, Assigned, In Progress, On Hold and For Approval; "
 "Closed is shown separately."
-msgstr ""
+msgstr "“开启及处理中”涵盖新建、已分配、处理中、挂起和待审批状态；“已关闭”单独显示。"
 
 #: src/hope_live/templates/pages/grievance.html:88
 msgid "Tickets by status"
-msgstr ""
+msgstr "按状态分列的工单"
 
 #: src/hope_live/templates/pages/grievance.html:93
 msgid "Average grievance resolution time by category"
@@ -612,21 +720,21 @@ msgstr "已关闭工单从创建到最近一次更新的平均天数。"
 
 #: src/hope_live/templates/pages/grievance.html:99
 msgid "Tickets by priority"
-msgstr ""
+msgstr "按优先级分列的工单"
 
 #: src/hope_live/templates/pages/grievance.html:101
 msgid ""
 "Priority is an optional field in HOPE; tickets without a priority appear as "
 "Not Set."
-msgstr ""
+msgstr "优先级在 HOPE 中为选填字段；未设置优先级的工单显示为“未设置”。"
 
 #: src/hope_live/templates/pages/grievance.html:108
 msgid "Tickets by category"
-msgstr ""
+msgstr "按类别分列的工单"
 
 #: src/hope_live/templates/pages/grievance.html:116
 msgid "Tickets by subcategory"
-msgstr ""
+msgstr "按子类别分列的工单"
 
 #: src/hope_live/templates/pages/grievance.html:118
 msgid ""
@@ -636,7 +744,7 @@ msgstr "子类别适用于数据变更、敏感申诉、申诉投诉和需要裁
 
 #: src/hope_live/templates/pages/grievance.html:128
 msgid "Tickets by status and country"
-msgstr ""
+msgstr "按状态和国家分列的工单"
 
 #: src/hope_live/templates/pages/landing.html:19
 msgid "Cash-based Assistance"
@@ -646,7 +754,7 @@ msgstr "现金援助"
 msgid ""
 "Data and evidence to deliver humanitarian cash assistance safely — and to "
 "show where it reaches children and families."
-msgstr "用于安全提供人道主义现金援助的数据和证据，并展示援助覆盖儿童和家庭的情况。"
+msgstr "通过数据与实证安全地提供人道主义现金援助，并清晰展示援助惠及儿童与家庭的覆盖情况。"
 
 #: src/hope_live/templates/pages/landing.html:26
 msgid "Explore the evidence"
@@ -662,11 +770,11 @@ msgstr "现金援助概览"
 
 #: src/hope_live/templates/pages/landing.html:44
 msgid "Assistance Delivered"
-msgstr "已提供援助"
+msgstr "已发放援助金额"
 
 #: src/hope_live/templates/pages/landing.html:47
 msgid "Direct cash transfers"
-msgstr "直接现金转移"
+msgstr "直接现金转移支付"
 
 #: src/hope_live/templates/pages/landing.html:57
 msgid "Countries & territories"
@@ -696,13 +804,11 @@ msgstr "国家"
 
 #: src/hope_live/templates/pages/landing.html:97
 #: src/hope_live/templates/pages/landing.html:102
-#, fuzzy
 #| msgid "countries"
 msgid "Search countries"
 msgstr "搜索国家"
 
 #: src/hope_live/templates/pages/landing.html:107
-#, fuzzy
 #| msgid "Select Language"
 msgid "Select all"
 msgstr "全选"
@@ -712,10 +818,9 @@ msgid "Clear"
 msgstr "清除"
 
 #: src/hope_live/templates/pages/landing.html:111
-#, fuzzy
 #| msgid "countries"
 msgid "No countries found"
-msgstr "未找到国家"
+msgstr "未找到匹配国家"
 
 #: src/hope_live/templates/pages/landing.html:115
 msgid "Reset"
@@ -727,7 +832,7 @@ msgstr "个人与家庭"
 
 #: src/hope_live/templates/pages/landing.html:135
 msgid "Children Reached"
-msgstr "覆盖儿童"
+msgstr "受益儿童数"
 
 #: src/hope_live/templates/pages/landing.html:139
 #: src/hope_live/templates/pages/landing.html:148
@@ -736,19 +841,19 @@ msgstr "HOPE 覆盖"
 
 #: src/hope_live/templates/pages/landing.html:144
 msgid "Families Reached"
-msgstr "覆盖家庭"
+msgstr "受益家庭数"
 
 #: src/hope_live/templates/pages/landing.html:153
 msgid "Individuals Reached"
-msgstr "覆盖个人"
+msgstr "受益人数"
 
 #: src/hope_live/templates/pages/landing.html:157
 msgid "People reached"
-msgstr "覆盖人数"
+msgstr "受益人数"
 
 #: src/hope_live/templates/pages/landing.html:162
 msgid "Social Workers Reached"
-msgstr "覆盖社会工作者"
+msgstr "受益社会工作者数"
 
 #: src/hope_live/templates/pages/landing.html:166
 msgid "Frontline workforce assisted"
@@ -763,7 +868,7 @@ msgstr "现金"
 
 #: src/hope_live/templates/pages/landing.html:179
 msgid "Cash Transfers"
-msgstr "现金转账"
+msgstr "现金转移支付笔数"
 
 #: src/hope_live/templates/pages/landing.html:183
 msgid "Payments delivered"
@@ -771,7 +876,7 @@ msgstr "已发放付款"
 
 #: src/hope_live/templates/pages/landing.html:186
 msgid "Average transfer"
-msgstr "平均转账"
+msgstr "平均每笔转移金额"
 
 #: src/hope_live/templates/pages/landing.html:188
 msgid "per transfer"
@@ -779,7 +884,7 @@ msgstr "每笔转账"
 
 #: src/hope_live/templates/pages/landing.html:205
 msgid "Where cash assistance reaches children and families"
-msgstr "现金援助覆盖儿童和家庭的地区"
+msgstr "现金援助惠及儿童和家庭的地区分布"
 
 #: src/hope_live/templates/pages/landing.html:206
 msgid "Country-level reach for the selected year"
@@ -847,7 +952,7 @@ msgstr "所选国家的儿童、家庭、个人和现金数据。"
 
 #: src/hope_live/templates/pages/landing.html:298
 msgid "Cash assistance by sector"
-msgstr "按部门划分的现金援助"
+msgstr "按部门分列的现金援助"
 
 #: src/hope_live/templates/pages/landing.html:299
 msgid "Share of delivered cash by programme sector."
@@ -859,16 +964,18 @@ msgid "Click a slice to filter."
 msgstr "点击扇区进行筛选。"
 
 #: src/hope_live/templates/pages/landing.html:313
-msgid "Payment Mechanism"
-msgstr "支付机制"
+#: src/hope_live/templates/pages/landing.html:371
+#| msgid "Delivery types"
+msgid "Delivery mechanism"
+msgstr "发放方式"
 
 #: src/hope_live/templates/pages/landing.html:314
 msgid "How cash reaches people: delivery mechanism share."
-msgstr "现金援助如何到达人们手中：按支付机制划分。"
+msgstr "现金如何送达受益人：各发放方式占比。"
 
 #: src/hope_live/templates/pages/landing.html:331
-msgid "Data responsibly"
-msgstr "负责任地使用数据"
+msgid "Responsible data"
+msgstr "负责任的数据管理"
 
 #: src/hope_live/templates/pages/landing.html:333
 msgid "Read UNICEF's data protection policy."
@@ -912,217 +1019,293 @@ msgid "Data could not be loaded. Please refresh."
 msgstr "无法加载数据。请刷新。"
 
 #: src/hope_live/templates/pages/landing.html:369
-#, fuzzy
 #| msgid "countries"
 msgid "countries selected"
-msgstr "个国家已选择"
+msgstr "个已选国家"
 
 #: src/hope_live/templates/pages/landing.html:370
 msgid "Sector"
 msgstr "部门"
 
-#: src/hope_live/templates/pages/landing.html:371
-msgid "Mechanism (cash)"
-msgstr "支付机制（现金）"
-
 #: src/hope_live/templates/pages/landing.html:372
 msgid "Remove"
 msgstr "移除"
 
+#: src/hope_live/templates/pages/landing.html:373
+msgid "Loading..."
+msgstr "加载中..."
+
+#: src/hope_live/templates/pages/landing.html:374
+msgid "years of data available."
+msgstr "年可用数据。"
+
+#: src/hope_live/templates/pages/landing.html:375
+msgid "Education"
+msgstr "教育"
+
+#: src/hope_live/templates/pages/landing.html:376
+msgid "Health"
+msgstr "卫生与健康"
+
+#: src/hope_live/templates/pages/landing.html:377
+msgid "WASH"
+msgstr "水、环境卫生和个人卫生 (WASH)"
+
+#: src/hope_live/templates/pages/landing.html:378
+msgid "Nutrition"
+msgstr "营养"
+
+#: src/hope_live/templates/pages/landing.html:379
+#| msgid "Children"
+msgid "Child Protection"
+msgstr "儿童保护"
+
+#: src/hope_live/templates/pages/landing.html:380
+#| msgid "Data protection"
+msgid "Social Protection"
+msgstr "社会保护"
+
+#: src/hope_live/templates/pages/landing.html:381
+msgid "Multi-purpose Cash"
+msgstr "多用途现金援助"
+
+#: src/hope_live/templates/pages/landing.html:382
+#| msgid "Payment verification"
+msgid "Winterization"
+msgstr "过冬援助"
+
+#: src/hope_live/templates/pages/landing.html:383
+msgid "Mobile Money"
+msgstr "移动货币"
+
+#: src/hope_live/templates/pages/landing.html:384
+#| msgid "Cash Transfers"
+msgid "Bank Transfer"
+msgstr "银行转账"
+
+#: src/hope_live/templates/pages/landing.html:385
+msgid "Cash in Hand"
+msgstr "直接发放现金"
+
+#: src/hope_live/templates/pages/landing.html:386
+msgid "Paper Voucher"
+msgstr "纸质代金券"
+
+#: src/hope_live/templates/pages/landing.html:387
+msgid "e-Voucher"
+msgstr "电子代金券"
+
+#: src/hope_live/templates/pages/landing.html:388
+msgid "Prepaid Card"
+msgstr "预付卡"
+
 #: src/hope_live/templates/pages/login.html:16
-#, fuzzy
 #| msgid "HOPE Dashboard"
 msgid "HOPE Live Dashboard"
-msgstr "HOPE 仪表板"
+msgstr "HOPE 实时仪表板"
 
 #: src/hope_live/templates/pages/login.html:25
 msgid "SSO Login"
-msgstr ""
+msgstr "单点登录 (SSO)"
 
 #: src/hope_live/templates/pages/login.html:32
 msgid "Debug Login"
-msgstr ""
+msgstr "调试登录"
 
 #: src/hope_live/templates/pages/login.html:35
 msgid "Username"
-msgstr ""
+msgstr "用户名"
 
 #: src/hope_live/templates/pages/login.html:36
 msgid "Password"
-msgstr ""
+msgstr "密码"
 
 #: src/hope_live/templates/pages/login.html:47
 #, python-format
 msgid "Hope Country Report dev - %(year)s - %(version)s"
-msgstr ""
+msgstr "HOPE 国家报告开发环境 - %(year)s - %(version)s"
 
 #: src/hope_live/templates/pages/risk.html:8
-#, fuzzy
 #| msgid "Completion Rate Dashboard"
 msgid "Operational risk dashboard"
-msgstr "完成率仪表板"
+msgstr "运营风险仪表板"
 
 #: src/hope_live/templates/pages/risk.html:9
 msgid ""
 "Operational risk indicators, systemic bottlenecks & exception management"
-msgstr ""
+msgstr "运营风险指标、系统性瓶颈与异常管理"
 
 #: src/hope_live/templates/pages/risk.html:24
-#, fuzzy
 #| msgid "Category"
 msgid "All categories"
-msgstr "类别"
+msgstr "所有类别"
 
 #: src/hope_live/templates/pages/risk.html:27
 msgid "Fiduciary"
-msgstr ""
+msgstr "受托财务风险"
 
 #: src/hope_live/templates/pages/risk.html:30
 msgid "Safeguarding"
-msgstr ""
+msgstr "保护机制"
 
 #: src/hope_live/templates/pages/risk.html:33
-#, fuzzy
 #| msgid "Programs"
 msgid "Programmatic"
-msgstr "节目"
+msgstr "项目执行风险"
 
 #: src/hope_live/templates/pages/risk.html:36
 msgid "Operational"
-msgstr ""
+msgstr "运营风险"
 
 #: src/hope_live/templates/pages/risk.html:39
 msgid "Compliance"
-msgstr ""
+msgstr "合规风险"
 
 #: src/hope_live/templates/pages/risk.html:52
 msgid "Clear country filter"
-msgstr ""
+msgstr "清除国家筛选"
 
 #: src/hope_live/templates/pages/risk.html:63
-#, fuzzy
 #| msgid "Programs"
 msgid "Programme:"
-msgstr "节目"
+msgstr "项目："
 
 #: src/hope_live/templates/pages/risk.html:67
-#, fuzzy
 #| msgid "Programs"
 msgid "All programmes"
-msgstr "节目"
+msgstr "所有项目"
 
 #: src/hope_live/templates/pages/risk.html:70
-#, fuzzy
 #| msgid "Programs"
 msgid "Clear programme filter"
-msgstr "节目"
+msgstr "清除项目筛选"
 
 #: src/hope_live/templates/pages/risk.html:88
-#, fuzzy
 #| msgid "Total Tickets"
 msgid "Total risk items"
-msgstr "总门票数"
+msgstr "风险项总数"
 
 #: src/hope_live/templates/pages/risk.html:90
 msgid "Across all operational modules"
-msgstr ""
+msgstr "涵盖所有运营模块"
+
+#: src/hope_live/templates/pages/risk.html:91
+msgid "Total count of operational risk issues across all active modules."
+msgstr "所有活跃模块中的运营风险问题总数。"
+
+#: src/hope_live/templates/pages/risk.html:91
+#: src/hope_live/templates/pages/risk.html:104
+msgid "HOPE"
+msgstr "HOPE"
+
+#: src/hope_live/templates/pages/risk.html:91
+msgid "Count of flagged risk indicators across all modules."
+msgstr "所有模块中被标记的风险指标数量。"
 
 #: src/hope_live/templates/pages/risk.html:101
 msgid "Critical risks"
-msgstr ""
+msgstr "严重风险"
 
 #: src/hope_live/templates/pages/risk.html:103
 msgid "Requires immediate action"
-msgstr ""
+msgstr "需立即采取行动"
+
+#: src/hope_live/templates/pages/risk.html:104
+msgid "Risks at or above the 150% threshold requiring immediate action."
+msgstr "达到或超过 150% 阈值、需立即采取行动的风险。"
+
+#: src/hope_live/templates/pages/risk.html:104
+msgid "Count of risk indicators at critical severity."
+msgstr "处于严重级别的风险指标数量。"
 
 #: src/hope_live/templates/pages/risk.html:114
-#, fuzzy
 #| msgid "Distribution by Sector"
 msgid "Risk distribution by module"
-msgstr "按行业分布"
+msgstr "按模块分列的风险分布"
+
+#: src/hope_live/templates/pages/risk.html:115
+msgid "5 modules"
+msgstr "5 个模块"
 
 #: src/hope_live/templates/pages/risk.html:117
 msgid "Click any module to filter operational cards"
-msgstr ""
+msgstr "点击任意模块以筛选运营卡片"
 
 #: src/hope_live/templates/pages/risk.html:126
-#, fuzzy
 #| msgid "Tickets Timeline"
 msgid "Issues timeline"
-msgstr "门票时间表"
+msgstr "问题时间线"
 
 #: src/hope_live/templates/pages/risk.html:127
 msgid "Daily volume"
-msgstr ""
+msgstr "每日数量"
 
 #: src/hope_live/templates/pages/risk.html:138
 msgid "Risk status color guide:"
-msgstr ""
+msgstr "风险状态颜色图例："
 
 #: src/hope_live/templates/pages/risk.html:142
 msgid "Critical"
-msgstr ""
+msgstr "严重"
 
 #: src/hope_live/templates/pages/risk.html:147
 msgid "Warning"
-msgstr ""
+msgstr "警告"
 
 #: src/hope_live/templates/pages/risk.html:152
 msgid "Caution"
-msgstr ""
+msgstr "注意"
 
 #: src/hope_live/templates/pages/risk.html:157
 msgid "Normal"
-msgstr ""
+msgstr "正常"
 
 #: src/hope_live/templates/pages/risk.html:171
 msgid "All risk indicators"
-msgstr ""
+msgstr "所有风险指标"
 
 #: src/hope_live/templates/pages/risk.html:172
 msgid "Itemized operational metrics by indicator and programme"
-msgstr ""
+msgstr "按指标和项目分列的运营指标明细"
 
 #: src/hope_live/templates/pages/risk.html:178
 msgid "Risk Indicator"
-msgstr ""
+msgstr "风险指标"
 
 #: src/hope_live/templates/pages/risk.html:180
 msgid "Module"
-msgstr ""
+msgstr "模块"
 
 #: src/hope_live/templates/pages/risk.html:181
-#, fuzzy
 #| msgid "Programs"
 msgid "Programme"
-msgstr "节目"
+msgstr "项目"
 
 #: src/hope_live/templates/pages/risk.html:182
 msgid "Severity"
-msgstr ""
+msgstr "严重程度"
 
 #: src/hope_live/templates/pages/risk.html:183
 msgid "Trend"
-msgstr ""
+msgstr "趋势"
 
 #: src/hope_live/templates/pages/risk.html:184
-#, fuzzy
 #| msgid "Open Issue"
 msgid "Issues"
-msgstr "开放问题"
+msgstr "问题数"
 
 #: src/hope_live/templates/pages/risk.html:185
 #, python-format
 msgid "%%"
-msgstr ""
+msgstr "%%"
 
 #: src/hope_live/templates/pages/update_detail.html:11
 msgid "Back to latest updates"
-msgstr ""
+msgstr "返回最新更新"
 
 #: src/hope_live/templates/pages/update_detail.html:24
 msgid "View all HOPE releases"
-msgstr ""
+msgstr "查看所有 HOPE 版本"
 
 #: src/hope_live/templates/public_layout.html:10
 #: src/hope_live/templates/public_layout.html:28
@@ -1131,11 +1314,11 @@ msgstr "联合国儿童基金会现金援助"
 
 #: src/hope_live/templates/public_layout.html:25
 msgid "UNICEF Cash-based Assistance home"
-msgstr ""
+msgstr "联合国儿童基金会现金援助首页"
 
 #: src/hope_live/templates/public_layout.html:32
 msgid "Public navigation"
-msgstr ""
+msgstr "公共导航"
 
 #: src/hope_live/templates/public_layout.html:33
 #: src/hope_live/templates/public_layout.html:69
@@ -1172,23 +1355,23 @@ msgstr "数据保护"
 #: src/hope_live/templates/public_layout.html:110
 #, python-format
 msgid "Version %(version)s"
-msgstr ""
+msgstr "版本 %(version)s"
 
 #: src/hope_live/templates/unfold/helpers/header_back_button.html:7
 #: src/hope_live/templates/unfold/helpers/header_back_button.html:15
 msgid " Go back"
-msgstr "回去"
+msgstr " 返回"
 
 #: src/hope_live/templates/unfold/helpers/site_branding.html:3
 #: src/hope_live/templates/unfold/helpers/site_branding.html:6
 msgid "Django administration"
-msgstr "Django 管理"
+msgstr "Django 后台管理"
 
 #: src/hope_live/web/chart_metadata.py:15
 msgid ""
 "Cash disbursed or payments over time, using the selected metric and chart "
 "filters."
-msgstr ""
+msgstr "按所选指标和图表筛选条件统计的随时间变化的现金发放额或付款笔数。"
 
 #: src/hope_live/web/chart_metadata.py:16
 #: src/hope_live/web/chart_metadata.py:45
@@ -1198,12 +1381,12 @@ msgstr ""
 #: src/hope_live/web/chart_metadata.py:86
 #: src/hope_live/web/chart_metadata.py:95
 #: src/hope_live/web/chart_metadata.py:117
-#: src/hope_live/web/chart_metadata.py:376
-#: src/hope_live/web/chart_metadata.py:386
-#: src/hope_live/web/chart_metadata.py:432
-#: src/hope_live/web/chart_metadata.py:441
+#: src/hope_live/web/chart_metadata.py:374
+#: src/hope_live/web/chart_metadata.py:384
+#: src/hope_live/web/chart_metadata.py:430
+#: src/hope_live/web/chart_metadata.py:439
 msgid "HOPE payments — country report financial feed."
-msgstr ""
+msgstr "HOPE 付款数据——国家报告财务数据流。"
 
 #: src/hope_live/web/chart_metadata.py:18
 msgid ""
@@ -1213,22 +1396,23 @@ msgid ""
 "delivered quantity when present, otherwise entitlement quantity. Payments "
 "count counts payment records."
 msgstr ""
+"付款日期依次采用发放日期、应享日期和状态日期。仅纳入已接受、已完成或已关闭付款计划中的付款；排除失败、已移除和冲突的付款。美元金额优先采用已发放金额，未记录时采用应享金额。付款笔数统计付款记录条数。"
 
 #: src/hope_live/web/chart_metadata.py:24
 msgid ""
 "The metric toggle switches between USD and payment count. The selected "
 "programme cohort and chart filters apply. Quantity (QTY) is retained for "
 "reconciliation and is not displayed as a separate metric on this page."
-msgstr ""
+msgstr "指标切换按钮可在美元金额与付款笔数之间切换。所选项目群体和图表筛选条件均适用。数量 (QTY) 保留用于对账，不在本页作为独立指标显示。"
 
 #: src/hope_live/web/chart_metadata.py:30
 msgid ""
 "Payment pipeline from total payment volume through delivered to reconciled."
-msgstr ""
+msgstr "从付款总量、已发放到已对账的付款处理流程。"
 
 #: src/hope_live/web/chart_metadata.py:31
 msgid "HOPE payments and the completion reconciliation rate."
-msgstr ""
+msgstr "HOPE 付款数据及完成情况对账率。"
 
 #: src/hope_live/web/chart_metadata.py:33
 msgid ""
@@ -1238,142 +1422,143 @@ msgid ""
 "Reconciled is delivered multiplied by the reconciliation rate from the "
 "completion dataset for the same period and cohort."
 msgstr ""
+"“处理中”为当前指标下的付款总量（即漏斗起始总量，而非仅待处理付款）。“已发放”统计发放成功、部分发放和交易成功状态。“已对账”为已发放量乘以同一周期和群体下完成数据集中的对账率。"
 
 #: src/hope_live/web/chart_metadata.py:40
 msgid ""
 "Pending in pipeline is shown below the chart as a subset of in-pipeline, not"
 " as a separate failure stage."
-msgstr ""
+msgstr "“待处理”在图表下方作为“处理中”的子集显示，而非独立的失败阶段。"
 
 #: src/hope_live/web/chart_metadata.py:44
 msgid "Cash disbursed or payments by programme sector."
-msgstr ""
+msgstr "按项目部门分列的已发放现金或付款。"
 
 #: src/hope_live/web/chart_metadata.py:47
 msgid ""
 "Payment rows are grouped by programme sector using the same date and status "
 "filters as the financial timeline. USD uses delivered quantity when present,"
 " otherwise entitlement quantity; payments count counts payment records."
-msgstr ""
+msgstr "付款记录采用与财务时间线相同的日期和状态筛选条件按项目部门分组。美元金额优先采用已发放金额，否则采用应享金额；付款笔数统计付款记录条数。"
 
 #: src/hope_live/web/chart_metadata.py:53
 msgid "Cash disbursed or payments by delivery mechanism."
-msgstr ""
+msgstr "按发放方式分列的已发放现金或付款。"
 
 #: src/hope_live/web/chart_metadata.py:56
 msgid ""
 "Payment rows are grouped by the delivery mechanism name using the same date "
 "and status filters as the financial timeline."
-msgstr ""
+msgstr "付款记录采用与财务时间线相同的日期和状态筛选条件按发放方式名称分组。"
 
 #: src/hope_live/web/chart_metadata.py:61
 msgid "Cash disbursed or payments by UNICEF region."
-msgstr ""
+msgstr "按联合国儿童基金会地区分列的已发放现金或付款。"
 
 #: src/hope_live/web/chart_metadata.py:64
 msgid ""
 "Payment rows are grouped by the business area region name using the same "
 "date and status filters as the financial timeline."
-msgstr ""
+msgstr "付款记录采用与财务时间线相同的日期和状态筛选条件按业务区域所属地区名称分组。"
 
 #: src/hope_live/web/chart_metadata.py:68
 msgid ""
 "Bars are ordered by value and shaded from dark (highest) to light (lowest). "
 "Axis abbreviations are defined in the footnote below the chart; full region "
 "names appear in the tooltip."
-msgstr ""
+msgstr "柱状条按数值排序，颜色由深（最高）至浅（最低）渐变。坐标轴缩写说明见图表下方脚注；完整地区名称显示在悬浮提示框中。"
 
 #: src/hope_live/web/chart_metadata.py:74
 msgid "Cash disbursed (paid) or payments by country."
-msgstr ""
+msgstr "按国家分列的已发放（已支付）现金或付款。"
 
 #: src/hope_live/web/chart_metadata.py:77
 msgid ""
 "Payment rows are grouped by the business area country slug using the same "
 "date and status filters as the financial timeline."
-msgstr ""
+msgstr "付款记录采用与财务时间线相同的日期和状态筛选条件按业务区域国家标识分组。"
 
 #: src/hope_live/web/chart_metadata.py:81
 msgid ""
 "All countries with financial data in the period are shown. Outstanding by "
 "country is shown beside it."
-msgstr ""
+msgstr "显示该周期内有财务数据的所有国家，并在旁侧显示各国的待付款项。"
 
 #: src/hope_live/web/chart_metadata.py:85
 msgid "Cash disbursed or payments by programme."
-msgstr ""
+msgstr "按项目分列的已发放现金或付款。"
 
 #: src/hope_live/web/chart_metadata.py:88
 msgid ""
 "Payment rows are grouped by programme name using the same date and status "
 "filters as the financial timeline."
-msgstr ""
+msgstr "付款记录采用与财务时间线相同的日期和状态筛选条件按项目名称分组。"
 
 #: src/hope_live/web/chart_metadata.py:91
 msgid "The chart shows the top 10 programmes, plus an Other bucket."
-msgstr ""
+msgstr "图表显示排名前 10 的项目以及“其他”汇总项。"
 
 #: src/hope_live/web/chart_metadata.py:94
 msgid "Cash disbursed or payments by financial service provider."
-msgstr ""
+msgstr "按金融服务提供商分列的已发放现金或付款。"
 
 #: src/hope_live/web/chart_metadata.py:97
 msgid ""
 "Payment rows are grouped by financial service provider name using the same "
 "date and status filters as the financial timeline."
-msgstr ""
+msgstr "付款记录采用与财务时间线相同的日期和状态筛选条件按金融服务提供商名称分组。"
 
 #: src/hope_live/web/chart_metadata.py:100
 msgid "The chart shows the top 10 providers, plus an Other bucket."
-msgstr ""
+msgstr "图表显示排名前 10 的服务提供商以及“其他”汇总项。"
 
 #: src/hope_live/web/chart_metadata.py:103
 msgid "Outstanding payment amount by country, in USD."
-msgstr ""
+msgstr "按国家分列的待付款项金额（美元）。"
 
 #: src/hope_live/web/chart_metadata.py:104
 msgid "HOPE payments — country report financial feed (status dimension)."
-msgstr ""
+msgstr "HOPE 付款数据——国家报告财务数据流（状态维度）。"
 
 #: src/hope_live/web/chart_metadata.py:106
 msgid ""
 "Sums the entitlement quantity in USD for payments still in pending statuses "
 "(SENT TO PAYMENT GATEWAY, SENT TO FSP, PENDING), grouped by country. "
 "Payments in successful statuses have already been paid and are excluded."
-msgstr ""
+msgstr "按国家汇总仍处于待处理状态（已发送至支付网关、已发送至金融服务提供商、待处理）的付款应享金额（美元）。处于成功状态的付款已支付，不计入内。"
 
 #: src/hope_live/web/chart_metadata.py:111
 msgid ""
 "Always shown in USD, independent of the amount/payment-count toggle. All "
 "countries with outstanding amounts are shown."
-msgstr ""
+msgstr "始终以美元显示，不受金额/付款笔数切换按钮影响。显示所有存在待付款项的国家。"
 
 #: src/hope_live/web/chart_metadata.py:116
 msgid "Cash disbursed or payments by implementing partner."
-msgstr ""
+msgstr "按执行伙伴分列的已发放现金或付款。"
 
 #: src/hope_live/web/chart_metadata.py:119
 msgid ""
 "Payment rows are grouped by the programme's implementing partner using the "
 "same date and status filters as the financial timeline."
-msgstr ""
+msgstr "付款记录采用与财务时间线相同的日期和状态筛选条件按项目执行伙伴分组。"
 
 #: src/hope_live/web/chart_metadata.py:123
 msgid ""
 "The card appears once the financial feed provides the implementing-partner "
 "dimension. Top 10 partners plus an Other bucket."
-msgstr ""
+msgstr "当财务数据流提供执行伙伴维度时显示此卡片。展示排名前 10 的执行伙伴及“其他”汇总项。"
 
 #: src/hope_live/web/chart_metadata.py:131
 msgid ""
 "People reached in households with at least one qualifying payment in the "
 "period."
-msgstr ""
+msgstr "周期内至少获得一笔合格付款的家庭中的受益人数。"
 
 #: src/hope_live/web/chart_metadata.py:132
 #: src/hope_live/web/chart_metadata.py:147
 msgid "HOPE households and payments — country report demographic feed."
-msgstr ""
+msgstr "HOPE 家庭与付款数据——国家报告人口统计数据流。"
 
 #: src/hope_live/web/chart_metadata.py:134
 msgid ""
@@ -1384,38 +1569,39 @@ msgid ""
 "closed plans are included; failed, removed, conflicted and excluded payments"
 " are excluded."
 msgstr ""
+"家庭在周期内有合格付款时计入一次。个人、儿童和残障人士数据来自登记的家庭构成。日期基准依次为付款发放日期、应享日期和付款状态日期。仅纳入已接受、已完成或已关闭的计划；排除失败、已移除、冲突和已排除的付款。"
 
 #: src/hope_live/web/chart_metadata.py:141
 msgid ""
 "Children and PWD figures rely on recorded household fields, so missing "
 "composition or dates of birth understate the totals."
-msgstr ""
+msgstr "儿童和残障人士数据依赖于登记的家庭字段，因此家庭构成或出生日期缺失会导致总计偏低。"
 
 #: src/hope_live/web/chart_metadata.py:146
 msgid ""
 "Children reached in households with at least one qualifying payment in the "
 "period."
-msgstr ""
+msgstr "周期内至少获得一笔合格付款的家庭中的受益儿童数。"
 
 #: src/hope_live/web/chart_metadata.py:149
 msgid ""
 "Sums each household's recorded children count (the household composition "
 "count where available, otherwise the beneficiary-recorded children count). "
 "Households with no recorded count contribute zero."
-msgstr ""
+msgstr "汇总每个家庭登记的儿童人数（优先采用家庭构成中的儿童数，否则采用受益人记录中的儿童数）。未登记儿童数的家庭计为零。"
 
 #: src/hope_live/web/chart_metadata.py:154
 msgid ""
 "Where household composition has not been recalculated or children's dates of"
 " birth are missing, the figure is understated. An improved estimate based on"
 " household members is being added to the feed."
-msgstr ""
+msgstr "若家庭构成尚未重新计算或儿童出生日期缺失，该数值会偏低。基于家庭成员的改进估算正逐步纳入数据流。"
 
 #: src/hope_live/web/chart_metadata.py:160
 msgid ""
 "Individuals, households, children or persons with disabilities reached over "
 "time."
-msgstr ""
+msgstr "随时间变化的受益个人、家庭、儿童或残障人士数量。"
 
 #: src/hope_live/web/chart_metadata.py:161
 #: src/hope_live/web/chart_metadata.py:183
@@ -1424,7 +1610,7 @@ msgstr ""
 msgid ""
 "HOPE household, social-worker and payment data — country report demographic "
 "feed."
-msgstr ""
+msgstr "HOPE 家庭、社会工作者和付款数据——国家报告人口统计数据流。"
 
 #: src/hope_live/web/chart_metadata.py:163
 msgid ""
@@ -1439,6 +1625,7 @@ msgid ""
 "demographic data is available. Date basis: payment delivery date, then "
 "entitlement date, then payment status date."
 msgstr ""
+"各项指标根据所选周期内至少有一笔合格付款的收款人计算。合格付款必须属于已接受、已完成或已关闭的付款计划；失败、已移除、冲突及已排除的付款不计入内。对于家庭收款人，个人、儿童和残障人士数量源自登记的家庭构成。对于社会工作者收款人，一条记录代表一名工作人员，因此受益人数即工作人员数量，不适用家庭、儿童和残障指标。机构收款人仅在具备收款人层级人口统计数据时纳入。日期基准依次为付款发放日期、应享日期和付款状态日期。"
 
 #: src/hope_live/web/chart_metadata.py:174
 msgid ""
@@ -1448,10 +1635,11 @@ msgid ""
 "composition or dates of birth understate the totals, and PWD figures may be "
 "under-reported where programmes do not collect them."
 msgstr ""
+"在现行旧版计算逻辑下，同月内有多笔合格付款的家庭可能按付款笔数重复计入家庭规模、儿童和残障人士数；但家庭总数仍保持去重。家庭构成或出生日期缺失会导致总计偏低，未收集残障数据的项目其残障人士数字可能偏低。"
 
 #: src/hope_live/web/chart_metadata.py:182
 msgid "Share of the reached population by programme sector."
-msgstr ""
+msgstr "按项目部门分列的受益人口占比。"
 
 #: src/hope_live/web/chart_metadata.py:185
 msgid ""
@@ -1461,14 +1649,15 @@ msgid ""
 "metrics use recorded composition; social-worker programmes report workforce "
 "counts separately."
 msgstr ""
+"采用与覆盖人数时间线相同的收款人和合格付款基准，并按项目部门分组。占比根据当前激活指标（个人、家庭、儿童或残障人士）计算。家庭指标使用登记的家庭构成；社会工作者项目单独报告人员数量。"
 
 #: src/hope_live/web/chart_metadata.py:190
 msgid "Children and PWD under-reporting caveats also apply here."
-msgstr ""
+msgstr "关于儿童和残障人士数据可能偏低的注意事项同样适用于此处。"
 
 #: src/hope_live/web/chart_metadata.py:193
 msgid "Share of the reached population by country."
-msgstr ""
+msgstr "按国家分列的受益人口占比。"
 
 #: src/hope_live/web/chart_metadata.py:196
 msgid ""
@@ -1477,37 +1666,38 @@ msgid ""
 "metric. Household metrics use recorded composition; social-worker programmes"
 " report workforce counts separately."
 msgstr ""
+"采用与覆盖人数时间线相同的收款人和合格付款基准，并按业务区域国家分组。占比根据当前激活指标计算。家庭指标使用登记的家庭构成；社会工作者项目单独报告人员数量。"
 
 #: src/hope_live/web/chart_metadata.py:201
 msgid ""
 "All countries with data in the period are shown. Children and PWD caveats "
 "apply."
-msgstr ""
+msgstr "显示该周期内有数据的所有国家。儿童与残障人士数据的注意事项同样适用。"
 
 #: src/hope_live/web/chart_metadata.py:204
 msgid "Share of the reached population by region."
-msgstr ""
+msgstr "按地区分列的受益人口占比。"
 
 #: src/hope_live/web/chart_metadata.py:207
 msgid ""
 "Uses the same payee and qualifying-payment base as the reach timeline, "
 "grouped by business-area region. Shares are calculated from the active "
 "metric (individuals, households, children or persons with disabilities)."
-msgstr ""
+msgstr "采用与覆盖人数时间线相同的收款人和合格付款基准，并按业务区域所属地区分组。占比根据当前激活指标（个人、家庭、儿童或残障人士）计算。"
 
 #: src/hope_live/web/chart_metadata.py:211
 msgid ""
 "This is an intermediate view between the global cards and the country chart."
-msgstr ""
+msgstr "此图表是全局概览卡片与国家分布图之间的中间层级视图。"
 
 #: src/hope_live/web/chart_metadata.py:217
 msgid "Reconciled and still-open payments or amount over time."
-msgstr ""
+msgstr "随时间变化的已对账与待对账付款笔数或金额。"
 
 #: src/hope_live/web/chart_metadata.py:218
 #: src/hope_live/web/chart_metadata.py:233
 msgid "HOPE payments — country report completion feed."
-msgstr ""
+msgstr "HOPE 付款数据——国家报告完成情况数据流。"
 
 #: src/hope_live/web/chart_metadata.py:220
 msgid ""
@@ -1517,6 +1707,7 @@ msgid ""
 "finished or closed plans are included; failed, removed and conflicted "
 "payments are excluded. USD is entitlement USD."
 msgstr ""
+"“已对账”包括已发送至支付网关、已发送至金融服务提供商、发放成功、部分发放和交易成功。所有其他非失败状态归为“待对账”。仅纳入已接受、已完成或已关闭计划中的付款；排除失败、已移除和冲突的付款。美元金额为应享美元金额。"
 
 #: src/hope_live/web/chart_metadata.py:226
 msgid ""
@@ -1524,34 +1715,34 @@ msgid ""
 "and country charts. The status mapping is applied when the report rows are "
 "loaded; Pending Reconciliation includes pending and other non-reconciled "
 "statuses."
-msgstr ""
+msgstr "在时间线和国家图表中，“已对账”以绿色显示，“待对账”以琥珀色显示。状态映射在加载报告记录时应用；“待对账”包含待处理及其他未对账状态。"
 
 #: src/hope_live/web/chart_metadata.py:232
 msgid "Reconciled and still-open payments by country."
-msgstr ""
+msgstr "按国家分列的已对账与待对账付款。"
 
 #: src/hope_live/web/chart_metadata.py:235
 msgid ""
 "Uses the same completion base as the reconciliation timeline, grouped by "
 "business area country. Each bar is the stacked total of reconciled and "
 "still-open values for the active metric."
-msgstr ""
+msgstr "采用与对账时间线相同的完成情况数据基准，并按业务区域国家分组。每个柱状条为当前激活指标下已对账与待对账数值的堆叠总计。"
 
 #: src/hope_live/web/chart_metadata.py:240
-#, python-format
+#, no-python-format
 msgid ""
 "All countries with completion data are shown. Absolute values is the "
 "default; 100% share shows each country's reconciled and pending split as "
 "percentages."
-msgstr ""
+msgstr "显示所有具有完成情况数据的国家。默认显示绝对值；100% 占比模式以百分比显示各国已对账与待对账的比例。"
 
 #: src/hope_live/web/chart_metadata.py:245
 msgid "Reconciliation and delivery success rates by country."
-msgstr ""
+msgstr "按国家分列的对账率与发放成功率。"
 
 #: src/hope_live/web/chart_metadata.py:246
 msgid "HOPE payments — financial and completion feeds."
-msgstr ""
+msgstr "HOPE 付款数据——财务与完成情况数据流。"
 
 #: src/hope_live/web/chart_metadata.py:248
 msgid ""
@@ -1560,26 +1751,27 @@ msgid ""
 "statuses divided by successful plus pending statuses in the financial feed. "
 "Only countries present in both feeds are shown."
 msgstr ""
+"对账率等于完成数据流中已对账数量除以已对账与待对账之和。发放成功率等于财务数据流中成功状态数量除以成功与待处理状态之和。仅显示同时存在于两个数据流中的国家。"
 
 #: src/hope_live/web/chart_metadata.py:254
-#, fuzzy, python-format
+#, no-python-format
 #| msgid ""
 #| "Two rates per country, sorted by reconciliation rate. The dashed line is the"
 #| " 80 percent reference."
 msgid ""
 "All countries present in both feeds are shown, sorted by reconciliation "
 "rate. The dashed 80% line is a reference guide, not a threshold."
-msgstr "每个国家两项比率，按对账率排序。虚线为百分之八十的参考线。"
+msgstr "显示同时存在于两个数据流中的所有国家，并按对账率排序。80% 虚线为参考基准线，而非强制阈值。"
 
 #: src/hope_live/web/chart_metadata.py:259
 msgid ""
 "Payment verification outcomes: selected, verified, pending and "
 "discrepancies."
-msgstr ""
+msgstr "付款核查结果：已抽选、核查通过、待核查及存在差异。"
 
 #: src/hope_live/web/chart_metadata.py:260
 msgid "HOPE payment verification plans — country report completion feed."
-msgstr ""
+msgstr "HOPE 付款核查计划——国家报告完成情况数据流。"
 
 #: src/hope_live/web/chart_metadata.py:262
 msgid ""
@@ -1589,18 +1781,19 @@ msgid ""
 "basis is the verification-plan activation date, falling back to the "
 "completion date."
 msgstr ""
+"采用核查计划汇总数据：“已抽选”为样本量，“核查通过”为确认收到数，“待核查”为样本量减去已反馈数，“存在差异”为未收到数与收到但有问题数之和。日期基准采用核查计划激活日期，缺失时回退至完成日期。"
 
 #: src/hope_live/web/chart_metadata.py:268
 msgid ""
 "The completion rate is verified payments divided by selected payments. The "
 "panel appears when verification plans exist for the period."
-msgstr ""
+msgstr "核查完成率等于核查通过的付款数除以已抽选的付款数。当所选周期内存在核查计划时显示此面板。"
 
 #: src/hope_live/web/chart_metadata.py:276
 msgid ""
 "Grievance ticket volume over time, split into closed/resolved and "
 "open/active."
-msgstr ""
+msgstr "随时间变化的申诉工单数量，分为已关闭/已解决和开启/处理中。"
 
 #: src/hope_live/web/chart_metadata.py:277
 #: src/hope_live/web/chart_metadata.py:291
@@ -1610,7 +1803,7 @@ msgstr ""
 #: src/hope_live/web/chart_metadata.py:329
 #: src/hope_live/web/chart_metadata.py:344
 msgid "HOPE grievances — country report grievance feed."
-msgstr ""
+msgstr "HOPE 申诉数据——国家报告申诉数据流。"
 
 #: src/hope_live/web/chart_metadata.py:279
 msgid ""
@@ -1618,29 +1811,30 @@ msgid ""
 "area must be set. Closed covers the Closed and Resolved statuses; Open & "
 "Active covers New, Assigned, In Progress, On Hold and For Approval."
 msgstr ""
+"按创建日期统计工单。忽略的工单不计入内，且必须设置业务区域。“已关闭”涵盖已关闭和已解决状态；“开启及处理中”涵盖新建、已分配、处理中、挂起和待审批状态。"
 
 #: src/hope_live/web/chart_metadata.py:284
 msgid ""
 "HOPE integer status codes are mapped to labels before charting. System flags"
 " are a separate source and are excluded by default; use the ticket-source "
 "toggle to include them."
-msgstr ""
+msgstr "HOPE 整数状态代码在绘图前映射为可读标签。系统标记属于独立来源，默认排除；可通过工单来源切换开关将其纳入。"
 
 #: src/hope_live/web/chart_metadata.py:290
 msgid "Grievance tickets by status."
-msgstr ""
+msgstr "按状态分列的申诉工单。"
 
 #: src/hope_live/web/chart_metadata.py:292
 msgid ""
 "Counts tickets by the status value for the active ticket source and period."
-msgstr ""
+msgstr "按当前激活工单来源和周期下的状态值统计工单数量。"
 
 #: src/hope_live/web/chart_metadata.py:294
 msgid ""
 "Not specified means the source status field was blank. The doughnut is used "
 "until resolution-time data is available, when it is replaced by Average "
 "Grievance Resolution Time by Category."
-msgstr ""
+msgstr "“未指定”表示源数据中的状态字段为空。在解决时长数据可用之前显示环形图，有数据后替换为“按类别划分的平均申诉处理时间”。"
 
 #: src/hope_live/web/chart_metadata.py:300
 msgid "Average grievance resolution time by category."
@@ -1653,53 +1847,55 @@ msgid ""
 "is used as the closure proxy because HOPE does not expose a dedicated "
 "closure timestamp."
 msgstr ""
+"所选周期内创建的已关闭工单（状态 6）从创建到最后更新的平均天数，按类别分组。由于 HOPE 未提供专门的关闭时间戳，因此使用 updated_at "
+"作为关闭时间替代值。"
 
 #: src/hope_live/web/chart_metadata.py:308
 msgid ""
 "Only closed tickets with both timestamps are included. The status doughnut "
 "is shown instead until resolution rows exist."
-msgstr ""
+msgstr "仅纳入同时具备两个时间戳的已关闭工单。在存在解决时长记录之前，改为显示状态环形图。"
 
 #: src/hope_live/web/chart_metadata.py:313
 msgid "Grievance tickets by priority."
-msgstr ""
+msgstr "按优先级分列的申诉工单。"
 
 #: src/hope_live/web/chart_metadata.py:315
 msgid ""
 "Counts tickets by the priority value for the selected period and country."
-msgstr ""
+msgstr "按所选周期和国家的优先级统计工单数量。"
 
 #: src/hope_live/web/chart_metadata.py:317
 msgid ""
 "Priority is an optional field in HOPE, so many tickets have none; these are "
 "reported as Not Set (source value 0)."
-msgstr ""
+msgstr "优先级在 HOPE 中为选填字段，因此许多工单未设优先级；此类工单报告为“未设置”（源数据值为 0）。"
 
 #: src/hope_live/web/chart_metadata.py:322
 msgid "Grievance tickets by category."
-msgstr ""
+msgstr "按类别分列的申诉工单。"
 
 #: src/hope_live/web/chart_metadata.py:324
 msgid ""
 "Counts tickets by the category value for the selected period and country."
-msgstr ""
+msgstr "按所选周期和国家的类别统计工单数量。"
 
 #: src/hope_live/web/chart_metadata.py:325
 msgid ""
 "The chart shows the top 10 categories. Not specified means the category was "
 "blank."
-msgstr ""
+msgstr "图表显示排名前 10 的类别。“未指定”表示类别为空。"
 
 #: src/hope_live/web/chart_metadata.py:328
 msgid "Grievance tickets by subcategory."
-msgstr ""
+msgstr "按子类别分列的申诉工单。"
 
 #: src/hope_live/web/chart_metadata.py:331
 msgid ""
 "Counts tickets by the subcategory value (stored as issue_type in HOPE) for "
 "categories that define subcategories: Data Change, Sensitive Grievance, "
 "Grievance Complaint and Needs Adjudication."
-msgstr ""
+msgstr "针对定义了子类别的类别（数据变更、敏感申诉、申诉和需裁决），按子类别值（在 HOPE 中存储为 issue_type）统计工单数量。"
 
 #: src/hope_live/web/chart_metadata.py:336
 msgid ""
@@ -1708,418 +1904,194 @@ msgid ""
 " are excluded, so the chart total is lower than total tickets. HOPE calls "
 "this field Subcategory."
 msgstr ""
+"图表显示排名前 10 的子类别。付款核查、反馈、转介、系统标记和受益人类别没有子类别，因此被排除，图表总计低于工单总数。HOPE "
+"将此字段称为“子类别”。"
 
 #: src/hope_live/web/chart_metadata.py:343
 msgid ""
 "Grievance tickets by country, split into closed/resolved and open/active."
-msgstr ""
+msgstr "按国家分列的申诉工单，分为已关闭/已解决和开启/处理中。"
 
 #: src/hope_live/web/chart_metadata.py:346
 msgid ""
 "Uses the same ticket base as the grievance timeline, grouped by business "
 "area country. Each bar is the stacked total of closed/resolved and "
 "open/active tickets."
-msgstr ""
+msgstr "采用与申诉时间线相同的工单基准，并按业务区域国家分组。每个柱状条为已关闭/已解决与开启/处理中工单的堆叠总计。"
 
 #: src/hope_live/web/chart_metadata.py:349
 msgid ""
 "All countries with tickets in the period are shown; long country names wrap "
 "on the axis."
-msgstr ""
+msgstr "显示该周期内有工单的所有国家；较长的国家名称在坐标轴上自动换行。"
 
 #: src/hope_live/web/chart_metadata.py:356
 msgid ""
-"Global delivery over time: cash disbursed, payment count, and the number of "
-"individuals, households and children reached by household programmes."
-msgstr ""
+"Global delivery over time: cash disbursed and the number of individuals, "
+"families and children reached by household programmes."
+msgstr "随时间变化的全球发放情况：已发放现金金额以及家庭项目惠及的个人、家庭和儿童数量。"
 
 #: src/hope_live/web/chart_metadata.py:359
 msgid ""
 "HOPE payments and household registration data, aggregated by the country "
 "report."
-msgstr ""
+msgstr "由国家报告汇总的 HOPE 付款与家庭登记数据。"
 
 #: src/hope_live/web/chart_metadata.py:361
 msgid ""
-"Total Cash Disbursed sums delivered quantity in USD. Payments Count counts "
-"payment records — not payment plans, unique recipients or only completed "
-"payments. Individuals Reached sums the registered household size of reached "
-"households; Households Reached counts those households; Children Reached "
-"sums the children recorded in household composition. Frontline (incentive) "
-"workers are reported separately and are not part of these series."
+"Cash sums delivered quantity in USD. Individuals sums the registered "
+"household size of reached households; Families counts those households; "
+"Children sums the children recorded in household composition. Frontline "
+"(incentive) workers are reported separately and are not part of these "
+"series."
 msgstr ""
+"“现金”汇总已发放美元金额。“个人”汇总受益家庭的登记家庭规模；“家庭”统计受益家庭户数；“儿童”汇总家庭构成中记录的儿童人数。一线（激励津贴）工作人员单独报告，不包含在这些序列中。"
 
-#: src/hope_live/web/chart_metadata.py:369
+#: src/hope_live/web/chart_metadata.py:368
 msgid ""
-"All years is the default. Last 5 years shows the current year and the "
-"previous four. Selecting a year shows its monthly data. Where a year or "
-"month has no demographic record, the reached series are estimated from "
-"payment volume."
-msgstr ""
+"All years is the default and shows annual totals. Selecting a single year "
+"shows its monthly breakdown."
+msgstr "默认选择“所有年份”并显示年度总计。选择单个年份时显示该年的月度细分。"
 
-#: src/hope_live/web/chart_metadata.py:375
+#: src/hope_live/web/chart_metadata.py:373
 msgid "Share of cash assistance delivered by programme sector."
-msgstr ""
+msgstr "按项目部门分列的已发放现金援助占比。"
 
-#: src/hope_live/web/chart_metadata.py:378
+#: src/hope_live/web/chart_metadata.py:376
 msgid ""
 "Sums delivered quantity in USD for the selected year and country, grouped by"
 " programme sector. The chart shows the largest sectors and groups the "
 "remainder as Other."
-msgstr ""
+msgstr "按项目部门汇总所选年份和国家的已发放美元金额。图表展示主要部门，其余归入“其他”。"
 
-#: src/hope_live/web/chart_metadata.py:382
+#: src/hope_live/web/chart_metadata.py:380
 msgid "Percentages are of total cash delivered in the selected scope."
-msgstr ""
+msgstr "百分比基于所选范围内已发放的现金总额计算。"
 
-#: src/hope_live/web/chart_metadata.py:385
+#: src/hope_live/web/chart_metadata.py:383
 msgid "Share of cash assistance delivered by payment mechanism."
-msgstr ""
+msgstr "按发放方式分列的已发放现金援助占比。"
 
-#: src/hope_live/web/chart_metadata.py:388
+#: src/hope_live/web/chart_metadata.py:386
 msgid ""
 "Sums delivered quantity in USD for the selected year and country, grouped by"
 " delivery mechanism. The chart shows the largest mechanisms and groups the "
 "remainder as Other."
-msgstr ""
+msgstr "按发放方式汇总所选年份和国家的已发放美元金额。图表展示主要发放方式，其余归入“其他”。"
 
-#: src/hope_live/web/chart_metadata.py:392
+#: src/hope_live/web/chart_metadata.py:390
 msgid ""
 "Payment mechanism is the HOPE delivery mechanism attached to the payment."
-msgstr ""
+msgstr "发放方式即付款记录所关联的 HOPE 发放机制。"
 
-#: src/hope_live/web/chart_metadata.py:395
+#: src/hope_live/web/chart_metadata.py:393
 msgid "Children reached through household programmes in the current data."
-msgstr ""
+msgstr "当前数据中通过家庭项目受益的儿童人数。"
 
-#: src/hope_live/web/chart_metadata.py:396
-#: src/hope_live/web/chart_metadata.py:409
-#: src/hope_live/web/chart_metadata.py:422
+#: src/hope_live/web/chart_metadata.py:394
+#: src/hope_live/web/chart_metadata.py:407
+#: src/hope_live/web/chart_metadata.py:420
 msgid ""
 "HOPE household registration and payment data — country report demographic "
 "feed."
-msgstr ""
+msgstr "HOPE 家庭登记与付款数据——国家报告人口统计数据流。"
 
-#: src/hope_live/web/chart_metadata.py:398
+#: src/hope_live/web/chart_metadata.py:396
 msgid ""
 "Sums the children recorded in the composition of reached households. A "
 "household is counted when it has at least one qualifying payment in the "
 "period; the children count follows the household's recorded composition."
-msgstr ""
+msgstr "汇总受益家庭构成中记录的儿童人数。家庭在周期内至少有一笔合格付款时即予计入；儿童人数依据家庭登记构成统计。"
 
-#: src/hope_live/web/chart_metadata.py:403
+#: src/hope_live/web/chart_metadata.py:401
 msgid ""
 "Where household composition or children's dates of birth are missing, the "
 "figure is understated. This is not an estimate of all children in need."
-msgstr ""
+msgstr "若家庭构成或儿童出生日期缺失，该数值会偏低。此数据并非对所有受困儿童总数的估算。"
 
-#: src/hope_live/web/chart_metadata.py:408
+#: src/hope_live/web/chart_metadata.py:406
 msgid "Families with at least one qualifying payment in the selected period."
-msgstr ""
+msgstr "所选周期内至少获得一笔合格付款的家庭。"
 
-#: src/hope_live/web/chart_metadata.py:411
+#: src/hope_live/web/chart_metadata.py:409
 msgid ""
 "Counts reached households distinctly. Qualifying payments must belong to "
 "accepted, finished or closed payment plans; failed, removed, conflicted and "
 "excluded payments are not included."
-msgstr ""
+msgstr "对受益家庭进行去重统计。合格付款必须属于已接受、已完成或已关闭的付款计划；失败、已移除、冲突及已排除的付款不计入内。"
 
-#: src/hope_live/web/chart_metadata.py:416
+#: src/hope_live/web/chart_metadata.py:414
 msgid ""
 "Families are counted from standard (household) programmes; social-worker "
 "programmes are reported separately."
-msgstr ""
+msgstr "家庭户数统计自标准（家庭）项目；社会工作者项目单独报告。"
 
-#: src/hope_live/web/chart_metadata.py:421
+#: src/hope_live/web/chart_metadata.py:419
 msgid "People reached through household programmes in the current data."
-msgstr ""
+msgstr "当前数据中通过家庭项目受益的总人数。"
 
-#: src/hope_live/web/chart_metadata.py:424
+#: src/hope_live/web/chart_metadata.py:422
 msgid ""
 "Sums the registered household size of reached households. A household is "
 "counted when it has at least one qualifying payment in the period, using the"
 " delivery date, then the entitlement date, then the payment status date."
-msgstr ""
+msgstr "汇总受益家庭的登记家庭规模。家庭在周期内至少有一笔合格付款时即予计入，日期依次采用发放日期、应享日期和付款状态日期。"
 
-#: src/hope_live/web/chart_metadata.py:428
+#: src/hope_live/web/chart_metadata.py:426
 msgid ""
 "Frontline (incentive) workers are reported separately and are not part of "
 "this figure."
-msgstr ""
+msgstr "一线（激励津贴）工作人员单独报告，不包含在此数字中。"
 
-#: src/hope_live/web/chart_metadata.py:431
+#: src/hope_live/web/chart_metadata.py:429
 msgid "Cash disbursed directly to beneficiaries in the current data."
-msgstr ""
+msgstr "当前数据中直接发放给受益人的现金金额。"
 
-#: src/hope_live/web/chart_metadata.py:434
+#: src/hope_live/web/chart_metadata.py:432
 msgid ""
 "Sums delivered quantity in USD, grouped by sector to avoid double counting. "
 "Entitlement quantity is used only when a delivery amount is not recorded."
-msgstr ""
+msgstr "按部门汇总已发放美元金额以避免重复计算。仅在未记录发放金额时才采用应享金额。"
 
-#: src/hope_live/web/chart_metadata.py:437
+#: src/hope_live/web/chart_metadata.py:435
 msgid ""
 "The figure covers direct cash transfers, not the full operational budget."
-msgstr ""
+msgstr "该数值仅涵盖直接现金转移支付，不包括全部运营预算。"
 
-#: src/hope_live/web/chart_metadata.py:440
+#: src/hope_live/web/chart_metadata.py:438
 msgid "Number of cash transfers delivered in the current data."
 msgstr "当前数据中已发放的现金转账数量。"
 
-#: src/hope_live/web/chart_metadata.py:443
+#: src/hope_live/web/chart_metadata.py:441
 msgid ""
 "Sums payment records grouped by sector to avoid double counting. A payment "
 "record is not a unique recipient or a payment plan."
 msgstr "按部门汇总付款记录以避免重复计算。付款记录不是唯一受益人或付款计划。"
 
-#: src/hope_live/web/chart_metadata.py:446
+#: src/hope_live/web/chart_metadata.py:444
 msgid ""
 "Average transfer value divides cash disbursed by the number of payment "
 "records."
 msgstr "平均转账金额等于现金发放总额除以付款记录数量。"
 
-#: src/hope_live/web/chart_metadata.py:449
+#: src/hope_live/web/chart_metadata.py:447
 msgid "Frontline social workers assisted through social-worker programmes."
-msgstr ""
+msgstr "通过社会工作者项目获得支持的一线社会工作者。"
 
-#: src/hope_live/web/chart_metadata.py:450
+#: src/hope_live/web/chart_metadata.py:448
 msgid ""
 "HOPE social-worker programme records — country report demographic feed."
-msgstr ""
+msgstr "HOPE 社会工作者项目记录——国家报告人口统计数据流。"
 
-#: src/hope_live/web/chart_metadata.py:452
+#: src/hope_live/web/chart_metadata.py:450
 msgid ""
 "Sums the beneficiaries recorded for social-worker programmes. In these "
 "programmes each record represents one worker, so the beneficiary total is "
 "the workforce count."
-msgstr ""
+msgstr "汇总社会工作者项目登记的受益人数量。在此类项目中，每条记录代表一名工作人员，因此受益人总数即工作人员数量。"
 
-#: src/hope_live/web/chart_metadata.py:455
+#: src/hope_live/web/chart_metadata.py:453
 msgid ""
 "Social-worker programmes are not part of household, children or persons-"
 "with-disabilities counts."
-msgstr ""
-
-#~ msgid "UNICEF"
-#~ msgstr "联合国儿童基金会"
-
-#~ msgid "Humanitarian cash"
-#~ msgstr "人道主义现金"
-
-#~ msgid "Operations and Programme"
-#~ msgstr "运营及计划"
-
-#~ msgid "Ecosystem"
-#~ msgstr "生态系统"
-
-#~ msgid "Updated regularly"
-#~ msgstr "定期更新"
-
-#, fuzzy
-#~ msgid "Latest:"
-#~ msgstr "最新数据："
-
-#~ msgid "Across"
-#~ msgstr "穿过"
-
-#~ msgid "Households Reached"
-#~ msgstr "覆盖家庭"
-
-#~ msgid "Humanitarian assistance"
-#~ msgstr "人道主义援助"
-
-#~ msgid "Active Countries"
-#~ msgstr "活跃国家"
-
-#~ msgid "HOPE Deployments"
-#~ msgstr "HOPE 部署"
-
-#~ msgid "Reconciled Transactions"
-#~ msgstr "已对账交易"
-
-#~ msgid "Where children need help the most"
-#~ msgstr "孩子们最需要帮助的地方"
-
-#~ msgid "Children in Need of Humanitarian Assistance (2026)"
-#~ msgstr "需要人道主义援助的儿童（2026）"
-
-#~ msgid "Explore map"
-#~ msgstr "探索地图"
-
-#, fuzzy
-#~ msgid "Selected indicators (global delivery)"
-#~ msgstr "选定指标（全球）"
-
-#~ msgid "Trend period"
-#~ msgstr "显示时段"
-
-#~ msgid "Last 5 years"
-#~ msgstr "过去 5 年"
-
-#~ msgid "Explore the Dashboard"
-#~ msgstr "探索仪表板"
-
-#, fuzzy
-#~ msgid "Financial"
-#~ msgstr "财务仪表板"
-
-#~ msgid "Transfer values & logistics"
-#~ msgstr "转移价值和物流"
-
-#, fuzzy
-#~ msgid "Population & reach"
-#~ msgstr "人口和家庭"
-
-#~ msgid "Feedback & grievances"
-#~ msgstr "反馈和申诉"
-
-#, fuzzy
-#~ msgid "Reconciliation & metrics"
-#~ msgstr "和解时间表"
-
-#~ msgid "Latest updates"
-#~ msgstr "最新更新"
-
-#~ msgid "Read details"
-#~ msgstr "阅读详情"
-
-#~ msgid "May 19, 2026"
-#~ msgstr "2026年5月19日"
-
-#~ msgid ""
-#~ "New features and enhancements 1. Added the Facility Workers beneficiary "
-#~ "group to the programme setup page, enabling visualization..."
-#~ msgstr "新功能和增强功能 1. 在计划设置页面中添加了设施工作人员受益人群组，从而实现了可视化..."
-
-#~ msgid "April 8, 2026"
-#~ msgstr "2026年4月8日"
-
-#~ msgid ""
-#~ "New features and enhancements 1. Added a new filter to select Household or "
-#~ "Individual IDs for alternate collectors receiving p..."
-#~ msgstr "新功能和增强功能 1. 添加了新过滤器，以针对接收...的备选收集器选择家庭或个人 ID"
-
-#~ msgid "March 16, 2026"
-#~ msgstr "2026年3月16日"
-
-#~ msgid ""
-#~ "New features and enhancements 1. Added a Currency Conversion section to the "
-#~ "payment plan module, allowing users to override the UN..."
-#~ msgstr "新功能和增强功能 1. 在付款计划模块中添加了货币换算部分，允许用户覆盖联合国..."
-
-#~ msgid "We are committed to data protection, privacy and ethical use."
-#~ msgstr "我们致力于数据保护、隐私和道德使用。"
-
-#~ msgid "Give feedback"
-#~ msgstr "提供反馈"
-
-#~ msgid "Help us improve HOPE by sharing your feedback."
-#~ msgstr "分享您的反馈，帮助我们改进 HOPE。"
-
-#~ msgid "Stay connected"
-#~ msgstr "保持联系"
-
-#~ msgid "Subscribe to updates and new data releases."
-#~ msgstr "订阅更新和新数据发布。"
-
-#, fuzzy
-#~ msgid "Programme cohort:"
-#~ msgstr "节目质量"
-
-#~ msgid "New"
-#~ msgstr "新建"
-
-#~ msgid "Global cash operations"
-#~ msgstr "全球现金业务"
-
-#~ msgid "Verification success rate"
-#~ msgstr "验证成功率"
-
-#~ msgid "Financial dashboard"
-#~ msgstr "财务仪表板"
-
-#~ msgid "1 year"
-#~ msgstr "1年"
-
-#~ msgid "Completion rate dashboard"
-#~ msgstr "完成率仪表板"
-
-#~ msgid "Delivery types"
-#~ msgstr "交付类型"
-
-#~ msgid "Regions"
-#~ msgstr "地区"
-
-#~ msgid "Countries"
-#~ msgstr "国家"
-
-#~ msgid "Status"
-#~ msgstr "地位"
-
-#~ msgid "Priority"
-#~ msgstr "优先事项"
-
-#~ msgid "Category"
-#~ msgstr "类别"
-
-#~ msgid "Issue type"
-#~ msgstr "问题类型"
-
-#~ msgid "Documentation"
-#~ msgstr "文档"
-
-#~ msgid "Quantity (QTY)"
-#~ msgstr "数量 (QTY)"
-
-#~ msgid "Total Quantity Distributed"
-#~ msgstr "分发的总数量"
-
-#~ msgid "Search for a country, indicator, dataset..."
-#~ msgstr "搜索国家、指标、数据集..."
-
-#~ msgid ""
-#~ "* Use the slider handles at the bottom of the timeline or click and drag to "
-#~ "filter dates."
-#~ msgstr "* 使用时间线底部的滑块手柄或单击并拖动来过滤日期。"
-
-#~ msgid "Completion rates & metrics"
-#~ msgstr "完成率和指标"
-
-#~ msgid "Story"
-#~ msgstr "故事"
-
-#~ msgid "Recent"
-#~ msgstr "最近的"
-
-#~ msgid ""
-#~ "Lifeline of hope for families after Typhoon Yagi: UNICEF's first "
-#~ "humanitarian cash transfers in Viet Nam."
-#~ msgstr "八木台风过后家庭的希望生命线：联合国儿童基金会在越南的首次人道主义现金转移。"
-
-#~ msgid "Read story"
-#~ msgstr "读故事"
-
-#~ msgid "Report"
-#~ msgstr "报告"
-
-#~ msgid "Featured"
-#~ msgstr "精选"
-
-#~ msgid ""
-#~ "Advancing Sustainable Funding for UNICEF Digital Public Good (HOPE) cash "
-#~ "assistance platform."
-#~ msgstr "推进联合国儿童基金会数字公益 (HOPE) 现金援助平台的可持续融资。"
-
-#~ msgid "View report"
-#~ msgstr "查看报告"
-
-#~ msgid "Podcast"
-#~ msgstr "播客"
-
-#~ msgid ""
-#~ "Bringing HOPE To Whoever Needs It Most: podcast on secure data and risk-"
-#~ "informed cash transfers."
-#~ msgstr "将希望带给最需要的人：有关安全数据和风险提示现金转移的播客。"
-
-#~ msgid "Listen now"
-#~ msgstr "现在听"
+msgstr "社会工作者项目不计入家庭、儿童或残障人士统计数据。"

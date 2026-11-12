@@ -41,7 +41,7 @@
         <div class="bg-white rounded-xl shadow-2xs border border-gray-200 p-3 border-l-4 border-unicef-blue flex flex-col justify-center min-h-[84px]">
             <h3 class="text-gray-500 text-[10px] sm:text-[11px] font-bold">{% translate "Total tickets" %}</h3>
             <p id="total-tickets" class="text-xl sm:text-2xl font-black text-blue-700 mt-0.5 leading-none">0</p>
-            {% include "includes/chart_info.html" with definition="Number of grievance tickets." source="HOPE grievances" method="Sum of ticket_count." %}
+            {% include "includes/chart_info.html" with definition=_("Number of grievance tickets.") source=_("HOPE grievances") method=_("Sum of ticket_count.") %}
         </div>
         <div class="bg-white rounded-xl shadow-2xs border border-gray-200 p-3 flex flex-col justify-center min-h-[84px]">
             <h3 class="text-gray-500 text-[10px] font-bold">{% translate "New (Not Assigned)" %}</h3>

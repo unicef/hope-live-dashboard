@@ -15,8 +15,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
-"&& n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
 
 #: src/hope_live/theme/static/js/completion_visuals.js:224
 #: src/hope_live/theme/static/js/completion_visuals.js:227
@@ -54,7 +53,7 @@ msgstr "التسوية المعلقة"
 #: src/hope_live/theme/static/js/completion_visuals.js:456
 #: src/hope_live/theme/static/js/completion_visuals.min.js:1
 msgid "Total"
-msgstr ""
+msgstr "الإجمالي"
 
 #: src/hope_live/theme/static/js/completion_visuals.js:574
 #: src/hope_live/theme/static/js/completion_visuals.min.js:1
@@ -103,7 +102,7 @@ msgstr "حالة التسوية حسب البلد (بالدولار الأمري
 #: src/hope_live/theme/static/js/completion_visuals.js:742
 #: src/hope_live/theme/static/js/completion_visuals.min.js:1
 msgid "Reconciled payments"
-msgstr "المدفوعات التوفيقية"
+msgstr "المدفوعات المسوّاة"
 
 #: src/hope_live/theme/static/js/completion_visuals.js:743
 #: src/hope_live/theme/static/js/completion_visuals.min.js:1
@@ -112,10 +111,9 @@ msgstr "مدفوعات التسوية المعلقة"
 
 #: src/hope_live/theme/static/js/completion_visuals.js:744
 #: src/hope_live/theme/static/js/completion_visuals.min.js:1
-#, fuzzy
 #| msgid "Reconciliation Timeline (USD)"
 msgid "Reconciliation timeline"
-msgstr "الخط الزمني للتسوية (بالدولار الأمريكي)"
+msgstr "الخط الزمني للتسوية"
 
 #: src/hope_live/theme/static/js/completion_visuals.js:745
 #: src/hope_live/theme/static/js/completion_visuals.min.js:1
@@ -125,37 +123,37 @@ msgstr "حالة المطابقة حسب البلد"
 #: src/hope_live/theme/static/js/dashboard_visuals.js:59
 #: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
 msgid "Middle East and North Africa (MENA)"
-msgstr ""
+msgstr "الشرق الأوسط وشمال أفريقيا (MENA)"
 
 #: src/hope_live/theme/static/js/dashboard_visuals.js:60
 #: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
 msgid "Eastern and Southern Africa (ESA)"
-msgstr ""
+msgstr "شرق وجنوب أفريقيا (ESA)"
 
 #: src/hope_live/theme/static/js/dashboard_visuals.js:61
 #: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
 msgid "Europe and Central Asia (ECA)"
-msgstr ""
+msgstr "أوروبا وآسيا الوسطى (ECA)"
 
 #: src/hope_live/theme/static/js/dashboard_visuals.js:62
 #: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
 msgid "West and Central Africa (WCA)"
-msgstr ""
+msgstr "غرب ووسط أفريقيا (WCA)"
 
 #: src/hope_live/theme/static/js/dashboard_visuals.js:63
 #: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
 msgid "Latin America and Caribbean (LAC)"
-msgstr ""
+msgstr "أمريكا اللاتينية ومنطقة البحر الكاريبي (LAC)"
 
 #: src/hope_live/theme/static/js/dashboard_visuals.js:64
 #: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
 msgid "East Asia and Pacific (EAP)"
-msgstr ""
+msgstr "شرق آسيا والمحيط الهادئ (EAP)"
 
 #: src/hope_live/theme/static/js/dashboard_visuals.js:65
 #: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
 msgid "South Asia (SA)"
-msgstr ""
+msgstr "جنوب آسيا (SA)"
 
 #: src/hope_live/theme/static/js/dashboard_visuals.js:306
 #: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
@@ -165,17 +163,17 @@ msgstr "الجدول الزمني للإنفاق"
 #: src/hope_live/theme/static/js/dashboard_visuals.js:307
 #: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
 msgid "Cash disbursed by sector"
-msgstr ""
+msgstr "المبالغ النقدية المصروفة حسب القطاع"
 
 #: src/hope_live/theme/static/js/dashboard_visuals.js:308
 #: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
 msgid "Cash disbursed by delivery type"
-msgstr ""
+msgstr "المبالغ النقدية المصروفة حسب آلية الصرف"
 
 #: src/hope_live/theme/static/js/dashboard_visuals.js:309
 #: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
 msgid "Cash disbursed by region"
-msgstr ""
+msgstr "المبالغ النقدية المصروفة حسب الإقليم"
 
 #: src/hope_live/theme/static/js/dashboard_visuals.js:310
 #: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
@@ -185,12 +183,12 @@ msgstr "الأموال المصروفة (المدفوعة) حسب البلد"
 #: src/hope_live/theme/static/js/dashboard_visuals.js:311
 #: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
 msgid "Cash disbursed by programme"
-msgstr ""
+msgstr "المبالغ النقدية المصروفة حسب البرنامج"
 
 #: src/hope_live/theme/static/js/dashboard_visuals.js:312
 #: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
 msgid "Cash disbursed by financial service provider (FSP)"
-msgstr ""
+msgstr "المبالغ النقدية المصروفة حسب مقدم الخدمات المالية (FSP)"
 
 #: src/hope_live/theme/static/js/dashboard_visuals.js:314
 #: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
@@ -200,32 +198,32 @@ msgstr "الخط الزمني للمدفوعات"
 #: src/hope_live/theme/static/js/dashboard_visuals.js:315
 #: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
 msgid "Payments by sector"
-msgstr ""
+msgstr "المدفوعات حسب القطاع"
 
 #: src/hope_live/theme/static/js/dashboard_visuals.js:316
 #: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
 msgid "Payments by delivery type"
-msgstr ""
+msgstr "المدفوعات حسب آلية الصرف"
 
 #: src/hope_live/theme/static/js/dashboard_visuals.js:317
 #: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
 msgid "Payments by region"
-msgstr ""
+msgstr "المدفوعات حسب الإقليم"
 
 #: src/hope_live/theme/static/js/dashboard_visuals.js:318
 #: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
 msgid "Payments by country"
-msgstr ""
+msgstr "المدفوعات حسب البلد"
 
 #: src/hope_live/theme/static/js/dashboard_visuals.js:319
 #: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
 msgid "Payments by programme"
-msgstr ""
+msgstr "المدفوعات حسب البرنامج"
 
 #: src/hope_live/theme/static/js/dashboard_visuals.js:320
 #: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
 msgid "Payments by financial service provider (FSP)"
-msgstr ""
+msgstr "المدفوعات حسب مقدم الخدمات المالية (FSP)"
 
 #: src/hope_live/theme/static/js/dashboard_visuals.js:346
 #: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
@@ -244,86 +242,82 @@ msgstr "أخرى"
 
 #: src/hope_live/theme/static/js/dashboard_visuals.js:704
 #: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
-#, fuzzy
 #| msgid "Spending Timeline"
 msgid "In pipeline"
-msgstr "الجدول الزمني للإنفاق"
+msgstr "قيد المعالجة"
 
 #: src/hope_live/theme/static/js/dashboard_visuals.js:705
 #: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
 msgid "Delivered"
-msgstr ""
+msgstr "تم التسليم"
 
 #: src/hope_live/theme/static/js/dashboard_visuals.js:747
 #: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
-#, fuzzy
 #| msgid "Spending Timeline"
 msgid "Pending in pipeline"
-msgstr "الجدول الزمني للإنفاق"
+msgstr "معلق قيد المعالجة"
 
 #: src/hope_live/theme/static/js/dashboard_visuals.js:780
 #: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
 #: src/hope_live/theme/static/js/grievance_visuals.js:712
 #: src/hope_live/theme/static/js/grievance_visuals.min.js:1
 msgid "Show top 10"
-msgstr ""
+msgstr "عرض أعلى 10"
 
 #: src/hope_live/theme/static/js/dashboard_visuals.js:780
 #: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
 #: src/hope_live/theme/static/js/grievance_visuals.js:712
 #: src/hope_live/theme/static/js/grievance_visuals.min.js:1
 msgid "Show all"
-msgstr ""
+msgstr "عرض الكل"
 
 #: src/hope_live/theme/static/js/demographic_visuals.js:16
 #: src/hope_live/theme/static/js/demographic_visuals.js:472
 #: src/hope_live/theme/static/js/demographic_visuals.min.js:1
 msgid "Individuals reached"
-msgstr "الأفراد الذين تم الوصول إليهم"
+msgstr "الأفراد المستفيدون"
 
 #: src/hope_live/theme/static/js/demographic_visuals.js:17
 #: src/hope_live/theme/static/js/demographic_visuals.min.js:1
 msgid "Households reached"
-msgstr "وصلت الأسر"
+msgstr "الأسر المستفيدة"
 
 #: src/hope_live/theme/static/js/demographic_visuals.js:18
 #: src/hope_live/theme/static/js/demographic_visuals.min.js:1
 msgid "Children reached"
-msgstr "وصل الأطفال"
+msgstr "الأطفال المستفيدون"
 
 #: src/hope_live/theme/static/js/demographic_visuals.js:19
 #: src/hope_live/theme/static/js/demographic_visuals.min.js:1
 msgid "Persons with disabilities reached"
-msgstr ""
+msgstr "الأشخاص ذوو الإعاقة المستفيدون"
 
 #: src/hope_live/theme/static/js/demographic_visuals.js:438
 #: src/hope_live/theme/static/js/demographic_visuals.min.js:1
-#, fuzzy
 #| msgid "Spending Timeline"
 msgid "Timeline"
-msgstr "الجدول الزمني للإنفاق"
+msgstr "الخط الزمني"
 
 #: src/hope_live/theme/static/js/demographic_visuals.js:441
 #: src/hope_live/theme/static/js/demographic_visuals.min.js:1
 msgid "Sector share of"
-msgstr ""
+msgstr "حصة القطاع من"
 
 #: src/hope_live/theme/static/js/demographic_visuals.js:444
 #: src/hope_live/theme/static/js/demographic_visuals.min.js:1
 msgid "Country share of"
-msgstr ""
+msgstr "حصة البلد من"
 
 #: src/hope_live/theme/static/js/demographic_visuals.js:472
 #: src/hope_live/theme/static/js/demographic_visuals.min.js:1
-#, fuzzy
 #| msgid "PWD Reached"
 msgid "Workers reached"
-msgstr "الأشخاص ذوو الإعاقة الذين تم الوصول إليهم"
+msgstr "العاملون المستفيدون"
 
 #: src/hope_live/theme/static/js/demographic_visuals.js:475
 #: src/hope_live/theme/static/js/demographic_visuals.min.js:1
 msgid "Workers"
-msgstr ""
+msgstr "العاملون"
 
 #: src/hope_live/theme/static/js/demographic_visuals.js:475
 #: src/hope_live/theme/static/js/demographic_visuals.min.js:1
@@ -583,7 +577,7 @@ msgstr "غير محدد"
 #: src/hope_live/theme/static/js/grievance_visuals.js:648
 #: src/hope_live/theme/static/js/grievance_visuals.min.js:1
 msgid "tickets"
-msgstr "تذاكر"
+msgstr "بلاغات"
 
 #: src/hope_live/theme/static/js/grievance_visuals.js:282
 #: src/hope_live/theme/static/js/grievance_visuals.js:318
@@ -602,219 +596,173 @@ msgstr "أيام"
 #: src/hope_live/theme/static/js/grievance_visuals.js:385
 #: src/hope_live/theme/static/js/grievance_visuals.min.js:1
 msgid "closed tickets"
-msgstr "التذاكر المغلقة"
+msgstr "البلاغات المغلقة"
 
 #: src/hope_live/theme/static/js/risk_visuals.js:6
 #: src/hope_live/theme/static/js/risk_visuals.min.js:1
 msgid "Critical"
-msgstr ""
+msgstr "حرج"
 
 #: src/hope_live/theme/static/js/risk_visuals.js:7
 #: src/hope_live/theme/static/js/risk_visuals.min.js:1
 msgid "Warning"
-msgstr ""
+msgstr "تحذير"
 
 #: src/hope_live/theme/static/js/risk_visuals.js:8
 #: src/hope_live/theme/static/js/risk_visuals.min.js:1
 msgid "Caution"
-msgstr ""
+msgstr "تنبيه"
 
 #: src/hope_live/theme/static/js/risk_visuals.js:9
 #: src/hope_live/theme/static/js/risk_visuals.min.js:1
 msgid "Normal"
-msgstr ""
+msgstr "طبيعي"
 
 #: src/hope_live/theme/static/js/risk_visuals.js:12
 #: src/hope_live/theme/static/js/risk_visuals.js:190
 #: src/hope_live/theme/static/js/risk_visuals.js:312
 #: src/hope_live/theme/static/js/risk_visuals.min.js:1
 msgid "Increasing"
-msgstr ""
+msgstr "في تزايد"
 
 #: src/hope_live/theme/static/js/risk_visuals.js:13
 #: src/hope_live/theme/static/js/risk_visuals.js:193
 #: src/hope_live/theme/static/js/risk_visuals.js:314
 #: src/hope_live/theme/static/js/risk_visuals.min.js:1
 msgid "Decreasing"
-msgstr ""
+msgstr "في تناقص"
 
 #: src/hope_live/theme/static/js/risk_visuals.js:14
 #: src/hope_live/theme/static/js/risk_visuals.js:195
 #: src/hope_live/theme/static/js/risk_visuals.min.js:1
 msgid "Neutral"
-msgstr ""
+msgstr "مستقر"
 
 #: src/hope_live/theme/static/js/risk_visuals.js:19
 #: src/hope_live/theme/static/js/risk_visuals.js:26
 #: src/hope_live/theme/static/js/risk_visuals.min.js:1
-#, fuzzy
 #| msgid "Payment Verification"
 msgid "Payment Operations"
-msgstr "التحقق من الدفع"
+msgstr "عمليات الدفع"
 
 #: src/hope_live/theme/static/js/risk_visuals.js:20
 #: src/hope_live/theme/static/js/risk_visuals.js:27
 #: src/hope_live/theme/static/js/risk_visuals.min.js:1
 msgid "Payment, Reconciliation & Verification bottlenecks"
-msgstr ""
+msgstr "اختناقات الدفع والتسوية والتحقق"
 
 #: src/hope_live/theme/static/js/risk_visuals.js:33
 #: src/hope_live/theme/static/js/risk_visuals.min.js:1
-#, fuzzy
 #| msgid "Registration Related Complaint"
 msgid "Registration & Population"
-msgstr "شكوى متعلقة بالتسجيل"
+msgstr "التسجيل وبيانات السكان"
 
 #: src/hope_live/theme/static/js/risk_visuals.js:34
 #: src/hope_live/theme/static/js/risk_visuals.min.js:1
 msgid "KYC, Identity documents & Geographic verification"
-msgstr ""
+msgstr "اعرف عميلك (KYC) ووثائق الهوية والتحقق الجغرافي"
 
 #: src/hope_live/theme/static/js/risk_visuals.js:40
 #: src/hope_live/theme/static/js/risk_visuals.min.js:1
-#, fuzzy
 #| msgid "Needs Adjudication"
 msgid "Deduplication & Adjudication"
-msgstr "يتطلب الفصل فيه"
+msgstr "إزالة التكرار والفصل في الحالات"
 
 #: src/hope_live/theme/static/js/risk_visuals.js:41
 #: src/hope_live/theme/static/js/risk_visuals.min.js:1
 msgid "Biometric, Needs-Adjudication & Cross-channel duplicate issues"
 msgstr ""
+"مشكلات التكرار البيومتري والحالات التي تتطلب الفصل والتكرار عبر القنوات"
 
 #: src/hope_live/theme/static/js/risk_visuals.js:48
 #: src/hope_live/theme/static/js/risk_visuals.min.js:1
 msgid "PVP execution, overdue tickets & high failure rates"
 msgstr ""
+"تنفيذ التحقق بعد الدفع (PVP) والبلاغات المتأخرة ومعدلات الفشل المرتفعة"
 
 #: src/hope_live/theme/static/js/risk_visuals.js:54
 #: src/hope_live/theme/static/js/risk_visuals.js:61
 #: src/hope_live/theme/static/js/risk_visuals.min.js:1
 msgid "Grievances & Safeguarding"
-msgstr ""
+msgstr "الشكاوى والحماية من الاستغلال والانتهاك"
 
 #: src/hope_live/theme/static/js/risk_visuals.js:55
 #: src/hope_live/theme/static/js/risk_visuals.js:62
 #: src/hope_live/theme/static/js/risk_visuals.min.js:1
 msgid "Sensitive complaints, zero-reporting & FSP concentrations"
-msgstr ""
+msgstr "الشكاوى الحساسة وانعدام التبليغ وتركّز مقدمي الخدمات المالية"
 
 #: src/hope_live/theme/static/js/risk_visuals.js:68
 #: src/hope_live/theme/static/js/risk_visuals.min.js:1
 msgid "Targeting & Eligibility"
-msgstr ""
+msgstr "الاستهداف والأهلية"
 
 #: src/hope_live/theme/static/js/risk_visuals.js:69
 #: src/hope_live/theme/static/js/risk_visuals.min.js:1
 msgid "Vulnerability criteria & payment readiness anomalies"
-msgstr ""
+msgstr "اختلالات معايير الهشاشة والجاهزية للدفع"
 
 #: src/hope_live/theme/static/js/risk_visuals.js:190
 #: src/hope_live/theme/static/js/risk_visuals.min.js:1
 msgid "Up"
-msgstr ""
+msgstr "ارتفاع"
 
 #: src/hope_live/theme/static/js/risk_visuals.js:193
 #: src/hope_live/theme/static/js/risk_visuals.min.js:1
 msgid "Down"
-msgstr ""
+msgstr "انخفاض"
 
 #: src/hope_live/theme/static/js/risk_visuals.js:195
 #: src/hope_live/theme/static/js/risk_visuals.js:310
 #: src/hope_live/theme/static/js/risk_visuals.min.js:1
 msgid "Stable"
-msgstr ""
+msgstr "مستقر"
 
 #: src/hope_live/theme/static/js/risk_visuals.js:209
 #: src/hope_live/theme/static/js/risk_visuals.min.js:1
 msgid "modules"
-msgstr ""
+msgstr "وحدات"
 
 #: src/hope_live/theme/static/js/risk_visuals.js:213
 #: src/hope_live/theme/static/js/risk_visuals.min.js:1
 msgid "No active module issues"
-msgstr ""
+msgstr "لا توجد مشكلات نشطة في الوحدات"
 
 #: src/hope_live/theme/static/js/risk_visuals.js:272
 #: src/hope_live/theme/static/js/risk_visuals.min.js:1
 msgid "No Operational Risk Anomalies"
-msgstr ""
+msgstr "لا توجد اختلالات في المخاطر التشغيلية"
 
 #: src/hope_live/theme/static/js/risk_visuals.js:273
 #: src/hope_live/theme/static/js/risk_visuals.min.js:1
 msgid ""
 "All operational thresholds are within normal tolerances for the selected "
 "filters."
-msgstr ""
+msgstr "جميع العتبات التشغيلية ضمن الحدود الطبيعية للمرشحات المحددة."
 
 #: src/hope_live/theme/static/js/risk_visuals.js:289
 #: src/hope_live/theme/static/js/risk_visuals.min.js:1
 msgid "Operational metrics and bottlenecks"
-msgstr ""
+msgstr "المؤشرات التشغيلية ونقاط الاختناق"
 
 #: src/hope_live/theme/static/js/risk_visuals.js:317
 #: src/hope_live/theme/static/js/risk_visuals.js:401
 #: src/hope_live/theme/static/js/risk_visuals.min.js:1
 msgid "issues"
-msgstr ""
+msgstr "مشكلات"
 
 #: src/hope_live/theme/static/js/risk_visuals.js:350
 #: src/hope_live/theme/static/js/risk_visuals.js:426
 #: src/hope_live/theme/static/js/risk_visuals.min.js:1
 msgid "Issues"
-msgstr ""
+msgstr "المشكلات"
 
 #: src/hope_live/theme/static/js/risk_visuals.js:411
 #: src/hope_live/theme/static/js/risk_visuals.min.js:1
 msgid "Download PNG"
-msgstr ""
+msgstr "تنزيل صورة PNG"
 
 #: src/hope_live/theme/static/js/risk_visuals.js:577
 #: src/hope_live/theme/static/js/risk_visuals.min.js:1
 msgid "No matching results"
-msgstr ""
-
-#~ msgid "Amount by beneficiary group"
-#~ msgstr "المبلغ حسب مجموعة المستفيدين"
-
-#~ msgid "Amount (USD)"
-#~ msgstr "المبلغ (دولار أمريكي)"
-
-#, fuzzy
-#~| msgid "Individuals Reached"
-#~ msgid "Individuals reached by beneficiary group"
-#~ msgstr "الأفراد الذين تم الوصول إليهم"
-
-#~ msgid "New"
-#~ msgstr "جديد"
-
-#, fuzzy
-#~| msgid "Reconciled"
-#~ msgid "Reconciled volume"
-#~ msgstr "مسواة"
-
-#, fuzzy
-#~| msgid "Reconciliation Timeline"
-#~ msgid "Reconciliation rate (%)"
-#~ msgstr "الجدول الزمني للمصالحة"
-
-#~ msgid "PWD reached"
-#~ msgstr "الأشخاص ذوو الإعاقة الذين تم الوصول إليهم"
-
-#~ msgid "Quantity"
-#~ msgstr "الكمية"
-
-#~ msgid "Quantity Distribution Timeline"
-#~ msgstr "الخط الزمني لتوزيع الكميات"
-
-#~ msgid "Households"
-#~ msgstr "الأسر"
-
-#~ msgid "Children"
-#~ msgstr "الأطفال"
-
-#~ msgid "PWD"
-#~ msgstr "الأشخاص ذوو الإعاقة"
-
-#~ msgid "Resolved & Closed"
-#~ msgstr "تم حلها وإغلاقها"
+msgstr "لا توجد نتائج مطابقة"

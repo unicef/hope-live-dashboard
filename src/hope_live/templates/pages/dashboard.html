@@ -57,17 +57,17 @@
         <div class="bg-white rounded-xl shadow-2xs border border-gray-200 p-3 border-l-4 border-green-500 flex flex-col justify-center min-h-[84px]">
             <h3 class="text-gray-500 text-[10px] sm:text-[11px] font-bold">{% translate "Total amount paid" %}</h3>
             <p id="total-amount-paid" class="text-xl sm:text-2xl font-black text-emerald-600 mt-0.5 leading-none">$0.00</p>
-            {% include "includes/chart_info.html" with definition="Cash paid out to beneficiaries in USD." source="HOPE payments" method="Sum of delivered quantity (USD) for successful payment statuses (Distribution Successful, Partially Distributed, Transaction Successful); entitlement quantity is used when delivery is not recorded." %}
+            {% include "includes/chart_info.html" with definition=_("Cash paid out to beneficiaries in USD.") source=_("HOPE payments") method=_("Sum of delivered quantity (USD) for successful payment statuses (Distribution Successful, Partially Distributed, Transaction Successful); entitlement quantity is used when delivery is not recorded.") %}
         </div>
         <div class="bg-white rounded-xl shadow-2xs border border-gray-200 p-3 border-l-4 border-blue-500 flex flex-col justify-center min-h-[84px]">
             <h3 class="text-gray-500 text-[10px] sm:text-[11px] font-bold">{% translate "Number of Payment Records" %}</h3>
             <p id="total-payments" class="text-xl sm:text-2xl font-black text-blue-700 mt-0.5 leading-none">0</p>
-            {% include "includes/chart_info.html" with definition="Number of payment records in the selected period." source="HOPE payments" method="Count of payment records under the active metric, cohort and filters — not payment plans, unique recipients, or only completed payments." %}
+            {% include "includes/chart_info.html" with definition=_("Number of payment records in the selected period.") source=_("HOPE payments") method=_("Count of payment records under the active metric, cohort and filters — not payment plans, unique recipients, or only completed payments.") %}
         </div>
         <div class="bg-white rounded-xl shadow-2xs border border-gray-200 p-3 border-l-4 border-yellow-500 flex flex-col justify-center min-h-[84px]">
             <h3 class="text-gray-500 text-[10px] sm:text-[11px] font-bold">{% translate "Outstanding payments" %}</h3>
             <p id="outstanding-payments" class="text-xl sm:text-2xl font-black text-amber-600 mt-0.5 leading-none">$0.00</p>
-            {% include "includes/chart_info.html" with definition="Amount not yet paid." source="HOPE payments" method="Sum of entitlement (USD) for payments still in pending statuses: SENT TO PAYMENT GATEWAY, SENT TO FSP and PENDING." %}
+            {% include "includes/chart_info.html" with definition=_("Amount not yet paid.") source=_("HOPE payments") method=_("Sum of entitlement (USD) for payments still in pending statuses: SENT TO PAYMENT GATEWAY, SENT TO FSP and PENDING.") %}
         </div>
     </div>
 

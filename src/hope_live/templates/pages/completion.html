@@ -41,18 +41,18 @@
         <div class="bg-white rounded-xl shadow-2xs border border-gray-200 p-3 border-l-4 border-green-500 flex flex-col justify-center min-h-[84px]">
             <h3 id="reconciled-card-title" class="text-gray-500 text-[10px] sm:text-[11px] font-bold">{% translate "Reconciled payments" %}</h3>
             <p id="total-reconciled" class="text-xl sm:text-2xl font-black text-emerald-600 mt-0.5 leading-none">0</p>
-            {% include "includes/chart_info.html" with definition="Payments that have been reconciled." source="HOPE payments" method="Count of payments with reconciled status." %}
+            {% include "includes/chart_info.html" with definition=_("Payments that have been reconciled.") source=_("HOPE payments") method=_("Count of payments with reconciled status.") %}
         </div>
         <div class="bg-white rounded-xl shadow-2xs border border-gray-200 p-3 border-l-4 border-amber-500 flex flex-col justify-center min-h-[84px]">
             <h3 id="opened-card-title" class="text-gray-500 text-[10px] sm:text-[11px] font-bold">{% translate "Pending Reconciliation" %}</h3>
             <p id="total-opened" class="text-xl sm:text-2xl font-black text-amber-600 mt-0.5 leading-none">0</p>
-            {% include "includes/chart_info.html" with definition="Payments pending reconciliation." source="HOPE payments" method="Count of payments still awaiting reconciliation." %}
+            {% include "includes/chart_info.html" with definition=_("Payments pending reconciliation.") source=_("HOPE payments") method=_("Count of payments still awaiting reconciliation.") %}
         </div>
         <div class="bg-white rounded-xl shadow-2xs border border-gray-200 p-3 border-l-4 border-green-500 flex justify-between items-center min-h-[84px]">
             <div>
                 <h3 class="text-gray-500 text-[10px] sm:text-[11px] font-bold">{% translate "Reconciliation rate" %}</h3>
                 <p id="completion-rate-text" class="text-xl sm:text-2xl font-black text-emerald-600 mt-0.5 leading-none">0%</p>
-                {% include "includes/chart_info.html" with definition="Share of payments reconciled." source="HOPE payments" method="Reconciled payments divided by total payments." %}
+                {% include "includes/chart_info.html" with definition=_("Share of payments reconciled.") source=_("HOPE payments") method=_("Reconciled payments divided by total payments.") %}
             </div>
             <div id="completion-gauge" style="width: 100px; height: 60px;"></div>
         </div>

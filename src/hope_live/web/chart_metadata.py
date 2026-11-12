@@ -236,6 +236,7 @@ CHART_INFO = {
             "area country. Each bar is the stacked total of reconciled and still-open values for "
             "the active metric."
         ),
+        # xgettext:no-python-format
         "note": _(
             "All countries with completion data are shown. Absolute values is the default; 100% "
             "share shows each country's reconciled and pending split as percentages."
@@ -250,6 +251,7 @@ CHART_INFO = {
             "plus pending statuses in the financial feed. Only countries present in both feeds "
             "are shown."
         ),
+        # xgettext:no-python-format
         "note": _(
             "All countries present in both feeds are shown, sorted by reconciliation rate. The "
             "dashed 80% line is a reference guide, not a threshold."
@@ -353,22 +355,19 @@ CHART_INFO = {
     # ------------------------------------------------------------------
     "landing.trends": {
         "definition": _(
-            "Global delivery over time: cash disbursed, payment count, and the number of "
-            "individuals, households and children reached by household programmes."
+            "Global delivery over time: cash disbursed and the number of "
+            "individuals, families and children reached by household programmes."
         ),
         "source": _("HOPE payments and household registration data, aggregated by the country report."),
         "method": _(
-            "Total Cash Disbursed sums delivered quantity in USD. Payments Count counts payment "
-            "records — not payment plans, unique recipients or only completed payments. "
-            "Individuals Reached sums the registered household size of reached households; "
-            "Households Reached counts those households; Children Reached sums the children "
+            "Cash sums delivered quantity in USD. "
+            "Individuals sums the registered household size of reached households; "
+            "Families counts those households; Children sums the children "
             "recorded in household composition. Frontline (incentive) workers are reported "
             "separately and are not part of these series."
         ),
         "note": _(
-            "All years is the default. Last 5 years shows the current year and the previous four. "
-            "Selecting a year shows its monthly data. Where a year or month has no demographic "
-            "record, the reached series are estimated from payment volume."
+            "All years is the default and shows annual totals. Selecting a single year shows its monthly breakdown."
         ),
     },
     "landing.sector": {

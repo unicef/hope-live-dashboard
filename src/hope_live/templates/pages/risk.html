@@ -88,7 +88,7 @@
                     <h3 class="text-gray-500 text-[10px] sm:text-[11px] font-bold">{% translate "Total risk items" %}</h3>
                     <p id="total-issues" class="text-2xl sm:text-3xl font-black text-gray-900 mt-0.5 leading-none">0</p>
                     <p class="text-[11px] text-gray-500 mt-1">{% translate "Across all operational modules" %}</p>
-                    {% include "includes/chart_info.html" with definition="Total count of operational risk issues across all active modules." source="HOPE" method="Count of flagged risk indicators across all modules." %}
+                    {% include "includes/chart_info.html" with definition=_("Total count of operational risk issues across all active modules.") source=_("HOPE") method=_("Count of flagged risk indicators across all modules.") %}
                 </div>
                 <div class="w-11 h-11 rounded-xl bg-blue-50 text-unicef-blue flex items-center justify-center font-bold text-xl">
                     📊
@@ -101,7 +101,7 @@
                     <h3 class="text-gray-500 text-[10px] sm:text-[11px] font-bold">{% translate "Critical risks" %}</h3>
                     <p id="total-critical" class="text-2xl sm:text-3xl font-black text-red-600 mt-0.5 leading-none">0</p>
                     <p class="text-[11px] text-red-600/80 font-bold mt-1">{% translate "Requires immediate action" %}</p>
-                    {% include "includes/chart_info.html" with definition="Risks at or above the 150% threshold requiring immediate action." source="HOPE" method="Count of risk indicators at critical severity." %}
+                    {% include "includes/chart_info.html" with definition=_("Risks at or above the 150% threshold requiring immediate action.") source=_("HOPE") method=_("Count of risk indicators at critical severity.") %}
                 </div>
                 <div class="w-11 h-11 rounded-xl bg-red-50 text-red-600 flex items-center justify-center font-bold text-xl">
                     🚨
@@ -112,7 +112,7 @@
             <div class="bg-white rounded-xl shadow-2xs border border-gray-200 p-3.5">
                 <div class="flex items-center justify-between mb-2">
                     <h3 class="text-xs font-bold text-gray-700">{% translate "Risk distribution by module" %}</h3>
-                    <span id="modules-monitored-count" class="text-[10px] font-bold text-gray-500 bg-gray-100 px-2 py-0.5 rounded-full">5 modules</span>
+                    <span id="modules-monitored-count" class="text-[10px] font-bold text-gray-500 bg-gray-100 px-2 py-0.5 rounded-full">{% translate "5 modules" %}</span>
                 </div>
                 <p class="text-[11px] text-gray-400 mb-3">{% translate "Click any module to filter operational cards" %}</p>
                 <div id="module-distribution-list" class="space-y-2.5">

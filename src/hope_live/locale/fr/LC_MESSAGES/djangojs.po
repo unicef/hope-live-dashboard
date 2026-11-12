@@ -54,7 +54,7 @@ msgstr "Rapprochement en attente"
 #: src/hope_live/theme/static/js/completion_visuals.js:456
 #: src/hope_live/theme/static/js/completion_visuals.min.js:1
 msgid "Total"
-msgstr ""
+msgstr "Total"
 
 #: src/hope_live/theme/static/js/completion_visuals.js:574
 #: src/hope_live/theme/static/js/completion_visuals.min.js:1
@@ -114,10 +114,9 @@ msgstr "Paiements en attente de rapprochement"
 
 #: src/hope_live/theme/static/js/completion_visuals.js:744
 #: src/hope_live/theme/static/js/completion_visuals.min.js:1
-#, fuzzy
 #| msgid "Reconciliation Timeline (USD)"
 msgid "Reconciliation timeline"
-msgstr "Chronologie du rapprochement (USD)"
+msgstr "Chronologie du rapprochement"
 
 #: src/hope_live/theme/static/js/completion_visuals.js:745
 #: src/hope_live/theme/static/js/completion_visuals.min.js:1
@@ -127,37 +126,37 @@ msgstr "État du rapprochement par pays"
 #: src/hope_live/theme/static/js/dashboard_visuals.js:59
 #: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
 msgid "Middle East and North Africa (MENA)"
-msgstr ""
+msgstr "Moyen-Orient et Afrique du Nord (MENA)"
 
 #: src/hope_live/theme/static/js/dashboard_visuals.js:60
 #: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
 msgid "Eastern and Southern Africa (ESA)"
-msgstr ""
+msgstr "Afrique de l'Est et australe (ESA)"
 
 #: src/hope_live/theme/static/js/dashboard_visuals.js:61
 #: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
 msgid "Europe and Central Asia (ECA)"
-msgstr ""
+msgstr "Europe et Asie centrale (ECA)"
 
 #: src/hope_live/theme/static/js/dashboard_visuals.js:62
 #: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
 msgid "West and Central Africa (WCA)"
-msgstr ""
+msgstr "Afrique de l'Ouest et centrale (WCA)"
 
 #: src/hope_live/theme/static/js/dashboard_visuals.js:63
 #: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
 msgid "Latin America and Caribbean (LAC)"
-msgstr ""
+msgstr "Amérique latine et Caraïbes (LAC)"
 
 #: src/hope_live/theme/static/js/dashboard_visuals.js:64
 #: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
 msgid "East Asia and Pacific (EAP)"
-msgstr ""
+msgstr "Asie de l'Est et Pacifique (EAP)"
 
 #: src/hope_live/theme/static/js/dashboard_visuals.js:65
 #: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
 msgid "South Asia (SA)"
-msgstr ""
+msgstr "Asie du Sud (SA)"
 
 #: src/hope_live/theme/static/js/dashboard_visuals.js:306
 #: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
@@ -167,17 +166,17 @@ msgstr "Chronologie des dépenses"
 #: src/hope_live/theme/static/js/dashboard_visuals.js:307
 #: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
 msgid "Cash disbursed by sector"
-msgstr ""
+msgstr "Fonds décaissés par secteur"
 
 #: src/hope_live/theme/static/js/dashboard_visuals.js:308
 #: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
 msgid "Cash disbursed by delivery type"
-msgstr ""
+msgstr "Fonds décaissés par mécanisme de versement"
 
 #: src/hope_live/theme/static/js/dashboard_visuals.js:309
 #: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
 msgid "Cash disbursed by region"
-msgstr ""
+msgstr "Fonds décaissés par région"
 
 #: src/hope_live/theme/static/js/dashboard_visuals.js:310
 #: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
@@ -187,12 +186,12 @@ msgstr "Fonds décaissés (payés) par pays"
 #: src/hope_live/theme/static/js/dashboard_visuals.js:311
 #: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
 msgid "Cash disbursed by programme"
-msgstr ""
+msgstr "Fonds décaissés par programme"
 
 #: src/hope_live/theme/static/js/dashboard_visuals.js:312
 #: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
 msgid "Cash disbursed by financial service provider (FSP)"
-msgstr ""
+msgstr "Fonds décaissés par prestataire de services financiers (PSF)"
 
 #: src/hope_live/theme/static/js/dashboard_visuals.js:314
 #: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
@@ -202,32 +201,32 @@ msgstr "Chronologie des paiements"
 #: src/hope_live/theme/static/js/dashboard_visuals.js:315
 #: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
 msgid "Payments by sector"
-msgstr ""
+msgstr "Paiements par secteur"
 
 #: src/hope_live/theme/static/js/dashboard_visuals.js:316
 #: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
 msgid "Payments by delivery type"
-msgstr ""
+msgstr "Paiements par mécanisme de versement"
 
 #: src/hope_live/theme/static/js/dashboard_visuals.js:317
 #: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
 msgid "Payments by region"
-msgstr ""
+msgstr "Paiements par région"
 
 #: src/hope_live/theme/static/js/dashboard_visuals.js:318
 #: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
 msgid "Payments by country"
-msgstr ""
+msgstr "Paiements par pays"
 
 #: src/hope_live/theme/static/js/dashboard_visuals.js:319
 #: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
 msgid "Payments by programme"
-msgstr ""
+msgstr "Paiements par programme"
 
 #: src/hope_live/theme/static/js/dashboard_visuals.js:320
 #: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
 msgid "Payments by financial service provider (FSP)"
-msgstr ""
+msgstr "Paiements par prestataire de services financiers (PSF)"
 
 #: src/hope_live/theme/static/js/dashboard_visuals.js:346
 #: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
@@ -246,91 +245,87 @@ msgstr "Autre"
 
 #: src/hope_live/theme/static/js/dashboard_visuals.js:704
 #: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
-#, fuzzy
 #| msgid "Spending Timeline"
 msgid "In pipeline"
-msgstr "Chronologie des dépenses"
+msgstr "En cours de traitement"
 
 #: src/hope_live/theme/static/js/dashboard_visuals.js:705
 #: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
 msgid "Delivered"
-msgstr ""
+msgstr "Versé"
 
 #: src/hope_live/theme/static/js/dashboard_visuals.js:747
 #: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
-#, fuzzy
 #| msgid "Spending Timeline"
 msgid "Pending in pipeline"
-msgstr "Chronologie des dépenses"
+msgstr "En attente de traitement"
 
 #: src/hope_live/theme/static/js/dashboard_visuals.js:780
 #: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
 #: src/hope_live/theme/static/js/grievance_visuals.js:712
 #: src/hope_live/theme/static/js/grievance_visuals.min.js:1
 msgid "Show top 10"
-msgstr ""
+msgstr "Afficher le top 10"
 
 #: src/hope_live/theme/static/js/dashboard_visuals.js:780
 #: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
 #: src/hope_live/theme/static/js/grievance_visuals.js:712
 #: src/hope_live/theme/static/js/grievance_visuals.min.js:1
 msgid "Show all"
-msgstr ""
+msgstr "Tout afficher"
 
 #: src/hope_live/theme/static/js/demographic_visuals.js:16
 #: src/hope_live/theme/static/js/demographic_visuals.js:472
 #: src/hope_live/theme/static/js/demographic_visuals.min.js:1
 msgid "Individuals reached"
-msgstr "Individus atteints"
+msgstr "Personnes bénéficiaires"
 
 #: src/hope_live/theme/static/js/demographic_visuals.js:17
 #: src/hope_live/theme/static/js/demographic_visuals.min.js:1
 msgid "Households reached"
-msgstr "Ménages atteints"
+msgstr "Ménages bénéficiaires"
 
 #: src/hope_live/theme/static/js/demographic_visuals.js:18
 #: src/hope_live/theme/static/js/demographic_visuals.min.js:1
 msgid "Children reached"
-msgstr "Enfants atteints"
+msgstr "Enfants bénéficiaires"
 
 #: src/hope_live/theme/static/js/demographic_visuals.js:19
 #: src/hope_live/theme/static/js/demographic_visuals.min.js:1
 msgid "Persons with disabilities reached"
-msgstr ""
+msgstr "Personnes handicapées bénéficiaires"
 
 #: src/hope_live/theme/static/js/demographic_visuals.js:438
 #: src/hope_live/theme/static/js/demographic_visuals.min.js:1
-#, fuzzy
 #| msgid "Spending Timeline"
 msgid "Timeline"
-msgstr "Chronologie des dépenses"
+msgstr "Chronologie"
 
 #: src/hope_live/theme/static/js/demographic_visuals.js:441
 #: src/hope_live/theme/static/js/demographic_visuals.min.js:1
 msgid "Sector share of"
-msgstr ""
+msgstr "Part par secteur de"
 
 #: src/hope_live/theme/static/js/demographic_visuals.js:444
 #: src/hope_live/theme/static/js/demographic_visuals.min.js:1
 msgid "Country share of"
-msgstr ""
+msgstr "Part par pays de"
 
 #: src/hope_live/theme/static/js/demographic_visuals.js:472
 #: src/hope_live/theme/static/js/demographic_visuals.min.js:1
-#, fuzzy
 #| msgid "PWD Reached"
 msgid "Workers reached"
-msgstr "Personnes handicapées atteintes"
+msgstr "Travailleurs bénéficiaires"
 
 #: src/hope_live/theme/static/js/demographic_visuals.js:475
 #: src/hope_live/theme/static/js/demographic_visuals.min.js:1
 msgid "Workers"
-msgstr ""
+msgstr "Travailleurs"
 
 #: src/hope_live/theme/static/js/demographic_visuals.js:475
 #: src/hope_live/theme/static/js/demographic_visuals.min.js:1
 msgid "Individuals"
-msgstr "Individus"
+msgstr "Personnes"
 
 #: src/hope_live/theme/static/js/grievance_visuals.js:6
 #: src/hope_live/theme/static/js/grievance_visuals.js:232
@@ -586,7 +581,7 @@ msgstr "Non précisé"
 #: src/hope_live/theme/static/js/grievance_visuals.js:648
 #: src/hope_live/theme/static/js/grievance_visuals.min.js:1
 msgid "tickets"
-msgstr "tickets"
+msgstr "signalements"
 
 #: src/hope_live/theme/static/js/grievance_visuals.js:282
 #: src/hope_live/theme/static/js/grievance_visuals.js:318
@@ -605,143 +600,147 @@ msgstr "jours"
 #: src/hope_live/theme/static/js/grievance_visuals.js:385
 #: src/hope_live/theme/static/js/grievance_visuals.min.js:1
 msgid "closed tickets"
-msgstr "tickets clos"
+msgstr "signalements clôturés"
 
 #: src/hope_live/theme/static/js/risk_visuals.js:6
 #: src/hope_live/theme/static/js/risk_visuals.min.js:1
 msgid "Critical"
-msgstr ""
+msgstr "Critique"
 
 #: src/hope_live/theme/static/js/risk_visuals.js:7
 #: src/hope_live/theme/static/js/risk_visuals.min.js:1
 msgid "Warning"
-msgstr ""
+msgstr "Alerte"
 
 #: src/hope_live/theme/static/js/risk_visuals.js:8
 #: src/hope_live/theme/static/js/risk_visuals.min.js:1
 msgid "Caution"
-msgstr ""
+msgstr "Attention"
 
 #: src/hope_live/theme/static/js/risk_visuals.js:9
 #: src/hope_live/theme/static/js/risk_visuals.min.js:1
 msgid "Normal"
-msgstr ""
+msgstr "Normal"
 
 #: src/hope_live/theme/static/js/risk_visuals.js:12
 #: src/hope_live/theme/static/js/risk_visuals.js:190
 #: src/hope_live/theme/static/js/risk_visuals.js:312
 #: src/hope_live/theme/static/js/risk_visuals.min.js:1
 msgid "Increasing"
-msgstr ""
+msgstr "En hausse"
 
 #: src/hope_live/theme/static/js/risk_visuals.js:13
 #: src/hope_live/theme/static/js/risk_visuals.js:193
 #: src/hope_live/theme/static/js/risk_visuals.js:314
 #: src/hope_live/theme/static/js/risk_visuals.min.js:1
 msgid "Decreasing"
-msgstr ""
+msgstr "En baisse"
 
 #: src/hope_live/theme/static/js/risk_visuals.js:14
 #: src/hope_live/theme/static/js/risk_visuals.js:195
 #: src/hope_live/theme/static/js/risk_visuals.min.js:1
 msgid "Neutral"
-msgstr ""
+msgstr "Stable"
 
 #: src/hope_live/theme/static/js/risk_visuals.js:19
 #: src/hope_live/theme/static/js/risk_visuals.js:26
 #: src/hope_live/theme/static/js/risk_visuals.min.js:1
-#, fuzzy
 #| msgid "Payment Verification"
 msgid "Payment Operations"
-msgstr "Vérification des paiements"
+msgstr "Opérations de paiement"
 
 #: src/hope_live/theme/static/js/risk_visuals.js:20
 #: src/hope_live/theme/static/js/risk_visuals.js:27
 #: src/hope_live/theme/static/js/risk_visuals.min.js:1
 msgid "Payment, Reconciliation & Verification bottlenecks"
 msgstr ""
+"Goulots d'étranglement des paiements, du rapprochement et de la vérification"
 
 #: src/hope_live/theme/static/js/risk_visuals.js:33
 #: src/hope_live/theme/static/js/risk_visuals.min.js:1
-#, fuzzy
 #| msgid "Registration Related Complaint"
 msgid "Registration & Population"
-msgstr "Plainte liée à l'enregistrement"
+msgstr "Enregistrement et population"
 
 #: src/hope_live/theme/static/js/risk_visuals.js:34
 #: src/hope_live/theme/static/js/risk_visuals.min.js:1
 msgid "KYC, Identity documents & Geographic verification"
 msgstr ""
+"Vérification d'identité (KYC), documents d'identité et vérification "
+"géographique"
 
 #: src/hope_live/theme/static/js/risk_visuals.js:40
 #: src/hope_live/theme/static/js/risk_visuals.min.js:1
-#, fuzzy
 #| msgid "Needs Adjudication"
 msgid "Deduplication & Adjudication"
-msgstr "Nécessite une décision"
+msgstr "Déduplication et arbitrage"
 
 #: src/hope_live/theme/static/js/risk_visuals.js:41
 #: src/hope_live/theme/static/js/risk_visuals.min.js:1
 msgid "Biometric, Needs-Adjudication & Cross-channel duplicate issues"
 msgstr ""
+"Doublons biométriques, dossiers en attente d'arbitrage et doublons inter-"
+"canaux"
 
 #: src/hope_live/theme/static/js/risk_visuals.js:48
 #: src/hope_live/theme/static/js/risk_visuals.min.js:1
 msgid "PVP execution, overdue tickets & high failure rates"
 msgstr ""
+"Exécution de la vérification post-paiement (PVP), signalements en retard et "
+"taux d'échec élevés"
 
 #: src/hope_live/theme/static/js/risk_visuals.js:54
 #: src/hope_live/theme/static/js/risk_visuals.js:61
 #: src/hope_live/theme/static/js/risk_visuals.min.js:1
 msgid "Grievances & Safeguarding"
-msgstr ""
+msgstr "Plaintes et sauvegarde"
 
 #: src/hope_live/theme/static/js/risk_visuals.js:55
 #: src/hope_live/theme/static/js/risk_visuals.js:62
 #: src/hope_live/theme/static/js/risk_visuals.min.js:1
 msgid "Sensitive complaints, zero-reporting & FSP concentrations"
-msgstr ""
+msgstr "Plaintes sensibles, absence de signalement et concentration des PSF"
 
 #: src/hope_live/theme/static/js/risk_visuals.js:68
 #: src/hope_live/theme/static/js/risk_visuals.min.js:1
 msgid "Targeting & Eligibility"
-msgstr ""
+msgstr "Ciblage et éligibilité"
 
 #: src/hope_live/theme/static/js/risk_visuals.js:69
 #: src/hope_live/theme/static/js/risk_visuals.min.js:1
 msgid "Vulnerability criteria & payment readiness anomalies"
-msgstr ""
+msgstr "Anomalies des critères de vulnérabilité et de préparation au paiement"
 
 #: src/hope_live/theme/static/js/risk_visuals.js:190
 #: src/hope_live/theme/static/js/risk_visuals.min.js:1
 msgid "Up"
-msgstr ""
+msgstr "En hausse"
 
 #: src/hope_live/theme/static/js/risk_visuals.js:193
 #: src/hope_live/theme/static/js/risk_visuals.min.js:1
 msgid "Down"
-msgstr ""
+msgstr "En baisse"
 
 #: src/hope_live/theme/static/js/risk_visuals.js:195
 #: src/hope_live/theme/static/js/risk_visuals.js:310
 #: src/hope_live/theme/static/js/risk_visuals.min.js:1
 msgid "Stable"
-msgstr ""
+msgstr "Stable"
 
 #: src/hope_live/theme/static/js/risk_visuals.js:209
 #: src/hope_live/theme/static/js/risk_visuals.min.js:1
 msgid "modules"
-msgstr ""
+msgstr "modules"
 
 #: src/hope_live/theme/static/js/risk_visuals.js:213
 #: src/hope_live/theme/static/js/risk_visuals.min.js:1
 msgid "No active module issues"
-msgstr ""
+msgstr "Aucune anomalie active dans les modules"
 
 #: src/hope_live/theme/static/js/risk_visuals.js:272
 #: src/hope_live/theme/static/js/risk_visuals.min.js:1
 msgid "No Operational Risk Anomalies"
-msgstr ""
+msgstr "Aucune anomalie de risque opérationnel"
 
 #: src/hope_live/theme/static/js/risk_visuals.js:273
 #: src/hope_live/theme/static/js/risk_visuals.min.js:1
@@ -749,75 +748,32 @@ msgid ""
 "All operational thresholds are within normal tolerances for the selected "
 "filters."
 msgstr ""
+"Tous les seuils opérationnels se situent dans les tolérances normales pour "
+"les filtres sélectionnés."
 
 #: src/hope_live/theme/static/js/risk_visuals.js:289
 #: src/hope_live/theme/static/js/risk_visuals.min.js:1
 msgid "Operational metrics and bottlenecks"
-msgstr ""
+msgstr "Indicateurs opérationnels et goulots d'étranglement"
 
 #: src/hope_live/theme/static/js/risk_visuals.js:317
 #: src/hope_live/theme/static/js/risk_visuals.js:401
 #: src/hope_live/theme/static/js/risk_visuals.min.js:1
 msgid "issues"
-msgstr ""
+msgstr "anomalies"
 
 #: src/hope_live/theme/static/js/risk_visuals.js:350
 #: src/hope_live/theme/static/js/risk_visuals.js:426
 #: src/hope_live/theme/static/js/risk_visuals.min.js:1
 msgid "Issues"
-msgstr ""
+msgstr "Anomalies"
 
 #: src/hope_live/theme/static/js/risk_visuals.js:411
 #: src/hope_live/theme/static/js/risk_visuals.min.js:1
 msgid "Download PNG"
-msgstr ""
+msgstr "Télécharger en PNG"
 
 #: src/hope_live/theme/static/js/risk_visuals.js:577
 #: src/hope_live/theme/static/js/risk_visuals.min.js:1
 msgid "No matching results"
-msgstr ""
-
-#~ msgid "Amount by beneficiary group"
-#~ msgstr "Montant par groupe de bénéficiaires"
-
-#~ msgid "Amount (USD)"
-#~ msgstr "Montant (USD)"
-
-#, fuzzy
-#~| msgid "Individuals Reached"
-#~ msgid "Individuals reached by beneficiary group"
-#~ msgstr "Individus atteints"
-
-#~ msgid "New"
-#~ msgstr "Nouveau"
-
-#, fuzzy
-#~| msgid "Reconciled"
-#~ msgid "Reconciled volume"
-#~ msgstr "Rapproché"
-
-#, fuzzy
-#~| msgid "Reconciliation Timeline"
-#~ msgid "Reconciliation rate (%)"
-#~ msgstr "Chronologie du rapprochement"
-
-#~ msgid "PWD reached"
-#~ msgstr "Personnes handicapées atteintes"
-
-#~ msgid "Quantity"
-#~ msgstr "Quantités"
-
-#~ msgid "Quantity Distribution Timeline"
-#~ msgstr "Chronologie de distribution des quantités"
-
-#~ msgid "Households"
-#~ msgstr "Ménages"
-
-#~ msgid "Children"
-#~ msgstr "Enfants"
-
-#~ msgid "PWD"
-#~ msgstr "Personnes handicapées"
-
-#~ msgid "Resolved & Closed"
-#~ msgstr "Résolu et Clôturé"
+msgstr "Aucun résultat correspondant"
