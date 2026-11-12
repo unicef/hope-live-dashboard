@@ -86,7 +86,7 @@ def test_landing_page_unauthenticated_no_private_sections(client):
 
 
 @pytest.mark.django_db
-def test_landing_page_authenticated_shows_dashboards(client, user_factory):
+def test_landing_page_authenticated_hides_dashboard_launcher(client, user_factory):
     user = user_factory()
     client.force_login(user)
 
@@ -95,9 +95,9 @@ def test_landing_page_authenticated_shows_dashboards(client, user_factory):
 
     content = response.content.decode()
 
-    # Authenticated user gets a direct dashboard launcher from the public header.
-    assert "Go to Dashboards" in content
-    assert 'href="/dashboard/"' in content
+    # The public page does not advertise the dashboard endpoint.
+    assert "Go to Dashboards" not in content
+    assert 'href="/dashboard/"' not in content
 
 
 @pytest.mark.django_db

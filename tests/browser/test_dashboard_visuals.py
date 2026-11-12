@@ -1,4 +1,5 @@
 import datetime
+import math
 import re
 
 import pytest
@@ -335,7 +336,7 @@ def _apply_custom_range(browser, start: str, end: str) -> None:
     browser.click("#btn-apply-custom-range")
 
 
-def test_landing_kpis_have_definitions_and_exact_date(browser, financial_aggregates):
+def test_landing_shows_exact_data_date_without_public_info_tooltips(browser, financial_aggregates):
     browser.login_as_user()
     browser.open("/")
     browser.wait_for_element_visible("#latest-data-date")
@@ -343,38 +344,11 @@ def test_landing_kpis_have_definitions_and_exact_date(browser, financial_aggrega
     latest = browser.get_text("#latest-data-date")
     assert re.search(r"\d{2} [A-Z][a-z]{2} \d{4}", latest), latest
 
-    for key in (
-        "children",
-        "households",
-        "individuals",
-        "assistance",
-        "payments",
-        "social_workers",
-    ):
-        browser.wait_for_element_visible(f'[data-chart-info="landing.{key}"]')
-
-    width_before = browser.execute_script(
-        "return document.getElementById('landing-kpis').getBoundingClientRect().width;"
-    )
-    browser.click('[data-chart-info="landing.children"] [data-chart-info-toggle]')
-    browser.wait_for_element_visible("#chart-info-landingchildren")
-    browser.wait_for_text_visible("Children reached through household programmes")
-    assert (
-        browser.execute_script(
-            "return getComputedStyle(document.getElementById('chart-info-landingchildren')).position;"
-        )
-        == "fixed"
-    )
-    width_after = browser.execute_script(
-        "return document.getElementById('landing-kpis').getBoundingClientRect().width;"
-    )
-    assert width_after == width_before
-
-    browser.click("#latest-data-date")
-    browser.assert_element_not_visible("#chart-info-landingchildren")
+    assert browser.execute_script("return document.querySelectorAll('[data-chart-info]').length;") == 0
+    assert browser.execute_script("return document.querySelectorAll('#spotlight-content').length;") == 0
 
 
-def test_landing_filters_update_kpis_and_country_spotlight(browser, financial_aggregates, demographic_aggregates):
+def test_landing_filters_update_kpis_and_chips(browser, financial_aggregates, demographic_aggregates):
     browser.login_as_user()
     browser.open("/")
     browser.wait_for_element_visible("#country-filter-button")
@@ -394,9 +368,11 @@ def test_landing_filters_update_kpis_and_country_spotlight(browser, financial_ag
     browser.assert_text("200", "#kpi-children")
     browser.assert_text("300", "#kpi-families")
     browser.assert_text("400", "#kpi-individuals")
+    browser.assert_text("$20K", "#kpi-cash")
     browser.assert_text("10", "#kpi-payments")
     browser.assert_text("$2K", "#kpi-average-transfer")
-    browser.assert_text("2", "#spotlight-country")
+    # The at-a-glance figure is global and must not change with filters.
+    browser.assert_text("$150K", "#glance-cash")
     assert (
         "country=kenya%2Csomalia" in browser.get_current_url() or "country=kenya,somalia" in browser.get_current_url()
     )
@@ -406,14 +382,16 @@ def test_landing_filters_update_kpis_and_country_spotlight(browser, financial_ag
     browser.assert_text("100", "#kpi-children")
     browser.assert_text("150", "#kpi-families")
     browser.assert_text("200", "#kpi-individuals")
+    browser.assert_text("$10K", "#kpi-cash")
     browser.assert_text("5", "#kpi-payments")
     browser.assert_text("$2K", "#kpi-average-transfer")
-    browser.assert_text("Kenya", "#spotlight-country")
+    browser.assert_text("Kenya", "#country-filter-value")
 
     browser.click("#landing-reset")
     browser.assert_text("1.5K", "#kpi-children")
     browser.assert_text("2.3K", "#kpi-families")
     browser.assert_text("3K", "#kpi-individuals")
+    browser.assert_text("$150K", "#kpi-cash")
     browser.assert_text("75", "#kpi-payments")
     browser.assert_text("$2K", "#kpi-average-transfer")
 
@@ -985,18 +963,43 @@ def test_landing_sector_and_mechanism_chart_clicks(browser, financial_aggregates
     browser.wait_for_element_visible("#sector-chart canvas")
     browser.wait_for_element_visible("#mechanism-chart canvas")
     browser.sleep(1)
+    browser.execute_script(
+        "document.querySelectorAll('[id^=dj]').forEach(e=>e.style.setProperty('display','none','important'));"
+    )
+    browser.assert_text("$50K", "#kpi-cash")
     browser.assert_text("25", "#kpi-payments")
     browser.assert_text("500", "#kpi-children")
 
-    browser.click_with_offset("#sector-chart canvas", 80, -17, center=True)
+    def click_pie_slice(selector, dimension):
+        size = browser.execute_script(
+            f"const r=document.querySelector('{selector}').getBoundingClientRect();"
+            "return {width:r.width, height:r.height};"
+        )
+        radius = min(size["width"], size["height"]) * 0.275
+        for degrees in range(0, 360, 30):
+            angle = math.radians(degrees)
+            browser.click_with_offset(
+                selector,
+                radius * math.cos(angle),
+                radius * math.sin(angle) - size["height"] * 0.06,
+                center=True,
+            )
+            browser.sleep(0.25)
+            if browser.execute_script(f"return !!document.querySelector('[data-remove-dimension=\"{dimension}\"]');"):
+                return
+        raise AssertionError(f"Could not hit a {dimension} pie slice")
+
+    click_pie_slice("#sector-chart canvas", "sector")
     browser.wait_for_element_visible("[data-remove-dimension='sector']")
+    browser.assert_text("$10K", "#kpi-cash")
     browser.assert_text("5", "#kpi-payments")
     browser.assert_text("0", "#kpi-children")
     browser.assert_text("Sector: Health-", "#country-chips")
     assert "sector=Health-" in browser.get_current_url()
 
-    browser.click_with_offset("#mechanism-chart canvas", 80, -17, center=True)
+    click_pie_slice("#mechanism-chart canvas", "mechanism")
     browser.wait_for_element_visible("[data-remove-dimension='mechanism']")
+    browser.assert_text("$5K", "#kpi-cash")
     browser.assert_text("2", "#kpi-payments")
     browser.assert_text("$2.5K", "#kpi-average-transfer")
     browser.assert_text("500", "#kpi-children")
@@ -1005,6 +1008,7 @@ def test_landing_sector_and_mechanism_chart_clicks(browser, financial_aggregates
     assert "sector=" not in browser.get_current_url()
 
     browser.click("[data-remove-dimension='mechanism']")
+    browser.assert_text("$50K", "#kpi-cash")
     browser.assert_text("25", "#kpi-payments")
     browser.assert_element_not_visible("#country-chips")
     assert "mechanism=" not in browser.get_current_url()
@@ -1093,7 +1097,6 @@ def test_landing_mobile_navigation_and_layout(browser, financial_aggregates, dem
     browser.wait_for_element_visible("#public-mobile-menu a[href='#global-evidence']")
     browser.assert_element_visible("#public-mobile-menu a[href*='hope-hct/resources']")
     browser.assert_element_visible("#public-mobile-menu a[href*='contact-us']")
-    browser.assert_element_visible("#public-mobile-menu a[href='/dashboard/']")
     browser.click("#public-mobile-menu summary")
 
     browser.click("#country-filter-button")
@@ -1117,3 +1120,79 @@ def test_landing_mobile_navigation_and_layout(browser, financial_aggregates, dem
         browser.sleep(0.5)
         overflow = browser.execute_script("return document.documentElement.scrollWidth - window.innerWidth;")
         assert overflow <= 0, f"Horizontal overflow at {width}px: {overflow}px"
+
+
+def test_landing_separates_social_workers_and_adds_map_metric(browser):
+    year = datetime.datetime.now().year
+    DemographicAggregateFactory(
+        date=datetime.date(year, 1, 1),
+        time_grain="monthly",
+        country_slug="kenya",
+        dimension_type="sector",
+        dimension_value="HEALTH",
+        program_type="STANDARD",
+        total_beneficiaries=100,
+        total_children=20,
+        total_households=25,
+    )
+    DemographicAggregateFactory(
+        date=datetime.date(year, 1, 1),
+        time_grain="monthly",
+        country_slug="kenya",
+        dimension_type="sector",
+        dimension_value="HEALTH",
+        program_type="SOCIAL",
+        total_beneficiaries=40,
+        total_children=0,
+        total_households=0,
+    )
+
+    browser.login_as_user()
+    browser.open(f"/?year={year}")
+    browser.wait_for_element_visible("#trends-chart canvas")
+    browser.sleep(1)
+
+    browser.assert_text("100", "#kpi-individuals")
+    browser.assert_text("40", "#kpi-social-workers")
+    browser.assert_text("20", "#kpi-children")
+    browser.assert_text("25", "#kpi-families")
+
+    series_names = browser.execute_script(
+        "return echarts.getInstanceByDom(document.getElementById('trends-chart')).getOption().series.map(s => s.name);"
+    )
+    assert "Social Workers" in series_names
+
+    browser.select_option_by_value("#map-metric", "social_workers")
+    browser.sleep(0.5)
+    map_data = browser.execute_script(
+        "return echarts.getInstanceByDom(document.getElementById('world-map-chart')).getOption().series[0].data;"
+    )
+    kenya = next(item for item in map_data if item["name"] == "Kenya")
+    assert kenya["value"] == 40
+
+
+def test_landing_merges_outreach_payments_into_cash_on_site(browser):
+    year = datetime.datetime.now().year
+    for value, total in (("CASH ON SITE", 100), ("OUTREACH PAYMENTS", 50)):
+        FinancialAggregateFactory(
+            date=datetime.date(year, 1, 1),
+            time_grain="daily",
+            country_slug="kenya",
+            dimension_type="delivery_type",
+            dimension_value=value,
+            total_usd=total,
+            payment_count=1,
+        )
+
+    browser.login_as_user()
+    browser.open(f"/?year={year}")
+    browser.wait_for_element_visible("#mechanism-chart canvas")
+    browser.sleep(1)
+
+    chart_data = browser.execute_script(
+        "return echarts.getInstanceByDom(document.getElementById('mechanism-chart')).getOption().series[0].data;"
+    )
+    cash_on_site = [item for item in chart_data if item["name"] == "Cash on Site"]
+    assert len(cash_on_site) == 1
+    assert cash_on_site[0]["value"] == 150
+    assert all("Outreach" not in item["name"] for item in chart_data)

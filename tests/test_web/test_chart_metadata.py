@@ -17,7 +17,9 @@ def _template_keys() -> set[str]:
 
 
 def test_every_chart_in_the_templates_has_metadata() -> None:
-    assert _template_keys() == set(CHART_INFO)
+    # Extra definitions are allowed: landing metadata is retained even though the
+    # public page no longer exposes chart-info explanations.
+    assert _template_keys() <= set(CHART_INFO)
 
 
 def test_every_chart_has_definition_source_and_method() -> None:

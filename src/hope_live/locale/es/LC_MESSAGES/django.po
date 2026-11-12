@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-12 02:00+0100\n"
+"POT-Creation-Date: 2026-11-12 11:24+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -44,8 +44,6 @@ msgstr "Chino"
 
 #: src/hope_live/templates/footer.html:7
 #, python-format
-#| msgid ""
-#| "Copyright © %(year)s - All right reserved by UNICEF - %(version)s"
 msgid "Copyright © %(year)s - All rights reserved by UNICEF - %(version)s"
 msgstr ""
 "Copyright © %(year)s - Todos los derechos reservados por UNICEF - "
@@ -61,7 +59,6 @@ msgstr "Cerrar sesión"
 
 #: src/hope_live/templates/header.html:58
 #: src/hope_live/templates/pages/login.html:37
-#| msgid "Sign Out"
 msgid "Sign In"
 msgstr "Iniciar sesión"
 
@@ -84,7 +81,6 @@ msgid "Source"
 msgstr "Fuente"
 
 #: src/hope_live/templates/includes/chart_info.html:21
-#| msgid "Methodology"
 msgid "Method"
 msgstr "Metodología"
 
@@ -113,7 +109,6 @@ msgid "Last 3 months"
 msgstr "Últimos 3 meses"
 
 #: src/hope_live/templates/includes/time_filter.html:21
-#| msgid "1 year"
 msgid "This year"
 msgstr "Este año"
 
@@ -231,7 +226,7 @@ msgstr "Datos en tiempo real"
 #: src/hope_live/templates/pages/dashboard.html:13
 #: src/hope_live/templates/pages/demographic.html:14
 #: src/hope_live/templates/pages/grievance.html:13
-#: src/hope_live/templates/pages/landing.html:118
+#: src/hope_live/templates/pages/landing.html:117
 #: src/hope_live/templates/pages/risk.html:13
 msgid "Data as of"
 msgstr "Datos al"
@@ -255,7 +250,6 @@ msgstr "Monto (USD)"
 #: src/hope_live/templates/pages/demographic.html:55
 #: src/hope_live/templates/pages/grievance.html:32
 #: src/hope_live/templates/pages/risk.html:45
-#| msgid "Countries"
 msgid "Country:"
 msgstr "País:"
 
@@ -267,8 +261,8 @@ msgstr "País:"
 #: src/hope_live/templates/pages/demographic.html:57
 #: src/hope_live/templates/pages/grievance.html:33
 #: src/hope_live/templates/pages/grievance.html:34
-#: src/hope_live/templates/pages/landing.html:92
-#: src/hope_live/templates/pages/landing.html:355
+#: src/hope_live/templates/pages/landing.html:91
+#: src/hope_live/templates/pages/landing.html:321
 #: src/hope_live/templates/pages/risk.html:49
 msgid "All countries"
 msgstr "Todos los países"
@@ -287,7 +281,6 @@ msgstr "Pagos que han sido conciliados."
 #: src/hope_live/templates/pages/dashboard.html:60
 #: src/hope_live/templates/pages/dashboard.html:65
 #: src/hope_live/templates/pages/dashboard.html:70
-#| msgid "HOPE Deployments"
 msgid "HOPE payments"
 msgstr "Pagos de HOPE"
 
@@ -300,7 +293,6 @@ msgid "Pending Reconciliation"
 msgstr "Pendientes de conciliación"
 
 #: src/hope_live/templates/pages/completion.html:49
-#| msgid "Pending Reconciliation"
 msgid "Payments pending reconciliation."
 msgstr "Pagos pendientes de conciliación."
 
@@ -373,7 +365,6 @@ msgstr ""
 "discontinua marca la referencia del 80 por ciento."
 
 #: src/hope_live/templates/pages/dashboard.html:9
-#| msgid "Overview of Financial info"
 msgid "Overview of financial information"
 msgstr "Resumen de la información financiera"
 
@@ -424,7 +415,6 @@ msgid "Number of Payment Records"
 msgstr "Número de registros de pago"
 
 #: src/hope_live/templates/pages/dashboard.html:65
-#| msgid "Number of Payment Records"
 msgid "Number of payment records in the selected period."
 msgstr "Número de registros de pago en el período seleccionado."
 
@@ -503,7 +493,6 @@ msgstr "Efectivo desembolsado por programa"
 #: src/hope_live/templates/pages/dashboard.html:141
 #: src/hope_live/templates/pages/grievance.html:112
 #: src/hope_live/templates/pages/grievance.html:121
-#| msgid "View all"
 msgid "Show all"
 msgstr "Mostrar todo"
 
@@ -516,7 +505,6 @@ msgid "Cash disbursed by implementing partner"
 msgstr "Fondos desembolsados por socio implementador"
 
 #: src/hope_live/templates/pages/demographic.html:8
-#| msgid "Demographics"
 msgid "Demographic dashboard"
 msgstr "Panel demográfico"
 
@@ -526,26 +514,22 @@ msgid ""
 msgstr "Desglose de personas, niños y personas con discapacidad alcanzados"
 
 #: src/hope_live/templates/pages/demographic.html:23
-#| msgid "View Dashboard Metrics by:"
 msgid "View demographic metrics by:"
 msgstr "Ver métricas demográficas por:"
 
 #: src/hope_live/templates/pages/demographic.html:26
-#: src/hope_live/templates/pages/landing.html:214
-#: src/hope_live/templates/pages/landing.html:263
-#: src/hope_live/templates/pages/landing.html:359
+#: src/hope_live/templates/pages/landing.html:211
+#: src/hope_live/templates/pages/landing.html:325
 msgid "Individuals"
 msgstr "Personas"
 
 #: src/hope_live/templates/pages/demographic.html:29
-#| msgid "Households Reached"
 msgid "Households"
 msgstr "Hogares"
 
 #: src/hope_live/templates/pages/demographic.html:32
-#: src/hope_live/templates/pages/landing.html:212
-#: src/hope_live/templates/pages/landing.html:261
-#: src/hope_live/templates/pages/landing.html:357
+#: src/hope_live/templates/pages/landing.html:209
+#: src/hope_live/templates/pages/landing.html:323
 msgid "Children"
 msgstr "Niños"
 
@@ -558,14 +542,12 @@ msgid "Individuals reached"
 msgstr "Personas alcanzadas"
 
 #: src/hope_live/templates/pages/demographic.html:67
-#| msgid "Individuals Reached"
 msgid "Number of individuals reached."
 msgstr "Número de personas alcanzadas."
 
 #: src/hope_live/templates/pages/demographic.html:67
 #: src/hope_live/templates/pages/demographic.html:72
 #: src/hope_live/templates/pages/demographic.html:82
-#| msgid "Demographics"
 msgid "HOPE demographics"
 msgstr "Demografía de HOPE"
 
@@ -578,7 +560,6 @@ msgid "Households reached"
 msgstr "Hogares alcanzados"
 
 #: src/hope_live/templates/pages/demographic.html:72
-#| msgid "Households reached"
 msgid "Number of households reached."
 msgstr "Número de hogares alcanzados."
 
@@ -607,7 +588,6 @@ msgstr ""
 "subrepresentada."
 
 #: src/hope_live/templates/pages/demographic.html:88
-#| msgid "Tickets Timeline"
 msgid "Reach timeline"
 msgstr "Cronología de cobertura"
 
@@ -667,12 +647,10 @@ msgid "Overview of feedback and grievance tickets"
 msgstr "Resumen de casos de comentarios, quejas y reclamos"
 
 #: src/hope_live/templates/pages/grievance.html:22
-#| msgid "Data source"
 msgid "Ticket source:"
 msgstr "Origen del caso:"
 
 #: src/hope_live/templates/pages/grievance.html:25
-#| msgid "Grievance dashboard"
 msgid "Grievances"
 msgstr "Quejas y reclamos"
 
@@ -685,12 +663,10 @@ msgid "Total tickets"
 msgstr "Total de casos"
 
 #: src/hope_live/templates/pages/grievance.html:44
-#| msgid "Overview of feedback and grievance tickets"
 msgid "Number of grievance tickets."
 msgstr "Número de casos de quejas y reclamos."
 
 #: src/hope_live/templates/pages/grievance.html:44
-#| msgid "Grievance dashboard"
 msgid "HOPE grievances"
 msgstr "Quejas de HOPE"
 
@@ -723,7 +699,7 @@ msgid "Closed"
 msgstr "Cerrado"
 
 #: src/hope_live/templates/pages/grievance.html:71
-#: src/hope_live/templates/pages/landing.html:364
+#: src/hope_live/templates/pages/landing.html:330
 msgid "Not specified"
 msgstr "No especificado"
 
@@ -791,12 +767,15 @@ msgid "Cash-based Assistance"
 msgstr "Asistencia monetaria"
 
 #: src/hope_live/templates/pages/landing.html:22
+#| msgid ""
+#| "Data and evidence to deliver humanitarian cash assistance safely — and to "
+#| "show where it reaches children and families."
 msgid ""
-"Data and evidence to deliver humanitarian cash assistance safely — and to "
-"show where it reaches children and families."
+"Data and evidence to deliver cash assistance safely — and to show where it "
+"reaches children and families."
 msgstr ""
-"Datos y evidencia para entregar asistencia monetaria humanitaria de forma "
-"segura — y mostrar dónde llega a los niños y las familias."
+"Datos y evidencia para entregar asistencia en efectivo de forma segura — y "
+"mostrar dónde llega a los niños y las familias."
 
 #: src/hope_live/templates/pages/landing.html:26
 msgid "Explore the evidence"
@@ -830,324 +809,309 @@ msgstr "Programas"
 msgid "HOPE Database"
 msgstr "Base de datos HOPE"
 
-#: src/hope_live/templates/pages/landing.html:83
+#: src/hope_live/templates/pages/landing.html:82
 msgid "Year"
 msgstr "Año"
 
-#: src/hope_live/templates/pages/landing.html:85
-#: src/hope_live/templates/pages/landing.html:354
+#: src/hope_live/templates/pages/landing.html:84
+#: src/hope_live/templates/pages/landing.html:320
 msgid "All years"
 msgstr "Todos los años"
 
-#: src/hope_live/templates/pages/landing.html:89
+#: src/hope_live/templates/pages/landing.html:88
 #: src/hope_live/templates/pages/risk.html:179
 msgid "Country"
 msgstr "País"
 
-#: src/hope_live/templates/pages/landing.html:97
-#: src/hope_live/templates/pages/landing.html:102
-#| msgid "countries"
+#: src/hope_live/templates/pages/landing.html:96
+#: src/hope_live/templates/pages/landing.html:101
 msgid "Search countries"
 msgstr "Buscar países"
 
-#: src/hope_live/templates/pages/landing.html:107
-#| msgid "Select Language"
+#: src/hope_live/templates/pages/landing.html:106
 msgid "Select all"
 msgstr "Seleccionar todo"
 
-#: src/hope_live/templates/pages/landing.html:108
+#: src/hope_live/templates/pages/landing.html:107
 msgid "Clear"
 msgstr "Borrar"
 
-#: src/hope_live/templates/pages/landing.html:111
-#| msgid "countries"
+#: src/hope_live/templates/pages/landing.html:110
 msgid "No countries found"
 msgstr "No se encontraron países"
 
-#: src/hope_live/templates/pages/landing.html:115
+#: src/hope_live/templates/pages/landing.html:114
 msgid "Reset"
 msgstr "Restablecer"
 
-#: src/hope_live/templates/pages/landing.html:130
+#: src/hope_live/templates/pages/landing.html:129
 msgid "People & Families"
 msgstr "Personas y familias"
 
-#: src/hope_live/templates/pages/landing.html:135
+#: src/hope_live/templates/pages/landing.html:134
 msgid "Children Reached"
 msgstr "Niños alcanzados"
 
-#: src/hope_live/templates/pages/landing.html:139
-#: src/hope_live/templates/pages/landing.html:148
+#: src/hope_live/templates/pages/landing.html:138
+#: src/hope_live/templates/pages/landing.html:146
 msgid "HOPE reach"
 msgstr "Alcanzados vía HOPE"
 
-#: src/hope_live/templates/pages/landing.html:144
+#: src/hope_live/templates/pages/landing.html:142
 msgid "Families Reached"
 msgstr "Familias alcanzadas"
 
-#: src/hope_live/templates/pages/landing.html:153
+#: src/hope_live/templates/pages/landing.html:150
 msgid "Individuals Reached"
 msgstr "Personas alcanzadas"
 
-#: src/hope_live/templates/pages/landing.html:157
+#: src/hope_live/templates/pages/landing.html:154
 msgid "People reached"
 msgstr "Personas alcanzadas"
 
-#: src/hope_live/templates/pages/landing.html:162
+#: src/hope_live/templates/pages/landing.html:158
 msgid "Social Workers Reached"
 msgstr "Trabajadores sociales alcanzados"
 
-#: src/hope_live/templates/pages/landing.html:166
+#: src/hope_live/templates/pages/landing.html:162
 msgid "Frontline workforce assisted"
 msgstr "Personal de primera línea asistido"
 
-#: src/hope_live/templates/pages/landing.html:174
-#: src/hope_live/templates/pages/landing.html:215
-#: src/hope_live/templates/pages/landing.html:264
-#: src/hope_live/templates/pages/landing.html:360
+#: src/hope_live/templates/pages/landing.html:169
+#: src/hope_live/templates/pages/landing.html:213
+#: src/hope_live/templates/pages/landing.html:326
 msgid "Cash"
 msgstr "Efectivo"
 
-#: src/hope_live/templates/pages/landing.html:179
-msgid "Cash Transfers"
-msgstr "Transferencias monetarias"
+#: src/hope_live/templates/pages/landing.html:174
+msgid "Cash Delivered (USD)"
+msgstr "Efectivo entregado (USD)"
 
-#: src/hope_live/templates/pages/landing.html:183
+#: src/hope_live/templates/pages/landing.html:179
 msgid "Payments delivered"
 msgstr "Pagos entregados"
 
-#: src/hope_live/templates/pages/landing.html:186
+#: src/hope_live/templates/pages/landing.html:184
 msgid "Average transfer"
 msgstr "Transferencia promedio"
 
-#: src/hope_live/templates/pages/landing.html:188
+#: src/hope_live/templates/pages/landing.html:186
 msgid "per transfer"
 msgstr "por transferencia"
 
-#: src/hope_live/templates/pages/landing.html:205
+#: src/hope_live/templates/pages/landing.html:202
 msgid "Where cash assistance reaches children and families"
 msgstr "Dónde llega la asistencia monetaria a niños y familias"
 
-#: src/hope_live/templates/pages/landing.html:206
+#: src/hope_live/templates/pages/landing.html:203
 msgid "Country-level reach for the selected year"
 msgstr "Cobertura por país para el año seleccionado"
 
-#: src/hope_live/templates/pages/landing.html:210
+#: src/hope_live/templates/pages/landing.html:207
 msgid "Map metric"
 msgstr "Indicador del mapa"
 
-#: src/hope_live/templates/pages/landing.html:213
-#: src/hope_live/templates/pages/landing.html:262
-#: src/hope_live/templates/pages/landing.html:358
+#: src/hope_live/templates/pages/landing.html:210
+#: src/hope_live/templates/pages/landing.html:324
 msgid "Families"
 msgstr "Familias"
 
-#: src/hope_live/templates/pages/landing.html:218
-#: src/hope_live/templates/pages/landing.html:366
+#: src/hope_live/templates/pages/landing.html:212
+#: src/hope_live/templates/pages/landing.html:338
+#| msgid "Social Worker"
+msgid "Social Workers"
+msgstr "Trabajadores sociales"
+
+#: src/hope_live/templates/pages/landing.html:216
+#: src/hope_live/templates/pages/landing.html:332
 msgid "Play years"
 msgstr "Reproducir años"
 
-#: src/hope_live/templates/pages/landing.html:225
+#: src/hope_live/templates/pages/landing.html:223
 msgid "Reset view"
 msgstr "Restablecer vista"
 
-#: src/hope_live/templates/pages/landing.html:228
+#: src/hope_live/templates/pages/landing.html:226
 msgid "Zoom in"
 msgstr "Acercar"
 
-#: src/hope_live/templates/pages/landing.html:231
+#: src/hope_live/templates/pages/landing.html:229
 msgid "Zoom out"
 msgstr "Alejar"
 
-#: src/hope_live/templates/pages/landing.html:237
+#: src/hope_live/templates/pages/landing.html:235
+#| msgid ""
+#| "Darker shading means a higher value. Select a country to open its spotlight."
 msgid ""
-"Darker shading means a higher value. Select a country to open its spotlight."
+"Darker shading means a higher value. Select a country to filter the page."
 msgstr ""
-"Un color más oscuro indica un valor más alto. Seleccione un país para abrir "
-"su foco."
+"Un color más oscuro indica un valor más alto. Seleccione un país para "
+"filtrar la página."
 
 #: src/hope_live/templates/pages/landing.html:247
-msgid "Select a country on the map"
-msgstr "Seleccione un país en el mapa"
-
-#: src/hope_live/templates/pages/landing.html:248
-msgid "Its children, families, individuals and cash figures will appear here."
-msgstr "Aquí aparecerán las cifras de niños, familias, personas y efectivo."
-
-#: src/hope_live/templates/pages/landing.html:253
-msgid "Country spotlight"
-msgstr "Foco del país"
-
-#: src/hope_live/templates/pages/landing.html:256
-msgid "Close country spotlight"
-msgstr "Cerrar foco del país"
-
-#: src/hope_live/templates/pages/landing.html:267
-msgid "Source: HOPE Database. Country totals follow the selected year."
-msgstr ""
-"Fuente: base de datos HOPE. Los totales por país siguen el año seleccionado."
-
-#: src/hope_live/templates/pages/landing.html:280
-msgid "Trends over time"
-msgstr "Tendencias a lo largo del tiempo"
-
-#: src/hope_live/templates/pages/landing.html:281
-msgid "Children, families, individuals and cash for the selected country."
-msgstr "Niños, familias, personas y efectivo para el país seleccionado."
-
-#: src/hope_live/templates/pages/landing.html:298
 msgid "Cash assistance by sector"
 msgstr "Asistencia monetaria por sector"
 
-#: src/hope_live/templates/pages/landing.html:299
+#: src/hope_live/templates/pages/landing.html:248
 msgid "Share of delivered cash by programme sector."
 msgstr ""
 "Proporción de la asistencia en efectivo entregada por sector del programa."
 
-#: src/hope_live/templates/pages/landing.html:299
-#: src/hope_live/templates/pages/landing.html:314
+#: src/hope_live/templates/pages/landing.html:248
+#: src/hope_live/templates/pages/landing.html:281
 msgid "Click a slice to filter."
 msgstr "Haga clic en un segmento para filtrar."
 
-#: src/hope_live/templates/pages/landing.html:313
-#: src/hope_live/templates/pages/landing.html:371
-#| msgid "Delivery types"
+#: src/hope_live/templates/pages/landing.html:265
+msgid "Trends over time"
+msgstr "Tendencias a lo largo del tiempo"
+
+#: src/hope_live/templates/pages/landing.html:266
+#| msgid ""
+#| "Children, families, individuals and cash for the selected country."
+msgid ""
+"Children, families, individuals, social workers and cash for the selected "
+"scope."
+msgstr ""
+"Niños, familias, personas, trabajadores sociales y efectivo para el ámbito "
+"seleccionado."
+
+#: src/hope_live/templates/pages/landing.html:280
+#: src/hope_live/templates/pages/landing.html:337
 msgid "Delivery mechanism"
 msgstr "Mecanismo de entrega"
 
-#: src/hope_live/templates/pages/landing.html:314
+#: src/hope_live/templates/pages/landing.html:281
 msgid "How cash reaches people: delivery mechanism share."
 msgstr ""
 "Cómo llega el efectivo a las personas: proporción por mecanismo de entrega."
 
-#: src/hope_live/templates/pages/landing.html:331
+#: src/hope_live/templates/pages/landing.html:297
 msgid "Responsible data"
 msgstr "Gestión responsable de datos"
 
-#: src/hope_live/templates/pages/landing.html:333
+#: src/hope_live/templates/pages/landing.html:299
 msgid "Read UNICEF's data protection policy."
 msgstr "Lea la política de protección de datos de UNICEF."
 
-#: src/hope_live/templates/pages/landing.html:341
-#: src/hope_live/templates/public_layout.html:104
+#: src/hope_live/templates/pages/landing.html:307
+#: src/hope_live/templates/public_layout.html:91
 msgid "Methodology"
 msgstr "Metodología"
 
-#: src/hope_live/templates/pages/landing.html:343
+#: src/hope_live/templates/pages/landing.html:309
 msgid "How HOPE data is produced and the standards applied."
 msgstr "Cómo se producen los datos de HOPE y las normas aplicadas."
 
-#: src/hope_live/templates/pages/landing.html:356
+#: src/hope_live/templates/pages/landing.html:322
 msgid "No data"
 msgstr "Sin datos"
 
-#: src/hope_live/templates/pages/landing.html:361
+#: src/hope_live/templates/pages/landing.html:327
 msgid "High"
 msgstr "Alto"
 
-#: src/hope_live/templates/pages/landing.html:362
+#: src/hope_live/templates/pages/landing.html:328
 msgid "Low"
 msgstr "Bajo"
 
-#: src/hope_live/templates/pages/landing.html:363
+#: src/hope_live/templates/pages/landing.html:329
 msgid "Reach"
 msgstr "Cobertura"
 
-#: src/hope_live/templates/pages/landing.html:365
+#: src/hope_live/templates/pages/landing.html:331
 msgid "Other"
 msgstr "Otro"
 
-#: src/hope_live/templates/pages/landing.html:367
+#: src/hope_live/templates/pages/landing.html:333
 msgid "Pause"
 msgstr "Pausa"
 
-#: src/hope_live/templates/pages/landing.html:368
+#: src/hope_live/templates/pages/landing.html:334
 msgid "Data could not be loaded. Please refresh."
 msgstr "No se pudieron cargar los datos. Actualice la página."
 
-#: src/hope_live/templates/pages/landing.html:369
-#| msgid "countries"
+#: src/hope_live/templates/pages/landing.html:335
 msgid "countries selected"
 msgstr "países seleccionados"
 
-#: src/hope_live/templates/pages/landing.html:370
+#: src/hope_live/templates/pages/landing.html:336
 msgid "Sector"
 msgstr "Sector"
 
-#: src/hope_live/templates/pages/landing.html:372
+#: src/hope_live/templates/pages/landing.html:339
 msgid "Remove"
 msgstr "Quitar"
 
-#: src/hope_live/templates/pages/landing.html:373
+#: src/hope_live/templates/pages/landing.html:340
 msgid "Loading..."
 msgstr "Cargando..."
 
-#: src/hope_live/templates/pages/landing.html:374
+#: src/hope_live/templates/pages/landing.html:341
 msgid "years of data available."
 msgstr "años de datos disponibles."
 
-#: src/hope_live/templates/pages/landing.html:375
+#: src/hope_live/templates/pages/landing.html:342
 msgid "Education"
 msgstr "Educación"
 
-#: src/hope_live/templates/pages/landing.html:376
+#: src/hope_live/templates/pages/landing.html:343
 msgid "Health"
 msgstr "Salud"
 
-#: src/hope_live/templates/pages/landing.html:377
+#: src/hope_live/templates/pages/landing.html:344
 msgid "WASH"
 msgstr "Agua, saneamiento e higiene (WASH)"
 
-#: src/hope_live/templates/pages/landing.html:378
+#: src/hope_live/templates/pages/landing.html:345
 msgid "Nutrition"
 msgstr "Nutrición"
 
-#: src/hope_live/templates/pages/landing.html:379
-#| msgid "Children"
+#: src/hope_live/templates/pages/landing.html:346
 msgid "Child Protection"
 msgstr "Protección de la infancia"
 
-#: src/hope_live/templates/pages/landing.html:380
-#| msgid "Data protection"
+#: src/hope_live/templates/pages/landing.html:347
 msgid "Social Protection"
 msgstr "Protección social"
 
-#: src/hope_live/templates/pages/landing.html:381
+#: src/hope_live/templates/pages/landing.html:348
 msgid "Multi-purpose Cash"
 msgstr "Efectivo multipropósito"
 
-#: src/hope_live/templates/pages/landing.html:382
-#| msgid "Payment verification"
+#: src/hope_live/templates/pages/landing.html:349
 msgid "Winterization"
 msgstr "Asistencia de invierno"
 
-#: src/hope_live/templates/pages/landing.html:383
+#: src/hope_live/templates/pages/landing.html:350
 msgid "Mobile Money"
 msgstr "Dinero móvil"
 
-#: src/hope_live/templates/pages/landing.html:384
-#| msgid "Cash Transfers"
+#: src/hope_live/templates/pages/landing.html:351
 msgid "Bank Transfer"
 msgstr "Transferencia bancaria"
 
-#: src/hope_live/templates/pages/landing.html:385
+#: src/hope_live/templates/pages/landing.html:352
 msgid "Cash in Hand"
 msgstr "Efectivo en mano"
 
-#: src/hope_live/templates/pages/landing.html:386
+#: src/hope_live/templates/pages/landing.html:353
+msgid "Cash on Site"
+msgstr "Efectivo en el sitio"
+
+#: src/hope_live/templates/pages/landing.html:354
 msgid "Paper Voucher"
 msgstr "Cupón impreso"
 
-#: src/hope_live/templates/pages/landing.html:387
+#: src/hope_live/templates/pages/landing.html:355
 msgid "e-Voucher"
 msgstr "Cupón electrónico"
 
-#: src/hope_live/templates/pages/landing.html:388
+#: src/hope_live/templates/pages/landing.html:356
 msgid "Prepaid Card"
 msgstr "Tarjeta prepago"
 
 #: src/hope_live/templates/pages/login.html:16
-#| msgid "HOPE Dashboard"
 msgid "HOPE Live Dashboard"
 msgstr "Panel en vivo de HOPE"
 
@@ -1173,7 +1137,6 @@ msgid "Hope Country Report dev - %(year)s - %(version)s"
 msgstr "Informe de país de HOPE (dev) - %(year)s - %(version)s"
 
 #: src/hope_live/templates/pages/risk.html:8
-#| msgid "Completion Rate Dashboard"
 msgid "Operational risk dashboard"
 msgstr "Panel de riesgos operativos"
 
@@ -1185,7 +1148,6 @@ msgstr ""
 "excepciones"
 
 #: src/hope_live/templates/pages/risk.html:24
-#| msgid "Category"
 msgid "All categories"
 msgstr "Todas las categorías"
 
@@ -1198,7 +1160,6 @@ msgid "Safeguarding"
 msgstr "Salvaguardia"
 
 #: src/hope_live/templates/pages/risk.html:33
-#| msgid "Programs"
 msgid "Programmatic"
 msgstr "Programático"
 
@@ -1215,22 +1176,18 @@ msgid "Clear country filter"
 msgstr "Borrar filtro de país"
 
 #: src/hope_live/templates/pages/risk.html:63
-#| msgid "Programs"
 msgid "Programme:"
 msgstr "Programa:"
 
 #: src/hope_live/templates/pages/risk.html:67
-#| msgid "Programs"
 msgid "All programmes"
 msgstr "Todos los programas"
 
 #: src/hope_live/templates/pages/risk.html:70
-#| msgid "Programs"
 msgid "Clear programme filter"
 msgstr "Borrar filtro de programa"
 
 #: src/hope_live/templates/pages/risk.html:88
-#| msgid "Total Tickets"
 msgid "Total risk items"
 msgstr "Total de elementos de riesgo"
 
@@ -1272,7 +1229,6 @@ msgid "Count of risk indicators at critical severity."
 msgstr "Recuento de indicadores de riesgo con gravedad crítica."
 
 #: src/hope_live/templates/pages/risk.html:114
-#| msgid "Distribution by Sector"
 msgid "Risk distribution by module"
 msgstr "Distribución de riesgos por módulo"
 
@@ -1285,7 +1241,6 @@ msgid "Click any module to filter operational cards"
 msgstr "Haga clic en cualquier módulo para filtrar las tarjetas operativas"
 
 #: src/hope_live/templates/pages/risk.html:126
-#| msgid "Tickets Timeline"
 msgid "Issues timeline"
 msgstr "Cronología de incidencias"
 
@@ -1330,7 +1285,6 @@ msgid "Module"
 msgstr "Módulo"
 
 #: src/hope_live/templates/pages/risk.html:181
-#| msgid "Programs"
 msgid "Programme"
 msgstr "Programa"
 
@@ -1343,7 +1297,6 @@ msgid "Trend"
 msgstr "Tendencia"
 
 #: src/hope_live/templates/pages/risk.html:184
-#| msgid "Open Issue"
 msgid "Issues"
 msgstr "Incidencias"
 
@@ -1374,17 +1327,17 @@ msgid "Public navigation"
 msgstr "Navegación pública"
 
 #: src/hope_live/templates/public_layout.html:33
-#: src/hope_live/templates/public_layout.html:69
+#: src/hope_live/templates/public_layout.html:63
 msgid "Evidence"
 msgstr "Evidencia"
 
 #: src/hope_live/templates/public_layout.html:34
-#: src/hope_live/templates/public_layout.html:73
+#: src/hope_live/templates/public_layout.html:67
 msgid "Resources"
 msgstr "Recursos"
 
 #: src/hope_live/templates/public_layout.html:35
-#: src/hope_live/templates/public_layout.html:77
+#: src/hope_live/templates/public_layout.html:71
 msgid "Contact"
 msgstr "Contacto"
 
@@ -1393,19 +1346,14 @@ msgid "Language"
 msgstr "Idioma"
 
 #: src/hope_live/templates/public_layout.html:57
-#: src/hope_live/templates/public_layout.html:83
-msgid "Go to Dashboards"
-msgstr "Ir a los tableros"
-
-#: src/hope_live/templates/public_layout.html:63
 msgid "Menu"
 msgstr "Menú"
 
-#: src/hope_live/templates/public_layout.html:108
+#: src/hope_live/templates/public_layout.html:95
 msgid "Data protection"
 msgstr "Protección de datos"
 
-#: src/hope_live/templates/public_layout.html:110
+#: src/hope_live/templates/public_layout.html:97
 #, python-format
 msgid "Version %(version)s"
 msgstr "Versión %(version)s"
@@ -1436,10 +1384,10 @@ msgstr ""
 #: src/hope_live/web/chart_metadata.py:86
 #: src/hope_live/web/chart_metadata.py:95
 #: src/hope_live/web/chart_metadata.py:117
-#: src/hope_live/web/chart_metadata.py:374
-#: src/hope_live/web/chart_metadata.py:384
-#: src/hope_live/web/chart_metadata.py:430
-#: src/hope_live/web/chart_metadata.py:439
+#: src/hope_live/web/chart_metadata.py:375
+#: src/hope_live/web/chart_metadata.py:385
+#: src/hope_live/web/chart_metadata.py:431
+#: src/hope_live/web/chart_metadata.py:440
 msgid "HOPE payments — country report financial feed."
 msgstr "Pagos de HOPE — flujo financiero del informe de país."
 
@@ -1904,8 +1852,12 @@ msgstr ""
 "agrupada por país del área operativa. Cada barra es el total apilado de los "
 "valores conciliados y pendientes para la métrica activa."
 
-#: src/hope_live/web/chart_metadata.py:240
-#, no-python-format
+#: src/hope_live/web/chart_metadata.py:241
+#, fuzzy, python-format
+#| msgid ""
+#| "All countries with completion data are shown. Absolute values is the "
+#| "default; 100% share shows each country's reconciled and pending split as "
+#| "percentages."
 msgid ""
 "All countries with completion data are shown. Absolute values is the "
 "default; 100% share shows each country's reconciled and pending split as "
@@ -1915,15 +1867,15 @@ msgstr ""
 "es la vista predeterminada; el modo de participación del 100% muestra la "
 "proporción conciliada y pendiente de cada país en porcentajes."
 
-#: src/hope_live/web/chart_metadata.py:245
+#: src/hope_live/web/chart_metadata.py:246
 msgid "Reconciliation and delivery success rates by country."
 msgstr "Tasas de conciliación y de éxito de entrega por país."
 
-#: src/hope_live/web/chart_metadata.py:246
+#: src/hope_live/web/chart_metadata.py:247
 msgid "HOPE payments — financial and completion feeds."
 msgstr "Pagos de HOPE — flujos financiero y de finalización."
 
-#: src/hope_live/web/chart_metadata.py:248
+#: src/hope_live/web/chart_metadata.py:249
 msgid ""
 "Reconciliation rate is reconciled divided by reconciled plus pending "
 "reconciliation in the completion feed. Delivery success rate is successful "
@@ -1936,11 +1888,11 @@ msgstr ""
 "exitosos y pendientes en el flujo financiero. Solo se muestran los países "
 "presentes en ambos flujos."
 
-#: src/hope_live/web/chart_metadata.py:254
-#, no-python-format
+#: src/hope_live/web/chart_metadata.py:256
+#, fuzzy, python-format
 #| msgid ""
-#| "Two rates per country, sorted by reconciliation rate. The dashed line is the"
-#| " 80 percent reference."
+#| "All countries present in both feeds are shown, sorted by reconciliation "
+#| "rate. The dashed 80% line is a reference guide, not a threshold."
 msgid ""
 "All countries present in both feeds are shown, sorted by reconciliation "
 "rate. The dashed 80% line is a reference guide, not a threshold."
@@ -1949,7 +1901,7 @@ msgstr ""
 "de conciliación. La línea discontinua del 80% es una guía de referencia, no "
 "un umbral."
 
-#: src/hope_live/web/chart_metadata.py:259
+#: src/hope_live/web/chart_metadata.py:261
 msgid ""
 "Payment verification outcomes: selected, verified, pending and "
 "discrepancies."
@@ -1957,13 +1909,13 @@ msgstr ""
 "Resultados de la verificación de pagos: seleccionados, verificados, "
 "pendientes y con discrepancias."
 
-#: src/hope_live/web/chart_metadata.py:260
+#: src/hope_live/web/chart_metadata.py:262
 msgid "HOPE payment verification plans — country report completion feed."
 msgstr ""
 "Planes de verificación de pagos de HOPE — flujo de finalización del informe "
 "de país."
 
-#: src/hope_live/web/chart_metadata.py:262
+#: src/hope_live/web/chart_metadata.py:264
 msgid ""
 "Uses the verification-plan summaries: selected is the sample size, verified "
 "is the received count, pending is the sample size minus the responded count,"
@@ -1978,7 +1930,7 @@ msgstr ""
 " la fecha de activación del plan de verificación o, en su defecto, la fecha "
 "de finalización."
 
-#: src/hope_live/web/chart_metadata.py:268
+#: src/hope_live/web/chart_metadata.py:270
 msgid ""
 "The completion rate is verified payments divided by selected payments. The "
 "panel appears when verification plans exist for the period."
@@ -1987,7 +1939,7 @@ msgstr ""
 "seleccionados. El panel aparece cuando existen planes de verificación para "
 "el período."
 
-#: src/hope_live/web/chart_metadata.py:276
+#: src/hope_live/web/chart_metadata.py:278
 msgid ""
 "Grievance ticket volume over time, split into closed/resolved and "
 "open/active."
@@ -1995,17 +1947,17 @@ msgstr ""
 "Volumen de casos de quejas a lo largo del tiempo, dividido en "
 "cerrados/resueltos y abiertos/activos."
 
-#: src/hope_live/web/chart_metadata.py:277
-#: src/hope_live/web/chart_metadata.py:291
-#: src/hope_live/web/chart_metadata.py:301
-#: src/hope_live/web/chart_metadata.py:314
-#: src/hope_live/web/chart_metadata.py:323
-#: src/hope_live/web/chart_metadata.py:329
-#: src/hope_live/web/chart_metadata.py:344
+#: src/hope_live/web/chart_metadata.py:279
+#: src/hope_live/web/chart_metadata.py:293
+#: src/hope_live/web/chart_metadata.py:303
+#: src/hope_live/web/chart_metadata.py:316
+#: src/hope_live/web/chart_metadata.py:325
+#: src/hope_live/web/chart_metadata.py:331
+#: src/hope_live/web/chart_metadata.py:346
 msgid "HOPE grievances — country report grievance feed."
 msgstr "Quejas de HOPE — flujo de quejas del informe de país."
 
-#: src/hope_live/web/chart_metadata.py:279
+#: src/hope_live/web/chart_metadata.py:281
 msgid ""
 "Counts tickets by created date. Ignored tickets are excluded and business "
 "area must be set. Closed covers the Closed and Resolved statuses; Open & "
@@ -2016,7 +1968,7 @@ msgstr ""
 "Cerrado y Resuelto; «Abiertos y activos» abarca Nuevo, Asignado, En "
 "progreso, En espera y Para aprobación."
 
-#: src/hope_live/web/chart_metadata.py:284
+#: src/hope_live/web/chart_metadata.py:286
 msgid ""
 "HOPE integer status codes are mapped to labels before charting. System flags"
 " are a separate source and are excluded by default; use the ticket-source "
@@ -2027,18 +1979,18 @@ msgstr ""
 "excluyen de forma predeterminada; utilice el selector de origen del caso "
 "para incluirlas."
 
-#: src/hope_live/web/chart_metadata.py:290
+#: src/hope_live/web/chart_metadata.py:292
 msgid "Grievance tickets by status."
 msgstr "Casos de quejas por estado."
 
-#: src/hope_live/web/chart_metadata.py:292
+#: src/hope_live/web/chart_metadata.py:294
 msgid ""
 "Counts tickets by the status value for the active ticket source and period."
 msgstr ""
 "Contabiliza los casos según el valor de estado para el origen de caso y el "
 "período activos."
 
-#: src/hope_live/web/chart_metadata.py:294
+#: src/hope_live/web/chart_metadata.py:296
 msgid ""
 "Not specified means the source status field was blank. The doughnut is used "
 "until resolution-time data is available, when it is replaced by Average "
@@ -2049,11 +2001,11 @@ msgstr ""
 " disponibles, momento en el que se reemplaza por Tiempo medio de resolución "
 "de quejas por categoría."
 
-#: src/hope_live/web/chart_metadata.py:300
+#: src/hope_live/web/chart_metadata.py:302
 msgid "Average grievance resolution time by category."
 msgstr "Tiempo medio de resolución de quejas por categoría."
 
-#: src/hope_live/web/chart_metadata.py:303
+#: src/hope_live/web/chart_metadata.py:305
 msgid ""
 "Average days between ticket creation and last update for closed tickets "
 "(status 6) created in the selected period, grouped by category. updated_at "
@@ -2065,7 +2017,7 @@ msgstr ""
 "por categoría. Se utiliza updated_at como indicador de cierre porque HOPE no"
 " expone una marca de tiempo de cierre dedicada."
 
-#: src/hope_live/web/chart_metadata.py:308
+#: src/hope_live/web/chart_metadata.py:310
 msgid ""
 "Only closed tickets with both timestamps are included. The status doughnut "
 "is shown instead until resolution rows exist."
@@ -2074,18 +2026,18 @@ msgstr ""
 "muestra el gráfico de anillo por estado hasta que existan registros de "
 "resolución."
 
-#: src/hope_live/web/chart_metadata.py:313
+#: src/hope_live/web/chart_metadata.py:315
 msgid "Grievance tickets by priority."
 msgstr "Casos de quejas por prioridad."
 
-#: src/hope_live/web/chart_metadata.py:315
+#: src/hope_live/web/chart_metadata.py:317
 msgid ""
 "Counts tickets by the priority value for the selected period and country."
 msgstr ""
 "Contabiliza los casos según el valor de prioridad para el período y país "
 "seleccionados."
 
-#: src/hope_live/web/chart_metadata.py:317
+#: src/hope_live/web/chart_metadata.py:319
 msgid ""
 "Priority is an optional field in HOPE, so many tickets have none; these are "
 "reported as Not Set (source value 0)."
@@ -2093,18 +2045,18 @@ msgstr ""
 "La prioridad es un campo opcional en HOPE, por lo que muchos casos carecen "
 "de ella; estos se registran como «No establecido» (valor de origen 0)."
 
-#: src/hope_live/web/chart_metadata.py:322
+#: src/hope_live/web/chart_metadata.py:324
 msgid "Grievance tickets by category."
 msgstr "Casos de quejas por categoría."
 
-#: src/hope_live/web/chart_metadata.py:324
+#: src/hope_live/web/chart_metadata.py:326
 msgid ""
 "Counts tickets by the category value for the selected period and country."
 msgstr ""
 "Contabiliza los casos según el valor de categoría para el período y país "
 "seleccionados."
 
-#: src/hope_live/web/chart_metadata.py:325
+#: src/hope_live/web/chart_metadata.py:327
 msgid ""
 "The chart shows the top 10 categories. Not specified means the category was "
 "blank."
@@ -2112,11 +2064,11 @@ msgstr ""
 "El gráfico muestra las 10 categorías principales. «No especificado» "
 "significa que la categoría estaba vacía."
 
-#: src/hope_live/web/chart_metadata.py:328
+#: src/hope_live/web/chart_metadata.py:330
 msgid "Grievance tickets by subcategory."
 msgstr "Casos de quejas por subcategoría."
 
-#: src/hope_live/web/chart_metadata.py:331
+#: src/hope_live/web/chart_metadata.py:333
 msgid ""
 "Counts tickets by the subcategory value (stored as issue_type in HOPE) for "
 "categories that define subcategories: Data Change, Sensitive Grievance, "
@@ -2126,7 +2078,7 @@ msgstr ""
 "issue_type en HOPE) para las categorías que definen subcategorías: Cambio de"
 " datos, Queja sensible, Queja y Requiere adjudicación."
 
-#: src/hope_live/web/chart_metadata.py:336
+#: src/hope_live/web/chart_metadata.py:338
 msgid ""
 "The chart shows the top 10 subcategories. Payment Verification, feedback, "
 "referral, system-flagging and beneficiary categories have no subcategory and"
@@ -2139,14 +2091,14 @@ msgstr ""
 "gráfico es inferior al total de casos. HOPE denomina a este campo "
 "«Subcategoría»."
 
-#: src/hope_live/web/chart_metadata.py:343
+#: src/hope_live/web/chart_metadata.py:345
 msgid ""
 "Grievance tickets by country, split into closed/resolved and open/active."
 msgstr ""
 "Casos de quejas por país, divididos en cerrados/resueltos y "
 "abiertos/activos."
 
-#: src/hope_live/web/chart_metadata.py:346
+#: src/hope_live/web/chart_metadata.py:348
 msgid ""
 "Uses the same ticket base as the grievance timeline, grouped by business "
 "area country. Each bar is the stacked total of closed/resolved and "
@@ -2156,7 +2108,7 @@ msgstr ""
 "país del área operativa. Cada barra es el total apilado de casos "
 "cerrados/resueltos y abiertos/activos."
 
-#: src/hope_live/web/chart_metadata.py:349
+#: src/hope_live/web/chart_metadata.py:351
 msgid ""
 "All countries with tickets in the period are shown; long country names wrap "
 "on the axis."
@@ -2164,7 +2116,7 @@ msgstr ""
 "Se muestran todos los países con casos en el período; los nombres de países "
 "largos se ajustan en varias líneas en el eje."
 
-#: src/hope_live/web/chart_metadata.py:356
+#: src/hope_live/web/chart_metadata.py:358
 msgid ""
 "Global delivery over time: cash disbursed and the number of individuals, "
 "families and children reached by household programmes."
@@ -2172,7 +2124,7 @@ msgstr ""
 "Entrega global a lo largo del tiempo: efectivo desembolsado y número de "
 "personas, familias y niños alcanzados por los programas de hogares."
 
-#: src/hope_live/web/chart_metadata.py:359
+#: src/hope_live/web/chart_metadata.py:361
 msgid ""
 "HOPE payments and household registration data, aggregated by the country "
 "report."
@@ -2180,7 +2132,7 @@ msgstr ""
 "Datos de pagos y registro de hogares de HOPE, agregados por el informe de "
 "país."
 
-#: src/hope_live/web/chart_metadata.py:361
+#: src/hope_live/web/chart_metadata.py:363
 msgid ""
 "Cash sums delivered quantity in USD. Individuals sums the registered "
 "household size of reached households; Families counts those households; "
@@ -2194,7 +2146,7 @@ msgstr ""
 " de primera línea (incentivos) se reporta por separado y no forma parte de "
 "estas series."
 
-#: src/hope_live/web/chart_metadata.py:368
+#: src/hope_live/web/chart_metadata.py:370
 msgid ""
 "All years is the default and shows annual totals. Selecting a single year "
 "shows its monthly breakdown."
@@ -2202,12 +2154,12 @@ msgstr ""
 "«Todos los años» es la opción predeterminada y muestra los totales anuales. "
 "Al seleccionar un solo año se muestra su desglose mensual."
 
-#: src/hope_live/web/chart_metadata.py:373
+#: src/hope_live/web/chart_metadata.py:374
 msgid "Share of cash assistance delivered by programme sector."
 msgstr ""
 "Proporción de la asistencia monetaria entregada por sector del programa."
 
-#: src/hope_live/web/chart_metadata.py:376
+#: src/hope_live/web/chart_metadata.py:377
 msgid ""
 "Sums delivered quantity in USD for the selected year and country, grouped by"
 " programme sector. The chart shows the largest sectors and groups the "
@@ -2217,18 +2169,18 @@ msgstr ""
 " por sector del programa. El gráfico muestra los sectores principales y "
 "agrupa el resto como «Otro»."
 
-#: src/hope_live/web/chart_metadata.py:380
+#: src/hope_live/web/chart_metadata.py:381
 msgid "Percentages are of total cash delivered in the selected scope."
 msgstr ""
 "Los porcentajes corresponden al total de efectivo entregado en el alcance "
 "seleccionado."
 
-#: src/hope_live/web/chart_metadata.py:383
+#: src/hope_live/web/chart_metadata.py:384
 msgid "Share of cash assistance delivered by payment mechanism."
 msgstr ""
 "Proporción de la asistencia monetaria entregada por mecanismo de entrega."
 
-#: src/hope_live/web/chart_metadata.py:386
+#: src/hope_live/web/chart_metadata.py:387
 msgid ""
 "Sums delivered quantity in USD for the selected year and country, grouped by"
 " delivery mechanism. The chart shows the largest mechanisms and groups the "
@@ -2238,21 +2190,21 @@ msgstr ""
 " por mecanismo de entrega. El gráfico muestra los mecanismos principales y "
 "agrupa el resto como «Otro»."
 
-#: src/hope_live/web/chart_metadata.py:390
+#: src/hope_live/web/chart_metadata.py:391
 msgid ""
 "Payment mechanism is the HOPE delivery mechanism attached to the payment."
 msgstr ""
 "El mecanismo de entrega corresponde al mecanismo de entrega de HOPE asociado"
 " al pago."
 
-#: src/hope_live/web/chart_metadata.py:393
+#: src/hope_live/web/chart_metadata.py:394
 msgid "Children reached through household programmes in the current data."
 msgstr ""
 "Niños alcanzados a través de programas de hogares en los datos actuales."
 
-#: src/hope_live/web/chart_metadata.py:394
-#: src/hope_live/web/chart_metadata.py:407
-#: src/hope_live/web/chart_metadata.py:420
+#: src/hope_live/web/chart_metadata.py:395
+#: src/hope_live/web/chart_metadata.py:408
+#: src/hope_live/web/chart_metadata.py:421
 msgid ""
 "HOPE household registration and payment data — country report demographic "
 "feed."
@@ -2260,7 +2212,7 @@ msgstr ""
 "Datos de registro de hogares y pagos de HOPE — flujo demográfico del informe"
 " de país."
 
-#: src/hope_live/web/chart_metadata.py:396
+#: src/hope_live/web/chart_metadata.py:397
 msgid ""
 "Sums the children recorded in the composition of reached households. A "
 "household is counted when it has at least one qualifying payment in the "
@@ -2270,7 +2222,7 @@ msgstr ""
 "hogar se contabiliza cuando tiene al menos un pago admisible en el período; "
 "el recuento de niños sigue la composición registrada del hogar."
 
-#: src/hope_live/web/chart_metadata.py:401
+#: src/hope_live/web/chart_metadata.py:402
 msgid ""
 "Where household composition or children's dates of birth are missing, the "
 "figure is understated. This is not an estimate of all children in need."
@@ -2279,11 +2231,11 @@ msgstr ""
 "niños, la cifra está subestimada. Esta no es una estimación de todos los "
 "niños con necesidades humanitarias."
 
-#: src/hope_live/web/chart_metadata.py:406
+#: src/hope_live/web/chart_metadata.py:407
 msgid "Families with at least one qualifying payment in the selected period."
 msgstr "Familias con al menos un pago admisible en el período seleccionado."
 
-#: src/hope_live/web/chart_metadata.py:409
+#: src/hope_live/web/chart_metadata.py:410
 msgid ""
 "Counts reached households distinctly. Qualifying payments must belong to "
 "accepted, finished or closed payment plans; failed, removed, conflicted and "
@@ -2293,7 +2245,7 @@ msgstr ""
 "deben pertenecer a planes de pago aceptados, finalizados o cerrados; no se "
 "incluyen los pagos fallidos, eliminados, en conflicto ni excluidos."
 
-#: src/hope_live/web/chart_metadata.py:414
+#: src/hope_live/web/chart_metadata.py:415
 msgid ""
 "Families are counted from standard (household) programmes; social-worker "
 "programmes are reported separately."
@@ -2301,12 +2253,12 @@ msgstr ""
 "Las familias se contabilizan a partir de los programas estándar (de "
 "hogares); los programas de trabajadores sociales se reportan por separado."
 
-#: src/hope_live/web/chart_metadata.py:419
+#: src/hope_live/web/chart_metadata.py:420
 msgid "People reached through household programmes in the current data."
 msgstr ""
 "Personas alcanzadas a través de programas de hogares en los datos actuales."
 
-#: src/hope_live/web/chart_metadata.py:422
+#: src/hope_live/web/chart_metadata.py:423
 msgid ""
 "Sums the registered household size of reached households. A household is "
 "counted when it has at least one qualifying payment in the period, using the"
@@ -2317,7 +2269,7 @@ msgstr ""
 "de entrega, luego la fecha del derecho y después la fecha de estado del "
 "pago."
 
-#: src/hope_live/web/chart_metadata.py:426
+#: src/hope_live/web/chart_metadata.py:427
 msgid ""
 "Frontline (incentive) workers are reported separately and are not part of "
 "this figure."
@@ -2325,13 +2277,13 @@ msgstr ""
 "El personal de primera línea (incentivos) se reporta por separado y no forma"
 " parte de esta cifra."
 
-#: src/hope_live/web/chart_metadata.py:429
+#: src/hope_live/web/chart_metadata.py:430
 msgid "Cash disbursed directly to beneficiaries in the current data."
 msgstr ""
 "Efectivo desembolsado directamente a los beneficiarios en los datos "
 "actuales."
 
-#: src/hope_live/web/chart_metadata.py:432
+#: src/hope_live/web/chart_metadata.py:433
 msgid ""
 "Sums delivered quantity in USD, grouped by sector to avoid double counting. "
 "Entitlement quantity is used only when a delivery amount is not recorded."
@@ -2340,19 +2292,19 @@ msgstr ""
 "conteo. La cantidad del derecho solo se utiliza cuando no se registra un "
 "monto de entrega."
 
-#: src/hope_live/web/chart_metadata.py:435
+#: src/hope_live/web/chart_metadata.py:436
 msgid ""
 "The figure covers direct cash transfers, not the full operational budget."
 msgstr ""
 "La cifra abarca las transferencias monetarias directas, no el presupuesto "
 "operativo total."
 
-#: src/hope_live/web/chart_metadata.py:438
+#: src/hope_live/web/chart_metadata.py:439
 msgid "Number of cash transfers delivered in the current data."
 msgstr ""
 "Número de transferencias en efectivo entregadas en los datos actuales."
 
-#: src/hope_live/web/chart_metadata.py:441
+#: src/hope_live/web/chart_metadata.py:442
 msgid ""
 "Sums payment records grouped by sector to avoid double counting. A payment "
 "record is not a unique recipient or a payment plan."
@@ -2360,7 +2312,7 @@ msgstr ""
 "Suma los registros de pago agrupados por sector para evitar el doble conteo."
 " Un registro de pago no es un beneficiario único ni un plan de pago."
 
-#: src/hope_live/web/chart_metadata.py:444
+#: src/hope_live/web/chart_metadata.py:445
 msgid ""
 "Average transfer value divides cash disbursed by the number of payment "
 "records."
@@ -2368,20 +2320,20 @@ msgstr ""
 "El valor medio de la transferencia divide el efectivo desembolsado entre el "
 "número de registros de pago."
 
-#: src/hope_live/web/chart_metadata.py:447
+#: src/hope_live/web/chart_metadata.py:448
 msgid "Frontline social workers assisted through social-worker programmes."
 msgstr ""
 "Trabajadores sociales de primera línea asistidos a través de programas para "
 "trabajadores sociales."
 
-#: src/hope_live/web/chart_metadata.py:448
+#: src/hope_live/web/chart_metadata.py:449
 msgid ""
 "HOPE social-worker programme records — country report demographic feed."
 msgstr ""
 "Registros de programas de trabajadores sociales de HOPE — flujo demográfico "
 "del informe de país."
 
-#: src/hope_live/web/chart_metadata.py:450
+#: src/hope_live/web/chart_metadata.py:451
 msgid ""
 "Sums the beneficiaries recorded for social-worker programmes. In these "
 "programmes each record represents one worker, so the beneficiary total is "
@@ -2391,10 +2343,32 @@ msgstr ""
 "sociales. En estos programas cada registro representa a un trabajador, por "
 "lo que el total de beneficiarios equivale al personal."
 
-#: src/hope_live/web/chart_metadata.py:453
+#: src/hope_live/web/chart_metadata.py:454
 msgid ""
 "Social-worker programmes are not part of household, children or persons-"
 "with-disabilities counts."
 msgstr ""
 "Los programas de trabajadores sociales no forman parte de los recuentos de "
 "hogares, niños ni personas con discapacidad."
+
+#~ msgid "Cash Transfers"
+#~ msgstr "Transferencias monetarias"
+
+#~ msgid "Select a country on the map"
+#~ msgstr "Seleccione un país en el mapa"
+
+#~ msgid "Its children, families, individuals and cash figures will appear here."
+#~ msgstr "Aquí aparecerán las cifras de niños, familias, personas y efectivo."
+
+#~ msgid "Country spotlight"
+#~ msgstr "Foco del país"
+
+#~ msgid "Close country spotlight"
+#~ msgstr "Cerrar foco del país"
+
+#~ msgid "Source: HOPE Database. Country totals follow the selected year."
+#~ msgstr ""
+#~ "Fuente: base de datos HOPE. Los totales por país siguen el año seleccionado."
+
+#~ msgid "Go to Dashboards"
+#~ msgstr "Ir a los tableros"

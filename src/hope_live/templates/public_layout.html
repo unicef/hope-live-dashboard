@@ -52,12 +52,6 @@
                         </select>
                     </form>
 
-                    {% if user.is_authenticated %}
-                    <a href="{% url 'web:dashboard' %}" class="hidden lg:inline-flex bg-white text-[#0077a8] px-3 py-2 rounded text-sm font-black hover:bg-sky-50 transition-colors">
-                        {% translate "Go to Dashboards" %}
-                    </a>
-                    {% endif %}
-
                     <details id="public-mobile-menu" class="relative lg:hidden">
                         <summary class="list-none [&::-webkit-details-marker]:hidden cursor-pointer p-2 -mr-1 rounded hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-white/60"
                             aria-label="{% translate 'Menu' %}">
@@ -76,13 +70,6 @@
                                 {% icon "mail" "h-5 w-5 text-[#0077a8]" %}
                                 {% translate "Contact" %}
                             </a>
-                            {% if user.is_authenticated %}
-                            <div class="my-2 border-t border-slate-100"></div>
-                            <a href="{% url 'web:dashboard' %}" class="flex items-center gap-3 px-3 py-2.5 rounded text-base font-black text-[#0077a8] hover:bg-sky-50">
-                                {% icon "layout-dashboard" "h-5 w-5" %}
-                                {% translate "Go to Dashboards" %}
-                            </a>
-                            {% endif %}
                         </div>
                     </details>
                 </div>
