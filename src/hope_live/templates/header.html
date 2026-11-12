@@ -54,6 +54,8 @@
                 {% csrf_token %}
                 <button type="submit" class="bg-[#00adef] text-white px-4 py-2 rounded-md font-bold text-sm shadow hover:bg-sky-600 transition-colors">{% translate "Sign Out" %}</button>
             </form>
+        {% elif request.resolver_match.url_name != "login" %}
+            <a href="{% url 'web:login' %}" class="bg-[#00adef] text-white px-4 py-2 rounded-md font-bold text-sm shadow hover:bg-sky-600 transition-colors">{% translate "Sign In" %}</a>
         {% endif %}
 
         {% if request.user.is_staff %}

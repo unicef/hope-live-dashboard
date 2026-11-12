@@ -1,1049 +1,1017 @@
-{% extends "layout.html" %}
-{% load i18n js static %}
+{% extends "public_layout.html" %}
+{% load i18n icons js static %}
 
 {% block content %}
-<!-- 1. Hero Section -->
-<div class="grid grid-cols-12 bg-white border-b border-gray-200">
-
-    <!-- Unified Hero Banner (Spans 9 columns on lg) -->
-    <div class="col-span-12 lg:col-span-9 relative bg-sky-50 min-h-[330px] lg:min-h-[340px] flex items-center overflow-hidden">
-
-        <!-- Background Portrait Image & Blend Overlay: Pulled leftward to fill center void and position child naturally -->
-        <div class="absolute inset-y-0 right-0 w-full lg:w-[58%] xl:w-[62%] z-0 opacity-25 lg:opacity-100 transition-opacity pointer-events-none">
-            <img
-                src="{% static 'images/background.png' %}"
-                class="w-full h-full object-cover"
-                style="object-position: 80% 15%;"
-                alt="Child"
-            >
-            <!-- Feathered fade overlay to blend the image seamlessly into the bg-sky-50 card background -->
-            <div class="absolute inset-y-0 left-0 w-36 bg-gradient-to-r from-sky-50 via-sky-50/80 to-transparent hidden lg:block"></div>
-        </div>
-
-        <!-- Left Content: Title, Description, and CTAs -->
-        <div class="relative z-10 max-w-lg p-6 lg:py-8 lg:pl-10 flex flex-col justify-center">
-            <div class="flex items-center gap-4 mb-4">
-                <h1 class="text-5xl lg:text-6xl font-black text-[#00adef] tracking-tight">HOPE</h1>
-                <h2 class="text-base lg:text-lg font-semibold text-[#00adef] leading-snug border-l-2 border-[#00adef] pl-4">
-                    {% translate "Humanitarian cash" %}<br>
-                    {% translate "Operations and Programme" %}<br>
-                    {% translate "Ecosystem" %}
-                </h2>
-            </div>
-
-            <p class="text-xs lg:text-sm text-gray-600 mb-6 max-w-md leading-relaxed">
-                {% translate "Data and evidence to deliver humanitarian cash transfers safely." %}
-            </p>
-
-            <div class="flex items-center gap-3">
-                {% if user.is_authenticated %}
-                <a href="{% url 'web:dashboard' %}" class="bg-[#00adef] text-white px-5 py-2.5 rounded-lg font-bold text-xs shadow-2xs hover:bg-sky-600 transition-colors flex items-center gap-2">
-                    {% translate "Go to Dashboards" %}
-                    <svg class="w-3.5 h-3.5 rtl:rotate-180" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
-                </a>
-                {% else %}
-                <a href="#global-evidence" class="bg-[#00adef] text-white px-5 py-2.5 rounded-lg font-bold text-xs shadow-2xs hover:bg-sky-600 transition-colors flex items-center gap-2">
-                    {% translate "Explore evidence" %}
-                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 14l-7 7m0 0l-7-7m7 7V3"/></svg>
-                </a>
-                {% endif %}
-                <a href="{% url 'web:about' %}" class="text-[#00adef] font-semibold text-xs hover:underline flex items-center gap-1">
-                    {% translate "About HOPE" %}
-                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                </a>
-            </div>
-        </div>
-    </div>
-
-    <!-- Right: Stats / HOPE at a Glance (Spans 3 columns on lg) -->
-    <div class="col-span-12 md:col-span-6 lg:col-span-3 bg-white p-6 border-l border-gray-200 flex flex-col justify-center min-h-[330px] lg:min-h-[340px]">
-        <h3 class="font-bold text-gray-900 mb-3 text-xs uppercase tracking-wider text-slate-500">{% translate "HOPE at a glance" %}</h3>
-
-        <ul class="space-y-3">
-            <li class="flex items-center gap-3">
-                <div class="w-8 h-8 rounded-lg bg-sky-100 flex items-center justify-center shrink-0 text-[#00adef]">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+<div id="global-evidence" tabindex="-1" class="scroll-mt-24">
+    <!-- Hero + at a glance -->
+    <section class="bg-white border-b border-slate-200">
+        <div class="max-w-[1600px] mx-auto px-4 lg:px-6 py-8 lg:py-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
+            <div class="lg:col-span-8 relative overflow-hidden rounded-md bg-sky-50 min-h-[300px] flex items-center">
+                <div class="absolute inset-y-0 right-0 w-full md:w-[62%] opacity-30 md:opacity-100 pointer-events-none">
+                    <img src="{% static 'images/background.png' %}" class="w-full h-full object-cover" style="object-position: 80% 15%;" alt="">
+                    <div class="absolute inset-y-0 left-0 w-40 bg-gradient-to-r from-sky-50 via-sky-50/80 to-transparent"></div>
                 </div>
-                <div>
-                    <div class="font-bold text-gray-900 text-sm leading-none mb-0.5">{{ total_countries_glance }}+</div>
-                    <div class="text-[11px] text-gray-500">{% translate "Countries & territories" %}</div>
-                </div>
-            </li>
-
-            <li class="flex items-center gap-3">
-                <div class="w-8 h-8 rounded-lg bg-sky-100 flex items-center justify-center shrink-0 text-[#00adef]">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16 8v8m-4-5v5m-4-2v2m-2 4h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
-                </div>
-                <div>
-                    <div class="font-bold text-gray-900 text-sm leading-none mb-0.5">{{ total_programs_glance }}+</div>
-                    <div class="text-[11px] text-gray-500">{% translate "Programs" %}</div>
-                </div>
-            </li>
-
-            <li class="flex items-center gap-3">
-                <div class="w-8 h-8 rounded-lg bg-sky-100 flex items-center justify-center shrink-0 text-[#00adef]">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4"/></svg>
-                </div>
-                <div>
-                    <div class="font-bold text-gray-900 text-sm leading-none mb-0.5">{{ total_sources_glance }}</div>
-                    <div class="text-[11px] text-gray-500">{% translate "Data sources" %}</div>
-                </div>
-            </li>
-
-            <li class="flex items-center gap-3 pt-2.5 border-t border-gray-100">
-                <div class="w-8 h-8 rounded-lg bg-sky-100 flex items-center justify-center shrink-0 text-[#00adef]">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
-                </div>
-                <div>
-                    <div class="font-bold text-gray-900 text-xs leading-none mb-0.5">{% translate "Updated regularly" %}</div>
-                    <div class="text-[10px] text-gray-400">{% translate "Latest:" %} {{ latest_data_str }}</div>
-                </div>
-            </li>
-        </ul>
-    </div>
-</div>
-
-<div id="global-evidence" tabindex="-1" class="bg-gray-50 py-6 lg:py-8 border-t border-gray-200 focus:outline-none scroll-mt-6">
-    <div class="max-w-7xl mx-auto px-4 lg:px-6">
-
-        <!-- 2. Global KPI Strip (Compact) -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4 mb-8">
-            <!-- Card 1 -->
-            <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-2xs flex items-center justify-between">
-                <div>
-                    <div class="text-[10px] text-slate-500 uppercase tracking-wider font-bold mb-1">{% translate "Children Reached" %}</div>
-                    <div class="text-2xl font-black text-[#00adef] mb-0.5 leading-tight">{{ total_children|default:"47M" }}</div>
-                    <div class="text-[10px] text-slate-400 font-semibold">{% translate "Across" %} {{ total_countries|default:"32" }} {% translate "countries" %}</div>
-                </div>
-                <div class="w-10 h-10 rounded-lg bg-sky-50 flex items-center justify-center shrink-0">
-                    <svg class="w-5 h-5 text-[#00adef]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
-                </div>
-            </div>
-
-            <!-- Card 2 -->
-            <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-2xs flex items-center justify-between">
-                <div>
-                    <div class="text-[10px] text-slate-500 uppercase tracking-wider font-bold mb-1">{% translate "Households Reached" %}</div>
-                    <div class="text-2xl font-black text-[#00adef] mb-0.5 leading-tight">{{ total_households|default:"15M" }}</div>
-                    <div class="text-[10px] text-slate-400 font-semibold">{% translate "Humanitarian assistance" %}</div>
-                </div>
-                <div class="w-10 h-10 rounded-lg bg-sky-50 flex items-center justify-center shrink-0">
-                    <svg class="w-5 h-5 text-[#00adef]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" /></svg>
-                </div>
-            </div>
-
-            <!-- Card 3 -->
-            <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-2xs flex items-center justify-between">
-                <div>
-                    <div class="text-[10px] text-slate-500 uppercase tracking-wider font-bold mb-1">{% translate "Active Countries" %}</div>
-                    <div class="text-2xl font-black text-[#00adef] mb-0.5 leading-tight">{{ total_countries|default:"32" }}</div>
-                    <div class="text-[10px] text-slate-400 font-semibold">{% translate "Global cash operations" %}</div>
-                </div>
-                <div class="w-10 h-10 rounded-lg bg-sky-50 flex items-center justify-center shrink-0">
-                    <svg class="w-5 h-5 text-[#00adef]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                </div>
-            </div>
-
-            <!-- Card 4 -->
-            <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-2xs flex items-center justify-between">
-                <div>
-                    <div class="text-[10px] text-slate-500 uppercase tracking-wider font-bold mb-1">{% translate "Assistance Delivered" %}</div>
-                    <div class="text-2xl font-black text-[#00adef] mb-0.5 leading-tight">${{ total_cash_disbursed|default:"520M" }}</div>
-                    <div class="text-[10px] text-slate-400 font-semibold">{% translate "Direct cash transfers" %}</div>
-                </div>
-                <div class="w-10 h-10 rounded-lg bg-sky-50 flex items-center justify-center shrink-0">
-                    <svg class="w-5 h-5 text-[#00adef]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                </div>
-            </div>
-
-            <!-- Card 5 -->
-            <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-2xs flex items-center justify-between">
-                <div>
-                    <div class="text-[10px] text-slate-500 uppercase tracking-wider font-bold mb-1">{% translate "Verified Transactions" %}</div>
-                    <div class="text-2xl font-black text-[#00adef] mb-0.5 leading-tight">{{ verification_success_rate|default:"98.7" }}%</div>
-                    <div class="text-[10px] text-slate-400 font-semibold">{% translate "Verification success rate" %}</div>
-                </div>
-                <div class="w-10 h-10 rounded-lg bg-sky-50 flex items-center justify-center shrink-0">
-                    <svg class="w-5 h-5 text-[#00adef]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>
-                </div>
-            </div>
-
-            <!-- Card 6 -->
-            <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-2xs flex items-center justify-between">
-                <div>
-                    <div class="text-[10px] text-slate-500 uppercase tracking-wider font-bold mb-1">{% translate "Social Workers Reached" %}</div>
-                    <div class="text-2xl font-black text-[#00adef] mb-0.5 leading-tight">{{ total_social_workers|default:"0" }}</div>
-                    <div class="text-[10px] text-slate-400 font-semibold">{% translate "Frontline workforce assisted" %}</div>
-                </div>
-                <div class="w-10 h-10 rounded-lg bg-sky-50 flex items-center justify-center shrink-0">
-                    <svg class="w-5 h-5 text-[#00adef]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a4 4 0 00-3-3.87M9 20H4v-2a4 4 0 013-3.87m6-1.13a4 4 0 10-4-4 4 4 0 004 4zm6-4a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
-                </div>
-            </div>
-        </div>
-
-        <!-- 3. Interactive World Map + Trends Over Time (Side-by-Side on Same Level) -->
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-8 items-stretch">
-
-            <!-- Interactive World Map (7 cols) -->
-            <div class="lg:col-span-7 bg-white rounded-xl border border-gray-200 shadow-2xs flex flex-col justify-between overflow-hidden">
-                <div class="p-5 pb-2">
-                    <div class="flex justify-between items-center mb-1">
-                        <div>
-                            <h3 class="text-base font-bold text-gray-900">{% translate "Where children need help the most" %}</h3>
-                            <p class="text-xs text-gray-400">{% translate "Children in Need of Humanitarian Assistance (2026)" %}</p>
-                        </div>
-                        {% if user.is_authenticated %}
-                        <a href="{% url 'web:dashboard' %}" class="text-xs text-[#00adef] font-semibold hover:underline flex items-center gap-1">
-                            <span>{% translate "Explore map" %}</span>
-                            <svg class="w-3.5 h-3.5 rtl:rotate-180" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/></svg>
+                <div class="relative z-10 p-7 lg:p-10 max-w-xl">
+                    <div class="inline-flex items-center mb-5 rounded-md bg-[#00adef] px-4 py-3">
+                        <img src="{% static 'images/logo-white-trimmed.png' %}" alt="UNICEF" class="h-14 w-auto">
+                    </div>
+                    <h1 class="text-4xl sm:text-5xl lg:text-6xl font-black text-[#0077a8] tracking-tight leading-[1.05]">
+                        {% translate "Cash-based Assistance" %}
+                    </h1>
+                    <p class="mt-4 text-lg font-semibold text-slate-700 leading-relaxed max-w-md">
+                        {% translate "Data and evidence to deliver cash assistance safely — and to show where it reaches children and families." %}
+                    </p>
+                    <div class="mt-6 flex flex-wrap items-center gap-3">
+                        <a href="#landing-kpis" class="bg-[#00adef] text-white px-5 py-3 rounded font-black text-base hover:bg-sky-600 transition-colors">
+                            {% translate "Explore the evidence" %}
                         </a>
-                        {% else %}
-                        <span class="text-xs text-slate-400 font-medium flex items-center gap-1">
-                            <svg class="w-3.5 h-3.5 text-[#00adef]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z"/></svg>
-                            <span>{% translate "Global View" %}</span>
-                        </span>
-                        {% endif %}
-                    </div>
-                </div>
-
-                <div class="relative flex-grow h-[350px] px-5">
-                    <!-- Map Chart Element -->
-                    <div id="world-map-chart" class="w-full h-full"></div>
-                    <!-- Zoom Overlay -->
-                    <div class="absolute left-7 top-2 flex flex-col gap-1 z-20">
-                        <button id="map-zoom-home" class="w-7 h-7 bg-white/95 backdrop-blur border border-slate-200 rounded-md shadow-2xs hover:bg-slate-50 flex items-center justify-center text-slate-600 focus:outline-none" title="Reset view">
-                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
-                        </button>
-                        <button id="map-zoom-in" class="w-7 h-7 bg-white/95 backdrop-blur border border-slate-200 rounded-md shadow-2xs hover:bg-slate-50 flex items-center justify-center text-slate-600 focus:outline-none" title="Zoom in">
-                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
-                        </button>
-                        <button id="map-zoom-out" class="w-7 h-7 bg-white/95 backdrop-blur border border-slate-200 rounded-md shadow-2xs hover:bg-slate-50 flex items-center justify-center text-slate-600 focus:outline-none" title="Zoom out">
-                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M20 12H4"/></svg>
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Structured Map Legend Bar -->
-                <div class="px-5 py-2.5 bg-slate-50 border-t border-slate-100 flex flex-wrap items-center justify-between gap-2 text-xs text-slate-600 rounded-b-xl">
-                    <span class="font-bold text-[10px] text-slate-500 uppercase tracking-wider">{% translate "Reach scale" %}:</span>
-                    <div class="flex flex-wrap items-center gap-3">
-                        <span class="inline-flex items-center gap-1.5 text-[11px] font-medium"><span class="w-3 h-3 rounded-xs bg-[#084081]"></span> ≥ 10M</span>
-                        <span class="inline-flex items-center gap-1.5 text-[11px] font-medium"><span class="w-3 h-3 rounded-xs bg-[#0868ac]"></span> 5M–10M</span>
-                        <span class="inline-flex items-center gap-1.5 text-[11px] font-medium"><span class="w-3 h-3 rounded-xs bg-[#2b8cbe]"></span> 1M–5M</span>
-                        <span class="inline-flex items-center gap-1.5 text-[11px] font-medium"><span class="w-3 h-3 rounded-xs bg-[#7bccc4]"></span> 100K–1M</span>
-                        <span class="inline-flex items-center gap-1.5 text-[11px] font-medium"><span class="w-3 h-3 rounded-xs bg-[#bae4bc]"></span> &lt; 100K</span>
-                        <span class="inline-flex items-center gap-1.5 text-[11px] font-medium"><span class="w-3 h-3 rounded-xs bg-[#f1f5f9] border border-slate-300"></span> {% translate "No data" %}</span>
+                        <a href="https://www.unicef.org/hope-hct/resources" target="_blank" rel="noopener"
+                           class="text-[#0077a8] font-extrabold text-base hover:underline">
+                            {% translate "About UNICEF cash assistance" %}
+                        </a>
                     </div>
                 </div>
             </div>
 
-            <!-- Trends Over Time (5 cols - Same Level!) -->
-            <div class="lg:col-span-5 bg-white rounded-xl border border-gray-200 shadow-2xs p-5 flex flex-col justify-between">
-                <div>
-                    <div class="flex justify-between items-center mb-1">
+            <aside class="lg:col-span-4 bg-white border border-slate-200 rounded-md p-5 lg:p-6 flex flex-col justify-center">
+                <h2 class="text-base font-black tracking-wider text-[#0077a8] mb-4">
+                    {% translate "Cash-based Assistance at a glance" %}
+                </h2>
+
+                <div class="pb-4 border-b border-slate-100">
+                    <div class="flex items-center gap-2 text-base font-black tracking-wider text-[#0077a8] mb-1">
+                        {% icon "hand-coins" "h-4 w-4" %}
+                        {% translate "Assistance Delivered" %}
+                    </div>
+                    <div id="glance-cash" class="text-4xl lg:text-5xl font-black text-[#00adef] leading-none">${{ total_cash_disbursed|default:"1.2B" }}</div>
+                    <div class="text-base font-semibold text-slate-600 mt-1">{% translate "Direct cash transfers" %}</div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4 pt-4">
+                    <div class="flex items-start gap-2">
+                        <span class="w-7 h-7 shrink-0 rounded bg-sky-50 text-[#0077a8] flex items-center justify-center mt-0.5">
+                            {% icon "globe" "h-4 w-4" %}
+                        </span>
                         <div>
-                            <h3 class="text-base font-bold text-gray-900">{% translate "Trends over time" %}</h3>
-                            <p class="text-xs text-gray-400">{% translate "Selected indicators (global delivery)" %}</p>
+                            <div class="text-3xl font-black text-[#0077a8] leading-none">{{ total_countries_glance }}+</div>
+                            <div class="text-base font-bold text-[#0077a8] mt-1">{% translate "Countries & territories" %}</div>
                         </div>
-                        <select id="trends-timeframe" class="text-xs border-gray-300 rounded-md text-gray-700 py-1 pl-2.5 pr-7 focus:ring-[#00adef] focus:border-[#00adef] shadow-2xs font-semibold">
-                            <option value="5y">{% translate "5 years" %}</option>
-                            <option value="1y">{% translate "1 year" %}</option>
-                        </select>
                     </div>
-                </div>
-                <div class="flex-grow h-[350px] mt-2">
-                    <div id="trends-chart" class="w-full h-full"></div>
-                </div>
-            </div>
-        </div>
-
-        <!-- 4. Dashboards Grid + Updates Row -->
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-8">
-
-            {% if user.is_authenticated %}
-            <!-- Dashboards Grid (7 cols) -->
-            <div class="lg:col-span-7">
-                <h3 class="text-base font-bold text-gray-900 mb-3">{% translate "Explore Dashboards" %}</h3>
-                <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                    <a href="{% url 'web:dashboard' %}" class="bg-white p-4 rounded-xl border border-gray-200 shadow-2xs hover:border-[#00adef] hover:shadow-xs transition-all group">
-                        <h4 class="font-bold text-gray-800 text-sm group-hover:text-[#00adef]">{% translate "Financial" %}</h4>
-                        <p class="text-xs text-gray-500 mt-1">{% translate "Transfer values & logistics" %}</p>
-                    </a>
-                    <a href="{% url 'web:demographic' %}" class="bg-white p-4 rounded-xl border border-gray-200 shadow-2xs hover:border-[#00adef] hover:shadow-xs transition-all group">
-                        <h4 class="font-bold text-gray-800 text-sm group-hover:text-[#00adef]">{% translate "Demographics" %}</h4>
-                        <p class="text-xs text-gray-500 mt-1">{% translate "Population & reach" %}</p>
-                    </a>
-                    <a href="{% url 'web:grievance' %}" class="bg-white p-4 rounded-xl border border-gray-200 shadow-2xs hover:border-[#00adef] hover:shadow-xs transition-all group">
-                        <h4 class="font-bold text-gray-800 text-sm group-hover:text-[#00adef]">{% translate "Accountability" %}</h4>
-                        <p class="text-xs text-gray-500 mt-1">{% translate "Feedback & grievances" %}</p>
-                    </a>
-                    <a href="{% url 'web:completion' %}" class="bg-white p-4 rounded-xl border border-gray-200 shadow-2xs hover:border-[#00adef] hover:shadow-xs transition-all group">
-                        <h4 class="font-bold text-gray-800 text-sm group-hover:text-[#00adef]">{% translate "Quality" %}</h4>
-                        <p class="text-xs text-gray-500 mt-1">{% translate "Reconciliation & metrics" %}</p>
-                    </a>
-                    <a href="{% url 'web:risk' %}" class="bg-white p-4 rounded-xl border border-gray-200 shadow-2xs hover:border-amber-500 hover:shadow-xs transition-all group col-span-2 sm:col-span-1">
-                        <h4 class="font-bold text-gray-800 text-sm group-hover:text-amber-600 flex items-center gap-1.5">
-                            <span class="inline-block w-2 h-2 rounded-full bg-amber-500"></span>
-                            {% translate "Risk Monitor" %}
-                        </h4>
-                        <p class="text-xs text-gray-500 mt-1">{% translate "Operational exceptions" %}</p>
-                    </a>
-                </div>
-            </div>
-            {% else %}
-            <!-- Public HOPE Pillars & Capabilities (7 cols) -->
-            <div class="lg:col-span-7 bg-white rounded-xl border border-gray-200 shadow-2xs p-5 flex flex-col justify-between">
-                <div>
-                    <div class="flex items-center justify-between mb-3">
-                        <h3 class="text-base font-bold text-slate-900">{% translate "HOPE Ecosystem Pillars" %}</h3>
-                        <span class="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 bg-sky-50 text-[#00adef] rounded-md border border-sky-100">
-                            {% translate "Digital Public Good" %}
+                    <div class="flex items-start gap-2">
+                        <span class="w-7 h-7 shrink-0 rounded bg-sky-50 text-[#0077a8] flex items-center justify-center mt-0.5">
+                            {% icon "layers" "h-4 w-4" %}
                         </span>
-                    </div>
-                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4">
-                        <div class="p-3 bg-slate-50 rounded-lg border border-slate-100">
-                            <div class="w-7 h-7 rounded-md bg-sky-100 text-[#00adef] flex items-center justify-center mb-2">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.247 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
-                            </div>
-                            <h4 class="text-xs font-bold text-slate-800 mb-1">{% translate "Open Evidence" %}</h4>
-                            <p class="text-[11px] text-slate-500 leading-relaxed">{% translate "Standardized indicators and public evidence for global humanitarian action." %}</p>
-                        </div>
-                        <div class="p-3 bg-slate-50 rounded-lg border border-slate-100">
-                            <div class="w-7 h-7 rounded-md bg-sky-100 text-[#00adef] flex items-center justify-center mb-2">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75m-3-7.036A11.959 11.959 0 0 1 3.598 6 11.99 11.99 0 0 0 3 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285Z"/></svg>
-                            </div>
-                            <h4 class="text-xs font-bold text-slate-800 mb-1">{% translate "Data Protection" %}</h4>
-                            <p class="text-[11px] text-slate-500 leading-relaxed">{% translate "Zero-compromise privacy, safeguarding children and families in crisis." %}</p>
-                        </div>
-                        <div class="p-3 bg-slate-50 rounded-lg border border-slate-100">
-                            <div class="w-7 h-7 rounded-md bg-sky-100 text-[#00adef] flex items-center justify-center mb-2">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 21a9.004 9.004 0 0 0 8.716-6.747M12 21a9.004 9.004 0 0 1-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 0 1 7.843 4.582M12 3a8.997 8.997 0 0 0-7.843 4.582m15.686 0A11.953 11.953 0 0 1 12 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0 1 21 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0 1 12 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 0 1 3 12c0-.778.099-1.533.284-2.253"/></svg>
-                            </div>
-                            <h4 class="text-xs font-bold text-slate-800 mb-1">{% translate "Global Scale" %}</h4>
-                            <p class="text-[11px] text-slate-500 leading-relaxed">{% translate "End-to-end management across emergency and developmental contexts." %}</p>
+                        <div>
+                            <div class="text-3xl font-black text-[#0077a8] leading-none">{{ total_programs_glance }}+</div>
+                            <div class="text-base font-bold text-[#0077a8] mt-1">{% translate "Programmes" %}</div>
                         </div>
                     </div>
                 </div>
-                <div class="pt-3 border-t border-slate-100 flex items-center justify-between text-xs">
-                    <span class="text-slate-500">{% translate "Want to learn more about UNICEF HOPE?" %}</span>
-                    <a href="{% url 'web:about' %}" class="text-[#00adef] font-bold hover:underline flex items-center gap-1">
-                        <span>{% translate "About the platform" %}</span>
-                        <svg class="w-3 h-3 rtl:rotate-180" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/></svg>
-                    </a>
+
+                <div class="text-sm font-semibold text-slate-600 mt-4 pt-3 border-t border-slate-100">
+                    {% translate "Source" %}: {% translate "HOPE Database" %}
+                </div>
+            </aside>
+        </div>
+    </section>
+
+    <!-- Filter bar -->
+    <div class="static lg:sticky lg:top-0 z-30 bg-white/95 backdrop-blur border-b border-slate-200">
+        <div class="max-w-[1600px] mx-auto px-4 lg:px-6 py-3 flex flex-wrap items-end gap-3">
+            <div class="w-full sm:w-auto">
+                <label for="landing-year" class="block text-base font-black tracking-wider text-[#0077a8] mb-1">{% translate "Year" %}</label>
+                <select id="landing-year" class="w-full sm:w-auto text-base border-slate-300 rounded-md text-slate-700 py-2.5 pl-3 pr-8 focus:ring-[#00adef] focus:border-[#00adef] shadow-2xs font-bold bg-white">
+                    <option value="all">{% translate "All years" %}</option>
+                </select>
+            </div>
+            <div class="relative w-full sm:w-auto">
+                <label id="country-filter-label" class="block text-base font-black tracking-wider text-[#0077a8] mb-1">{% translate "Country" %}</label>
+                <button id="country-filter-button" type="button" aria-haspopup="listbox" aria-expanded="false" aria-controls="country-filter-panel"
+                    class="w-full sm:w-auto sm:min-w-[210px] flex items-center justify-between gap-3 text-base border border-slate-300 rounded-md text-slate-700 py-2.5 pl-3 pr-3 focus:outline-none focus:ring-2 focus:ring-[#00adef] font-bold bg-white">
+                    <span id="country-filter-value">{% translate "All countries" %}</span>
+                    {% icon "chevron-down" "h-4 w-4 text-slate-500" %}
+                </button>
+                <div id="country-filter-panel" class="hidden absolute left-0 right-0 sm:right-auto top-full mt-1 w-auto sm:w-[320px] max-w-none sm:max-w-[90vw] z-50 bg-white border border-slate-200 rounded-md shadow-lg">
+                    <div class="p-2 border-b border-slate-100">
+                        <label for="country-search" class="sr-only">{% translate "Search countries" %}</label>
+                        <div class="relative">
+                            <span class="absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none">
+                                {% icon "search" "h-4 w-4" %}
+                            </span>
+                            <input id="country-search" type="search" placeholder="{% translate 'Search countries' %}"
+                                class="w-full text-sm border border-slate-300 rounded-md pl-8 pr-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#00adef]">
+                        </div>
+                    </div>
+                    <div class="flex items-center justify-between px-3 py-2 border-b border-slate-100">
+                        <button id="country-select-all" type="button" class="text-xs font-bold text-[#0077a8] hover:underline">{% translate "Select all" %}</button>
+                        <button id="country-clear" type="button" class="text-xs font-bold text-slate-500 hover:underline">{% translate "Clear" %}</button>
+                    </div>
+                    <div id="country-options" class="max-h-64 overflow-y-auto p-2 space-y-1" role="listbox" aria-multiselectable="true"></div>
+                    <div id="country-empty" class="hidden px-3 py-4 text-sm text-slate-500 text-center">{% translate "No countries found" %}</div>
                 </div>
             </div>
-            {% endif %}
+            <button id="landing-reset" type="button" class="text-base font-black text-[#0077a8] hover:underline px-1 py-2">
+                {% translate "Reset" %}
+            </button>
+            <div class="ml-auto text-sm sm:text-base font-bold text-slate-700" id="latest-data-date">
+                {% translate "Data as of" %} {{ latest_data_exact|default:latest_data_str }}
+            </div>
+            <div id="country-chips" class="basis-full w-full flex flex-wrap gap-2"></div>
+        </div>
+    </div>
 
-            <!-- Latest Updates & Alerts (5 cols) -->
-            <div class="lg:col-span-5 bg-white rounded-xl border border-gray-200 shadow-2xs p-5 flex flex-col">
-                <div class="flex justify-between items-center mb-3">
-                    <h3 class="text-base font-bold text-slate-900">{% translate "Latest updates & alerts" %}</h3>
-                    <a href="https://www.unicef.org/hope-hct/" target="_blank" class="text-xs text-[#00adef] font-semibold hover:underline flex items-center gap-1">
-                        <span>{% translate "View all" %}</span>
-                        <svg class="w-3 h-3 rtl:rotate-180" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/></svg>
-                    </a>
+    <div class="max-w-[1600px] mx-auto px-4 lg:px-6 py-6 lg:py-8">
+        <!-- KPI strip -->
+        <div id="landing-kpis" class="grid grid-cols-1 xl:grid-cols-12 gap-4 mb-6">
+            <div class="xl:col-span-9">
+                <div class="flex items-center gap-2 text-base font-black tracking-wider text-[#0077a8] mb-2">
+                    {% icon "users" "h-4 w-4" %}
+                    {% translate "People & Families" %}
                 </div>
-                <div class="space-y-3.5 flex-grow">
-                    {% if hope_updates %}
-                        {% for update in hope_updates %}
-                        <div class="flex gap-3">
-                            <div class="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center shrink-0 text-[#00adef]">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
-                            </div>
-                            <div>
-                                <div class="flex items-center gap-2 mb-0.5">
-                                    <span class="bg-blue-100 text-blue-700 text-[10px] font-bold px-1.5 py-0.5 rounded">{{ update.version }}</span>
-                                    {% if update.date %}
-                                    <span class="text-[11px] text-gray-400">{{ update.date|date:"F j, Y" }}</span>
-                                    {% endif %}
-                                </div>
-                                <p class="text-xs text-slate-700 font-medium leading-snug">{{ update.snippet }}</p>
-                                <a href="https://www.unicef.org/hope-hct/" target="_blank" class="text-[11px] text-[#00adef] hover:underline font-semibold mt-0.5 inline-flex items-center gap-1">
-                                    <span>{% translate "Read details" %}</span>
-                                    <svg class="w-2.5 h-2.5 rtl:rotate-180" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/></svg>
-                                </a>
-                            </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                    <div class="bg-white p-4 rounded-md border border-slate-200 shadow-2xs">
+                        <div class="flex items-start justify-between gap-2 mb-1">
+                            <div class="text-base text-[#0077a8] tracking-wider font-black">{% translate "Children Reached" %}</div>
+                            <span class="w-7 h-7 shrink-0 rounded bg-sky-50 text-[#0077a8] flex items-center justify-center">{% icon "baby" "h-4 w-4" %}</span>
                         </div>
-                        {% endfor %}
-                    {% else %}
-                        <!-- Update 1: HOPE v2025.4.15.0 -->
-                        <div class="flex gap-3">
-                            <div class="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center shrink-0 text-[#00adef]">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
-                            </div>
-                            <div>
-                                <div class="flex items-center gap-2 mb-0.5">
-                                    <span class="bg-blue-100 text-blue-700 text-[10px] font-bold px-1.5 py-0.5 rounded">HOPE v2025.4.15.0</span>
-                                    <span class="text-[11px] text-gray-400">{% translate "May 19, 2026" %}</span>
-                                </div>
-                                <p class="text-xs text-slate-700 font-medium leading-snug">{% translate "New features and enhancements 1. Added the Facility Workers beneficiary group to the programme setup page, enabling visualization..." %}</p>
-                                <a href="https://www.unicef.org/hope-hct/" target="_blank" class="text-[11px] text-[#00adef] hover:underline font-semibold mt-0.5 inline-flex items-center gap-1">
-                                    <span>{% translate "Read details" %}</span>
-                                    <svg class="w-2.5 h-2.5 rtl:rotate-180" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/></svg>
-                                </a>
-                            </div>
+                        <div id="kpi-children" class="text-3xl lg:text-4xl font-black text-[#00adef] leading-tight">{{ total_children|default:"0" }}</div>
+                        <div class="text-base font-bold text-slate-700 mt-1" id="kpi-children-note">{% translate "HOPE reach" %}</div>
+                    </div>
+                    <div class="bg-white p-4 rounded-md border border-slate-200 shadow-2xs">
+                        <div class="flex items-start justify-between gap-2 mb-1">
+                            <div class="text-base text-[#0077a8] tracking-wider font-black">{% translate "Families Reached" %}</div>
+                            <span class="w-7 h-7 shrink-0 rounded bg-sky-50 text-[#0077a8] flex items-center justify-center">{% icon "house" "h-4 w-4" %}</span>
                         </div>
-
-                        <!-- Update 2: HOPE v2025.4.13.0 -->
-                        <div class="flex gap-3">
-                            <div class="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center shrink-0 text-[#00adef]">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
-                            </div>
-                            <div>
-                                <div class="flex items-center gap-2 mb-0.5">
-                                    <span class="bg-blue-100 text-blue-700 text-[10px] font-bold px-1.5 py-0.5 rounded">HOPE v2025.4.13.0</span>
-                                    <span class="text-[11px] text-gray-400">{% translate "April 8, 2026" %}</span>
-                                </div>
-                                <p class="text-xs text-slate-700 font-medium leading-snug">{% translate "New features and enhancements 1. Added a new filter to select Household or Individual IDs for alternate collectors receiving p..." %}</p>
-                                <a href="https://www.unicef.org/hope-hct/" target="_blank" class="text-[11px] text-[#00adef] hover:underline font-semibold mt-0.5 inline-flex items-center gap-1">
-                                    <span>{% translate "Read details" %}</span>
-                                    <svg class="w-2.5 h-2.5 rtl:rotate-180" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/></svg>
-                                </a>
-                            </div>
+                        <div id="kpi-families" class="text-3xl lg:text-4xl font-black text-[#00adef] leading-tight">{{ total_households|default:"0" }}</div>
+                        <div class="text-base font-bold text-slate-700 mt-1">{% translate "HOPE reach" %}</div>
+                    </div>
+                    <div class="bg-white p-4 rounded-md border border-slate-200 shadow-2xs">
+                        <div class="flex items-start justify-between gap-2 mb-1">
+                            <div class="text-base text-[#0077a8] tracking-wider font-black">{% translate "Individuals Reached" %}</div>
+                            <span class="w-7 h-7 shrink-0 rounded bg-sky-50 text-[#0077a8] flex items-center justify-center">{% icon "users" "h-4 w-4" %}</span>
                         </div>
-
-                        <!-- Update 3: HOPE v2025.4.12.0 -->
-                        <div class="flex gap-3">
-                            <div class="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center shrink-0 text-[#00adef]">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
-                            </div>
-                            <div>
-                                <div class="flex items-center gap-2 mb-0.5">
-                                    <span class="bg-blue-100 text-blue-700 text-[10px] font-bold px-1.5 py-0.5 rounded">HOPE v2025.4.12.0</span>
-                                    <span class="text-[11px] text-gray-400">{% translate "March 16, 2026" %}</span>
-                                </div>
-                                <p class="text-xs text-slate-700 font-medium leading-snug">{% translate "New features and enhancements 1. Added a Currency Conversion section to the payment plan module, allowing users to override the UN..." %}</p>
-                                <a href="https://www.unicef.org/hope-hct/" target="_blank" class="text-[11px] text-[#00adef] hover:underline font-semibold mt-0.5 inline-flex items-center gap-1">
-                                    <span>{% translate "Read details" %}</span>
-                                    <svg class="w-2.5 h-2.5 rtl:rotate-180" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/></svg>
-                                </a>
-                            </div>
+                        <div id="kpi-individuals" class="text-3xl lg:text-4xl font-black text-[#00adef] leading-tight">{{ total_individuals_reached|default:"0" }}</div>
+                        <div class="text-base font-bold text-slate-700 mt-1">{% translate "People reached" %}</div>
+                    </div>
+                    <div class="bg-white p-4 rounded-md border border-slate-200 shadow-2xs">
+                        <div class="flex items-start justify-between gap-2 mb-1">
+                            <div class="text-base text-[#0077a8] tracking-wider font-black">{% translate "Social Workers Reached" %}</div>
+                            <span class="w-7 h-7 shrink-0 rounded bg-sky-50 text-[#0077a8] flex items-center justify-center">{% icon "heart-handshake" "h-4 w-4" %}</span>
                         </div>
-                    {% endif %}
+                        <div id="kpi-social-workers" class="text-3xl lg:text-4xl font-black text-[#00adef] leading-tight">{{ total_social_workers|default:"0" }}</div>
+                        <div class="text-base font-bold text-slate-700 mt-1">{% translate "Frontline workforce assisted" %}</div>
+                    </div>
+                </div>
+            </div>
+            <div class="xl:col-span-3">
+                <div class="flex items-center gap-2 text-base font-black tracking-wider text-[#0077a8] mb-2">
+                    {% icon "banknote" "h-4 w-4" %}
+                    {% translate "Cash" %}
+                </div>
+                <div class="bg-white p-4 rounded-md border border-slate-200 shadow-2xs h-full flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-start justify-between gap-2 mb-1">
+                            <div class="text-base text-[#0077a8] tracking-wider font-black">{% translate "Cash Delivered (USD)" %}</div>
+                            <span class="w-7 h-7 shrink-0 rounded bg-sky-50 text-[#0077a8] flex items-center justify-center">{% icon "banknote" "h-4 w-4" %}</span>
+                        </div>
+                        <div id="kpi-cash" class="text-3xl lg:text-4xl font-black text-[#00adef] leading-tight">${{ total_cash_disbursed|default:"0" }}</div>
+                        <div class="text-sm font-bold text-slate-700 mt-1">
+                            {% translate "Payments delivered" %}:
+                            <span id="kpi-payments" class="font-black text-[#0077a8]">{{ total_payments|default:"0" }}</span>
+                        </div>
+                        <div class="flex items-center gap-1 text-sm font-semibold text-slate-600 mt-1">
+                            {% icon "coins" "h-3.5 w-3.5 text-[#0077a8]" %}
+                            {% translate "Average transfer" %}
+                            <span id="kpi-average-transfer" class="font-black text-[#0077a8]">${{ average_transfer|default:"0" }}</span>
+                            {% translate "per transfer" %}
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <!-- 5. Bottom 4-Card Information Strip (Compact) -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-            <!-- Card 1 -->
-            <div class="bg-white p-4 rounded-xl border border-gray-200 shadow-2xs flex flex-col items-start">
-                <div class="w-8 h-8 bg-sky-50 text-[#00adef] rounded-lg flex items-center justify-center mb-2.5">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+        <!-- Map + sector -->
+        <div class="grid grid-cols-1 xl:grid-cols-12 gap-4 mb-6">
+            <div class="xl:col-span-7 bg-white rounded-md border border-slate-200 shadow-2xs overflow-hidden">
+                <div class="p-4 lg:p-5 pb-2 flex flex-wrap items-start justify-between gap-3">
+                    <div class="flex items-start gap-2">
+                        <span class="w-8 h-8 shrink-0 rounded bg-sky-50 text-[#0077a8] flex items-center justify-center mt-0.5">
+                            {% icon "map-pin" "h-4 w-4" %}
+                        </span>
+                        <div>
+                            <h2 class="text-2xl lg:text-3xl font-black text-[#0077a8] tracking-tight">{% translate "Where cash assistance reaches children and families" %}</h2>
+                            <p class="text-base font-semibold text-slate-600 mt-1">{% translate "Country-level reach for the selected year" %}</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <label for="map-metric" class="sr-only">{% translate "Map metric" %}</label>
+                        <select id="map-metric" class="text-base border-slate-300 rounded-md text-slate-700 py-2.5 pl-3 pr-8 focus:ring-[#00adef] focus:border-[#00adef] font-semibold bg-white">
+                            <option value="children">{% translate "Children" %}</option>
+                            <option value="families" selected>{% translate "Families" %}</option>
+                            <option value="individuals">{% translate "Individuals" %}</option>
+                            <option value="social_workers">{% translate "Social Workers" %}</option>
+                            <option value="cash">{% translate "Cash" %}</option>
+                        </select>
+                        <button id="map-play" type="button" class="text-base font-black text-[#0077a8] border border-slate-200 rounded-md px-3 py-2.5 hover:bg-sky-50">
+                            {% translate "Play years" %}
+                        </button>
+                    </div>
                 </div>
-                <h4 class="font-bold text-gray-800 text-xs mb-1">{% translate "Data responsibly" %}</h4>
-                <p class="text-[11px] text-gray-500 leading-normal">{% translate "We are committed to data protection, privacy and ethical use." %}</p>
+                <div class="relative h-[320px] sm:h-[380px] lg:h-[430px] px-3 lg:px-5">
+                    <div id="world-map-chart" class="w-full h-full"></div>
+                    <div class="absolute left-6 top-2 flex flex-col gap-1 z-20">
+                        <button id="map-zoom-home" class="w-9 h-9 sm:w-7 sm:h-7 bg-white/95 border border-slate-200 rounded-md shadow-2xs hover:bg-slate-50 flex items-center justify-center text-slate-600" title="{% translate 'Reset view' %}" aria-label="{% translate 'Reset view' %}">
+                            {% icon "rotate-ccw" "h-4 w-4 sm:h-3.5 sm:w-3.5" %}
+                        </button>
+                        <button id="map-zoom-in" class="w-9 h-9 sm:w-7 sm:h-7 bg-white/95 border border-slate-200 rounded-md shadow-2xs hover:bg-slate-50 flex items-center justify-center text-slate-600" title="{% translate 'Zoom in' %}" aria-label="{% translate 'Zoom in' %}">
+                            {% icon "plus" "h-4 w-4 sm:h-3.5 sm:w-3.5" %}
+                        </button>
+                        <button id="map-zoom-out" class="w-9 h-9 sm:w-7 sm:h-7 bg-white/95 border border-slate-200 rounded-md shadow-2xs hover:bg-slate-50 flex items-center justify-center text-slate-600" title="{% translate 'Zoom out' %}" aria-label="{% translate 'Zoom out' %}">
+                            {% icon "minus" "h-4 w-4 sm:h-3.5 sm:w-3.5" %}
+                        </button>
+                    </div>
+                </div>
+                <div class="px-5 py-2.5 border-t border-slate-100 text-sm font-semibold text-slate-600">
+                    {% translate "Darker shading means a higher value. Select a country to filter the page." %}
+                </div>
+                <p id="map-summary" class="sr-only" aria-live="polite"></p>
             </div>
 
-            <!-- Card 2 -->
-            <div class="bg-white p-4 rounded-xl border border-gray-200 shadow-2xs flex flex-col items-start">
-                <div class="w-8 h-8 bg-sky-50 text-[#00adef] rounded-lg flex items-center justify-center mb-2.5">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+            <div class="xl:col-span-5 bg-white rounded-md border border-slate-200 shadow-2xs p-5 flex flex-col">
+                <div class="flex items-start justify-between gap-3 mb-1">
+                    <div class="flex items-start gap-2">
+                        <span class="w-8 h-8 shrink-0 rounded bg-sky-50 text-[#0077a8] flex items-center justify-center mt-0.5">
+                            {% icon "layers" "h-4 w-4" %}
+                        </span>
+                        <div>
+                            <h2 class="text-2xl lg:text-3xl font-black text-[#0077a8] tracking-tight">{% translate "Cash assistance by sector" %}</h2>
+                            <p class="text-sm text-slate-500">{% translate "Share of delivered cash by programme sector." %} <span class="font-bold text-[#0077a8]">{% translate "Click a slice to filter." %}</span></p>
+                        </div>
+                    </div>
                 </div>
-                <h4 class="font-bold text-gray-800 text-xs mb-1">{% translate "Methodology" %}</h4>
-                <p class="text-[11px] text-gray-500 leading-normal">{% translate "Learn how HOPE data is produced and standards applied." %}</p>
-            </div>
-
-            <!-- Card 3 -->
-            <div class="bg-white p-4 rounded-xl border border-gray-200 shadow-2xs flex flex-col items-start">
-                <div class="w-8 h-8 bg-sky-50 text-[#00adef] rounded-lg flex items-center justify-center mb-2.5">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"/></svg>
-                </div>
-                <h4 class="font-bold text-gray-800 text-xs mb-1">{% translate "Give feedback" %}</h4>
-                <p class="text-[11px] text-gray-500 leading-normal">{% translate "Help us improve HOPE by sharing your feedback." %}</p>
-            </div>
-
-            <!-- Card 4 -->
-            <div class="bg-white p-4 rounded-xl border border-gray-200 shadow-2xs flex flex-col items-start">
-                <div class="w-8 h-8 bg-sky-50 text-[#00adef] rounded-lg flex items-center justify-center mb-2.5">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
-                </div>
-                <h4 class="font-bold text-gray-800 text-xs mb-1">{% translate "Stay connected" %}</h4>
-                <p class="text-[11px] text-gray-500 leading-normal">{% translate "Subscribe to updates and new data releases." %}</p>
+                <div id="sector-chart" class="w-full flex-1 min-h-[280px]"></div>
             </div>
         </div>
 
+        <!-- Trends + mechanism -->
+        <div class="grid grid-cols-1 xl:grid-cols-12 gap-4 mb-6">
+            <div class="xl:col-span-7 bg-white rounded-md border border-slate-200 shadow-2xs p-5 flex flex-col">
+                <div class="flex items-start justify-between gap-3 mb-2">
+                    <div class="flex items-start gap-2">
+                        <span class="w-8 h-8 shrink-0 rounded bg-sky-50 text-[#0077a8] flex items-center justify-center mt-0.5">
+                            {% icon "chart-no-axes-column" "h-4 w-4" %}
+                        </span>
+                        <div>
+                            <h2 class="text-2xl lg:text-3xl font-black text-[#0077a8] tracking-tight">{% translate "Trends over time" %}</h2>
+                            <p class="text-sm text-slate-500">{% translate "Children, families, individuals, social workers and cash for the selected scope." %}</p>
+                        </div>
+                    </div>
+                </div>
+                <div id="trends-chart" class="w-full flex-1 min-h-[300px]"></div>
+            </div>
+
+            <div class="xl:col-span-5 bg-white rounded-md border border-slate-200 shadow-2xs p-5 flex flex-col">
+                <div class="flex items-start justify-between gap-3 mb-1">
+                    <div class="flex items-start gap-2">
+                        <span class="w-8 h-8 shrink-0 rounded bg-sky-50 text-[#0077a8] flex items-center justify-center mt-0.5">
+                            {% icon "wallet" "h-4 w-4" %}
+                        </span>
+                        <div>
+                            <h2 class="text-2xl lg:text-3xl font-black text-[#0077a8] tracking-tight">{% translate "Delivery mechanism" %}</h2>
+                            <p class="text-sm text-slate-500">{% translate "How cash reaches people: delivery mechanism share." %} <span class="font-bold text-[#0077a8]">{% translate "Click a slice to filter." %}</span></p>
+                        </div>
+                    </div>
+                </div>
+                <div id="mechanism-chart" class="w-full flex-1 min-h-[280px]"></div>
+            </div>
+        </div>
+
+        <!-- Trust links -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+            <a href="https://unicef.sharepoint.com/:w:/t/EMOPS-NYHQ-HCT/ETNzq6Frl5JPq6U0YLp7KXEBGRRp4uP23iizPHGmZfa61A?e=NlZoym" target="_blank" rel="noopener"
+               class="bg-white p-5 rounded-md border border-slate-200 shadow-2xs hover:border-[#00adef] transition-colors group">
+                <div class="flex items-center gap-2">
+                    <span class="w-8 h-8 shrink-0 rounded bg-sky-50 text-[#0077a8] flex items-center justify-center">
+                        {% icon "shield-check" "h-4 w-4" %}
+                    </span>
+                    <h3 class="text-xl font-black text-[#0077a8] group-hover:text-[#00adef]">{% translate "Responsible data" %}</h3>
+                </div>
+                <p class="text-base font-medium text-slate-600 mt-2">{% translate "Read UNICEF's data protection policy." %}</p>
+            </a>
+            <a href="https://www.unicef.org/hope-hct/resources" target="_blank" rel="noopener"
+               class="bg-white p-5 rounded-md border border-slate-200 shadow-2xs hover:border-[#00adef] transition-colors group">
+                <div class="flex items-center gap-2">
+                    <span class="w-8 h-8 shrink-0 rounded bg-sky-50 text-[#0077a8] flex items-center justify-center">
+                        {% icon "book-open" "h-4 w-4" %}
+                    </span>
+                    <h3 class="text-xl font-black text-[#0077a8] group-hover:text-[#00adef]">{% translate "Methodology" %}</h3>
+                </div>
+                <p class="text-base font-medium text-slate-600 mt-2">{% translate "How HOPE data is produced and the standards applied." %}</p>
+            </a>
+        </div>
     </div>
 </div>
 {% endblock content %}
-
-{% block footer %}
-<footer class="bg-white border-t border-gray-200 text-gray-500 py-8 px-8">
-    <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center text-sm font-medium">
-        <p>UNICEF © {% now "Y" %}</p>
-        <div class="space-x-8 mt-4 md:mt-0">
-            <a href="{% url 'web:about' %}" class="hover:text-[#00adef] transition-colors">{% translate "About HOPE" %}</a>
-            <a href="https://www.unicef.org/about/contact-us" class="hover:text-[#00adef] transition-colors">{% translate "Contact Us" %}</a>
-        </div>
-    </div>
-</footer>
-{% endblock footer %}
 
 {% block extra_js %}
 <script src="{% static 'js/echarts.min.js' %}"></script>
 <script src="{% static_js 'js/macarons.js' %}"></script>
 <script>
-    document.addEventListener('DOMContentLoaded', async function () {
-        // --- 1. Trends over time Chart ---
-        const trendsDom = document.getElementById('trends-chart');
-        const trendsChart = echarts.init(trendsDom, 'macarons');
+{% translate "All years" as t_all_years %}
+{% translate "All countries" as t_all_countries %}
+{% translate "No data" as t_no_data %}
+{% translate "Children" as t_children %}
+{% translate "Families" as t_families %}
+{% translate "Individuals" as t_individuals %}
+{% translate "Cash" as t_cash %}
+{% translate "High" as t_high %}
+{% translate "Low" as t_low %}
+{% translate "Reach" as t_reach %}
+{% translate "Not specified" as t_not_specified %}
+{% translate "Other" as t_other %}
+{% translate "Play years" as t_play_years %}
+{% translate "Pause" as t_pause %}
+{% translate "Data could not be loaded. Please refresh." as t_load_error %}
+{% translate "countries selected" as t_countries_selected %}
+{% translate "Sector" as t_sector %}
+{% translate "Delivery mechanism" as t_mechanism %}
+{% translate "Social Workers" as t_social_workers %}
+{% translate "Remove" as t_remove %}
+{% translate "Loading..." as t_loading %}
+{% translate "years of data available." as t_years_available %}
+{% translate "Education" as t_dim_education %}
+{% translate "Health" as t_dim_health %}
+{% translate "WASH" as t_dim_wash %}
+{% translate "Nutrition" as t_dim_nutrition %}
+{% translate "Child Protection" as t_dim_child_protection %}
+{% translate "Social Protection" as t_dim_social_protection %}
+{% translate "Multi-purpose Cash" as t_dim_mpc %}
+{% translate "Winterization" as t_dim_winterization %}
+{% translate "Mobile Money" as t_dim_mobile_money %}
+{% translate "Bank Transfer" as t_dim_bank_transfer %}
+{% translate "Cash in Hand" as t_dim_cash_in_hand %}
+{% translate "Cash on Site" as t_dim_cash_on_site %}
+{% translate "Paper Voucher" as t_dim_paper_voucher %}
+{% translate "e-Voucher" as t_dim_evoucher %}
+{% translate "Prepaid Card" as t_dim_prepaid_card %}
+document.addEventListener('DOMContentLoaded', async function () {
+    const docLang = document.documentElement.lang || 'en';
+    const countryKey = window.HopeChart?.countryKey || (value => String(value || '').toLowerCase());
+    const formatCountry = window.HopeChart?.formatCountryName || (value => value);
+    const mapFeatureByKey = new Map();
+    const compact = new Intl.NumberFormat(docLang, { notation: 'compact', maximumFractionDigits: 1 });
+    const DIMENSION_LABELS = {
+        'education': '{{ t_dim_education|escapejs }}',
+        'health': '{{ t_dim_health|escapejs }}',
+        'wash': '{{ t_dim_wash|escapejs }}',
+        'nutrition': '{{ t_dim_nutrition|escapejs }}',
+        'child protection': '{{ t_dim_child_protection|escapejs }}',
+        'child_protection': '{{ t_dim_child_protection|escapejs }}',
+        'social protection': '{{ t_dim_social_protection|escapejs }}',
+        'social_protection': '{{ t_dim_social_protection|escapejs }}',
+        'multi-purpose cash': '{{ t_dim_mpc|escapejs }}',
+        'multipurpose cash': '{{ t_dim_mpc|escapejs }}',
+        'mpc': '{{ t_dim_mpc|escapejs }}',
+        'winterization': '{{ t_dim_winterization|escapejs }}',
+        'mobile money': '{{ t_dim_mobile_money|escapejs }}',
+        'mobile_money': '{{ t_dim_mobile_money|escapejs }}',
+        'bank transfer': '{{ t_dim_bank_transfer|escapejs }}',
+        'bank_transfer': '{{ t_dim_bank_transfer|escapejs }}',
+        'cash in hand': '{{ t_dim_cash_in_hand|escapejs }}',
+        'cash_in_hand': '{{ t_dim_cash_in_hand|escapejs }}',
+        'direct cash': '{{ t_dim_cash_in_hand|escapejs }}',
+        'cash on site': '{{ t_dim_cash_on_site|escapejs }}',
+        'cash_on_site': '{{ t_dim_cash_on_site|escapejs }}',
+        'outreach payment': '{{ t_dim_cash_on_site|escapejs }}',
+        'outreach payments': '{{ t_dim_cash_on_site|escapejs }}',
+        'paper voucher': '{{ t_dim_paper_voucher|escapejs }}',
+        'paper_voucher': '{{ t_dim_paper_voucher|escapejs }}',
+        'e-voucher': '{{ t_dim_evoucher|escapejs }}',
+        'electronic voucher': '{{ t_dim_evoucher|escapejs }}',
+        'prepaid card': '{{ t_dim_prepaid_card|escapejs }}',
+        'debit card': '{{ t_dim_prepaid_card|escapejs }}'
+    };
+    const translateDimension = value => {
+        if (!value) return '{{ t_not_specified|escapejs }}';
+        const key = String(value).trim().toLowerCase();
+        return DIMENSION_LABELS[key] || String(value);
+    };
+    const normaliseMechanism = value => {
+        const key = String(value || '').trim().toUpperCase();
+        return key === 'OUTREACH PAYMENT' || key === 'OUTREACH PAYMENTS' ? 'CASH ON SITE' : String(value || '');
+    };
+    const money = value => {
+        const v = Number(value) || 0;
+        if (Math.abs(v) >= 1e9) return `$${(v / 1e9).toFixed(1)}B`;
+        if (Math.abs(v) >= 1e6) return `$${(v / 1e6).toFixed(1)}M`;
+        if (Math.abs(v) >= 1e3) return `$${(v / 1e3).toFixed(0)}K`;
+        return `$${Math.round(v).toLocaleString(docLang)}`;
+    };
+    const averageMoney = value => {
+        const v = Number(value) || 0;
+        if (Math.abs(v) >= 1e6) return `$${(v / 1e6).toFixed(1).replace(/\.0$/, '')}M`;
+        if (Math.abs(v) >= 1e3) return `$${(v / 1e3).toFixed(1).replace(/\.0$/, '')}K`;
+        return `$${Math.round(v).toLocaleString(docLang)}`;
+    };
+    const count = value => compact.format(Number(value) || 0);
+    const sum = (rows, key) => rows.reduce((total, row) => total + (Number(row[key]) || 0), 0);
+    const yearOf = row => Number(String(row.date || '').slice(0, 4));
+    const monthOf = row => Number(String(row.date || '').slice(5, 7));
+    const isSector = row => row.dimension_type === 'sector';
 
-        // Show loading state for trends
-        trendsChart.showLoading({
-            text: 'Loading trends...',
-            color: '#00adef',
-            textColor: '#00adef',
-            maskColor: 'rgba(255, 255, 255, 0.6)',
-            zlevel: 0
+    const state = {
+        year: 'all',
+        selectedCountries: new Set(),
+        sector: null,
+        mechanism: null,
+        metric: 'families',
+        playTimer: null
+    };
+
+    const yearSelect = document.getElementById('landing-year');
+    const countryButton = document.getElementById('country-filter-button');
+    const countryValue = document.getElementById('country-filter-value');
+    const countryPanel = document.getElementById('country-filter-panel');
+    const countrySearch = document.getElementById('country-search');
+    const countryOptions = document.getElementById('country-options');
+    const countryEmpty = document.getElementById('country-empty');
+    const countryChips = document.getElementById('country-chips');
+    const resetButton = document.getElementById('landing-reset');
+    const mapMetric = document.getElementById('map-metric');
+    const mapPlay = document.getElementById('map-play');
+    const mapChart = echarts.init(document.getElementById('world-map-chart'), 'macarons');
+    const trendsChart = echarts.init(document.getElementById('trends-chart'), 'macarons');
+    const sectorChart = echarts.init(document.getElementById('sector-chart'), 'macarons');
+    const mechanismChart = echarts.init(document.getElementById('mechanism-chart'), 'macarons');
+
+    [mapChart, trendsChart, sectorChart, mechanismChart].forEach(chart => {
+        chart.showLoading({ text: '{{ t_loading|escapejs }}', color: '#00adef', textColor: '#00adef', maskColor: 'rgba(255,255,255,0.65)' });
+    });
+
+    let finData = [];
+    let demoData = [];
+    let years = [];
+    let countries = [];
+
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('year')) state.year = params.get('year');
+    if (params.get('country')) {
+        params.get('country').split(',').map(value => value.trim()).filter(Boolean).forEach(value => {
+            state.selectedCountries.add(value);
         });
+    }
+    if (params.get('sector')) state.sector = params.get('sector');
+    if (params.get('mechanism')) state.mechanism = normaliseMechanism(params.get('mechanism'));
+    if (state.sector && state.mechanism) state.mechanism = null;
 
-        // --- 2. Interactive World Map ---
-        const mapDom = document.getElementById('world-map-chart');
-        const mapChart = echarts.init(mapDom, 'macarons');
+    function matches(row, includeCountry = true) {
+        const yearMatch = state.year === 'all' || yearOf(row) === Number(state.year);
+        const countryMatch = !includeCountry || state.selectedCountries.size === 0 || state.selectedCountries.has(row.country_slug);
+        return yearMatch && countryMatch;
+    }
 
-        // Show loading state while fetching map data
-        mapChart.showLoading({
-            text: 'Loading map...',
-            color: '#00adef',
-            textColor: '#00adef',
-            maskColor: 'rgba(255, 255, 255, 0.6)',
-            zlevel: 0
+    function yearMatches(row) {
+        return state.year === 'all' || yearOf(row) === Number(state.year);
+    }
+
+    function financialRows(rowMatches) {
+        if (state.sector) {
+            return finData.filter(row => row.dimension_type === 'sector' && row.dimension_value === state.sector && rowMatches(row));
+        }
+        if (state.mechanism) {
+            return finData.filter(row => row.dimension_type === 'delivery_type' && normaliseMechanism(row.dimension_value) === state.mechanism && rowMatches(row));
+        }
+        return finData.filter(row => isSector(row) && rowMatches(row));
+    }
+
+    function demographicRows(rowMatches) {
+        let rows = demoData.filter(row => isSector(row) && String(row.program_type || '').toUpperCase() !== 'SOCIAL' && rowMatches(row));
+        if (state.sector) rows = rows.filter(row => row.dimension_value === state.sector);
+        return rows;
+    }
+
+    function socialWorkerRows(rowMatches) {
+        let rows = demoData.filter(row => isSector(row) && String(row.program_type || '').toUpperCase() === 'SOCIAL' && rowMatches(row));
+        if (state.sector) rows = rows.filter(row => row.dimension_value === state.sector);
+        return rows;
+    }
+
+    function escapeHtml(value) {
+        return String(value).replace(/[&<>"']/g, char => ({
+            '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+        }[char]));
+    }
+
+    function setText(id, value) {
+        const element = document.getElementById(id);
+        if (element) element.textContent = value;
+    }
+
+    function updateUrl() {
+        const url = new URL(window.location.href);
+        if (state.year === 'all') url.searchParams.delete('year'); else url.searchParams.set('year', state.year);
+        if (state.selectedCountries.size === 0) url.searchParams.delete('country');
+        else url.searchParams.set('country', Array.from(state.selectedCountries).sort().join(','));
+        if (state.sector) url.searchParams.set('sector', state.sector);
+        else url.searchParams.delete('sector');
+        if (state.mechanism) url.searchParams.set('mechanism', state.mechanism);
+        else url.searchParams.delete('mechanism');
+        window.history.replaceState({}, '', url);
+    }
+
+    function countryLabel() {
+        const values = Array.from(state.selectedCountries);
+        if (values.length === 0) return '{{ t_all_countries|escapejs }}';
+        if (values.length === 1) return formatCountry(values[0]);
+        return `${values.length} {{ t_countries_selected|escapejs }}`;
+    }
+
+    function updateScopeSummary() {
+        const yearLabel = state.year === 'all' ? '{{ t_all_years|escapejs }}' : state.year;
+        const dimensionLabel = state.sector
+            ? `${'{{ t_sector|escapejs }}'}: ${translateDimension(state.sector)}`
+            : state.mechanism
+                ? `${'{{ t_mechanism|escapejs }}'}: ${translateDimension(state.mechanism)}`
+                : '';
+        const summary = document.getElementById('map-summary');
+        if (summary) summary.textContent = `${yearLabel} · ${countryLabel()}${dimensionLabel ? ' · ' + dimensionLabel : ''}. ${years.length} {{ t_years_available|escapejs }}`;
+    }
+
+    function dimensionChip(dimension, label, value) {
+        const displayValue = translateDimension(value);
+        return `
+            <span class="inline-flex items-center gap-1.5 bg-amber-50 border border-amber-200 text-amber-900 rounded pl-3 pr-1.5 py-1 text-xs font-bold">
+                ${escapeHtml(label)}: ${escapeHtml(displayValue)}
+                <button type="button" data-remove-dimension="${dimension}" class="w-6 h-6 sm:w-5 sm:h-5 rounded hover:bg-amber-100 flex items-center justify-center" aria-label="{{ t_remove|escapejs }} ${escapeHtml(label)}: ${escapeHtml(displayValue)}">×</button>
+            </span>`;
+    }
+
+    function updateCountryChips() {
+        countryValue.textContent = countryLabel();
+        const values = Array.from(state.selectedCountries).sort((a, b) => formatCountry(a).localeCompare(formatCountry(b)));
+        const chips = values.map(slug => `
+            <span class="inline-flex items-center gap-1.5 bg-sky-50 border border-sky-200 text-[#0077a8] rounded pl-3 pr-1.5 py-1 text-xs font-bold">
+                ${formatCountry(slug)}
+                <button type="button" data-remove-country="${slug}" class="w-6 h-6 sm:w-5 sm:h-5 rounded hover:bg-sky-100 flex items-center justify-center" aria-label="{{ t_remove|escapejs }} ${formatCountry(slug)}">×</button>
+            </span>`);
+        if (state.sector) chips.push(dimensionChip('sector', '{{ t_sector|escapejs }}', state.sector));
+        if (state.mechanism) chips.push(dimensionChip('mechanism', '{{ t_mechanism|escapejs }}', state.mechanism));
+        countryChips.innerHTML = chips.join('');
+        countryChips.style.display = chips.length ? 'flex' : 'none';
+    }
+
+    function visibleCountryOptions() {
+        const query = (countrySearch.value || '').trim().toLowerCase();
+        if (!query) return countries;
+        return countries.filter(slug => formatCountry(slug).toLowerCase().includes(query));
+    }
+
+    function renderCountryOptions() {
+        const visible = visibleCountryOptions();
+        countryOptions.innerHTML = visible.map(slug => `
+            <label class="flex items-center gap-2 px-2 py-2 rounded-md hover:bg-slate-50 cursor-pointer text-sm text-slate-700 font-semibold">
+                <input type="checkbox" value="${slug}" ${state.selectedCountries.has(slug) ? 'checked' : ''} class="rounded border-slate-300 text-[#00adef] focus:ring-[#00adef]">
+                <span>${formatCountry(slug)}</span>
+            </label>`).join('');
+        countryEmpty.classList.toggle('hidden', visible.length > 0);
+    }
+
+    function toggleCountry(slug, selected) {
+        if (selected) state.selectedCountries.add(slug);
+        else state.selectedCountries.delete(slug);
+        updateCountryChips();
+        renderCountryOptions();
+        updateAll();
+    }
+
+    function populateFilters() {
+        years = Array.from(new Set([...finData, ...demoData].map(yearOf))).filter(Boolean).sort();
+        countries = Array.from(new Set([...finData, ...demoData].filter(isSector).map(row => row.country_slug).filter(Boolean)))
+            .sort((a, b) => formatCountry(a).localeCompare(formatCountry(b)));
+
+        yearSelect.innerHTML = '<option value="all">{{ t_all_years|escapejs }}</option>' +
+            years.slice().reverse().map(year => `<option value="${year}">${year}</option>`).join('');
+
+        if (state.year !== 'all' && !years.includes(Number(state.year))) state.year = 'all';
+        Array.from(state.selectedCountries).forEach(slug => {
+            if (!countries.includes(slug)) state.selectedCountries.delete(slug);
         });
+        const sectorValues = new Set(finData.filter(row => row.dimension_type === 'sector').map(row => row.dimension_value));
+        const mechanismValues = new Set(finData.filter(row => row.dimension_type === 'delivery_type').map(row => normaliseMechanism(row.dimension_value)));
+        if (state.sector && !sectorValues.has(state.sector)) state.sector = null;
+        if (state.mechanism && !mechanismValues.has(state.mechanism)) state.mechanism = null;
+        yearSelect.value = state.year;
+        const unmapped = countries.filter(slug => !mapFeatureByKey.has(countryKey(slug)));
+        if (unmapped.length > 0) console.warn('No map feature for countries:', unmapped);
+        updateCountryChips();
+        renderCountryOptions();
+    }
 
-        // Mapping from country slugs to ECharts world.json names
-        const countryMap = {
-            'afghanistan': 'Afghanistan',
-            'angola': 'Angola',
-            'antigua-and-barbuda': 'Antigua and Barb.',
-            'armenia': 'Armenia',
-            'bangladesh': 'Bangladesh',
-            'belarus': 'Belarus',
-            'botswana': 'Botswana',
-            'central-african-republic': 'Central African Rep.',
-            'chad': 'Chad',
-            'colombia': 'Colombia',
-            'czech-republic': 'Czech Rep.',
-            'democratic-republic-of-congo': 'Dem. Rep. Congo',
-            'haiti': 'Haiti',
-            'honduras': 'Honduras',
-            'jordan': 'Jordan',
-            'kenya': 'Kenya',
-            'madagascar': 'Madagascar',
-            'mali': 'Mali',
-            'myanmar': 'Myanmar',
-            'niger': 'Niger',
-            'nigeria': 'Nigeria',
-            'palestine-state-of': 'Palestine',
-            'philippines': 'Philippines',
-            'republic-of-cameroon': 'Cameroon',
-            'republic-of-mozambique': 'Mozambique',
-            'senegal': 'Senegal',
-            'sierra-leone': 'Sierra Leone',
-            'slovakia': 'Slovakia',
-            'somalia': 'Somalia',
-            'south-sudan': 'S. Sudan',
-            'sri-lanka': 'Sri Lanka',
-            'sudan': 'Sudan',
-            'sudan-old': 'Sudan',
-            'syria': 'Syria',
-            'trinidad-tobago': 'Trinidad and Tobago',
-            'ukraine': 'Ukraine',
-            'vietnam': 'Vietnam',
-            'yemen': 'Yemen',
-            'zimbabwe': 'Zimbabwe'
-        };
+    function updateKpis() {
+        const finRows = financialRows(matches);
+        const demoRows = demographicRows(matches);
+        const socialRows = socialWorkerRows(matches);
 
-        try {
-            // Load map geojson and aggregates in parallel
-            const [mapRes, finRes, demoRes] = await Promise.all([
-                fetch("{% static 'data/world.json' %}"),
-                fetch("{% url 'analysis_api:daily-aggregates-list' %}?dashboard=financial"),
-                fetch("{% url 'analysis_api:daily-aggregates-list' %}?dashboard=demographic&time_grain=monthly")
-            ]);
+        setText('kpi-children', count(sum(demoRows, 'total_children')));
+        setText('kpi-families', count(sum(demoRows, 'total_households')));
+        setText('kpi-individuals', count(sum(demoRows, 'total_beneficiaries')));
+        setText('kpi-social-workers', count(sum(socialRows, 'total_beneficiaries')));
+        const cash = sum(finRows, 'total_usd');
+        const payments = sum(finRows, 'payment_count');
+        setText('kpi-cash', money(cash));
+        setText('kpi-payments', count(payments));
+        setText('kpi-average-transfer', payments > 0 ? averageMoney(cash / payments) : '—');
+    }
 
-            const worldJson = await mapRes.json();
-            const finData = await finRes.json();
-            const demoData = await demoRes.json();
+    function countryMetric(slug, metric) {
+        const finRows = financialRows(row => row.country_slug === slug && yearMatches(row));
+        const demoRows = demographicRows(row => row.country_slug === slug && yearMatches(row));
+        const socialRows = socialWorkerRows(row => row.country_slug === slug && yearMatches(row));
+        if (metric === 'cash') return sum(finRows, 'total_usd');
+        if (metric === 'families') return sum(demoRows, 'total_households');
+        if (metric === 'individuals') return sum(demoRows, 'total_beneficiaries');
+        if (metric === 'social_workers') return sum(socialRows, 'total_beneficiaries');
+        return sum(demoRows, 'total_children');
+    }
 
-            echarts.registerMap('world', worldJson);
+    function updateMap() {
+        const data = [];
+        countries.forEach(slug => {
+            const mapName = mapFeatureByKey.get(countryKey(slug));
+            if (!mapName) return;
+            const value = countryMetric(slug, state.metric);
+            if (value > 0) data.push({ name: mapName, value, slug });
+        });
+        const maxValue = Math.max(...data.map(item => item.value), 1);
 
-            // --- 2a. Group map data ---
-            const demoMap = {};
-            demoData.filter(d => d.dimension_type === 'sector').forEach(d => {
-                const slug = d.country_slug;
-                if (!demoMap[slug]) demoMap[slug] = 0;
-                demoMap[slug] += parseInt(d.total_children || 0, 10);
-            });
-
-            const finMap = {};
-            finData.filter(d => d.dimension_type === 'sector').forEach(d => {
-                const slug = d.country_slug;
-                if (!finMap[slug]) finMap[slug] = 0;
-                finMap[slug] += parseFloat(d.total_usd || 0);
-            });
-
-            const mapSeriesData = [];
-            const allSlugs = new Set([...Object.keys(demoMap), ...Object.keys(finMap)]);
-
-            allSlugs.forEach(slug => {
-                const mapName = countryMap[slug];
-                if (!mapName) return;
-
-                let childrenCount = 0;
-                let isEstimated = false;
-
-                if (demoMap[slug] !== undefined && demoMap[slug] > 0) {
-                    childrenCount = demoMap[slug];
-                } else {
-                    const totalUsd = finMap[slug] || 0;
-                    if (totalUsd > 0) {
-                        childrenCount = Math.round(totalUsd / 80);
-                        isEstimated = true;
-                    }
+        mapChart.setOption({
+            tooltip: {
+                trigger: 'item',
+                backgroundColor: 'rgba(255,255,255,0.97)',
+                borderColor: '#e2e8f0',
+                borderWidth: 1,
+                textStyle: { color: '#1e293b', fontSize: 13 },
+                formatter: params => {
+                    if (!params.data) return `${params.name}: {{ t_no_data|escapejs }}`;
+                    const d = params.data;
+                    const metrics = {
+                        children: sum(demographicRows(row => row.country_slug === d.slug && yearMatches(row)), 'total_children'),
+                        families: sum(demographicRows(row => row.country_slug === d.slug && yearMatches(row)), 'total_households'),
+                        individuals: sum(demographicRows(row => row.country_slug === d.slug && yearMatches(row)), 'total_beneficiaries'),
+                        social_workers: sum(socialWorkerRows(row => row.country_slug === d.slug && yearMatches(row)), 'total_beneficiaries'),
+                        cash: sum(financialRows(row => row.country_slug === d.slug && yearMatches(row)), 'total_usd')
+                    };
+                    return `<b>${params.name}</b><br/>` +
+                        `{{ t_children|escapejs }}: ${count(metrics.children)}<br/>` +
+                        `{{ t_families|escapejs }}: ${count(metrics.families)}<br/>` +
+                        `{{ t_individuals|escapejs }}: ${count(metrics.individuals)}<br/>` +
+                        `{{ t_social_workers|escapejs }}: ${count(metrics.social_workers)}<br/>` +
+                        `{{ t_cash|escapejs }}: ${money(metrics.cash)}`;
                 }
+            },
+            visualMap: {
+                min: 0,
+                max: maxValue,
+                left: 18,
+                bottom: 18,
+                text: ['{{ t_high|escapejs }}', '{{ t_low|escapejs }}'],
+                calculable: false,
+                inRange: { color: ['#e0f2fe', '#7dd3fc', '#0284c7', '#075985'] },
+                textStyle: { fontSize: 12, color: '#64748b' }
+            },
+            series: [{
+                name: '{{ t_reach|escapejs }}',
+                type: 'map',
+                mapType: 'world',
+                roam: true,
+                zoom: 1.2,
+                center: [16, 12],
+                itemStyle: { borderColor: '#ffffff', borderWidth: 0.8, areaColor: '#f1f5f9' },
+                emphasis: { itemStyle: { areaColor: '#00adef' }, label: { show: false } },
+                select: { disabled: true },
+                data
+            }]
+        }, { notMerge: true });
+        mapChart.hideLoading();
+    }
 
-                if (childrenCount > 0) {
-                    mapSeriesData.push({
-                        name: mapName,
-                        value: childrenCount,
-                        slug: slug,
-                        isEstimated: isEstimated,
-                        totalUsd: finMap[slug] || 0
-                    });
-                }
+    function updateTrends() {
+        const categories = [];
+        const cash = [];
+        const individuals = [];
+        const families = [];
+        const children = [];
+        const social_workers = [];
+
+        if (state.year === 'all') {
+            years.forEach(year => {
+                const finRows = financialRows(row => yearOf(row) === year && matches(row));
+                const demoRows = demographicRows(row => yearOf(row) === year && matches(row));
+                const socialRows = socialWorkerRows(row => yearOf(row) === year && matches(row));
+                categories.push(String(year));
+                cash.push(sum(finRows, 'total_usd'));
+                individuals.push(sum(demoRows, 'total_beneficiaries'));
+                families.push(sum(demoRows, 'total_households'));
+                children.push(sum(demoRows, 'total_children'));
+                social_workers.push(sum(socialRows, 'total_beneficiaries'));
             });
-
-            // --- 2b. Group trends data by year ---
-            const targetYears = [2021, 2022, 2023, 2024, 2025, 2026];
-            const yearlyFin = {};
-            const yearlyDemo = {};
-            targetYears.forEach(y => {
-                yearlyFin[y] = { total_usd: 0, payment_count: 0 };
-                yearlyDemo[y] = { total_beneficiaries: 0, total_households: 0, total_children: 0 };
-            });
-
-            finData.filter(d => d.dimension_type === 'sector').forEach(d => {
-                const yr = new Date(d.date).getFullYear();
-                if (yearlyFin[yr]) {
-                    yearlyFin[yr].total_usd += parseFloat(d.total_usd || 0);
-                    yearlyFin[yr].payment_count += parseInt(d.payment_count || 0, 10);
-                }
-            });
-
-            demoData.filter(d => d.dimension_type === 'sector').forEach(d => {
-                const yr = new Date(d.date).getFullYear();
-                if (yearlyDemo[yr]) {
-                    yearlyDemo[yr].total_beneficiaries += parseInt(d.total_beneficiaries || 0, 10);
-                    yearlyDemo[yr].total_households += parseInt(d.total_households || 0, 10);
-                    yearlyDemo[yr].total_children += parseInt(d.total_children || 0, 10);
-                }
-            });
-
-            // Calculate 2026 ratios for projection where demographic values are absent
-            const baseYear = 2026;
-            const basePayments = yearlyFin[baseYear].payment_count || 1;
-            const ratioBeneficiaries = (yearlyDemo[baseYear].total_beneficiaries || 9393478) / basePayments;
-            const ratioHouseholds = (yearlyDemo[baseYear].total_households || 3142162) / basePayments;
-            const ratioChildren = (yearlyDemo[baseYear].total_children || 7134629) / basePayments;
-
-            targetYears.forEach(yr => {
-                if (yearlyDemo[yr].total_beneficiaries === 0) {
-                    const p = yearlyFin[yr].payment_count;
-                    yearlyDemo[yr].total_beneficiaries = Math.round(p * ratioBeneficiaries);
-                    yearlyDemo[yr].total_households = Math.round(p * ratioHouseholds);
-                    yearlyDemo[yr].total_children = Math.round(p * ratioChildren);
-                }
-            });
-
-            // --- 2c. Group trends data by month for latest year (2026) ---
-            const monthLabels = ['Jan', 'Feb', 'Mar', 'Apr', 'May'];
-            const monthlyFin = {};
-            const monthlyDemo = {};
-            monthLabels.forEach((m, idx) => {
-                monthlyFin[idx] = { total_usd: 0, payment_count: 0 };
-                monthlyDemo[idx] = { total_beneficiaries: 0, total_households: 0, total_children: 0 };
-            });
-
-            finData.filter(d => d.dimension_type === 'sector').forEach(d => {
-                const dt = new Date(d.date);
-                if (dt.getFullYear() === 2026) {
-                    const mIdx = dt.getMonth(); // 0-11
-                    if (monthlyFin[mIdx] !== undefined) {
-                        monthlyFin[mIdx].total_usd += parseFloat(d.total_usd || 0);
-                        monthlyFin[mIdx].payment_count += parseInt(d.payment_count || 0, 10);
-                    }
-                }
-            });
-
-            demoData.filter(d => d.dimension_type === 'sector').forEach(d => {
-                const dt = new Date(d.date);
-                if (dt.getFullYear() === 2026) {
-                    const mIdx = dt.getMonth();
-                    if (monthlyDemo[mIdx] !== undefined) {
-                        monthlyDemo[mIdx].total_beneficiaries += parseInt(d.total_beneficiaries || 0, 10);
-                        monthlyDemo[mIdx].total_households += parseInt(d.total_households || 0, 10);
-                        monthlyDemo[mIdx].total_children += parseInt(d.total_children || 0, 10);
-                    }
-                }
-            });
-
-            // Ratios for monthly demographic projection in 2026 where missing
-            monthLabels.forEach((m, idx) => {
-                if (monthlyDemo[idx].total_beneficiaries === 0) {
-                    const p = monthlyFin[idx].payment_count;
-                    monthlyDemo[idx].total_beneficiaries = Math.round(p * ratioBeneficiaries);
-                    monthlyDemo[idx].total_households = Math.round(p * ratioHouseholds);
-                    monthlyDemo[idx].total_children = Math.round(p * ratioChildren);
-                }
-            });
-
-            // Hide loading states
-            mapChart.hideLoading();
-            trendsChart.hideLoading();
-
-            const usdFormat = d => {
-                if (Math.abs(d) < 1) return '$0';
-                if (typeof d3 !== 'undefined' && d3.format) {
-                    return '$' + d3.format(".2s")(d).replace('G', 'B');
-                }
-                if (d >= 1e9) return '$' + (d / 1e9).toFixed(1) + 'B';
-                if (d >= 1e6) return '$' + (d / 1e6).toFixed(1) + 'M';
-                if (d >= 1e3) return '$' + (d / 1e3).toFixed(1) + 'K';
-                return '$' + d.toFixed(0);
-            };
-
-            const numFormat = d => {
-                if (d >= 1000000) return (d / 1000000).toFixed(1) + 'M';
-                if (d >= 1000) return (d / 1000).toFixed(0) + 'K';
-                return d;
-            };
-
-            // Format Y-axis labels
-            const usdLabelFormat = val => {
-                if (val === 0) return '0';
-                if (val >= 1e9) return '$' + (val / 1e9).toFixed(0) + 'B';
-                if (val >= 1e6) return '$' + (val / 1e6).toFixed(0) + 'M';
-                if (val >= 1e3) return '$' + (val / 1e3).toFixed(0) + 'K';
-                return '$' + val;
-            };
-
-            const countLabelFormat = val => {
-                if (val === 0) return '0';
-                if (val >= 1e6) return (val / 1e6).toFixed(1) + 'M';
-                if (val >= 1e3) return (val / 1e3).toFixed(0) + 'K';
-                return val;
-            };
-
-            // Option generator for Trends
-            function getTrendsOption(timeframe) {
-                let categories = [];
-                let cashData = [];
-                let paymentsData = [];
-                let individualsData = [];
-                let householdsData = [];
-                let childrenData = [];
-
-                if (timeframe === '5y') {
-                    categories = ['2021', '2022', '2023', '2024', '2025', '2026'];
-                    categories.forEach(yr => {
-                        cashData.push(yearlyFin[yr].total_usd);
-                        paymentsData.push(yearlyFin[yr].payment_count);
-                        individualsData.push(yearlyDemo[yr].total_beneficiaries);
-                        householdsData.push(yearlyDemo[yr].total_households);
-                        childrenData.push(yearlyDemo[yr].total_children);
-                    });
-                } else {
-                    categories = ['Jan 26', 'Feb 26', 'Mar 26', 'Apr 26', 'May 26'];
-                    [0, 1, 2, 3, 4].forEach(idx => {
-                        cashData.push(monthlyFin[idx].total_usd);
-                        paymentsData.push(monthlyFin[idx].payment_count);
-                        individualsData.push(monthlyDemo[idx].total_beneficiaries);
-                        householdsData.push(monthlyDemo[idx].total_households);
-                        childrenData.push(monthlyDemo[idx].total_children);
-                    });
-                }
-
-                return {
-                    tooltip: {
-                        trigger: 'axis',
-                        backgroundColor: 'rgba(255, 255, 255, 0.95)',
-                        borderColor: '#e2e8f0',
-                        borderWidth: 1,
-                        textStyle: { color: '#1e293b', fontSize: 12 },
-                        formatter: function (params) {
-                            let res = `<div class="font-bold mb-1 text-slate-800">${params[0].name}</div>`;
-                            params.forEach(item => {
-                                let formattedVal = '';
-                                if (item.seriesName.includes('Disbursed')) {
-                                    formattedVal = usdFormat(item.value);
-                                } else {
-                                    formattedVal = numFormat(item.value);
-                                }
-                                res += `<div class="flex items-center justify-between gap-4 py-0.5">
-                                    <span class="flex items-center gap-1.5 text-xs text-slate-600">
-                                        <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background-color:${item.color};"></span>
-                                        ${item.seriesName}
-                                    </span>
-                                    <span class="font-bold text-xs text-slate-800">${formattedVal}</span>
-                                </div>`;
-                            });
-                            return res;
-                        }
-                    },
-                    legend: {
-                        bottom: 0,
-                        left: 'center',
-                        icon: 'circle',
-                        itemWidth: 8,
-                        itemHeight: 8,
-                        textStyle: {
-                            fontSize: 10,
-                            color: '#64748b',
-                            fontWeight: 500
-                        }
-                    },
-                    grid: {
-                        top: 25,
-                        bottom: 50,
-                        left: 10,
-                        right: 15,
-                        containLabel: true
-                    },
-                    xAxis: {
-                        type: 'category',
-                        data: categories,
-                        axisLine: { lineStyle: { color: '#cbd5e1' } },
-                        axisLabel: { color: '#64748b', fontSize: 10, fontWeight: 500 }
-                    },
-                    yAxis: [
-                        {
-                            type: 'value',
-                            name: 'Financial',
-                            nameTextStyle: { color: '#64748b', fontSize: 9, fontWeight: 600 },
-                            axisLine: { show: false },
-                            axisTick: { show: false },
-                            splitLine: { lineStyle: { color: '#f1f5f9' } },
-                            axisLabel: { formatter: usdLabelFormat, color: '#64748b', fontSize: 9, fontWeight: 500 }
-                        },
-                        {
-                            type: 'value',
-                            name: 'Volume',
-                            nameTextStyle: { color: '#64748b', fontSize: 9, fontWeight: 600 },
-                            axisLine: { show: false },
-                            axisTick: { show: false },
-                            splitLine: { show: false },
-                            axisLabel: { formatter: countLabelFormat, color: '#64748b', fontSize: 9, fontWeight: 500 }
-                        }
-                    ],
-                    series: [
-                        {
-                            name: 'Total Cash Disbursed',
-                            type: 'line',
-                            yAxisIndex: 0,
-                            symbol: 'circle',
-                            symbolSize: 6,
-                            showSymbol: true,
-                            smooth: true,
-                            lineStyle: { width: 2.5, color: '#00adef' },
-                            itemStyle: { color: '#00adef' },
-                            data: cashData
-                        },
-                        {
-                            name: 'Payments Count',
-                            type: 'line',
-                            yAxisIndex: 1,
-                            symbol: 'circle',
-                            symbolSize: 6,
-                            showSymbol: true,
-                            smooth: true,
-                            lineStyle: { width: 2, color: '#f97316' },
-                            itemStyle: { color: '#f97316' },
-                            data: paymentsData
-                        },
-                        {
-                            name: 'Individuals Reached',
-                            type: 'line',
-                            yAxisIndex: 1,
-                            symbol: 'circle',
-                            symbolSize: 6,
-                            showSymbol: true,
-                            smooth: true,
-                            lineStyle: { width: 2, color: '#10b981' },
-                            itemStyle: { color: '#10b981' },
-                            data: individualsData
-                        },
-                        {
-                            name: 'Households Reached',
-                            type: 'line',
-                            yAxisIndex: 1,
-                            symbol: 'circle',
-                            symbolSize: 6,
-                            showSymbol: true,
-                            smooth: true,
-                            lineStyle: { width: 2, color: '#8b5cf6' },
-                            itemStyle: { color: '#8b5cf6' },
-                            data: householdsData
-                        },
-                        {
-                            name: 'Children Reached',
-                            type: 'line',
-                            yAxisIndex: 1,
-                            symbol: 'circle',
-                            symbolSize: 6,
-                            showSymbol: true,
-                            smooth: true,
-                            lineStyle: { width: 2, color: '#ec4899' },
-                            itemStyle: { color: '#ec4899' },
-                            data: childrenData
-                        }
-                    ]
-                };
+        } else {
+            for (let month = 1; month <= 12; month++) {
+                const finRows = financialRows(row => yearOf(row) === Number(state.year) && monthOf(row) === month && matches(row));
+                const demoRows = demographicRows(row => yearOf(row) === Number(state.year) && monthOf(row) === month && matches(row));
+                const socialRows = socialWorkerRows(row => yearOf(row) === Number(state.year) && monthOf(row) === month && matches(row));
+                categories.push(new Date(Number(state.year), month - 1, 1).toLocaleString(docLang, { month: 'short' }));
+                cash.push(sum(finRows, 'total_usd'));
+                individuals.push(sum(demoRows, 'total_beneficiaries'));
+                families.push(sum(demoRows, 'total_households'));
+                children.push(sum(demoRows, 'total_children'));
+                social_workers.push(sum(socialRows, 'total_beneficiaries'));
             }
-
-            // Set Initial Options for Trends
-            trendsChart.setOption(getTrendsOption('5y'));
-
-            // Handle timeframe toggles
-            const selectDom = document.getElementById('trends-timeframe');
-            if (selectDom) {
-                const newSelectDom = selectDom.cloneNode(true);
-                selectDom.parentNode.replaceChild(newSelectDom, selectDom);
-                newSelectDom.addEventListener('change', function () {
-                    trendsChart.setOption(getTrendsOption(this.value), true);
-                });
-            }
-
-            // Map visual settings
-            mapChart.setOption({
-                tooltip: {
-                    trigger: 'item',
-                    backgroundColor: 'rgba(255, 255, 255, 0.95)',
-                    borderColor: '#e2e8f0',
-                    borderWidth: 1,
-                    textStyle: { color: '#1e293b', fontSize: 12 },
-                    formatter: function (params) {
-                        if (!params.data) return `${params.name}: No data`;
-                        const d = params.data;
-                        const labelStyle = d.isEstimated ? '<span class="text-[10px] text-slate-400 block mt-1">(Estimated from operations)</span>' : '<span class="text-[10px] text-emerald-500 font-semibold block mt-1">✓ Verified record</span>';
-                        let html = `<div class="font-bold text-slate-800">${d.name}</div>`;
-                        html += `<div class="text-xs text-slate-600 mt-1">Children in need: <span class="font-bold text-slate-800">${numFormat(d.value)}</span></div>`;
-                        if (d.totalUsd > 0) {
-                            html += `<div class="text-xs text-slate-600">Cash Operations: <span class="font-bold text-slate-800">${usdFormat(d.totalUsd)}</span></div>`;
-                        }
-                        html += labelStyle;
-                        return html;
-                    }
-                },
-                visualMap: {
-                    show: false,
-                    type: 'piecewise',
-                    orient: 'horizontal',
-                    left: 'center',
-                    bottom: 0,
-                    text: ['', ''],
-                    itemWidth: 10,
-                    itemHeight: 10,
-                    itemGap: 6,
-                    pieces: [
-                        { gt: 10000000, label: '≥ 10M', color: '#084081' },
-                        { gt: 5000000, lte: 10000000, label: '5M - 10M', color: '#0868ac' },
-                        { gt: 1000000, lte: 5000000, label: '1M - 5M', color: '#2b8cbe' },
-                        { gt: 100000, lte: 1000000, label: '100K - 1M', color: '#7bccc4' },
-                        { lte: 100000, label: '< 100K', color: '#bae4bc' }
-                    ],
-                    outOfRange: {
-                        color: '#f8fafc'
-                    },
-                    textStyle: {
-                        fontSize: 10,
-                        color: '#64748b',
-                        fontWeight: 600
-                    }
-                },
-                series: [{
-                    name: 'Children in Need',
-                    type: 'map',
-                    mapType: 'world',
-                    roam: true,
-                    zoom: 1.25,
-                    center: [16, 12],
-                    itemStyle: {
-                        borderColor: '#ffffff',
-                        borderWidth: 0.8,
-                        areaColor: '#f1f5f9'
-                    },
-                    emphasis: {
-                        itemStyle: {
-                            areaColor: '#00adef'
-                        },
-                        label: {
-                            show: false
-                        }
-                    },
-                    select: {
-                        disabled: true
-                    },
-                    data: mapSeriesData
-                }]
-            });
-
-            // Map custom zoom/pan controls bindings
-            const zoomHome = document.getElementById('map-zoom-home');
-            const zoomIn = document.getElementById('map-zoom-in');
-            const zoomOut = document.getElementById('map-zoom-out');
-
-            if (zoomHome) {
-                zoomHome.addEventListener('click', () => {
-                    mapChart.setOption({
-                        series: [{
-                            zoom: 1.25,
-                            center: [16, 12]
-                        }]
-                    });
-                });
-            }
-            if (zoomIn) {
-                zoomIn.addEventListener('click', () => {
-                    const opt = mapChart.getOption();
-                    const currentZoom = opt.series[0].zoom || 1.25;
-                    const currentCenter = opt.series[0].center || [16, 12];
-                    mapChart.setOption({
-                        series: [{
-                            zoom: currentZoom * 1.3,
-                            center: currentCenter
-                        }]
-                    });
-                });
-            }
-            if (zoomOut) {
-                zoomOut.addEventListener('click', () => {
-                    const opt = mapChart.getOption();
-                    const currentZoom = opt.series[0].zoom || 1.25;
-                    const currentCenter = opt.series[0].center || [16, 12];
-                    mapChart.setOption({
-                        series: [{
-                            zoom: currentZoom / 1.3,
-                            center: currentCenter
-                        }]
-                    });
-                });
-            }
-
-        } catch (err) {
-            console.error('Failed to load map geojson or aggregates:', err);
-            mapChart.hideLoading();
-            trendsChart.hideLoading();
-            mapDom.innerHTML = `<div class="flex flex-col items-center justify-center h-full text-slate-400 gap-2">
-                <svg class="w-8 h-8 text-slate-300" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
-                <div class="text-xs font-semibold">{% translate "Failed to load map visualization. Please refresh." %}</div>
-            </div>`;
         }
 
-        // --- 3. Resize handler for both charts ---
-        window.addEventListener('resize', function () {
-            trendsChart.resize();
-            mapChart.resize();
+        trendsChart.setOption({
+            tooltip: {
+                trigger: 'axis',
+                formatter: params => {
+                    let html = `<b>${params[0].axisValue}</b><br/>`;
+                    params.forEach(p => {
+                        html += `${p.marker} ${p.seriesName}: <b>${p.seriesName === '{{ t_cash|escapejs }}' ? money(p.value) : count(p.value)}</b><br/>`;
+                    });
+                    return html;
+                }
+            },
+            legend: { top: 0, right: 0, textStyle: { fontSize: 12, color: '#64748b' } },
+            grid: { top: 40, bottom: 30, left: 55, right: 55 },
+            xAxis: { type: 'category', data: categories, axisLabel: { fontSize: 13, color: '#64748b' }, axisLine: { lineStyle: { color: '#e2e8f0' } } },
+            yAxis: [
+                { type: 'value', axisLabel: { fontSize: 12, color: '#94a3b8', formatter: value => money(value) }, splitLine: { lineStyle: { color: '#f1f5f9' } } },
+                { type: 'value', axisLabel: { fontSize: 12, color: '#94a3b8', formatter: value => count(value) }, splitLine: { show: false } }
+            ],
+            series: [
+                { name: '{{ t_cash|escapejs }}', type: 'line', smooth: true, yAxisIndex: 0, data: cash, lineStyle: { color: '#00adef', width: 2.5 }, itemStyle: { color: '#00adef' } },
+                { name: '{{ t_individuals|escapejs }}', type: 'line', smooth: true, yAxisIndex: 1, data: individuals, lineStyle: { color: '#97b552', width: 2 }, itemStyle: { color: '#97b552' } },
+                { name: '{{ t_families|escapejs }}', type: 'line', smooth: true, yAxisIndex: 1, data: families, lineStyle: { color: '#b6a2de', width: 2 }, itemStyle: { color: '#b6a2de' } },
+                { name: '{{ t_children|escapejs }}', type: 'line', smooth: true, yAxisIndex: 1, data: children, lineStyle: { color: '#d87a80', width: 2 }, itemStyle: { color: '#d87a80' } },
+                { name: '{{ t_social_workers|escapejs }}', type: 'line', smooth: true, yAxisIndex: 1, data: social_workers, lineStyle: { color: '#e5cf0d', width: 2 }, itemStyle: { color: '#e5cf0d' } }
+            ],
+            media: [{
+                query: { maxWidth: 520 },
+                option: {
+                    legend: { top: 'auto', bottom: 0, left: 'center', right: 'auto', textStyle: { fontSize: 11, color: '#64748b' } },
+                    grid: { top: 20, bottom: 58, left: 45, right: 45 },
+                    xAxis: { axisLabel: { fontSize: 11 } },
+                    yAxis: [
+                        { axisLabel: { fontSize: 10 } },
+                        { axisLabel: { fontSize: 10 } }
+                    ]
+                }
+            }]
+        }, { notMerge: true });
+        trendsChart.hideLoading();
+    }
+
+    function renderComposition(chart, rows, metric, selected, normalise = value => value) {
+        const grouped = {};
+        rows.forEach(row => {
+            const key = normalise(row.dimension_value) || '{{ t_not_specified|escapejs }}';
+            grouped[key] = (grouped[key] || 0) + (Number(row[metric]) || 0);
         });
+        const entries = Object.entries(grouped).filter(([, value]) => value > 0).sort((a, b) => b[1] - a[1]);
+        const top = entries.slice(0, 7);
+        const rest = entries.slice(7).reduce((total, [, value]) => total + value, 0);
+        const hasOther = rest > 0;
+        if (hasOther) top.push(['{{ t_other|escapejs }}', rest]);
+        const data = top.map(([name, value], index) => {
+            const isOther = hasOther && index === top.length - 1;
+            const displayName = isOther ? name : translateDimension(name);
+            let itemStyle;
+            if (selected) {
+                itemStyle = name === selected
+                    ? { borderColor: '#0077a8', borderWidth: 3, opacity: 1 }
+                    : { opacity: 0.35 };
+            }
+            return { name: displayName, rawKey: name, value, isOther: isOther || undefined, itemStyle };
+        });
+        chart.setOption({
+            tooltip: { trigger: 'item', formatter: params => `${params.name}: <b>${metric === 'total_usd' ? money(params.value) : count(params.value)}</b> (${params.percent}%)` },
+            legend: { bottom: 0, left: 'center', textStyle: { fontSize: 13, color: '#64748b' } },
+            series: [{
+                type: 'pie',
+                radius: ['42%', '68%'],
+                center: ['50%', '44%'],
+                avoidLabelOverlap: true,
+                cursor: 'pointer',
+                itemStyle: { borderRadius: 4, borderColor: '#fff', borderWidth: 2 },
+                label: { show: true, formatter: params => `${params.name}\n${params.percent}%`, fontSize: 12, color: '#475569' },
+                labelLine: { length: 8, length2: 6 },
+                data
+            }],
+            media: [{
+                query: { maxWidth: 520 },
+                option: {
+                    legend: { type: 'scroll', bottom: 0, left: 'center', right: 'auto', width: '90%', textStyle: { fontSize: 11, color: '#64748b' } },
+                    series: [{
+                        radius: ['48%', '72%'],
+                        label: { show: false },
+                        labelLine: { show: false }
+                    }]
+                }
+            }]
+        }, { notMerge: true });
+        chart.hideLoading();
+    }
+
+    function updateComposition() {
+        const finRows = finData.filter(row => matches(row));
+        renderComposition(sectorChart, finRows.filter(row => row.dimension_type === 'sector'), 'total_usd', state.sector);
+        renderComposition(mechanismChart, finRows.filter(row => row.dimension_type === 'delivery_type'), 'total_usd', state.mechanism, normaliseMechanism);
+    }
+
+    function updateAll() {
+        updateKpis();
+        updateMap();
+        updateTrends();
+        updateComposition();
+        updateScopeSummary();
+        updateUrl();
+    }
+
+    function closeCountryPanel() {
+        countryPanel.classList.add('hidden');
+        countryButton.setAttribute('aria-expanded', 'false');
+    }
+
+    function openCountryPanel() {
+        countryPanel.classList.remove('hidden');
+        countryButton.setAttribute('aria-expanded', 'true');
+        renderCountryOptions();
+        countrySearch.focus();
+    }
+
+    countryButton.addEventListener('click', function (event) {
+        event.stopPropagation();
+        if (countryPanel.classList.contains('hidden')) openCountryPanel();
+        else closeCountryPanel();
     });
+    countrySearch.addEventListener('input', renderCountryOptions);
+    document.getElementById('country-select-all').addEventListener('click', function () {
+        visibleCountryOptions().forEach(slug => state.selectedCountries.add(slug));
+        updateCountryChips();
+        renderCountryOptions();
+        updateAll();
+    });
+    document.getElementById('country-clear').addEventListener('click', function () {
+        state.selectedCountries.clear();
+        updateCountryChips();
+        renderCountryOptions();
+        updateAll();
+    });
+    countryOptions.addEventListener('change', function (event) {
+        if (!event.target.matches('input[type="checkbox"]')) return;
+        toggleCountry(event.target.value, event.target.checked);
+    });
+    countryChips.addEventListener('click', function (event) {
+        const country = event.target.closest('[data-remove-country]');
+        if (country) {
+            toggleCountry(country.dataset.removeCountry, false);
+            return;
+        }
+        const dimension = event.target.closest('[data-remove-dimension]');
+        if (!dimension) return;
+        state[dimension.dataset.removeDimension] = null;
+        updateCountryChips();
+        updateAll();
+    });
+    document.addEventListener('click', function (event) {
+        if (!countryPanel.contains(event.target) && !countryButton.contains(event.target)) closeCountryPanel();
+    });
+    document.addEventListener('keydown', function (event) {
+        if (event.key === 'Escape') closeCountryPanel();
+    });
+
+    yearSelect.addEventListener('change', function () {
+        state.year = this.value;
+        if (state.playTimer) {
+            clearInterval(state.playTimer);
+            state.playTimer = null;
+            mapPlay.textContent = '{{ t_play_years|escapejs }}';
+        }
+        updateAll();
+    });
+    resetButton.addEventListener('click', function () {
+        if (state.playTimer) {
+            clearInterval(state.playTimer);
+            state.playTimer = null;
+            mapPlay.textContent = '{{ t_play_years|escapejs }}';
+        }
+        state.year = 'all';
+        state.selectedCountries.clear();
+        state.sector = null;
+        state.mechanism = null;
+        yearSelect.value = 'all';
+        updateCountryChips();
+        renderCountryOptions();
+        updateAll();
+    });
+    mapMetric.addEventListener('change', function () {
+        state.metric = this.value;
+        updateMap();
+    });
+    mapPlay.addEventListener('click', function () {
+        if (state.playTimer) {
+            clearInterval(state.playTimer);
+            state.playTimer = null;
+            mapPlay.textContent = '{{ t_play_years|escapejs }}';
+            return;
+        }
+        if (!years.length) return;
+        let index = state.year === 'all' ? 0 : Math.max(0, years.indexOf(Number(state.year)));
+        state.year = String(years[index]);
+        yearSelect.value = state.year;
+        updateAll();
+        mapPlay.textContent = '{{ t_pause|escapejs }}';
+        state.playTimer = setInterval(() => {
+            index += 1;
+            if (index >= years.length) {
+                clearInterval(state.playTimer);
+                state.playTimer = null;
+                mapPlay.textContent = '{{ t_play_years|escapejs }}';
+                return;
+            }
+            state.year = String(years[index]);
+            yearSelect.value = state.year;
+            updateAll();
+        }, 1800);
+    });
+
+    const zoomHome = document.getElementById('map-zoom-home');
+    const zoomIn = document.getElementById('map-zoom-in');
+    const zoomOut = document.getElementById('map-zoom-out');
+    if (zoomHome) zoomHome.addEventListener('click', () => mapChart.setOption({ series: [{ zoom: 1.2, center: [16, 12] }] }));
+    if (zoomIn) zoomIn.addEventListener('click', () => {
+        const option = mapChart.getOption();
+        mapChart.setOption({ series: [{ zoom: (option.series[0].zoom || 1.2) * 1.3, center: option.series[0].center || [16, 12] }] });
+    });
+    if (zoomOut) zoomOut.addEventListener('click', () => {
+        const option = mapChart.getOption();
+        mapChart.setOption({ series: [{ zoom: (option.series[0].zoom || 1.2) / 1.3, center: option.series[0].center || [16, 12] }] });
+    });
+
+    try {
+        const [worldResponse, finResponse, demoResponse] = await Promise.all([
+            fetch("{% static 'data/world.json' %}"),
+            fetch("{% url 'analysis_api:daily-aggregates-list' %}?dashboard=financial"),
+            fetch("{% url 'analysis_api:daily-aggregates-list' %}?dashboard=demographic&time_grain=monthly")
+        ]);
+        const worldJson = await worldResponse.json();
+        finData = await finResponse.json();
+        demoData = await demoResponse.json();
+        echarts.registerMap('world', worldJson);
+        worldJson.features.forEach(feature => {
+            const name = feature.properties && feature.properties.name;
+            if (name) mapFeatureByKey.set(countryKey(name), name);
+        });
+
+        const allFin = finData.filter(isSector);
+        setText('glance-cash', money(sum(allFin, 'total_usd')));
+        populateFilters();
+        updateAll();
+
+        mapChart.on('click', params => {
+            if (!params.data || !params.data.slug) return;
+            const slug = params.data.slug;
+            toggleCountry(slug, !state.selectedCountries.has(slug));
+        });
+
+        sectorChart.on('click', params => {
+            if (!params.data || params.data.isOther) return;
+            const rawKey = params.data.rawKey || params.data.name;
+            state.sector = state.sector === rawKey ? null : rawKey;
+            if (state.sector) state.mechanism = null;
+            updateCountryChips();
+            updateAll();
+        });
+
+        mechanismChart.on('click', params => {
+            if (!params.data || params.data.isOther) return;
+            const rawKey = params.data.rawKey || params.data.name;
+            state.mechanism = state.mechanism === rawKey ? null : rawKey;
+            if (state.mechanism) state.sector = null;
+            updateCountryChips();
+            updateAll();
+        });
+    } catch (error) {
+        console.error('Landing data failed:', error);
+        [mapChart, trendsChart, sectorChart, mechanismChart].forEach(chart => chart.hideLoading());
+        setText('map-summary', '{{ t_load_error|escapejs }}');
+    }
+
+    window.addEventListener('resize', function () {
+        mapChart.resize();
+        trendsChart.resize();
+        sectorChart.resize();
+        mechanismChart.resize();
+    });
+});
 </script>
 {% endblock extra_js %}

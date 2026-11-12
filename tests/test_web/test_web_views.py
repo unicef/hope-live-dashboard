@@ -66,13 +66,14 @@ def test_landing_page_unauthenticated_no_private_sections(client):
 
     content = response.content.decode()
 
-    # Unauthenticated visitor must see public evidence CTA
-    assert "Explore evidence" in content
-    assert "HOPE Ecosystem Pillars" in content
-
-    # Unauthenticated visitor must NOT see private section grid, links, Sign In, or mentions
+    # Unauthenticated visitor sees the public evidence page without a sign-in CTA.
+    assert "Explore the evidence" in content
+    assert "Cash-based Assistance" in content
     assert "Sign In" not in content
-    assert "Explore Dashboards" not in content
+    assert 'href="/login/"' not in content
+
+    # Unauthenticated visitor must NOT see private section grid, links, or mentions
+    assert "Explore the Dashboard" not in content
     assert 'href="/dashboard/"' not in content
     assert 'href="/demographic/"' not in content
     assert 'href="/completion/"' not in content
@@ -85,7 +86,7 @@ def test_landing_page_unauthenticated_no_private_sections(client):
 
 
 @pytest.mark.django_db
-def test_landing_page_authenticated_shows_dashboards(client, user_factory):
+def test_landing_page_authenticated_hides_dashboard_launcher(client, user_factory):
     user = user_factory()
     client.force_login(user)
 
@@ -94,12 +95,9 @@ def test_landing_page_authenticated_shows_dashboards(client, user_factory):
 
     content = response.content.decode()
 
-    # Authenticated user sees operational dashboards launcher and sign out
-    assert "Go to Dashboards" in content
-    assert "Explore Dashboards" in content
-    assert "Sign Out" in content
-    assert 'href="/dashboard/"' in content
-    assert 'href="/risk/"' in content
+    # The public page does not advertise the dashboard endpoint.
+    assert "Go to Dashboards" not in content
+    assert 'href="/dashboard/"' not in content
 
 
 @pytest.mark.django_db

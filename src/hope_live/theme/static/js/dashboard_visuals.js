@@ -24,22 +24,8 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     };
 
-    const colorPalette = [
-        '#2ec7c9', '#b6a2de', '#5ab1ef', '#ffb980', '#d87a80',
-        '#8d98b3', '#e5cf0d', '#97b552', '#95706d', '#dc69aa',
-        '#07a2a4', '#9a7fd1', '#588dd5', '#f5994e', '#c05050',
-        '#59678c', '#c9ab00', '#76933c', '#bc65a6'
-    ];
-
-    function getStableColor(name) {
-        if (!name) return '#5470c6';
-        let hash = 0;
-        for (let i = 0; i < name.length; i++) {
-            hash = name.charCodeAt(i) + (Math.imul(hash, 32) - hash); // == ((hash << 5) - hash); avoids a shift, which breaks gettext extraction
-        }
-        const index = Math.abs(hash) % colorPalette.length;
-        return colorPalette[index];
-    }
+    const chartHelpers = window.HopeChart || {};
+    const getStableColor = chartHelpers.getStableColor || (() => '#5470c6');
 
     const fallbackCountryToRegion = {
         'afghanistan': 'SAR',
@@ -83,6 +69,15 @@ document.addEventListener('DOMContentLoaded', function () {
         return REGION_NAMES[code] || code;
     }
 
+    function formatCountryName(slug) {
+        if (!slug) return '';
+        const minorWords = new Set(['of', 'and', 'the', 'for']);
+        return String(slug)
+            .split('-')
+            .map((part, index) => (index > 0 && minorWords.has(part)) ? part : part.charAt(0).toUpperCase() + part.slice(1))
+            .join(' ');
+    }
+
     // Initialize empty Crossfilter
     let ndx = crossfilter([]);
 
@@ -95,7 +90,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const regionDimension = ndx.dimension(d => d.region);
     const statusDimension = ndx.dimension(d => d.dimension_type === 'status' ? d.dimension_value : '');
     const countryDimension = ndx.dimension(d => d.country_slug);
-    const beneficiaryGroupDimension = ndx.dimension(d => d.dimension_type === 'beneficiary_group' ? d.dimension_value : '');
+    const ipDimension = ndx.dimension(d => d.dimension_type === 'implementing_partner' ? d.dimension_value : '');
     const programTypeDimension = ndx.dimension(d => d.program_type || 'STANDARD');
 
     const primaryDimFilter = d => d.dimension_type === 'sector';
@@ -147,6 +142,15 @@ document.addEventListener('DOMContentLoaded', function () {
         };
     }
 
+    // Payment status buckets used by the KPI cards, the pipeline and the
+    // outstanding-by-country chart.
+    const pendingList = ["SENT TO PAYMENT GATEWAY", "SENT TO FSP", "PENDING"];
+    const successfulList = [
+        "Distribution Successful",
+        "Partially Distributed",
+        "Transaction Successful",
+    ].map(s => s.toUpperCase());
+
     // Groups (aggregates usd, qty, and payments simultaneously)
     const moveDays = dateDimension.group(d3.timeDay);
     const volumeByDayGroup = moveDays.reduce(
@@ -175,7 +179,25 @@ document.addEventListener('DOMContentLoaded', function () {
     const fspGroup = fspDimension.group().reduce(reduceMetric('financial_service_provider').add, reduceMetric('financial_service_provider').remove, reduceMetric('financial_service_provider').init);
     const countryGroup = countryDimension.group().reduce(reduceMetric().add, reduceMetric().remove, reduceMetric().init);
     const regionGroup = regionDimension.group().reduce(reduceMetric().add, reduceMetric().remove, reduceMetric().init);
-    const beneficiaryGroupGroup = beneficiaryGroupDimension.group().reduce(reduceMetric('beneficiary_group').add, reduceMetric('beneficiary_group').remove, reduceMetric('beneficiary_group').init);
+    const ipGroup = ipDimension.group().reduce(reduceMetric('implementing_partner').add, reduceMetric('implementing_partner').remove, reduceMetric('implementing_partner').init);
+
+    // Outstanding by country: entitlement of payments still pending. Used by
+    // the dedicated outstanding chart, which always reports USD.
+    const outstandingByCountryGroup = countryDimension.group().reduce(
+        (p, v) => {
+            if (v.dimension_type === 'status' && pendingList.includes(String(v.dimension_value).toUpperCase())) {
+                p.usd += +v.total_usd;
+            }
+            return p;
+        },
+        (p, v) => {
+            if (v.dimension_type === 'status' && pendingList.includes(String(v.dimension_value).toUpperCase())) {
+                p.usd -= +v.total_usd;
+            }
+            return p;
+        },
+        () => ({ usd: 0 })
+    );
 
     // Status breakdown used by the payment pipeline funnel (respects the active drill filters)
     const statusFunnelGroup = statusDimension.group().reduce(
@@ -205,7 +227,17 @@ document.addEventListener('DOMContentLoaded', function () {
     const selectedFsps = new Set();
     const selectedRegions = new Set();
     const selectedCountries = new Set();
-    const selectedBeneficiaryGroups = new Set();
+    const countryFilter = chartHelpers.initCountryFilter({
+        dimension: countryDimension,
+        onChange: value => {
+            selectedCountries.clear();
+            if (value) selectedCountries.add(value);
+            updateAll();
+        }
+    });
+
+    const selectedIps = new Set();
+    const expandedCharts = new Set();
 
     // Initialize ECharts instances with macarons theme
     const timelineChart = echarts.init(document.getElementById('time-focus-chart'), 'macarons');
@@ -215,7 +247,10 @@ document.addEventListener('DOMContentLoaded', function () {
     const fspChart = echarts.init(document.getElementById('fsp-chart'), 'macarons');
     const regionChart = echarts.init(document.getElementById('region-chart'), 'macarons');
     const countryChart = echarts.init(document.getElementById('country-chart'), 'macarons');
-    const beneficiaryGroupChart = echarts.init(document.getElementById('beneficiary-group-chart'), 'macarons');
+    const outstandingCountryChart = echarts.init(document.getElementById('outstanding-country-chart'), 'macarons');
+    const ipCard = document.getElementById('ip-card');
+    const ipChartEl = document.getElementById('ip-chart');
+    let ipChart = null;
     const pipelineEl = document.getElementById('pipeline-funnel-chart');
     const pipelineChart = pipelineEl ? echarts.init(pipelineEl, 'macarons') : null;
 
@@ -228,16 +263,10 @@ document.addEventListener('DOMContentLoaded', function () {
         fspChart.resize();
         regionChart.resize();
         countryChart.resize();
-        beneficiaryGroupChart.resize();
+        outstandingCountryChart.resize();
+        if (ipChart) ipChart.resize();
         if (pipelineChart) pipelineChart.resize();
     });
-
-    const pendingList = ["SENT TO PAYMENT GATEWAY", "SENT TO FSP", "PENDING"];
-    const successfulList = [
-        "Distribution Successful",
-        "Partially Distributed",
-        "Transaction Successful",
-    ].map(s => s.toUpperCase());
 
     function updateTotals() {
         let activeDimType = 'sector';
@@ -271,7 +300,33 @@ document.addEventListener('DOMContentLoaded', function () {
         if (outEl) outEl.textContent = '$' + d3.format(',.0f')(totalOutstanding);
     }
 
+    function updateChartTitles() {
+        const usd = currentMetric === 'usd';
+        const titles = usd ? {
+            'timeline-title': gettext('Spending timeline'),
+            'sector-title': gettext('Cash disbursed by sector'),
+            'delivery-title': gettext('Cash disbursed by delivery type'),
+            'region-title': gettext('Cash disbursed by region'),
+            'country-title': gettext('Cash disbursed (paid) by country'),
+            'program-title': gettext('Cash disbursed by programme'),
+            'fsp-title': gettext('Cash disbursed by financial service provider (FSP)'),
+        } : {
+            'timeline-title': gettext('Payments timeline'),
+            'sector-title': gettext('Payments by sector'),
+            'delivery-title': gettext('Payments by delivery type'),
+            'region-title': gettext('Payments by region'),
+            'country-title': gettext('Payments by country'),
+            'program-title': gettext('Payments by programme'),
+            'fsp-title': gettext('Payments by financial service provider (FSP)'),
+        };
+        Object.keys(titles).forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.textContent = titles[id];
+        });
+    }
+
     function updateAll() {
+        updateChartTitles();
         let activeDimType = 'sector';
         if (selectedPrograms.size > 0) activeDimType = 'program';
         else if (selectedDeliveries.size > 0) activeDimType = 'delivery_type';
@@ -302,7 +357,7 @@ document.addEventListener('DOMContentLoaded', function () {
             grid: { top: 15, bottom: 25, left: 60, right: 20 },
             xAxis: {
                 type: 'time',
-                axisLabel: { color: '#64748b', formatter: value => d3.timeFormat('%b')(new Date(value)) }
+                axisLabel: { color: '#64748b', formatter: value => d3.timeFormat('%b %y')(new Date(value)) }
             },
             yAxis: {
                 type: 'value',
@@ -330,30 +385,39 @@ document.addEventListener('DOMContentLoaded', function () {
 
         timelineChart.setOption(timelineOption, { notMerge: true });
 
-        // Helper to update horizontal bar charts (row charts)
-        function updateHorizontalBarChart(chartObj, group, activeFiltersSet, leftMargin = 120, maxBars = 100, isRegionalOrCountry = false) {
-            const rawData = group.all()
-                .map(d => {
-                    if (isRegionalOrCountry) {
-                        const valObj = d.value[activeDimType] || { usd: 0, qty: 0, payments: 0 };
-                        return { key: d.key, value: valObj[currentMetric] };
-                    } else {
-                        return { key: d.key, value: d.value[currentMetric] };
-                    }
-                })
-                .filter(d => d.key !== '' && d.key !== null && d.value > 0)
-                .sort((a, b) => b.value - a.value)
-                .slice(0, maxBars);
+        // Collapse long category lists into the top N plus an "Other" bucket.
+        function collapseTopBars(rows, maxBars, otherLabel) {
+            if (rows.length <= maxBars) return rows;
+            const top = rows.slice(0, maxBars);
+            const otherValue = rows.slice(maxBars).reduce((sum, d) => sum + d.value, 0);
+            top.push({ key: otherLabel, value: otherValue, isOther: true });
+            return top;
+        }
 
-            const hasAnySelection = activeFiltersSet.size > 0;
-            const seriesData = rawData.map(d => {
+        // Shared horizontal bar renderer: single colour scale, abbreviated
+        // values at the bar ends, exact values in the tooltip.
+        function renderHorizontalBars(chartObj, rows, options = {}) {
+            const {
+                leftMargin = 220,
+                metric = currentMetric,
+                activeSet = null,
+                colorFor = getStableColor,
+                axisLabelFor = key => key,
+                tooltipLabelFor = key => key,
+                percentTotal = null,
+                wrapLabels = false
+            } = options;
+            const percentSuffix = value => percentTotal > 0 ? ` (${((value / percentTotal) * 100).toFixed(1)}%)` : '';
+
+            const hasAnySelection = activeSet && activeSet.size > 0;
+            const seriesData = rows.map((d, idx) => {
+                const baseColor = colorFor(d.key, idx, rows.length);
                 return {
                     name: d.key,
                     value: d.value,
+                    isOther: !!d.isOther,
                     itemStyle: {
-                        color: activeFiltersSet.has(d.key)
-                            ? getStableColor(d.key)
-                            : (hasAnySelection ? '#cbd5e1' : getStableColor(d.key))
+                        color: (hasAnySelection && !d.isOther && !activeSet.has(d.key)) ? '#cbd5e1' : baseColor
                     }
                 };
             });
@@ -362,42 +426,71 @@ document.addEventListener('DOMContentLoaded', function () {
                 tooltip: {
                     trigger: 'axis',
                     axisPointer: { type: 'shadow' },
-                    formatter: params => `${params[0].name}: <b>${formatFullVal(params[0].value)}</b>`
+                    formatter: params => `${tooltipLabelFor(params[0].name)}: <b>${formatFullVal(params[0].value, metric)}</b>${percentSuffix(params[0].value)}`
                 },
-                grid: { top: 15, bottom: 25, left: 15, right: 25 },
+                grid: { top: 15, bottom: 25, left: leftMargin, right: percentTotal ? 110 : 70 },
                 xAxis: {
                     type: 'value',
-                    axisLabel: { formatter: val => formatMetric(val), color: '#64748b', fontSize: 10 },
+                    axisLabel: { formatter: val => formatMetric(val, metric), color: '#64748b', fontSize: 10 },
                     splitLine: { lineStyle: { color: '#f1f5f9' } }
                 },
                 yAxis: {
                     type: 'category',
-                    data: rawData.map(d => d.key),
+                    data: rows.map(d => d.key),
                     inverse: true,
                     axisTick: { show: false },
                     axisLine: { show: true, lineStyle: { color: '#f1f5f9' } },
-                    axisLabel: { show: false }
+                    axisLabel: {
+                        show: true,
+                        width: leftMargin - 20,
+                        overflow: wrapLabels ? 'break' : 'truncate',
+                        lineHeight: 12,
+                        formatter: val => axisLabelFor(val),
+                        color: '#374151',
+                        fontSize: 10
+                    }
                 },
                 series: [{
                     type: 'bar',
                     data: seriesData,
-                    barMaxWidth: 24,
+                    barMaxWidth: 22,
                     showBackground: true,
                     backgroundStyle: { color: 'rgba(241, 245, 249, 0.75)', borderRadius: [0, 4, 4, 0] },
                     itemStyle: { borderRadius: [0, 4, 4, 0] },
                     label: {
                         show: true,
-                        position: 'insideLeft',
-                        distance: 8,
-                        formatter: params => `${params.name}  •  ${formatMetric(params.value)}`,
+                        position: 'right',
+                        distance: 6,
+                        formatter: params => `${formatMetric(params.value, metric)}${percentSuffix(params.value)}`,
                         color: '#0f172a',
                         fontWeight: 600,
-                        fontSize: 11,
-                        textBorderColor: '#ffffff',
-                        textBorderWidth: 2.5
+                        fontSize: 11
                     }
                 }]
             }, { notMerge: true });
+        }
+
+        // Country charts are never truncated: grow the canvas so every country
+        // remains readable instead of collapsing the tail into "Other".
+        function resizeCountryChart(chartObj, count) {
+            const el = chartObj.getDom();
+            if (!el) return;
+            el.style.height = `${Math.max(300, count * 22 + 60)}px`;
+            chartObj.resize();
+        }
+
+        // Group-backed bars (programme, FSP, beneficiary group): top 10 + Other.
+        function updateHorizontalBarChart(chartObj, group, activeFiltersSet, leftMargin = 220, maxBars = 10, wrapLabels = false) {
+            const rows = group.all()
+                .map(d => ({ key: d.key, value: d.value[currentMetric] }))
+                .filter(d => d.key !== '' && d.key !== null && d.value > 0)
+                .sort((a, b) => b.value - a.value);
+
+            renderHorizontalBars(chartObj, collapseTopBars(rows, maxBars, gettext('Other')), {
+                leftMargin,
+                activeSet: activeFiltersSet,
+                wrapLabels
+            });
         }
 
         // Update Charts
@@ -448,7 +541,14 @@ document.addEventListener('DOMContentLoaded', function () {
                 data: sectorDonutData
             }]
         }, { notMerge: true });
-        updateHorizontalBarChart(programChart, programGroup, selectedPrograms, 140, 10);
+        updateHorizontalBarChart(
+            programChart,
+            programGroup,
+            selectedPrograms,
+            260,
+            expandedCharts.has('program') ? Infinity : 10,
+            true
+        );
         // Delivery Donut Chart with outside labels
         const deliveryRawData = deliveryGroup.all()
             .map(d => ({ name: d.key, value: d.value[currentMetric] }))
@@ -496,70 +596,17 @@ document.addEventListener('DOMContentLoaded', function () {
                 data: deliverySeriesData
             }]
         }, { notMerge: true });
-        updateHorizontalBarChart(fspChart, fspGroup, selectedFsps, 140, 10);
-        // Region Chart (with full-name mapping)
-        const regionData = regionGroup.all()
-            .map(d => {
-                const valObj = d.value[activeDimType] || { usd: 0, qty: 0, payments: 0 };
-                return { key: d.key, fullName: getRegionName(d.key), value: valObj[currentMetric] };
-            })
-            .filter(d => d.key !== '' && d.key !== null && d.value > 0)
-            .sort((a, b) => b.value - a.value)
-            .slice(0, 100);
-
-        const hasAnyRegionSelection = selectedRegions.size > 0;
-        regionChart.setOption({
-            tooltip: {
-                trigger: 'axis',
-                axisPointer: { type: 'shadow' },
-                formatter: params => `${getRegionName(params[0].name)}: <b>${formatFullVal(params[0].value)}</b>`
-            },
-            grid: { top: 15, bottom: 25, left: 15, right: 25 },
-            xAxis: {
-                type: 'value',
-                axisLabel: { formatter: val => formatMetric(val), color: '#64748b', fontSize: 10 },
-                splitLine: { lineStyle: { color: '#f1f5f9' } }
-            },
-            yAxis: {
-                type: 'category',
-                data: regionData.map(d => d.key),
-                inverse: true,
-                axisTick: { show: false },
-                axisLine: { show: true, lineStyle: { color: '#f1f5f9' } },
-                axisLabel: { show: false }
-            },
-            series: [{
-                type: 'bar',
-                data: regionData.map(d => {
-                    return {
-                        name: d.key,
-                        value: d.value,
-                        itemStyle: {
-                            color: selectedRegions.has(d.key) ? getStableColor(d.key) : (hasAnyRegionSelection ? '#cbd5e1' : getStableColor(d.key))
-                        }
-                    };
-                }),
-                barMaxWidth: 24,
-                showBackground: true,
-                backgroundStyle: { color: 'rgba(241, 245, 249, 0.75)', borderRadius: [0, 4, 4, 0] },
-                itemStyle: { borderRadius: [0, 4, 4, 0] },
-                label: {
-                    show: true,
-                    position: 'insideLeft',
-                    distance: 8,
-                    formatter: params => `${getRegionName(params.name)}  •  ${formatMetric(params.value)}`,
-                    color: '#0f172a',
-                    fontWeight: 600,
-                    fontSize: 11,
-                    textBorderColor: '#ffffff',
-                    textBorderWidth: 2.5
-                }
-            }]
-        }, { notMerge: true });
-        updateHorizontalBarChart(beneficiaryGroupChart, beneficiaryGroupGroup, selectedBeneficiaryGroups, 140);
-
-        // 2. Country Chart (Donut with outside labels, all countries)
-        const countryData = countryGroup.all()
+        updateHorizontalBarChart(
+            fspChart,
+            fspGroup,
+            selectedFsps,
+            260,
+            expandedCharts.has('fsp') ? Infinity : 10,
+            true
+        );
+        // Region Chart: single-hue scale (dark = highest), abbreviations on the
+        // axis with full names in the tooltip and in the footnote below.
+        const regionRows = regionGroup.all()
             .map(d => {
                 const valObj = d.value[activeDimType] || { usd: 0, qty: 0, payments: 0 };
                 return { key: d.key, value: valObj[currentMetric] };
@@ -567,50 +614,66 @@ document.addEventListener('DOMContentLoaded', function () {
             .filter(d => d.key !== '' && d.key !== null && d.value > 0)
             .sort((a, b) => b.value - a.value);
 
-        const hasAnyCountrySelection = selectedCountries.size > 0;
-        const countrySeriesData = countryData.map(d => {
-            const stableColor = getStableColor(d.key);
-            return {
-                name: d.key,
-                value: d.value,
-                itemStyle: {
-                    color: selectedCountries.has(d.key)
-                        ? stableColor
-                        : (hasAnyCountrySelection ? '#cbd5e1' : stableColor)
-                }
-            };
+        const regionScale = d3.scaleLinear()
+            .domain([0, Math.max(regionRows.length - 1, 1)])
+            .range(['#084081', '#cfe8f3']);
+
+        renderHorizontalBars(regionChart, regionRows, {
+            leftMargin: 90,
+            activeSet: selectedRegions,
+            colorFor: (key, idx) => regionScale(idx),
+            axisLabelFor: key => key,
+            tooltipLabelFor: key => getRegionName(key),
+            percentTotal: regionRows.reduce((sum, row) => sum + row.value, 0)
         });
 
-        countryChart.setOption({
-            tooltip: {
-                trigger: 'item',
-                formatter: params => `${params.name}: <b>${formatFullVal(params.value)}</b> (${params.percent}%)`
-            },
-            series: [{
-                type: 'pie',
-                radius: ['45%', '70%'],
-                center: ['50%', '50%'],
-                avoidLabelOverlap: true,
-                itemStyle: { borderRadius: 6, borderColor: '#fff', borderWidth: 2 },
-                label: {
-                    show: true,
-                    position: 'outside',
-                    formatter: '{b}\n({d}%)',
-                    fontSize: 11,
-                    color: '#374151'
-                },
-                labelLine: {
-                    show: true,
-                    length: 15,
-                    length2: 10,
-                    smooth: false
-                },
-                emphasis: {
-                    label: { show: true, fontSize: 14, fontWeight: 'bold', formatter: params => `${params.name}\n${formatMetric(params.value)}` }
-                },
-                data: countrySeriesData
-            }]
-        }, { notMerge: true });
+        // Country Charts: cash disbursed (paid) and outstanding, side by side.
+        const countryRows = countryGroup.all()
+            .map(d => {
+                const valObj = d.value[activeDimType] || { usd: 0, qty: 0, payments: 0 };
+                return { key: d.key, value: valObj[currentMetric] };
+            })
+            .filter(d => d.key !== '' && d.key !== null && d.value > 0)
+            .sort((a, b) => b.value - a.value);
+
+        resizeCountryChart(countryChart, countryRows.length);
+        renderHorizontalBars(countryChart, countryRows, {
+            leftMargin: 150,
+            activeSet: selectedCountries,
+            axisLabelFor: formatCountryName,
+            tooltipLabelFor: formatCountryName
+        });
+
+        // Outstanding by country: entitlement of payments still pending. This
+        // chart always reports USD and does not follow the metric toggle.
+        const outstandingRows = outstandingByCountryGroup.all()
+            .map(d => ({ key: d.key, value: d.value.usd }))
+            .filter(d => d.key !== '' && d.key !== null && d.value > 0)
+            .sort((a, b) => b.value - a.value);
+
+        resizeCountryChart(outstandingCountryChart, outstandingRows.length);
+        renderHorizontalBars(outstandingCountryChart, outstandingRows, {
+            leftMargin: 150,
+            metric: 'usd',
+            activeSet: selectedCountries,
+            axisLabelFor: formatCountryName,
+            tooltipLabelFor: formatCountryName
+        });
+
+        // Implementing-partner chart appears once the feed carries the dimension.
+        if (ipCard && ipChartEl) {
+            const hasIpData = ipGroup.all().some(d => d.key !== '' && d.key !== null && d.value[currentMetric] > 0);
+            if (hasIpData) {
+                ipCard.classList.remove('hidden');
+                if (!ipChart) {
+                    ipChart = echarts.init(ipChartEl, 'macarons');
+                    bindFilterToggle(ipChart, selectedIps, ipDimension);
+                }
+                updateHorizontalBarChart(ipChart, ipGroup, selectedIps, 200, 10);
+            } else {
+                ipCard.classList.add('hidden');
+            }
+        }
 
         updatePipeline();
     }
@@ -689,6 +752,8 @@ document.addEventListener('DOMContentLoaded', function () {
     const bindFilterToggle = (chartObj, activeFiltersSet, dimension) => {
         chartObj.on('click', function (params) {
             const name = params.name;
+            // The aggregated "Other" bucket is not a real category.
+            if (params.data && params.data.isOther) return;
             if (activeFiltersSet.has(name)) {
                 activeFiltersSet.delete(name);
             } else {
@@ -706,7 +771,35 @@ document.addEventListener('DOMContentLoaded', function () {
     bindFilterToggle(fspChart, selectedFsps, fspDimension);
     bindFilterToggle(regionChart, selectedRegions, regionDimension);
     bindFilterToggle(countryChart, selectedCountries, countryDimension);
-    bindFilterToggle(beneficiaryGroupChart, selectedBeneficiaryGroups, beneficiaryGroupDimension);
+    bindFilterToggle(outstandingCountryChart, selectedCountries, countryDimension);
+
+    // Expand/collapse the top-10 charts so every category can be inspected.
+    function syncShowAllButtons() {
+        document.querySelectorAll('.show-all-toggle').forEach(btn => {
+            const expanded = expandedCharts.has(btn.dataset.chart);
+            btn.textContent = expanded ? gettext('Show top 10') : gettext('Show all');
+            btn.setAttribute('aria-expanded', expanded ? 'true' : 'false');
+        });
+    }
+
+    document.querySelectorAll('.show-all-toggle').forEach(btn => {
+        btn.addEventListener('click', function () {
+            const key = this.dataset.chart;
+            const expanded = !expandedCharts.has(key);
+            if (expanded) expandedCharts.add(key);
+            else expandedCharts.delete(key);
+
+            const chartEl = document.getElementById(`${key}-chart`);
+            if (chartEl) {
+                chartEl.style.height = expanded ? (key === 'program' || key === 'fsp' ? '620px' : '520px') : '';
+            }
+            updateAll();
+            syncShowAllButtons();
+            const chart = chartEl ? echarts.getInstanceByDom(chartEl) : null;
+            if (chart) chart.resize();
+        });
+    });
+    syncShowAllButtons();
 
     // Metric selector tab clicks
     const metricTabs = document.querySelectorAll('.metric-tab');
@@ -719,19 +812,6 @@ document.addEventListener('DOMContentLoaded', function () {
             this.classList.add('bg-white', 'shadow', 'text-blue-800', 'active-metric');
             this.classList.remove('text-gray-600');
             currentMetric = this.dataset.metric;
-
-            const timelineTitle = document.getElementById('timeline-title');
-            if (timelineTitle) {
-                if (currentMetric === 'usd') timelineTitle.textContent = gettext('Spending timeline');
-                else timelineTitle.textContent = gettext('Payments timeline');
-            }
-
-            const bgTitle = document.getElementById('bg-title');
-            if (bgTitle) {
-                if (currentMetric === 'usd') bgTitle.textContent = gettext('Cash disbursed by beneficiary group');
-                else bgTitle.textContent = gettext('Payments by beneficiary group');
-            }
-
             updateAll();
         });
     });
@@ -850,7 +930,7 @@ document.addEventListener('DOMContentLoaded', function () {
             selectedFsps.clear();
             selectedRegions.clear();
             selectedCountries.clear();
-            selectedBeneficiaryGroups.clear();
+            selectedIps.clear();
 
             sectorDimension.filterAll();
             programDimension.filterAll();
@@ -858,11 +938,16 @@ document.addEventListener('DOMContentLoaded', function () {
             fspDimension.filterAll();
             regionDimension.filterAll();
             countryDimension.filterAll();
-            beneficiaryGroupDimension.filterAll();
+            ipDimension.filterAll();
             dateDimension.filterAll();
 
             ndx.remove();
             ndx.add(data);
+            countryFilter.populate(data);
+            countryFilter.apply();
+            selectedCountries.clear();
+            if (countryFilter.value) selectedCountries.add(countryFilter.value);
+            if (chartHelpers.setDataAsOf) chartHelpers.setDataAsOf(data);
             applyCohortFilter();
 
             await loadReconciliation(from, to);

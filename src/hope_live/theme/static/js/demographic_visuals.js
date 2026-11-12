@@ -16,25 +16,12 @@ document.addEventListener('DOMContentLoaded', function () {
         individuals: gettext('Individuals reached'),
         households: gettext('Households reached'),
         children: gettext('Children reached'),
-        pwd: gettext('PWD reached')
+        pwd: gettext('Persons with disabilities reached')
     };
 
-    const colorPalette = [
-        '#2ec7c9', '#b6a2de', '#5ab1ef', '#ffb980', '#d87a80',
-        '#8d98b3', '#e5cf0d', '#97b552', '#95706d', '#dc69aa',
-        '#07a2a4', '#9a7fd1', '#588dd5', '#f5994e', '#c05050',
-        '#59678c', '#c9ab00', '#76933c', '#bc65a6'
-    ];
-
-    function getStableColor(name) {
-        if (!name) return '#5470c6';
-        let hash = 0;
-        for (let i = 0; i < name.length; i++) {
-            hash = name.charCodeAt(i) + (Math.imul(hash, 32) - hash); // == ((hash << 5) - hash); avoids a shift, which breaks gettext extraction
-        }
-        const index = Math.abs(hash) % colorPalette.length;
-        return colorPalette[index];
-    }
+    const chartHelpers = window.HopeChart || {};
+    const getStableColor = chartHelpers.getStableColor || (() => '#5470c6');
+    const formatCountry = chartHelpers.formatCountryName || (value => value);
 
     // Initialize empty Crossfilter
     let ndx = crossfilter([]);
@@ -44,7 +31,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const dateDimension = ndx.dimension(d => d.date);
     const sectorDimension = ndx.dimension(d => primaryDimFilter(d) ? d.dimension_value : '');
     const countryDimension = ndx.dimension(d => d.country_slug);
-    const beneficiaryGroupDimension = ndx.dimension(d => d.dimension_type === 'beneficiary_group' ? d.dimension_value : '');
+    const regionDimension = ndx.dimension(d => d.dimension_type === 'region' ? d.dimension_value : '');
     const programTypeDimension = ndx.dimension(d => d.program_type || 'STANDARD');
 
     function applyCohortFilter() {
@@ -116,29 +103,38 @@ document.addEventListener('DOMContentLoaded', function () {
         reduceDemographics('sector').init
     );
 
-    const beneficiaryGroupGroup = beneficiaryGroupDimension.group().reduce(
-        reduceDemographics('beneficiary_group').add,
-        reduceDemographics('beneficiary_group').remove,
-        reduceDemographics('beneficiary_group').init
+    const regionGroup = regionDimension.group().reduce(
+        reduceDemographics('region').add,
+        reduceDemographics('region').remove,
+        reduceDemographics('region').init
     );
+
 
     // Active Filters Sets
     const selectedSectors = new Set();
     const selectedCountries = new Set();
-    const selectedBeneficiaryGroups = new Set();
+    const countryFilter = chartHelpers.initCountryFilter({
+        dimension: countryDimension,
+        onChange: value => {
+            selectedCountries.clear();
+            if (value) selectedCountries.add(value);
+            updateAll();
+        }
+    });
+
 
     // Initialize ECharts instances with macarons theme
     const timelineChart = echarts.init(document.getElementById('time-focus-chart'), 'macarons');
     const sectorChildChart = echarts.init(document.getElementById('sector-children-chart'), 'macarons');
     const countryPwdChart = echarts.init(document.getElementById('country-pwd-chart'), 'macarons');
-    const beneficiaryGroupChart = echarts.init(document.getElementById('beneficiary-group-chart'), 'macarons');
+    const regionShareChart = echarts.init(document.getElementById('region-share-chart'), 'macarons');
 
     // Resize Handler
     window.addEventListener('resize', function () {
         timelineChart.resize();
         sectorChildChart.resize();
         countryPwdChart.resize();
-        beneficiaryGroupChart.resize();
+        regionShareChart.resize();
     });
 
     function updateTotals() {
@@ -182,7 +178,7 @@ document.addEventListener('DOMContentLoaded', function () {
             },
             xAxis: {
                 type: 'time',
-                axisLabel: { color: '#64748b', formatter: value => d3.timeFormat('%b')(new Date(value)) }
+                axisLabel: { color: '#64748b', formatter: value => d3.timeFormat('%b %y')(new Date(value)) }
             },
             yAxis: {
                 type: 'value',
@@ -240,107 +236,143 @@ document.addEventListener('DOMContentLoaded', function () {
                 center: ['50%', '50%'],
                 avoidLabelOverlap: true,
                 itemStyle: { borderRadius: 6, borderColor: '#fff', borderWidth: 2 },
-                label: { show: true, position: 'outside', formatter: '{b}\n({d}%)', fontSize: 11, color: '#374151' },
+                label: { show: true, position: 'outside', formatter: params => `${params.name}\n${d3.format(',')(params.value)} (${params.percent}%)`, fontSize: 11, color: '#374151' },
                 labelLine: { show: true, length: 15, length2: 10, smooth: false },
                 emphasis: { label: { show: true, fontSize: 13, fontWeight: 'bold' } },
                 data: sectorDonutData
             }]
         }, { notMerge: true });
 
-        // 3. Country Distribution Chart (Donut with outside labels)
-        const countryData = countryGroup.all()
-            .filter(d => d.key !== null && d.value.beneficiaries > 0)
-            .sort((a, b) => b.value[activeField] - a.value[activeField])
-            .slice(0, 10);
-
+        // 3. Country share (horizontal bars, top 10 + Other)
+        const allCountryData = countryGroup.all()
+            .map(d => ({ key: d.key, value: d.value[activeField] }))
+            .filter(d => d.key && d.value > 0)
+            .sort((a, b) => b.value - a.value);
+        const countryTotal = allCountryData.reduce((sum, d) => sum + d.value, 0);
+        const countryBars = allCountryData.map(d => ({ ...d, name: formatCountry(d.key) }));
+        const countryShare = value => countryTotal > 0 ? (value / countryTotal) * 100 : 0;
         const hasAnyCountrySelection = selectedCountries.size > 0;
-        const countryDonutData = countryData.map(d => {
-            const stableColor = getStableColor(d.key);
-            const isSelected = selectedCountries.has(d.key);
-            return {
-                name: d.key,
-                value: d.value[activeField],
-                itemStyle: {
-                    color: isSelected ? stableColor : (hasAnyCountrySelection ? '#cbd5e1' : stableColor)
-                }
-            };
-        }).filter(d => d.value > 0);
+        const countryChartEl = countryPwdChart.getDom();
+        if (countryChartEl) {
+            countryChartEl.style.height = `${Math.max(300, countryBars.length * 22 + 40)}px`;
+            countryPwdChart.resize();
+        }
 
         countryPwdChart.setOption({
             tooltip: {
-                trigger: 'item',
-                formatter: '{b}: <b>{c}</b> ({d}%)'
-            },
-            series: [{
-                type: 'pie',
-                radius: ['45%', '70%'],
-                center: ['50%', '50%'],
-                avoidLabelOverlap: true,
-                itemStyle: { borderRadius: 6, borderColor: '#fff', borderWidth: 2 },
-                label: { show: true, position: 'outside', formatter: '{b}\n({d}%)', fontSize: 11, color: '#374151' },
-                labelLine: { show: true, length: 15, length2: 10, smooth: false },
-                emphasis: { label: { show: true, fontSize: 13, fontWeight: 'bold' } },
-                data: countryDonutData
-            }]
-        }, { notMerge: true });
-
-        // 6. Beneficiary Group Chart
-        const bgData = beneficiaryGroupGroup.all()
-            .filter(d => d.key !== null && d.value.beneficiaries > 0)
-            .sort((a, b) => b.value[activeField] - a.value[activeField]);
-
-        const bgCategories = bgData.map(d => d.key);
-        const hasAnyBgSelection = selectedBeneficiaryGroups.size > 0;
-        const bgSeriesData = bgData.map(d => {
-            const isSelected = selectedBeneficiaryGroups.has(d.key);
-            return {
-                value: d.value[activeField],
-                itemStyle: {
-                    color: isSelected ? getStableColor(d.key) : (hasAnyBgSelection ? '#cbd5e1' : getStableColor(d.key))
-                }
-            };
-        });
-
-        beneficiaryGroupChart.setOption({
-            tooltip: {
                 trigger: 'axis',
                 axisPointer: { type: 'shadow' },
-                formatter: params => `${params[0].name}: <b>${d3.format(",")(params[0].value)}</b>`
+                formatter: params => {
+                    const d = params[0].data;
+                    return `${d.name}: <b>${d3.format(',')(d.value)}</b> (${countryShare(d.value).toFixed(1)}%)`;
+                }
             },
-            grid: { top: 15, bottom: 25, left: 15, right: 25 },
+            grid: { top: 15, bottom: 20, left: 170, right: 110 },
             xAxis: {
                 type: 'value',
-                axisLabel: { formatter: val => d3.format(".2s")(val).replace('G', 'B'), color: '#64748b', fontSize: 10 },
+                axisLabel: { formatter: val => d3.format('.2s')(val).replace('G', 'B'), color: '#64748b', fontSize: 10 },
                 splitLine: { lineStyle: { color: '#f1f5f9' } }
             },
             yAxis: {
                 type: 'category',
-                data: bgCategories,
+                data: countryBars.map(d => d.name),
                 inverse: true,
                 axisTick: { show: false },
                 axisLine: { show: true, lineStyle: { color: '#f1f5f9' } },
-                axisLabel: { show: false }
+                axisLabel: { width: 155, overflow: 'truncate', color: '#374151', fontSize: 10 }
             },
             series: [{
                 type: 'bar',
-                data: bgSeriesData,
-                barMaxWidth: 24,
+                data: countryBars.map(d => {
+                    const isSelected = selectedCountries.has(d.key);
+                    const baseColor = d.isOther ? '#cbd5e1' : getStableColor(d.key);
+                    return {
+                        name: d.name,
+                        value: d.value,
+                        slug: d.key,
+                        isOther: !!d.isOther,
+                        itemStyle: {
+                            color: isSelected ? getStableColor(d.key) : (hasAnyCountrySelection && !d.isOther ? '#cbd5e1' : baseColor)
+                        }
+                    };
+                }),
+                barMaxWidth: 20,
                 showBackground: true,
                 backgroundStyle: { color: 'rgba(241, 245, 249, 0.75)', borderRadius: [0, 4, 4, 0] },
                 itemStyle: { borderRadius: [0, 4, 4, 0] },
                 label: {
                     show: true,
-                    position: 'insideLeft',
-                    distance: 8,
-                    formatter: params => `${params.name}  •  ${d3.format(".2s")(params.value).replace('G', 'B')}`,
+                    position: 'right',
+                    distance: 6,
+                    formatter: params => {
+                        const value = +params.value || 0;
+                        return `${d3.format(',')(value)} (${countryShare(value).toFixed(1)}%)`;
+                    },
                     color: '#0f172a',
                     fontWeight: 600,
-                    fontSize: 11,
-                    textBorderColor: '#ffffff',
-                    textBorderWidth: 2.5
+                    fontSize: 10
                 }
             }]
         }, { notMerge: true });
+
+        // 4. Region share (horizontal bars with count + percentage)
+        const regionData = regionGroup.all()
+            .map(d => ({ key: d.key, value: d.value[activeField] }))
+            .filter(d => d.key && d.value > 0)
+            .sort((a, b) => b.value - a.value);
+        const regionTotal = regionData.reduce((sum, d) => sum + d.value, 0);
+        const regionShare = value => regionTotal > 0 ? (value / regionTotal) * 100 : 0;
+
+        regionShareChart.setOption({
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: { type: 'shadow' },
+                formatter: params => {
+                    const value = +params[0].value || 0;
+                    return `${params[0].name}: <b>${d3.format(',')(value)}</b> (${regionShare(value).toFixed(1)}%)`;
+                }
+            },
+            grid: { top: 15, bottom: 25, left: 180, right: 110 },
+            xAxis: {
+                type: 'value',
+                axisLabel: { formatter: val => d3.format('.2s')(val).replace('G', 'B'), color: '#64748b', fontSize: 10 },
+                splitLine: { lineStyle: { color: '#f1f5f9' } }
+            },
+            yAxis: {
+                type: 'category',
+                data: regionData.map(d => d.key),
+                inverse: true,
+                axisTick: { show: false },
+                axisLine: { show: true, lineStyle: { color: '#f1f5f9' } },
+                axisLabel: { width: 160, overflow: 'truncate', color: '#374151', fontSize: 10 }
+            },
+            series: [{
+                type: 'bar',
+                data: regionData.map(d => ({
+                    value: d.value,
+                    itemStyle: {
+                        color: chartHelpers.getRegionColor ? chartHelpers.getRegionColor(d.key) : getStableColor(d.key)
+                    }
+                })),
+                barMaxWidth: 22,
+                showBackground: true,
+                backgroundStyle: { color: 'rgba(241, 245, 249, 0.75)', borderRadius: [0, 4, 4, 0] },
+                itemStyle: { borderRadius: [0, 4, 4, 0] },
+                label: {
+                    show: true,
+                    position: 'right',
+                    distance: 6,
+                    formatter: params => {
+                        const value = +params.value || 0;
+                        return `${d3.format(',')(value)} (${regionShare(value).toFixed(1)}%)`;
+                    },
+                    color: '#0f172a',
+                    fontWeight: 600,
+                    fontSize: 10
+                }
+            }]
+        }, { notMerge: true });
+
     }
 
     // --- Interactive Filters Bindings ---
@@ -367,7 +399,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Country Filter Selection Toggle
     const handleCountryClick = function (params) {
-        const countryName = params.name;
+        const countryName = (params.data && params.data.slug) || params.name;
+        if (!countryName || (params.data && params.data.isOther)) return;
         if (selectedCountries.has(countryName)) {
             selectedCountries.delete(countryName);
         } else {
@@ -384,22 +417,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
     countryPwdChart.on('click', handleCountryClick);
 
-    beneficiaryGroupChart.on('click', function (params) {
-        const name = params.name;
-        if (selectedBeneficiaryGroups.has(name)) {
-            selectedBeneficiaryGroups.delete(name);
-        } else {
-            selectedBeneficiaryGroups.add(name);
-        }
-        if (selectedBeneficiaryGroups.size === 0) {
-            beneficiaryGroupDimension.filterAll();
-        } else {
-            beneficiaryGroupDimension.filterFunction(d => selectedBeneficiaryGroups.has(d));
-        }
-        updateAll();
-    });
-
-    // Metric Toggle Tab Selection
     const metricTabs = document.querySelectorAll('.metric-tab');
 
     function setActiveMetricTab(metric) {
@@ -426,14 +443,6 @@ document.addEventListener('DOMContentLoaded', function () {
         const countryShareTitle = document.getElementById('country-share-title');
         if (countryShareTitle) countryShareTitle.textContent = `${gettext('Country share of')} ${activeLabel}`;
 
-        const bgTitleMap = {
-            individuals: gettext('Individuals reached by beneficiary group'),
-            households: gettext('Households reached by beneficiary group'),
-            children: gettext('Children reached by beneficiary group'),
-            pwd: gettext('PWD reached by beneficiary group')
-        };
-        const bgTitle = document.getElementById('bg-title');
-        if (bgTitle) bgTitle.textContent = bgTitleMap[currentMetric];
     }
 
     metricTabs.forEach(btn => {
@@ -527,14 +536,17 @@ document.addEventListener('DOMContentLoaded', function () {
             // Clean existing state and filters (clear filters FIRST, then remove old data)
             selectedSectors.clear();
             selectedCountries.clear();
-            selectedBeneficiaryGroups.clear();
             sectorDimension.filterAll();
             countryDimension.filterAll();
-            beneficiaryGroupDimension.filterAll();
             dateDimension.filterAll();
 
             ndx.remove();
             ndx.add(data);
+            countryFilter.populate(data);
+            countryFilter.apply();
+            selectedCountries.clear();
+            if (countryFilter.value) selectedCountries.add(countryFilter.value);
+            if (chartHelpers.setDataAsOf) chartHelpers.setDataAsOf(data);
             applyCohortFilter();
 
             timeFilter.setBuffer(startDate, endDate);

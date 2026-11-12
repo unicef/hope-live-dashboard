@@ -11,7 +11,9 @@ from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.cache import cache
 from django.db.models import Max, Sum
-from django.http import HttpRequest, HttpResponseRedirect
+from django.http import Http404, HttpRequest, HttpResponseRedirect
+from django.utils.formats import date_format
+from django.utils.text import slugify
 from django.utils.translation import activate, get_language_from_path
 from django.views.generic import TemplateView
 from django.views.i18n import set_language as django_set_language
@@ -93,11 +95,17 @@ def _fetch_news_dataset_rows(api_url: str, query_id: int, headers: dict[str, str
     return all_rows
 
 
-def fetch_hope_news() -> list[dict[str, Any]]:
+def fetch_hope_news(limit: int | None = 3) -> list[dict[str, Any]]:
+    """Fetch HOPE release updates from the country report feed.
+
+    The whole list is cached once; ``limit=None`` returns every update so the
+    "Read details" pages can resolve any linked entry.
+    """
     cache_key = "hope_news_updates_list"
     cached_data = cache.get(cache_key)
     if cached_data is not None:
-        return cast("list[dict[str, Any]]", cached_data)
+        updates = cast("list[dict[str, Any]]", cached_data)
+        return updates if limit is None else updates[:limit]
 
     try:
         api_url = config.HOPE_COUNTRY_REPORT_API_URL
@@ -112,24 +120,25 @@ def fetch_hope_news() -> list[dict[str, Any]]:
             if not item.get("active", True):
                 continue
 
+            version = str(item.get("version", "Update"))
+            description = str(item.get("description", "")).replace("**", "").replace("\r", "")
+
             processed.append(
                 {
-                    "version": item.get("version", "Update"),
+                    "version": version,
+                    "slug": slugify(version),
                     "date": _parse_news_item_date(item.get("date")),
-                    "snippet": _create_news_item_snippet(item.get("description", "")),
-                    "description": item.get("description", ""),
+                    "snippet": _create_news_item_snippet(description),
+                    "description": description,
                 }
             )
 
         # Sort by date descending (newest first)
         processed.sort(key=lambda x: x["date"] or datetime.date.min, reverse=True)
 
-        # Take the top 3
-        top_updates = processed[:3]
-
-        # Cache for 1 hour
-        cache.set(cache_key, top_updates, 60 * 60)
-        return top_updates
+        # Cache the full list for one hour; callers slice it as needed.
+        cache.set(cache_key, processed, 60 * 60)
+        return processed if limit is None else processed[:limit]
     except Exception as e:  # noqa: BLE001
         logger.warning(f"Failed to fetch HOPE news updates: {e}")
         return []
@@ -235,17 +244,25 @@ class IndexView(TemplateView):
         latest_data_date = max(dates) if dates else None
 
         if latest_data_date:
-            latest_data_str = latest_data_date.strftime("%B %Y")
+            latest_data_str = date_format(latest_data_date, "F Y")
+            latest_data_exact = date_format(latest_data_date, "d M Y")
         else:
-            latest_data_str = "May 2026"
+            latest_data_str = date_format(datetime.date(2026, 5, 1), "F Y")
+            latest_data_exact = latest_data_str
 
+        total_payments = (
+            FinancialAggregate.objects.filter(dimension_type="sector").aggregate(total=Sum("payment_count"))["total"]
+            or 0
+        )
         context["total_cash_disbursed"] = format_large_number(total_usd)
+        context["total_payments"] = format_large_number(total_payments)
+        context["average_transfer"] = format_large_number(total_usd / total_payments) if total_payments else "0"
         context["total_individuals_reached"] = format_large_number(total_beneficiaries)
         context["total_children"] = format_large_number(total_children)
         context["total_households"] = format_large_number(total_households)
         context["total_social_workers"] = format_large_number(total_social_workers)
         context["total_countries"] = total_countries
-        # Calculate verification success rate from CompletionAggregate status counts
+        # Calculate the reconciliation rate from CompletionAggregate status counts
         reconciled_sum = (
             CompletionAggregate.objects.filter(dimension_type="status", dimension_value="RECONCILED").aggregate(
                 total=Sum("payment_count")
@@ -259,17 +276,31 @@ class IndexView(TemplateView):
             or 0
         )
         total_payments = reconciled_sum + open_sum
-        if total_payments > 0:
-            context["verification_success_rate"] = round((reconciled_sum / total_payments) * 100, 1)
-        else:
-            context["verification_success_rate"] = 98.7
+        context["reconciliation_rate"] = (
+            round((reconciled_sum / total_payments) * 100, 1) if total_payments > 0 else None
+        )
 
         context["total_countries_glance"] = total_countries_glance or 170
         context["total_programs_glance"] = total_programs_glance or 450
         context["total_sources_glance"] = total_sources_glance
         context["latest_data_str"] = latest_data_str
-        context["hope_updates"] = fetch_hope_news()
+        context["latest_data_exact"] = latest_data_exact
 
+        return context
+
+
+class UpdateDetailView(TemplateView):
+    """Full text of one release update linked from the landing "Read details"."""
+
+    template_name = "pages/update_detail.html"
+
+    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        wanted = self.kwargs.get("slug", "")
+        update = next((item for item in fetch_hope_news(limit=None) if item["slug"] == wanted), None)
+        if update is None:
+            raise Http404("Update not found")
+        context["update"] = update
         return context
 
 

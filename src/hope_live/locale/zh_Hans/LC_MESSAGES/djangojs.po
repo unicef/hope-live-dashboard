@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-22 08:51+0000\n"
+"POT-Creation-Date: 2026-11-11 22:12+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,276 +17,349 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
-#: src/hope_live/theme/static/js/completion_visuals.js:205
-#: src/hope_live/theme/static/js/completion_visuals.js:208
+#: src/hope_live/theme/static/js/completion_visuals.js:224
+#: src/hope_live/theme/static/js/completion_visuals.js:227
 #: src/hope_live/theme/static/js/completion_visuals.min.js:1
 #, javascript-format
 msgid "%s out of %s total"
 msgstr "在总共 %s 中占 %s"
 
-#: src/hope_live/theme/static/js/completion_visuals.js:252
+#: src/hope_live/theme/static/js/completion_visuals.js:309
 #: src/hope_live/theme/static/js/completion_visuals.min.js:1
 msgid "payments"
 msgstr "付款"
 
-#: src/hope_live/theme/static/js/completion_visuals.js:278
-#: src/hope_live/theme/static/js/completion_visuals.js:302
-#: src/hope_live/theme/static/js/completion_visuals.js:370
-#: src/hope_live/theme/static/js/completion_visuals.js:395
-#: src/hope_live/theme/static/js/dashboard_visuals.js:643
+#: src/hope_live/theme/static/js/completion_visuals.js:335
+#: src/hope_live/theme/static/js/completion_visuals.js:360
+#: src/hope_live/theme/static/js/completion_visuals.js:449
+#: src/hope_live/theme/static/js/completion_visuals.js:462
+#: src/hope_live/theme/static/js/completion_visuals.js:487
+#: src/hope_live/theme/static/js/completion_visuals.min.js:1
+#: src/hope_live/theme/static/js/dashboard_visuals.js:706
+#: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
 msgid "Reconciled"
 msgstr "已对账"
 
-#: src/hope_live/theme/static/js/completion_visuals.js:278
-#: src/hope_live/theme/static/js/completion_visuals.js:310
-#: src/hope_live/theme/static/js/completion_visuals.js:370
-#: src/hope_live/theme/static/js/completion_visuals.js:403
-msgid "Still opened"
-msgstr "仍在营业"
-
-#: src/hope_live/theme/static/js/completion_visuals.js:532
+#: src/hope_live/theme/static/js/completion_visuals.js:335
+#: src/hope_live/theme/static/js/completion_visuals.js:368
+#: src/hope_live/theme/static/js/completion_visuals.js:450
+#: src/hope_live/theme/static/js/completion_visuals.js:462
+#: src/hope_live/theme/static/js/completion_visuals.js:496
 #: src/hope_live/theme/static/js/completion_visuals.min.js:1
-#, fuzzy
-#| msgid "Reconciliation Timeline"
-msgid "Reconciliation rate"
-msgstr "和解时间表"
+msgid "Pending Reconciliation"
+msgstr "待对账"
 
-#: src/hope_live/theme/static/js/completion_visuals.js:533
+#: src/hope_live/theme/static/js/completion_visuals.js:451
+#: src/hope_live/theme/static/js/completion_visuals.js:456
+#: src/hope_live/theme/static/js/completion_visuals.min.js:1
+msgid "Total"
+msgstr "总计"
+
+#: src/hope_live/theme/static/js/completion_visuals.js:574
+#: src/hope_live/theme/static/js/completion_visuals.min.js:1
+msgid "No country has both completion and financial data for this period."
+msgstr "本期没有国家同时具备完成情况和财务数据。"
+
+#: src/hope_live/theme/static/js/completion_visuals.js:593
+#: src/hope_live/theme/static/js/completion_visuals.js:600
+#: src/hope_live/theme/static/js/completion_visuals.js:628
+#: src/hope_live/theme/static/js/completion_visuals.min.js:1
+msgid "Reconciliation rate"
+msgstr "对账率"
+
+#: src/hope_live/theme/static/js/completion_visuals.js:595
+#: src/hope_live/theme/static/js/completion_visuals.js:600
+#: src/hope_live/theme/static/js/completion_visuals.js:658
 #: src/hope_live/theme/static/js/completion_visuals.min.js:1
 msgid "Delivery success rate"
-msgstr ""
+msgstr "发放成功率"
 
-#: src/hope_live/theme/static/js/completion_visuals.js:534
+#: src/hope_live/theme/static/js/completion_visuals.js:648
 #: src/hope_live/theme/static/js/completion_visuals.min.js:1
-#, fuzzy
-#| msgid "Reconciled"
-msgid "Reconciled volume"
-msgstr "已对账"
+msgid "80% reference"
+msgstr "80% 参考线"
 
-#: src/hope_live/theme/static/js/completion_visuals.js:542
-#, fuzzy
-#| msgid "Reconciliation Timeline"
-msgid "Reconciliation rate (%)"
-msgstr "和解时间表"
-
-#: src/hope_live/theme/static/js/completion_visuals.js:553
-msgid "Delivery success rate (%)"
-msgstr ""
-
-#: src/hope_live/theme/static/js/completion_visuals.js:657
+#: src/hope_live/theme/static/js/completion_visuals.js:737
+#: src/hope_live/theme/static/js/completion_visuals.min.js:1
 msgid "Reconciled amount (USD)"
 msgstr "已对账金额 (美元)"
 
-#: src/hope_live/theme/static/js/completion_visuals.js:658
-msgid "Still opened amount (USD)"
-msgstr "未清金额 (美元)"
+#: src/hope_live/theme/static/js/completion_visuals.js:738
+#: src/hope_live/theme/static/js/completion_visuals.min.js:1
+msgid "Pending Reconciliation amount (USD)"
+msgstr "待对账金额（美元）"
 
-#: src/hope_live/theme/static/js/completion_visuals.js:659
+#: src/hope_live/theme/static/js/completion_visuals.js:739
+#: src/hope_live/theme/static/js/completion_visuals.min.js:1
 msgid "Reconciliation timeline (USD)"
 msgstr "对账时间线 (美元)"
 
-#: src/hope_live/theme/static/js/completion_visuals.js:660
+#: src/hope_live/theme/static/js/completion_visuals.js:740
+#: src/hope_live/theme/static/js/completion_visuals.min.js:1
 msgid "Reconciliation status by country (USD)"
 msgstr "各国对账状态 (美元)"
 
-#: src/hope_live/theme/static/js/completion_visuals.js:662
+#: src/hope_live/theme/static/js/completion_visuals.js:742
+#: src/hope_live/theme/static/js/completion_visuals.min.js:1
 msgid "Reconciled payments"
-msgstr "核对付款"
+msgstr "已对账付款"
 
-#: src/hope_live/theme/static/js/completion_visuals.js:663
-msgid "Still opened payments"
-msgstr "未清付款"
+#: src/hope_live/theme/static/js/completion_visuals.js:743
+#: src/hope_live/theme/static/js/completion_visuals.min.js:1
+msgid "Pending Reconciliation payments"
+msgstr "待对账付款"
 
-#: src/hope_live/theme/static/js/completion_visuals.js:664
-#, fuzzy
+#: src/hope_live/theme/static/js/completion_visuals.js:744
+#: src/hope_live/theme/static/js/completion_visuals.min.js:1
 #| msgid "Reconciliation Timeline (USD)"
 msgid "Reconciliation timeline"
-msgstr "对账时间线 (美元)"
+msgstr "对账时间线"
 
-#: src/hope_live/theme/static/js/completion_visuals.js:665
+#: src/hope_live/theme/static/js/completion_visuals.js:745
+#: src/hope_live/theme/static/js/completion_visuals.min.js:1
 msgid "Reconciliation status by country"
 msgstr "各国对账状态"
 
-#: src/hope_live/theme/static/js/completion_visuals.js:671
-#: src/hope_live/theme/static/js/dashboard_visuals.js:731
-msgid "Cash disbursed by beneficiary group"
-msgstr ""
-
-#: src/hope_live/theme/static/js/completion_visuals.js:672
-#: src/hope_live/theme/static/js/dashboard_visuals.js:732
-msgid "Payments by beneficiary group"
-msgstr ""
-
-#: src/hope_live/theme/static/js/dashboard_visuals.js:73
+#: src/hope_live/theme/static/js/dashboard_visuals.js:59
 #: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
 msgid "Middle East and North Africa (MENA)"
-msgstr ""
+msgstr "中东和北非 (MENA)"
 
-#: src/hope_live/theme/static/js/dashboard_visuals.js:74
+#: src/hope_live/theme/static/js/dashboard_visuals.js:60
 #: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
 msgid "Eastern and Southern Africa (ESA)"
-msgstr ""
+msgstr "东部和南部非洲 (ESA)"
 
-#: src/hope_live/theme/static/js/dashboard_visuals.js:75
+#: src/hope_live/theme/static/js/dashboard_visuals.js:61
 #: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
 msgid "Europe and Central Asia (ECA)"
-msgstr ""
+msgstr "欧洲和中亚 (ECA)"
 
-#: src/hope_live/theme/static/js/dashboard_visuals.js:76
+#: src/hope_live/theme/static/js/dashboard_visuals.js:62
 #: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
 msgid "West and Central Africa (WCA)"
-msgstr ""
+msgstr "西部和中部非洲 (WCA)"
 
-#: src/hope_live/theme/static/js/dashboard_visuals.js:77
+#: src/hope_live/theme/static/js/dashboard_visuals.js:63
 #: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
 msgid "Latin America and Caribbean (LAC)"
-msgstr ""
+msgstr "拉丁美洲和加勒比地区 (LAC)"
 
-#: src/hope_live/theme/static/js/dashboard_visuals.js:78
+#: src/hope_live/theme/static/js/dashboard_visuals.js:64
 #: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
 msgid "East Asia and Pacific (EAP)"
-msgstr ""
+msgstr "东亚和太平洋地区 (EAP)"
 
-#: src/hope_live/theme/static/js/dashboard_visuals.js:79
+#: src/hope_live/theme/static/js/dashboard_visuals.js:65
 #: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
 msgid "South Asia (SA)"
-msgstr ""
+msgstr "南亚 (SA)"
 
-#: src/hope_live/theme/static/js/dashboard_visuals.js:291
+#: src/hope_live/theme/static/js/dashboard_visuals.js:306
+#: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
+msgid "Spending timeline"
+msgstr "支出时间表"
+
+#: src/hope_live/theme/static/js/dashboard_visuals.js:307
+#: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
+msgid "Cash disbursed by sector"
+msgstr "按部门分列的已发放现金"
+
+#: src/hope_live/theme/static/js/dashboard_visuals.js:308
+#: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
+msgid "Cash disbursed by delivery type"
+msgstr "按发放方式分列的已发放现金"
+
+#: src/hope_live/theme/static/js/dashboard_visuals.js:309
+#: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
+msgid "Cash disbursed by region"
+msgstr "按地区分列的已发放现金"
+
+#: src/hope_live/theme/static/js/dashboard_visuals.js:310
+#: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
+msgid "Cash disbursed (paid) by country"
+msgstr "按国家分列的已支付现金"
+
+#: src/hope_live/theme/static/js/dashboard_visuals.js:311
+#: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
+msgid "Cash disbursed by programme"
+msgstr "按项目分列的已发放现金"
+
+#: src/hope_live/theme/static/js/dashboard_visuals.js:312
+#: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
+msgid "Cash disbursed by financial service provider (FSP)"
+msgstr "按金融服务提供商 (FSP) 分列的已发放现金"
+
+#: src/hope_live/theme/static/js/dashboard_visuals.js:314
+#: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
+msgid "Payments timeline"
+msgstr "付款时间线"
+
+#: src/hope_live/theme/static/js/dashboard_visuals.js:315
+#: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
+msgid "Payments by sector"
+msgstr "按部门分列的付款"
+
+#: src/hope_live/theme/static/js/dashboard_visuals.js:316
+#: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
+msgid "Payments by delivery type"
+msgstr "按发放方式分列的付款"
+
+#: src/hope_live/theme/static/js/dashboard_visuals.js:317
+#: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
+msgid "Payments by region"
+msgstr "按地区分列的付款"
+
+#: src/hope_live/theme/static/js/dashboard_visuals.js:318
+#: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
+msgid "Payments by country"
+msgstr "按国家分列的付款"
+
+#: src/hope_live/theme/static/js/dashboard_visuals.js:319
+#: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
+msgid "Payments by programme"
+msgstr "按项目分列的付款"
+
+#: src/hope_live/theme/static/js/dashboard_visuals.js:320
+#: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
+msgid "Payments by financial service provider (FSP)"
+msgstr "按金融服务提供商 (FSP) 分列的付款"
+
+#: src/hope_live/theme/static/js/dashboard_visuals.js:346
 #: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
 msgid "Spending"
 msgstr "支出"
 
-#: src/hope_live/theme/static/js/dashboard_visuals.js:291
+#: src/hope_live/theme/static/js/dashboard_visuals.js:346
 #: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
 msgid "Payments"
 msgstr "付款"
 
-#: src/hope_live/theme/static/js/dashboard_visuals.js:641
-#, fuzzy
+#: src/hope_live/theme/static/js/dashboard_visuals.js:489
+#: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
+msgid "Other"
+msgstr "其他"
+
+#: src/hope_live/theme/static/js/dashboard_visuals.js:704
+#: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
 #| msgid "Spending Timeline"
 msgid "In pipeline"
-msgstr "支出时间表"
+msgstr "处理中"
 
-#: src/hope_live/theme/static/js/dashboard_visuals.js:642
-msgid "Delivered"
-msgstr ""
-
-#: src/hope_live/theme/static/js/dashboard_visuals.js:684
+#: src/hope_live/theme/static/js/dashboard_visuals.js:705
 #: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
-#, fuzzy
+msgid "Delivered"
+msgstr "已发放"
+
+#: src/hope_live/theme/static/js/dashboard_visuals.js:747
+#: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
 #| msgid "Spending Timeline"
 msgid "Pending in pipeline"
-msgstr "支出时间表"
+msgstr "待处理"
 
-#: src/hope_live/theme/static/js/dashboard_visuals.js:725
-msgid "Spending timeline"
-msgstr "支出时间表"
+#: src/hope_live/theme/static/js/dashboard_visuals.js:780
+#: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
+#: src/hope_live/theme/static/js/grievance_visuals.js:712
+#: src/hope_live/theme/static/js/grievance_visuals.min.js:1
+msgid "Show top 10"
+msgstr "显示前 10 项"
 
-#: src/hope_live/theme/static/js/dashboard_visuals.js:726
-msgid "Payments timeline"
-msgstr "付款时间线"
+#: src/hope_live/theme/static/js/dashboard_visuals.js:780
+#: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
+#: src/hope_live/theme/static/js/grievance_visuals.js:712
+#: src/hope_live/theme/static/js/grievance_visuals.min.js:1
+msgid "Show all"
+msgstr "显示全部"
 
 #: src/hope_live/theme/static/js/demographic_visuals.js:16
-#: src/hope_live/theme/static/js/demographic_visuals.js:463
+#: src/hope_live/theme/static/js/demographic_visuals.js:472
 #: src/hope_live/theme/static/js/demographic_visuals.min.js:1
 msgid "Individuals reached"
-msgstr "覆盖人数"
+msgstr "受益人数"
 
 #: src/hope_live/theme/static/js/demographic_visuals.js:17
 #: src/hope_live/theme/static/js/demographic_visuals.min.js:1
 msgid "Households reached"
-msgstr "覆盖家庭"
+msgstr "受益家庭数"
 
 #: src/hope_live/theme/static/js/demographic_visuals.js:18
 #: src/hope_live/theme/static/js/demographic_visuals.min.js:1
 msgid "Children reached"
-msgstr "儿童到达"
+msgstr "受益儿童数"
 
 #: src/hope_live/theme/static/js/demographic_visuals.js:19
 #: src/hope_live/theme/static/js/demographic_visuals.min.js:1
-msgid "PWD reached"
-msgstr "覆盖残疾人数"
+msgid "Persons with disabilities reached"
+msgstr "受益残障人士数"
 
-#: src/hope_live/theme/static/js/demographic_visuals.js:421
+#: src/hope_live/theme/static/js/demographic_visuals.js:438
 #: src/hope_live/theme/static/js/demographic_visuals.min.js:1
-#, fuzzy
 #| msgid "Spending Timeline"
 msgid "Timeline"
-msgstr "支出时间表"
+msgstr "时间线"
 
-#: src/hope_live/theme/static/js/demographic_visuals.js:424
+#: src/hope_live/theme/static/js/demographic_visuals.js:441
 #: src/hope_live/theme/static/js/demographic_visuals.min.js:1
 msgid "Sector share of"
-msgstr ""
+msgstr "各部门占比："
 
-#: src/hope_live/theme/static/js/demographic_visuals.js:427
+#: src/hope_live/theme/static/js/demographic_visuals.js:444
 #: src/hope_live/theme/static/js/demographic_visuals.min.js:1
 msgid "Country share of"
-msgstr ""
+msgstr "各国家占比："
 
-#: src/hope_live/theme/static/js/demographic_visuals.js:430
-#, fuzzy
-#| msgid "Individuals Reached"
-msgid "Individuals reached by beneficiary group"
-msgstr "覆盖人数"
-
-#: src/hope_live/theme/static/js/demographic_visuals.js:431
-msgid "Households reached by beneficiary group"
-msgstr ""
-
-#: src/hope_live/theme/static/js/demographic_visuals.js:432
-msgid "Children reached by beneficiary group"
-msgstr ""
-
-#: src/hope_live/theme/static/js/demographic_visuals.js:433
-msgid "PWD reached by beneficiary group"
-msgstr ""
-
-#: src/hope_live/theme/static/js/demographic_visuals.js:463
-#, fuzzy
+#: src/hope_live/theme/static/js/demographic_visuals.js:472
+#: src/hope_live/theme/static/js/demographic_visuals.min.js:1
 #| msgid "PWD Reached"
 msgid "Workers reached"
-msgstr "覆盖残疾人数"
+msgstr "受益工作人员数"
 
-#: src/hope_live/theme/static/js/demographic_visuals.js:466
+#: src/hope_live/theme/static/js/demographic_visuals.js:475
+#: src/hope_live/theme/static/js/demographic_visuals.min.js:1
 msgid "Workers"
-msgstr ""
+msgstr "工作人员"
 
-#: src/hope_live/theme/static/js/demographic_visuals.js:466
+#: src/hope_live/theme/static/js/demographic_visuals.js:475
+#: src/hope_live/theme/static/js/demographic_visuals.min.js:1
 msgid "Individuals"
 msgstr "个人"
 
 #: src/hope_live/theme/static/js/grievance_visuals.js:6
+#: src/hope_live/theme/static/js/grievance_visuals.js:232
 #: src/hope_live/theme/static/js/grievance_visuals.min.js:1
-msgid "New"
-msgstr "新建"
+msgid "New (Not Assigned)"
+msgstr "新建（未分配）"
 
 #: src/hope_live/theme/static/js/grievance_visuals.js:7
+#: src/hope_live/theme/static/js/grievance_visuals.js:233
 #: src/hope_live/theme/static/js/grievance_visuals.min.js:1
 msgid "Assigned"
 msgstr "已分配"
 
 #: src/hope_live/theme/static/js/grievance_visuals.js:8
+#: src/hope_live/theme/static/js/grievance_visuals.js:234
 #: src/hope_live/theme/static/js/grievance_visuals.min.js:1
 msgid "In Progress"
 msgstr "进行中"
 
 #: src/hope_live/theme/static/js/grievance_visuals.js:9
+#: src/hope_live/theme/static/js/grievance_visuals.js:235
 #: src/hope_live/theme/static/js/grievance_visuals.min.js:1
 msgid "On Hold"
 msgstr "挂起"
 
 #: src/hope_live/theme/static/js/grievance_visuals.js:10
+#: src/hope_live/theme/static/js/grievance_visuals.js:236
 #: src/hope_live/theme/static/js/grievance_visuals.min.js:1
 msgid "For Approval"
 msgstr "待审批"
 
 #: src/hope_live/theme/static/js/grievance_visuals.js:11
-#: src/hope_live/theme/static/js/grievance_visuals.js:214
-#: src/hope_live/theme/static/js/grievance_visuals.js:233
-#: src/hope_live/theme/static/js/grievance_visuals.js:454
-#: src/hope_live/theme/static/js/grievance_visuals.js:471
+#: src/hope_live/theme/static/js/grievance_visuals.js:237
+#: src/hope_live/theme/static/js/grievance_visuals.js:282
+#: src/hope_live/theme/static/js/grievance_visuals.js:302
+#: src/hope_live/theme/static/js/grievance_visuals.js:656
+#: src/hope_live/theme/static/js/grievance_visuals.js:676
 #: src/hope_live/theme/static/js/grievance_visuals.min.js:1
 msgid "Closed"
 msgstr "已关闭"
@@ -493,203 +566,200 @@ msgstr "生物识别相似度"
 msgid "Update Delegate"
 msgstr "更新代表"
 
-#: src/hope_live/theme/static/js/grievance_visuals.js:208
-#: src/hope_live/theme/static/js/grievance_visuals.js:448
+#: src/hope_live/theme/static/js/grievance_visuals.js:238
+#: src/hope_live/theme/static/js/grievance_visuals.js:830
+#: src/hope_live/theme/static/js/grievance_visuals.min.js:1
+msgid "Not specified"
+msgstr "未指定"
+
+#: src/hope_live/theme/static/js/grievance_visuals.js:276
+#: src/hope_live/theme/static/js/grievance_visuals.js:648
 #: src/hope_live/theme/static/js/grievance_visuals.min.js:1
 msgid "tickets"
 msgstr "工单"
 
-#: src/hope_live/theme/static/js/grievance_visuals.js:214
-#: src/hope_live/theme/static/js/grievance_visuals.js:248
-#: src/hope_live/theme/static/js/grievance_visuals.js:454
-#: src/hope_live/theme/static/js/grievance_visuals.js:479
+#: src/hope_live/theme/static/js/grievance_visuals.js:282
+#: src/hope_live/theme/static/js/grievance_visuals.js:318
+#: src/hope_live/theme/static/js/grievance_visuals.js:656
+#: src/hope_live/theme/static/js/grievance_visuals.js:684
+#: src/hope_live/theme/static/js/grievance_visuals.min.js:1
 msgid "Open & Active"
 msgstr "打开并活跃"
+
+#: src/hope_live/theme/static/js/grievance_visuals.js:384
+#: src/hope_live/theme/static/js/grievance_visuals.js:422
+#: src/hope_live/theme/static/js/grievance_visuals.min.js:1
+msgid "days"
+msgstr "天"
+
+#: src/hope_live/theme/static/js/grievance_visuals.js:385
+#: src/hope_live/theme/static/js/grievance_visuals.min.js:1
+msgid "closed tickets"
+msgstr "已结案工单"
 
 #: src/hope_live/theme/static/js/risk_visuals.js:6
 #: src/hope_live/theme/static/js/risk_visuals.min.js:1
 msgid "Critical"
-msgstr ""
+msgstr "严重"
 
 #: src/hope_live/theme/static/js/risk_visuals.js:7
 #: src/hope_live/theme/static/js/risk_visuals.min.js:1
 msgid "Warning"
-msgstr ""
+msgstr "警告"
 
 #: src/hope_live/theme/static/js/risk_visuals.js:8
 #: src/hope_live/theme/static/js/risk_visuals.min.js:1
 msgid "Caution"
-msgstr ""
+msgstr "注意"
 
 #: src/hope_live/theme/static/js/risk_visuals.js:9
 #: src/hope_live/theme/static/js/risk_visuals.min.js:1
 msgid "Normal"
-msgstr ""
+msgstr "正常"
 
 #: src/hope_live/theme/static/js/risk_visuals.js:12
-#: src/hope_live/theme/static/js/risk_visuals.js:161
-#: src/hope_live/theme/static/js/risk_visuals.js:284
+#: src/hope_live/theme/static/js/risk_visuals.js:190
+#: src/hope_live/theme/static/js/risk_visuals.js:312
 #: src/hope_live/theme/static/js/risk_visuals.min.js:1
 msgid "Increasing"
-msgstr ""
+msgstr "上升"
 
 #: src/hope_live/theme/static/js/risk_visuals.js:13
-#: src/hope_live/theme/static/js/risk_visuals.js:164
-#: src/hope_live/theme/static/js/risk_visuals.js:286
+#: src/hope_live/theme/static/js/risk_visuals.js:193
+#: src/hope_live/theme/static/js/risk_visuals.js:314
 #: src/hope_live/theme/static/js/risk_visuals.min.js:1
 msgid "Decreasing"
-msgstr ""
+msgstr "下降"
 
 #: src/hope_live/theme/static/js/risk_visuals.js:14
-#: src/hope_live/theme/static/js/risk_visuals.js:166
+#: src/hope_live/theme/static/js/risk_visuals.js:195
 #: src/hope_live/theme/static/js/risk_visuals.min.js:1
 msgid "Neutral"
-msgstr ""
+msgstr "持平"
 
 #: src/hope_live/theme/static/js/risk_visuals.js:19
 #: src/hope_live/theme/static/js/risk_visuals.js:26
 #: src/hope_live/theme/static/js/risk_visuals.min.js:1
-#, fuzzy
 #| msgid "Payment Verification"
 msgid "Payment Operations"
-msgstr "付款验证"
+msgstr "支付运营"
 
 #: src/hope_live/theme/static/js/risk_visuals.js:20
 #: src/hope_live/theme/static/js/risk_visuals.js:27
 #: src/hope_live/theme/static/js/risk_visuals.min.js:1
 msgid "Payment, Reconciliation & Verification bottlenecks"
-msgstr ""
+msgstr "支付、对账与核验瓶颈"
 
 #: src/hope_live/theme/static/js/risk_visuals.js:33
 #: src/hope_live/theme/static/js/risk_visuals.min.js:1
-#, fuzzy
 #| msgid "Registration Related Complaint"
 msgid "Registration & Population"
-msgstr "注册相关申诉"
+msgstr "登记与人口数据"
 
 #: src/hope_live/theme/static/js/risk_visuals.js:34
 #: src/hope_live/theme/static/js/risk_visuals.min.js:1
 msgid "KYC, Identity documents & Geographic verification"
-msgstr ""
+msgstr "身份核验 (KYC)、身份证件与地理核实"
 
 #: src/hope_live/theme/static/js/risk_visuals.js:40
 #: src/hope_live/theme/static/js/risk_visuals.min.js:1
-#, fuzzy
 #| msgid "Needs Adjudication"
 msgid "Deduplication & Adjudication"
-msgstr "需裁决"
+msgstr "查重与裁决"
 
 #: src/hope_live/theme/static/js/risk_visuals.js:41
 #: src/hope_live/theme/static/js/risk_visuals.min.js:1
 msgid "Biometric, Needs-Adjudication & Cross-channel duplicate issues"
-msgstr ""
+msgstr "生物识别、待裁决及跨渠道重复问题"
 
 #: src/hope_live/theme/static/js/risk_visuals.js:48
 #: src/hope_live/theme/static/js/risk_visuals.min.js:1
 msgid "PVP execution, overdue tickets & high failure rates"
-msgstr ""
+msgstr "支付后核验 (PVP) 执行、逾期工单与高失败率"
 
 #: src/hope_live/theme/static/js/risk_visuals.js:54
 #: src/hope_live/theme/static/js/risk_visuals.js:61
 #: src/hope_live/theme/static/js/risk_visuals.min.js:1
 msgid "Grievances & Safeguarding"
-msgstr ""
+msgstr "申诉与保护机制"
 
 #: src/hope_live/theme/static/js/risk_visuals.js:55
 #: src/hope_live/theme/static/js/risk_visuals.js:62
 #: src/hope_live/theme/static/js/risk_visuals.min.js:1
 msgid "Sensitive complaints, zero-reporting & FSP concentrations"
-msgstr ""
+msgstr "敏感申诉、零报告与金融服务提供商集中度"
 
 #: src/hope_live/theme/static/js/risk_visuals.js:68
 #: src/hope_live/theme/static/js/risk_visuals.min.js:1
 msgid "Targeting & Eligibility"
-msgstr ""
+msgstr "目标瞄准与资格审查"
 
 #: src/hope_live/theme/static/js/risk_visuals.js:69
 #: src/hope_live/theme/static/js/risk_visuals.min.js:1
 msgid "Vulnerability criteria & payment readiness anomalies"
-msgstr ""
+msgstr "脆弱性标准与支付就绪异常"
 
-#: src/hope_live/theme/static/js/risk_visuals.js:161
+#: src/hope_live/theme/static/js/risk_visuals.js:190
 #: src/hope_live/theme/static/js/risk_visuals.min.js:1
 msgid "Up"
-msgstr ""
+msgstr "上升"
 
-#: src/hope_live/theme/static/js/risk_visuals.js:164
+#: src/hope_live/theme/static/js/risk_visuals.js:193
 #: src/hope_live/theme/static/js/risk_visuals.min.js:1
 msgid "Down"
-msgstr ""
+msgstr "下降"
 
-#: src/hope_live/theme/static/js/risk_visuals.js:166
-#: src/hope_live/theme/static/js/risk_visuals.js:282
+#: src/hope_live/theme/static/js/risk_visuals.js:195
+#: src/hope_live/theme/static/js/risk_visuals.js:310
 #: src/hope_live/theme/static/js/risk_visuals.min.js:1
 msgid "Stable"
-msgstr ""
+msgstr "稳定"
 
-#: src/hope_live/theme/static/js/risk_visuals.js:180
+#: src/hope_live/theme/static/js/risk_visuals.js:209
 #: src/hope_live/theme/static/js/risk_visuals.min.js:1
 msgid "modules"
-msgstr ""
+msgstr "个模块"
 
-#: src/hope_live/theme/static/js/risk_visuals.js:184
+#: src/hope_live/theme/static/js/risk_visuals.js:213
 #: src/hope_live/theme/static/js/risk_visuals.min.js:1
 msgid "No active module issues"
-msgstr ""
+msgstr "无活跃模块问题"
 
-#: src/hope_live/theme/static/js/risk_visuals.js:243
+#: src/hope_live/theme/static/js/risk_visuals.js:272
 #: src/hope_live/theme/static/js/risk_visuals.min.js:1
 msgid "No Operational Risk Anomalies"
-msgstr ""
+msgstr "无运营风险异常"
 
-#: src/hope_live/theme/static/js/risk_visuals.js:244
+#: src/hope_live/theme/static/js/risk_visuals.js:273
 #: src/hope_live/theme/static/js/risk_visuals.min.js:1
 msgid ""
 "All operational thresholds are within normal tolerances for the selected "
 "filters."
-msgstr ""
-
-#: src/hope_live/theme/static/js/risk_visuals.js:260
-#: src/hope_live/theme/static/js/risk_visuals.min.js:1
-msgid "Operational metrics and bottlenecks"
-msgstr ""
+msgstr "所选筛选条件下的所有运营指标均在正常容差范围内。"
 
 #: src/hope_live/theme/static/js/risk_visuals.js:289
-#: src/hope_live/theme/static/js/risk_visuals.js:374
+#: src/hope_live/theme/static/js/risk_visuals.min.js:1
+msgid "Operational metrics and bottlenecks"
+msgstr "运营指标与瓶颈"
+
+#: src/hope_live/theme/static/js/risk_visuals.js:317
+#: src/hope_live/theme/static/js/risk_visuals.js:401
 #: src/hope_live/theme/static/js/risk_visuals.min.js:1
 msgid "issues"
-msgstr ""
+msgstr "项问题"
 
-#: src/hope_live/theme/static/js/risk_visuals.js:322
-#: src/hope_live/theme/static/js/risk_visuals.js:399
+#: src/hope_live/theme/static/js/risk_visuals.js:350
+#: src/hope_live/theme/static/js/risk_visuals.js:426
 #: src/hope_live/theme/static/js/risk_visuals.min.js:1
 msgid "Issues"
-msgstr ""
+msgstr "问题"
 
-#: src/hope_live/theme/static/js/risk_visuals.js:384
+#: src/hope_live/theme/static/js/risk_visuals.js:411
 #: src/hope_live/theme/static/js/risk_visuals.min.js:1
 msgid "Download PNG"
-msgstr ""
+msgstr "下载 PNG"
 
-#: src/hope_live/theme/static/js/risk_visuals.js:502
+#: src/hope_live/theme/static/js/risk_visuals.js:577
 #: src/hope_live/theme/static/js/risk_visuals.min.js:1
-msgid "All programmes"
-msgstr ""
-
-#~ msgid "Quantity"
-#~ msgstr "数量"
-
-#~ msgid "Quantity Distribution Timeline"
-#~ msgstr "数量分布时间线"
-
-#~ msgid "Households"
-#~ msgstr "家庭"
-
-#~ msgid "Children"
-#~ msgstr "儿童"
-
-#~ msgid "PWD"
-#~ msgstr "残疾人"
-
-#~ msgid "Resolved & Closed"
-#~ msgstr "已解决并关闭"
+msgid "No matching results"
+msgstr "无匹配结果"

@@ -1,15 +1,17 @@
 {% extends "layout.html" %}
-{% load i18n js static %}
+{% load chart_info i18n js static %}
 
 {% block content %}
 <div class="container mx-auto px-4 lg:px-6 py-4 lg:py-5">
     <div class="mb-3 flex flex-wrap justify-between items-center gap-2">
         <div>
             <h1 class="text-xl lg:text-2xl font-black text-gray-900 leading-tight">{% translate "Demographic dashboard" %}</h1>
-            <p class="text-xs text-gray-500">{% translate "Breakdown of individuals, children, and PWD reached" %}</p>
+            <p class="text-xs text-gray-500">{% translate "Breakdown of individuals, children, and persons with disabilities reached" %}</p>
+            {% chart_info "demographic.reached" %}
         </div>
-        <div>
+        <div class="flex items-center gap-2">
             <span class="bg-unicef-blue text-white text-[11px] font-bold px-2 py-0.5 rounded">{% translate "Live data" %}</span>
+            <span class="text-[10px] text-gray-400 font-semibold">{% translate "Data as of" %} <span id="data-as-of">—</span></span>
         </div>
     </div>
 
@@ -30,24 +32,30 @@
                 {% translate "Children" %}
             </button>
             <button id="btn-pwd" class="metric-tab px-3 py-1 text-xs font-bold rounded-md text-gray-600 hover:text-gray-900 transition-all duration-200 cursor-pointer" data-metric="pwd">
-                {% translate "PWD reached" %}
+                {% translate "Persons with disabilities" %}
             </button>
         </div>
     </div>
 
     <!-- Cohort Selector -->
     <div class="mb-3 flex flex-wrap gap-2 items-center justify-between">
-        <div class="text-xs font-bold text-gray-500 uppercase tracking-wider">{% translate "Programme cohort:" %}</div>
+        <div class="text-xs font-bold text-gray-500">{% translate "Payee Type:" %}</div>
         <div class="flex bg-gray-100 p-0.5 rounded-lg space-x-1 border border-gray-200">
             <button type="button" class="cohort-tab px-3 py-1 text-xs font-bold rounded-md bg-white shadow text-blue-800 transition-all duration-200 cursor-pointer" data-cohort="ALL">
                 {% translate "All" %}
             </button>
             <button type="button" class="cohort-tab px-3 py-1 text-xs font-bold rounded-md text-gray-600 hover:text-gray-900 transition-all duration-200 cursor-pointer" data-cohort="STANDARD">
-                {% translate "Standard" %}
+                {% translate "Household" %}
             </button>
             <button type="button" class="cohort-tab px-3 py-1 text-xs font-bold rounded-md text-gray-600 hover:text-gray-900 transition-all duration-200 cursor-pointer" data-cohort="SOCIAL">
-                {% translate "Social workers" %}
+                {% translate "Social Worker" %}
             </button>
+        </div>
+        <div class="flex items-center gap-2">
+            <label for="country-filter" class="text-xs font-bold text-gray-500">{% translate "Country:" %}</label>
+            <select id="country-filter" data-all-label="{% translate 'All countries' %}" class="text-xs border-gray-300 rounded-md text-gray-700 py-1 pl-2.5 pr-7 focus:ring-[#00adef] focus:border-[#00adef] shadow-2xs font-semibold bg-white">
+                <option value="">{% translate "All countries" %}</option>
+            </select>
         </div>
     </div>
 
@@ -56,28 +64,29 @@
         <div class="bg-white rounded-xl shadow-2xs border border-gray-200 p-3 border-l-4 border-unicef-blue flex flex-col justify-center min-h-[84px]">
             <h3 id="individuals-card-title" class="text-gray-500 text-[10px] sm:text-[11px] font-bold">{% translate "Individuals reached" %}</h3>
             <p id="total-individuals" class="text-xl sm:text-2xl font-black text-blue-700 mt-0.5 leading-none">0</p>
-            {% include "includes/chart_info.html" with definition="Number of individuals reached." source="HOPE demographics" method="Sum of total_beneficiaries for the sector dimension." %}
+            {% include "includes/chart_info.html" with definition=_("Number of individuals reached.") source=_("HOPE demographics") method=_("Sum of total_beneficiaries for the sector dimension.") %}
         </div>
         <div id="card-households" class="bg-white rounded-xl shadow-2xs border border-gray-200 p-3 border-l-4 border-green-500 flex flex-col justify-center min-h-[84px]">
             <h3 class="text-gray-500 text-[10px] sm:text-[11px] font-bold">{% translate "Households reached" %}</h3>
             <p id="total-households" class="text-xl sm:text-2xl font-black text-emerald-600 mt-0.5 leading-none">0</p>
-            {% include "includes/chart_info.html" with definition="Number of households reached." source="HOPE demographics" method="Sum of total_households for the sector dimension." %}
+            {% include "includes/chart_info.html" with definition=_("Number of households reached.") source=_("HOPE demographics") method=_("Sum of total_households for the sector dimension.") %}
         </div>
         <div id="card-children" class="bg-white rounded-xl shadow-2xs border border-gray-200 p-3 border-l-4 border-unicef-primary flex flex-col justify-center min-h-[84px]">
-            <h3 class="text-gray-500 text-[10px] sm:text-[11px] font-bold">{% translate "Children" %}</h3>
+            <h3 class="text-gray-500 text-[10px] sm:text-[11px] font-bold">{% translate "Children reached" %}</h3>
             <p id="total-children" class="text-xl sm:text-2xl font-black text-sky-600 mt-0.5 leading-none">0</p>
-            {% include "includes/chart_info.html" with definition="Estimated children reached." source="HOPE demographics" method="For programmes not collecting children data, figures are estimated using agreed fertility rate multipliers." %}
+            {% chart_info "demographic.children" %}
         </div>
         <div id="card-pwd" class="bg-white rounded-xl shadow-2xs border border-gray-200 p-3 border-l-4 border-purple-500 flex flex-col justify-center min-h-[84px]">
-            <h3 class="text-gray-500 text-[10px] sm:text-[11px] font-bold">{% translate "PWD reached" %}</h3>
+            <h3 class="text-gray-500 text-[10px] sm:text-[11px] font-bold">{% translate "Persons with disabilities reached" %}</h3>
             <p id="total-pwd" class="text-xl sm:text-2xl font-black text-purple-700 mt-0.5 leading-none">0</p>
-            {% include "includes/chart_info.html" with definition="Confirmed persons with disabilities reached." source="HOPE demographics" method="Some programmes do not collect this data, so the figure may be under-represented." %}
+            {% include "includes/chart_info.html" with definition=_("Confirmed persons with disabilities reached.") source=_("HOPE demographics") method=_("Some programmes do not collect this data, so the figure may be under-represented.") %}
         </div>
     </div>
 
     <!-- Timeline Filter (Full Width) -->
     <div class="bg-white rounded-xl shadow-2xs border border-gray-200 p-3.5 mb-4">
         <h3 id="timeline-title" class="text-sm font-bold text-gray-900 mb-1">{% translate "Reach timeline" %}</h3>
+        {% chart_info "demographic.timeline" %}
         <div id="time-focus-chart" class="w-full h-[220px]"></div>
         <div id="time-range-chart" style="display: none;"></div>
     </div>
@@ -86,20 +95,28 @@
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
         <div class="bg-white rounded-xl shadow-2xs border border-gray-200 p-3.5 flex flex-col">
             <h3 id="sector-share-title" class="text-sm font-bold text-gray-900 mb-1">{% translate "Sector share of reached population" %}</h3>
-            <p class="text-[11px] text-gray-400 mb-2 italic">{% translate "Note: Figures may use estimated multipliers where children data is not collected." %}</p>
+            {% chart_info "demographic.sector" %}
+            <p class="text-[11px] text-gray-400 mb-2 italic">{% translate "Note: children and PWD figures rely on recorded household composition." %}</p>
             <div id="sector-children-chart" class="w-full h-[250px]"></div>
         </div>
         <div class="bg-white rounded-xl shadow-2xs border border-gray-200 p-3.5">
             <h3 id="country-share-title" class="text-sm font-bold text-gray-900 mb-2">{% translate "Country share of reached population" %}</h3>
-            <div id="country-pwd-chart" class="w-full h-[250px]"></div>
+            {% chart_info "demographic.country" %}
+            <div id="country-pwd-chart" class="w-full h-[300px]"></div>
         </div>
     </div>
 
-    <!-- Beneficiary Group Breakdown -->
     <div class="bg-white rounded-xl shadow-2xs border border-gray-200 p-3.5 mb-4">
-        <h3 id="bg-title" class="text-sm font-bold text-gray-900 mb-2">{% translate "Individuals reached by beneficiary group" %}</h3>
-        <div id="beneficiary-group-chart" class="w-full h-[220px]"></div>
+        <h3 id="region-share-title" class="text-sm font-bold text-gray-900 mb-1">{% translate "Region share of reached population" %}</h3>
+        {% chart_info "demographic.region" %}
+        <div id="region-share-chart" class="w-full h-[260px]"></div>
     </div>
+
+    <details class="bg-white rounded-xl shadow-2xs border border-gray-200 p-3.5 mb-4 text-[11px] text-gray-500">
+        <summary class="cursor-pointer font-semibold text-gray-700">{% translate "Method and caveats" %}</summary>
+        <p class="mt-2 leading-relaxed">{% translate "Metrics use payees with at least one qualifying payment in the selected period. Qualifying payments must belong to accepted, finished or closed payment plans; failed, removed, conflicted and excluded payments are not included. Household metrics (individuals, children and persons with disabilities) use recorded household composition; social-worker programmes report workforce counts separately, and organisation payees are included only where payee-level demographic data exists. The timeline uses the payment delivery date, then the entitlement date, then the payment status date. Missing composition or dates of birth may understate children and disability figures." %}</p>
+    </details>
+
 </div>
 
 <script>

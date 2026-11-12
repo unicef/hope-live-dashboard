@@ -1,4 +1,6 @@
 import datetime
+import math
+import re
 
 import pytest
 
@@ -7,6 +9,7 @@ from tests.extras.testutils.factories.analysis import (
     DemographicAggregateFactory,
     FinancialAggregateFactory,
     GrievanceAggregateFactory,
+    RiskAggregateFactory,
 )
 
 pytestmark = [pytest.mark.selenium, pytest.mark.django_db]
@@ -18,7 +21,7 @@ def clear_aggregate_api_cache():
 
     Each dashboard now loads two aggregate feeds (e.g. the financial page also pulls
     completion data for the pipeline funnel, and completion pulls financial data for the
-    quality quadrant). Without clearing, a test would be served a previous test's cached
+    delivery success rates). Without clearing, a test would be served a previous test's cached
     payload — including empty payloads cached when that test had no rows for the feed.
     """
     from django.core.cache import cache
@@ -52,12 +55,11 @@ def financial_aggregates(db):
             total_usd=20000,
             payment_count=10,
         )
-    # Additional dimensions (program, delivery_type, financial_service_provider, beneficiary_group)
+    # Additional dimensions (program, delivery_type, financial_service_provider)
     for dim_type, prefix in [
         ("program", "Program"),
         ("delivery_type", "Delivery"),
         ("financial_service_provider", "FSP"),
-        ("beneficiary_group", "Group"),
     ]:
         for i, country in enumerate(countries[:3]):
             FinancialAggregateFactory(
@@ -97,6 +99,19 @@ def demographic_aggregates(db):
             total_pwd=10,
             total_households=150,
         )
+    # Region dimension used by the Region Share chart.
+    for i, country in enumerate(countries):
+        DemographicAggregateFactory(
+            date=datetime.date(year, 1, i + 1),
+            time_grain="monthly",
+            country_slug=country,
+            dimension_type="region",
+            dimension_value=["MENAR", "ESAR", "WCAR", "ECAR", "SAR"][i],
+            total_beneficiaries=200,
+            total_children=100,
+            total_pwd=10,
+            total_households=150,
+        )
     # Previous year
     for i, country in enumerate(countries):
         DemographicAggregateFactory(
@@ -109,30 +124,6 @@ def demographic_aggregates(db):
             total_children=200,
             total_pwd=20,
             total_households=300,
-        )
-    # Beneficiary groups
-    for i, country in enumerate(countries[:3]):
-        DemographicAggregateFactory(
-            date=datetime.date(year, 1, i + 1),
-            time_grain="monthly",
-            country_slug=country,
-            dimension_type="beneficiary_group",
-            dimension_value=f"Group-{i}",
-            total_beneficiaries=50,
-            total_children=25,
-            total_pwd=5,
-            total_households=40,
-        )
-        DemographicAggregateFactory(
-            date=datetime.date(year - 1, 1, i + 1),
-            time_grain="monthly",
-            country_slug=country,
-            dimension_type="beneficiary_group",
-            dimension_value=f"Group-{i}",
-            total_beneficiaries=100,
-            total_children=50,
-            total_pwd=10,
-            total_households=80,
         )
 
 
@@ -161,26 +152,6 @@ def completion_aggregates(db):
             dimension_value=f"RECONCILED-{i}",
             payment_count=6,
             total_usd=10000,
-        )
-    # Beneficiary groups
-    for i, country in enumerate(countries[:3]):
-        CompletionAggregateFactory(
-            date=datetime.date(year, 1, i + 1),
-            time_grain="daily",
-            country_slug=country,
-            dimension_type="beneficiary_group",
-            dimension_value=f"Group-{i}",
-            payment_count=2,
-            total_usd=2000,
-        )
-        CompletionAggregateFactory(
-            date=datetime.date(year - 1, 1, i + 1),
-            time_grain="daily",
-            country_slug=country,
-            dimension_type="beneficiary_group",
-            dimension_value=f"Group-{i}",
-            payment_count=4,
-            total_usd=4000,
         )
 
 
@@ -297,6 +268,64 @@ def social_worker_aggregates(db):
         )
 
 
+@pytest.fixture
+def risk_aggregates(db):
+    """Two countries x two programmes, with predictable issue totals."""
+    year = datetime.datetime.now().year
+    rows = [
+        ("kenya", "Child Protection - THABAT", "Targeting", "critical", 10),
+        ("kenya", "Education THABAT", "Payment Operations", "warning", 5),
+        ("somalia", "Child Protection - THABAT", "Targeting", "critical", 7),
+        ("somalia", "Education THABAT", "Payment Operations", "warning", 3),
+    ]
+    for index, (country, programme, module, severity, issues) in enumerate(rows):
+        RiskAggregateFactory(
+            date=datetime.date(year, 1, index + 1),
+            time_grain="daily",
+            country_slug=country,
+            dimension_type="risk_code",
+            dimension_value=f"CODE_{index}",
+            risk_code=f"CODE_{index}",
+            risk_name=f"Risk {index}",
+            module=module,
+            program_name=programme,
+            category="operational",
+            issue_count=issues,
+            severity=severity,
+            trend="up",
+            unit_label="payments",
+            percentage=None,
+        )
+
+
+@pytest.fixture
+def risk_shared_code(db):
+    """The same risk code in two countries with different programme/severity/%."""
+    year = datetime.datetime.now().year
+    rows = [
+        ("kenya", "Kenya Programme", "critical", 10, 80),
+        ("somalia", "Somalia Programme", "warning", 7, 10),
+    ]
+    for index, (country, programme, severity, issues, percentage) in enumerate(rows):
+        RiskAggregateFactory(
+            date=datetime.date(year, 1, index + 1),
+            time_grain="daily",
+            country_slug=country,
+            dimension_type="risk_code",
+            dimension_value="MISSING_ID_DOCUMENTS",
+            risk_code="MISSING_ID_DOCUMENTS",
+            risk_name="Missing ID Documents",
+            module="Registration",
+            program_name=programme,
+            category="operational",
+            issue_count=issues,
+            severity=severity,
+            trend="up",
+            unit_label="% of individuals",
+            percentage=percentage,
+        )
+
+
 def _apply_custom_range(browser, start: str, end: str) -> None:
     browser.click('button.time-preset-btn[data-preset="custom"]')
     browser.wait_for_element_visible("#custom-range-inputs")
@@ -307,6 +336,103 @@ def _apply_custom_range(browser, start: str, end: str) -> None:
     browser.click("#btn-apply-custom-range")
 
 
+def test_landing_shows_exact_data_date_without_public_info_tooltips(browser, financial_aggregates):
+    browser.login_as_user()
+    browser.open("/")
+    browser.wait_for_element_visible("#latest-data-date")
+
+    latest = browser.get_text("#latest-data-date")
+    assert re.search(r"\d{2} [A-Z][a-z]{2} \d{4}", latest), latest
+
+    assert browser.execute_script("return document.querySelectorAll('[data-chart-info]').length;") == 0
+    assert browser.execute_script("return document.querySelectorAll('#spotlight-content').length;") == 0
+
+
+def test_landing_filters_update_kpis_and_chips(browser, financial_aggregates, demographic_aggregates):
+    browser.login_as_user()
+    browser.open("/")
+    browser.wait_for_element_visible("#country-filter-button")
+    browser.wait_for_element_visible("#world-map-chart canvas")
+    browser.wait_for_element_visible("#sector-chart canvas")
+    browser.wait_for_element_visible("#mechanism-chart canvas")
+    assert browser.get_value("#map-metric") == "families"
+
+    year = datetime.datetime.now().year
+    browser.select_option_by_value("#landing-year", str(year))
+    browser.click("#country-filter-button")
+    browser.wait_for_element_visible("#country-options input[value='kenya']")
+    browser.click("#country-options input[value='kenya']")
+    browser.click("#country-options input[value='somalia']")
+    browser.click("#country-filter-button")
+
+    browser.assert_text("200", "#kpi-children")
+    browser.assert_text("300", "#kpi-families")
+    browser.assert_text("400", "#kpi-individuals")
+    browser.assert_text("$20K", "#kpi-cash")
+    browser.assert_text("10", "#kpi-payments")
+    browser.assert_text("$2K", "#kpi-average-transfer")
+    # The at-a-glance figure is global and must not change with filters.
+    browser.assert_text("$150K", "#glance-cash")
+    assert (
+        "country=kenya%2Csomalia" in browser.get_current_url() or "country=kenya,somalia" in browser.get_current_url()
+    )
+
+    browser.wait_for_element_visible("[data-remove-country='somalia']")
+    browser.click("[data-remove-country='somalia']")
+    browser.assert_text("100", "#kpi-children")
+    browser.assert_text("150", "#kpi-families")
+    browser.assert_text("200", "#kpi-individuals")
+    browser.assert_text("$10K", "#kpi-cash")
+    browser.assert_text("5", "#kpi-payments")
+    browser.assert_text("$2K", "#kpi-average-transfer")
+    browser.assert_text("Kenya", "#country-filter-value")
+
+    browser.click("#landing-reset")
+    browser.assert_text("1.5K", "#kpi-children")
+    browser.assert_text("2.3K", "#kpi-families")
+    browser.assert_text("3K", "#kpi-individuals")
+    browser.assert_text("$150K", "#kpi-cash")
+    browser.assert_text("75", "#kpi-payments")
+    browser.assert_text("$2K", "#kpi-average-transfer")
+
+
+def test_country_filter_is_available_on_dashboards(  # noqa: PLR0917
+    browser,
+    financial_aggregates,
+    demographic_aggregates,
+    completion_aggregates,
+    grievance_aggregates,
+    grievance_status_aggregates,
+):
+    browser.login_as_user()
+
+    expected = {
+        "/dashboard/": "kenya",
+        "/demographic/": "kenya",
+        "/completion/": "kenya",
+        "/grievance/": "country-test",
+    }
+    for path, country in expected.items():
+        browser.open(path)
+        browser.wait_for_element_visible("#country-filter")
+        browser.wait_for_element_visible(f"#country-filter option[value='{country}']")
+
+    browser.open("/dashboard/")
+    browser.wait_for_element_visible("#country-filter option[value='kenya']")
+    browser.select_option_by_value("#country-filter", "kenya")
+    browser.assert_text("5", "#total-payments")
+
+    # The country filter survives navigation to another dashboard.
+    browser.open("/demographic/")
+    browser.wait_for_element_visible("#country-filter option[value='kenya']")
+    assert browser.get_value("#country-filter") == "kenya"
+
+    # The period preset is persisted too.
+    browser.click('button.time-preset-btn[data-preset="this_month"]')
+    browser.open("/completion/")
+    browser.wait_for_element_visible('button.time-preset-btn[data-preset="this_month"].active-preset')
+
+
 def test_financial_dashboard_loads(browser, financial_aggregates):
     browser.login_as_user()
     browser.open("/dashboard/")
@@ -314,13 +440,35 @@ def test_financial_dashboard_loads(browser, financial_aggregates):
     browser.wait_for_element_visible("#time-focus-chart canvas")
     browser.wait_for_element_visible("#sector-chart canvas")
     browser.wait_for_element_visible("#country-chart canvas")
+    browser.wait_for_element_visible("#outstanding-country-chart canvas")
     browser.wait_for_element_visible("#total-amount-paid")
     browser.wait_for_element_visible("#total-payments")
     browser.wait_for_element_visible("#delivery-chart canvas")
     browser.wait_for_element_visible("#region-chart canvas")
     browser.wait_for_element_visible("#program-chart canvas")
     browser.wait_for_element_visible("#fsp-chart canvas")
-    browser.wait_for_element_visible("#beneficiary-group-chart canvas")
+
+    browser.assert_text("Cash disbursed by sector", "#sector-title")
+    browser.assert_text("Cash disbursed by delivery type", "#delivery-title")
+    browser.assert_text("Cash disbursed by region", "#region-title")
+    browser.assert_text("Cash disbursed (paid) by country", "#country-title")
+    browser.assert_text("Cash disbursed by programme", "#program-title")
+    browser.assert_text("Cash disbursed by financial service provider (FSP)", "#fsp-title")
+
+    browser.wait_for_element_visible('[data-chart-info="financial.timeline"]')
+    browser.wait_for_element_visible('[data-chart-info="financial.program"]')
+    browser.click('[data-chart-info="financial.program"] [data-chart-info-toggle]')
+    browser.wait_for_text_visible("top 10 programmes")
+
+    # Month axes show a short year (Nov 25), while tooltips keep the full date.
+    axis_label = browser.execute_script(
+        "const o = echarts.getInstanceByDom(document.getElementById('time-focus-chart')).getOption();"
+        "return o.xAxis[0].axisLabel.formatter(new Date(2025, 10, 1).getTime());"
+    )
+    assert axis_label == "Nov 25"
+
+    # The header shows the latest aggregate date once the data is loaded.
+    assert browser.get_text("#data-as-of") != "—"
 
     # Assert current year totals (default "This Year" preset)
     browser.assert_text("25", "#total-payments")
@@ -343,8 +491,29 @@ def test_demographic_dashboard_loads(browser, demographic_aggregates, financial_
     browser.wait_for_element_visible("#total-pwd")
     browser.wait_for_element_visible("#sector-children-chart canvas")
     browser.wait_for_element_visible("#country-pwd-chart canvas")
+    browser.wait_for_element_visible("#region-share-chart canvas")
     browser.wait_for_element_visible("#time-focus-chart canvas")
-    browser.wait_for_element_visible("#beneficiary-group-chart canvas")
+
+    browser.assert_text("Children reached", "#card-children h3")
+    browser.assert_text("Persons with disabilities reached", "#card-pwd h3")
+    browser.assert_text("Region share of reached population", "#region-share-title")
+
+    region_option = browser.execute_script(
+        "return echarts.getInstanceByDom(document.getElementById('region-share-chart')).getOption();"
+    )
+    assert len(region_option["series"][0]["data"]) == 5
+
+    country_option = browser.execute_script(
+        "return echarts.getInstanceByDom(document.getElementById('country-pwd-chart')).getOption();"
+    )
+    assert country_option["series"][0]["type"] == "bar"
+    assert len(country_option["series"][0]["data"]) == 5
+
+    browser.wait_for_element_visible('[data-chart-info="demographic.timeline"]')
+    browser.wait_for_element_visible('[data-chart-info="demographic.country"]')
+    browser.wait_for_text_visible("Method and caveats")
+    browser.click("//summary[contains(., 'Method and caveats')]")
+    browser.wait_for_text_visible("Qualifying payments must belong to accepted, finished or closed payment plans")
 
     # Assert current year totals
     browser.assert_text("1,000", "#total-individuals")
@@ -372,11 +541,30 @@ def test_completion_dashboard_loads(browser, completion_aggregates, financial_ag
     browser.wait_for_element_visible("#time-focus-chart canvas")
     browser.wait_for_element_visible("#status-country-chart canvas")
     browser.wait_for_element_visible("#completion-gauge canvas")
-    browser.wait_for_element_visible("#beneficiary-group-chart canvas")
+
+    browser.assert_text("Pending Reconciliation", "#opened-card-title")
+    browser.assert_text("Payment reconciliation dashboard", "h1")
+
+    browser.wait_for_element_visible('[data-chart-info="completion.timeline"]')
+    browser.wait_for_element_visible('[data-chart-info="completion.rates"]')
+
+    # Country chart: absolute default, 100% share toggle flips the axis to percentages.
+    browser.assert_element_not_visible("#verification-card")
+    browser.click("#country-view-share")
+    share_option = browser.execute_script(
+        "return echarts.getInstanceByDom(document.getElementById('status-country-chart')).getOption();"
+    )
+    assert share_option["xAxis"][0]["max"] == 100
+    assert share_option["series"][0].get("stack") == "total"
+    browser.click("#country-view-absolute")
+    absolute_option = browser.execute_script(
+        "return echarts.getInstanceByDom(document.getElementById('status-country-chart')).getOption();"
+    )
+    assert absolute_option["series"][0].get("stack") == "total"
+    assert absolute_option["yAxis"][0]["type"] == "category"
 
     # Assert current year totals
     browser.assert_text("15 (100.0% out of 15 total)", "#total-reconciled")
-
     # Apply a custom period covering the previous year
     prev_year = datetime.datetime.now().year - 1
     _apply_custom_range(browser, f"{prev_year}-01-01", f"{prev_year}-12-31")
@@ -390,17 +578,49 @@ def test_grievance_dashboard_loads(browser, grievance_aggregates, grievance_stat
     browser.open("/grievance/")
     browser.wait_for_element_visible("#total-tickets")
     browser.wait_for_element_visible("#time-filter-container")
-    browser.wait_for_text_visible("Status")
-    browser.wait_for_text_visible("Priority")
-    browser.wait_for_text_visible("Category")
-    browser.wait_for_text_visible("Issue type")
-    browser.wait_for_text_visible("Ticket status by country")
+    browser.wait_for_text_visible("Tickets by status")
+    browser.wait_for_text_visible("Tickets by priority")
+    browser.wait_for_text_visible("Tickets by category")
+    browser.wait_for_text_visible("Tickets by subcategory")
+    browser.wait_for_text_visible("Tickets by status and country")
+    browser.wait_for_element_visible('[data-chart-info="grievance.timeline"]')
+    browser.wait_for_element_visible('[data-chart-info="grievance.subcategory"]')
     browser.wait_for_element_visible("#grievance-status-chart canvas")
     browser.wait_for_element_visible("#grievance-priority-chart canvas")
     browser.wait_for_element_visible("#grievance-category-chart canvas")
     browser.wait_for_element_visible("#grievance-issue-type-chart canvas")
     browser.wait_for_element_visible("#grievance-country-chart canvas")
     browser.wait_for_element_visible("#time-focus-chart canvas")
+    browser.wait_for_element_visible('.grievance-show-all[data-chart="category"]')
+    browser.wait_for_element_visible('.grievance-show-all[data-chart="issue-type"]')
+    browser.wait_for_element_visible("#status-count-new")
+    browser.wait_for_element_visible("#status-count-closed")
+
+    # Key-status figures reconcile with the status doughnut (fixture: 5 CLOSED +
+    # 5 RESOLVED in the current year).
+    browser.wait_for_text_visible("10 (20.0%)", "#status-count-closed")
+    browser.wait_for_text_visible("Open & Active covers")
+    browser.wait_for_text_visible("Priority is an optional field")
+
+    # Category and subcategory bars show count and share, not only the count.
+    for chart_id in ("grievance-category-chart", "grievance-issue-type-chart"):
+        label = browser.execute_script(
+            f"const o = echarts.getInstanceByDom(document.getElementById('{chart_id}')).getOption();"
+            "return o.series[0].label.formatter({value: 10});"
+        )
+        assert re.search(r"\(\d+\.\d%\)", label), label
+
+    country_option = browser.execute_script(
+        "return echarts.getInstanceByDom(document.getElementById('grievance-country-chart')).getOption();"
+    )
+    assert country_option["yAxis"][0]["type"] == "category"
+    assert country_option["series"][0].get("stack") == "total"
+    assert country_option["series"][1].get("stack") == "total"
+    country_label = browser.execute_script(
+        "const o = echarts.getInstanceByDom(document.getElementById('grievance-country-chart')).getOption();"
+        "return o.series[1].label.formatter({data: {total: 10, share: 20}});"
+    )
+    assert "20.0%" in country_label
 
     # Assert current year totals
     browser.assert_text("50", "#total-tickets")
@@ -411,6 +631,44 @@ def test_grievance_dashboard_loads(browser, grievance_aggregates, grievance_stat
 
     # Wait and assert updated previous year totals
     browser.wait_for_text_visible("100", "#total-tickets")
+
+
+def test_grievance_country_chart_shows_every_country(browser, db):
+    year = datetime.datetime.now().year
+    for i in range(15):
+        country = f"country-{i}"
+        GrievanceAggregateFactory(
+            date=datetime.date(year, 1, i + 1),
+            time_grain="daily",
+            country_slug=country,
+            dimension_type="status",
+            dimension_value="NEW",
+            ticket_count=5,
+        )
+        GrievanceAggregateFactory(
+            date=datetime.date(year, 1, i + 1),
+            time_grain="daily",
+            country_slug=country,
+            dimension_type="status",
+            dimension_value="CLOSED",
+            ticket_count=5,
+        )
+        GrievanceAggregateFactory(
+            date=datetime.date(year, 1, i + 1),
+            time_grain="daily",
+            country_slug=country,
+            dimension_type="category",
+            dimension_value="Data Change",
+            ticket_count=10,
+        )
+
+    browser.login_as_user()
+    browser.open("/grievance/")
+    browser.wait_for_element_visible("#grievance-country-chart canvas")
+    country_option = browser.execute_script(
+        "return echarts.getInstanceByDom(document.getElementById('grievance-country-chart')).getOption();"
+    )
+    assert len(country_option["yAxis"][0]["data"]) == 15
 
 
 def test_financial_dashboard_cohort_toggle_and_pipeline(browser, financial_aggregates, social_worker_aggregates):
@@ -454,9 +712,487 @@ def test_demographic_dashboard_cohort_toggle(browser, demographic_aggregates, fi
     browser.assert_text("Individuals reached", "#individuals-card-title")
 
 
-def test_completion_quality_quadrant_loads(browser, completion_aggregates, financial_aggregates):
+def test_completion_rates_chart_loads(browser, completion_aggregates, financial_aggregates):
+    year = datetime.datetime.now().year
+    # Delivery-status rows so the chart has both feeds for the same countries.
+    for i, country in enumerate(["kenya", "somalia", "nigeria", "ukraine", "bangladesh"]):
+        for status, count in [("DISTRIBUTION SUCCESSFUL", 80 + i), ("PENDING", 20 - i)]:
+            FinancialAggregateFactory(
+                date=datetime.date(year, 1, i + 1),
+                time_grain="daily",
+                country_slug=country,
+                dimension_type="status",
+                dimension_value=status,
+                total_usd=1000 * count,
+                payment_count=count,
+            )
+
     browser.login_as_user()
     browser.open("/completion/")
     browser.wait_for_element_visible("#time-filter-container")
     browser.wait_for_element_visible("#time-focus-chart canvas")
-    browser.wait_for_element_visible("#quality-quadrant-chart canvas")
+    browser.wait_for_element_visible("#completion-rates-chart canvas")
+
+    rates_option = browser.execute_script(
+        "return echarts.getInstanceByDom(document.getElementById('completion-rates-chart')).getOption();"
+    )
+    assert [s["type"] for s in rates_option["series"]] == ["bar", "bar"]
+    assert rates_option["xAxis"][0]["max"] == 100
+
+
+def test_completion_country_charts_show_every_country(browser, db):
+    year = datetime.datetime.now().year
+    countries = [f"country-{i}" for i in range(15)]
+    for i, country in enumerate(countries):
+        CompletionAggregateFactory(
+            date=datetime.date(year, 1, i + 1),
+            time_grain="daily",
+            country_slug=country,
+            dimension_type="status",
+            dimension_value="RECONCILED",
+            payment_count=10,
+            total_usd=1000,
+        )
+        FinancialAggregateFactory(
+            date=datetime.date(year, 1, i + 1),
+            time_grain="daily",
+            country_slug=country,
+            dimension_type="status",
+            dimension_value="DISTRIBUTION SUCCESSFUL",
+            payment_count=10,
+            total_usd=1000,
+        )
+
+    browser.login_as_user()
+    browser.open("/completion/")
+    browser.wait_for_element_visible("#status-country-chart canvas")
+    browser.wait_for_element_visible("#completion-rates-chart canvas")
+
+    status_option = browser.execute_script(
+        "return echarts.getInstanceByDom(document.getElementById('status-country-chart')).getOption();"
+    )
+    assert len(status_option["yAxis"][0]["data"]) == 15
+
+    rates_option = browser.execute_script(
+        "return echarts.getInstanceByDom(document.getElementById('completion-rates-chart')).getOption();"
+    )
+    assert len(rates_option["yAxis"][0]["data"]) == 15
+
+
+def test_completion_verification_panel(browser, completion_aggregates, financial_aggregates):
+    year = datetime.datetime.now().year
+    for i, (value, count) in enumerate([("SELECTED", 100), ("VERIFIED", 92), ("PENDING", 5), ("DISCREPANCIES", 3)]):
+        CompletionAggregateFactory(
+            date=datetime.date(year, 1, i + 1),
+            time_grain="daily",
+            country_slug="kenya",
+            dimension_type="verification",
+            dimension_value=value,
+            payment_count=count,
+            total_usd=count * 100,
+        )
+
+    browser.login_as_user()
+    browser.open("/completion/")
+    browser.wait_for_element_visible("#verification-card")
+    browser.assert_text("100", "#verification-selected")
+    browser.assert_text("92", "#verification-verified")
+    browser.assert_text("5", "#verification-pending")
+    browser.assert_text("3", "#verification-discrepancies")
+    browser.assert_text("92.0%", "#verification-rate")
+
+
+def test_program_chart_uses_top_ten_and_country_chart_shows_all(browser, db):
+    """Programmes use top 10 + Other; country charts must show every country."""
+    year = datetime.datetime.now().year
+    for i in range(12):
+        FinancialAggregateFactory(
+            date=datetime.date(year, 1, i + 1),
+            time_grain="daily",
+            country_slug=f"country-{i}",
+            dimension_type="sector",
+            dimension_value=f"Sector {i}",
+            total_usd=1000 + i,
+            payment_count=1,
+        )
+        FinancialAggregateFactory(
+            date=datetime.date(year, 1, i + 1),
+            time_grain="daily",
+            country_slug=f"country-{i}",
+            dimension_type="program",
+            dimension_value=f"Programme {i}",
+            total_usd=1000 + i,
+            payment_count=1,
+        )
+
+    browser.login_as_user()
+    browser.open("/dashboard/")
+    browser.wait_for_element_visible("#time-filter-container")
+    browser.wait_for_element_visible("#total-payments")
+    browser.wait_for_element_visible("#program-chart canvas")
+    browser.wait_for_element_visible("#country-chart canvas")
+
+    program_option = browser.execute_script(
+        "return echarts.getInstanceByDom(document.getElementById('program-chart')).getOption();"
+    )
+    program_names = [item["name"] for item in program_option["series"][0]["data"]]
+    assert len(program_names) == 11, program_names
+    assert "Other" in program_names, program_names
+
+    country_option = browser.execute_script(
+        "return echarts.getInstanceByDom(document.getElementById('country-chart')).getOption();"
+    )
+    country_names = [item["name"] for item in country_option["series"][0]["data"]]
+    assert len(country_names) == 12, country_names
+    assert "Other" not in country_names, country_names
+
+    # Expanding a chart replaces the Other bucket with every underlying category.
+    browser.click('.show-all-toggle[data-chart="program"]')
+    browser.wait_for_text_visible("Show top 10", '.show-all-toggle[data-chart="program"]')
+    program_option = browser.execute_script(
+        "return echarts.getInstanceByDom(document.getElementById('program-chart')).getOption();"
+    )
+    program_names = [item["name"] for item in program_option["series"][0]["data"]]
+    assert len(program_names) == 12, program_names
+    assert "Other" not in program_names, program_names
+
+    browser.click('.show-all-toggle[data-chart="program"]')
+    browser.wait_for_text_visible("Show all", '.show-all-toggle[data-chart="program"]')
+    program_option = browser.execute_script(
+        "return echarts.getInstanceByDom(document.getElementById('program-chart')).getOption();"
+    )
+    assert len(program_option["series"][0]["data"]) == 11
+
+
+def test_risk_filters_are_searchable(browser, risk_aggregates):
+    browser.login_as_user()
+    browser.open("/risk/")
+    browser.wait_for_element_visible("#time-filter-container")
+    browser.wait_for_text_visible("25", "#total-issues")
+
+    # Programme combobox: search, then select the match
+    browser.click("#program-filter-input")
+    browser.type("#program-filter-input", "Child")
+    browser.wait_for_element_visible('#program-filter-list [role="option"]')
+    browser.assert_text("Child Protection - THABAT", '#program-filter-list [role="option"]')
+    browser.click('#program-filter-list [role="option"]')
+    assert browser.get_value("#program-filter-input") == "Child Protection - THABAT"
+    browser.wait_for_text_visible("17", "#total-issues")
+
+    # Country combobox: search, then select the match
+    browser.click("#country-filter-input")
+    browser.type("#country-filter-input", "Kenya")
+    browser.wait_for_element_visible('#country-filter-list [role="option"]')
+    browser.click('#country-filter-list [role="option"]')
+    assert browser.get_value("#country-filter-input") == "Kenya"
+    browser.wait_for_text_visible("10", "#total-issues")
+
+    # Clearing the programme leaves the country filter active
+    browser.click("#program-filter-clear")
+    browser.wait_for_text_visible("15", "#total-issues")
+    assert browser.get_value("#program-filter-input") == ""
+
+
+def test_risk_table_uses_the_filtered_country(browser, risk_shared_code):
+    """The table must not keep another country's programme/severity/percentage."""
+    browser.login_as_user()
+    browser.open("/risk/")
+    browser.wait_for_element_visible("#time-filter-container")
+    browser.wait_for_text_visible("17", "#total-issues")
+
+    browser.click("#country-filter-input")
+    browser.type("#country-filter-input", "Somalia")
+    browser.wait_for_element_visible('#country-filter-list [role="option"]')
+    browser.click('#country-filter-list [role="option"]')
+    browser.wait_for_text_visible("7", "#total-issues")
+
+    table = browser.get_text("#risk-top-table")
+    assert "Somalia" in table
+    assert "Somalia Programme" in table
+    assert "Warning" in table
+    assert "10%" in table
+
+    assert "Kenya Programme" not in table
+    assert "Critical" not in table
+    assert "80%" not in table
+
+
+def test_grievance_resolution_and_source_filter(browser, grievance_aggregates, grievance_status_aggregates):
+    year = datetime.datetime.now().year
+    GrievanceAggregateFactory(
+        date=datetime.date(year, 1, 1),
+        time_grain="daily",
+        country_slug="country-test",
+        dimension_type="resolution",
+        dimension_value="1",
+        ticket_count=10,
+        avg_resolution_days=3.5,
+        ticket_source="GRIEVANCE",
+    )
+    GrievanceAggregateFactory(
+        date=datetime.date(year, 1, 1),
+        time_grain="daily",
+        country_slug="country-test",
+        dimension_type="category",
+        dimension_value="9",
+        ticket_count=100,
+        ticket_source="SYSTEM_FLAG",
+    )
+
+    browser.login_as_user()
+    browser.open("/grievance/")
+    browser.wait_for_element_visible("#time-filter-container")
+    browser.wait_for_element_visible("#resolution-card")
+    browser.assert_element_not_visible("#status-card")
+    browser.assert_text("50", "#total-tickets")
+
+    option = browser.execute_script(
+        "return echarts.getInstanceByDom(document.getElementById('grievance-resolution-chart')).getOption();"
+    )
+    assert option["series"][0]["type"] == "bar"
+
+    browser.click("#source-all")
+    browser.wait_for_text_visible("150", "#total-tickets")
+
+
+def test_landing_sector_and_mechanism_chart_clicks(browser, financial_aggregates, demographic_aggregates):
+    year = datetime.datetime.now().year
+    browser.set_window_size(1600, 1400)
+    browser.login_as_user()
+    browser.open(f"/?year={year}")
+    browser.wait_for_element_visible("#sector-chart canvas")
+    browser.wait_for_element_visible("#mechanism-chart canvas")
+    browser.sleep(1)
+    browser.execute_script(
+        "document.querySelectorAll('[id^=dj]').forEach(e=>e.style.setProperty('display','none','important'));"
+    )
+    browser.assert_text("$50K", "#kpi-cash")
+    browser.assert_text("25", "#kpi-payments")
+    browser.assert_text("500", "#kpi-children")
+
+    def click_pie_slice(selector, dimension):
+        size = browser.execute_script(
+            f"const r=document.querySelector('{selector}').getBoundingClientRect();"
+            "return {width:r.width, height:r.height};"
+        )
+        radius = min(size["width"], size["height"]) * 0.275
+        for degrees in range(0, 360, 30):
+            angle = math.radians(degrees)
+            browser.click_with_offset(
+                selector,
+                radius * math.cos(angle),
+                radius * math.sin(angle) - size["height"] * 0.06,
+                center=True,
+            )
+            browser.sleep(0.25)
+            if browser.execute_script(f"return !!document.querySelector('[data-remove-dimension=\"{dimension}\"]');"):
+                return
+        raise AssertionError(f"Could not hit a {dimension} pie slice")
+
+    click_pie_slice("#sector-chart canvas", "sector")
+    browser.wait_for_element_visible("[data-remove-dimension='sector']")
+    browser.assert_text("$10K", "#kpi-cash")
+    browser.assert_text("5", "#kpi-payments")
+    browser.assert_text("0", "#kpi-children")
+    browser.assert_text("Sector: Health-", "#country-chips")
+    assert "sector=Health-" in browser.get_current_url()
+
+    click_pie_slice("#mechanism-chart canvas", "mechanism")
+    browser.wait_for_element_visible("[data-remove-dimension='mechanism']")
+    browser.assert_text("$5K", "#kpi-cash")
+    browser.assert_text("2", "#kpi-payments")
+    browser.assert_text("$2.5K", "#kpi-average-transfer")
+    browser.assert_text("500", "#kpi-children")
+    browser.assert_text("Delivery mechanism: Delivery-", "#country-chips")
+    assert "mechanism=Delivery-" in browser.get_current_url()
+    assert "sector=" not in browser.get_current_url()
+
+    browser.click("[data-remove-dimension='mechanism']")
+    browser.assert_text("$50K", "#kpi-cash")
+    browser.assert_text("25", "#kpi-payments")
+    browser.assert_element_not_visible("#country-chips")
+    assert "mechanism=" not in browser.get_current_url()
+
+
+def test_landing_map_names_are_derived_from_data(browser):
+    year = datetime.datetime.now().year
+    FinancialAggregateFactory(
+        date=datetime.date(year, 1, 1),
+        time_grain="daily",
+        country_slug="democratic-republic-of-congo",
+        dimension_type="sector",
+        dimension_value="HEALTH",
+        total_usd=1000,
+        payment_count=1,
+    )
+    DemographicAggregateFactory(
+        date=datetime.date(year, 1, 1),
+        time_grain="monthly",
+        country_slug="democratic-republic-of-congo",
+        dimension_type="sector",
+        dimension_value="HEALTH",
+        total_beneficiaries=10,
+        total_children=5,
+        total_households=3,
+    )
+
+    browser.login_as_user()
+    browser.open(f"/?year={year}&country=democratic-republic-of-congo")
+    browser.wait_for_element_visible("#world-map-chart canvas")
+    browser.wait_for_text("1", "#kpi-payments")
+
+    map_names = browser.execute_script(
+        """
+        const chart = echarts.getInstanceByDom(document.getElementById('world-map-chart'));
+        return chart.getOption().series[0].data.map(item => item.name);
+        """
+    )
+    assert "Dem. Rep. Congo" in map_names
+
+    keys = browser.execute_script(
+        """
+        return {
+            drc: [
+                window.HopeChart.countryKey('democratic-republic-of-congo'),
+                window.HopeChart.countryKey('Dem. Rep. Congo')
+            ],
+            southSudan: [
+                window.HopeChart.countryKey('south-sudan'),
+                window.HopeChart.countryKey('S. Sudan')
+            ],
+            centralAfricanRepublic: [
+                window.HopeChart.countryKey('central-african-republic'),
+                window.HopeChart.countryKey('Central African Rep.')
+            ],
+            palestine: [
+                window.HopeChart.countryKey('palestine-state-of'),
+                window.HopeChart.countryKey('Palestine')
+            ],
+            sudan: [
+                window.HopeChart.countryKey('sudan-old'),
+                window.HopeChart.countryKey('Sudan')
+            ]
+        };
+        """
+    )
+    assert keys["drc"][0] == keys["drc"][1]
+    assert keys["southSudan"][0] == keys["southSudan"][1]
+    assert keys["centralAfricanRepublic"][0] == keys["centralAfricanRepublic"][1]
+    assert keys["palestine"][0] == keys["palestine"][1]
+    assert keys["sudan"][0] == keys["sudan"][1]
+
+
+def test_landing_mobile_navigation_and_layout(browser, financial_aggregates, demographic_aggregates):
+    browser.set_window_size(390, 844)
+    browser.login_as_user()
+    browser.open("/")
+    browser.wait_for_element_visible("#world-map-chart canvas")
+    browser.sleep(1)
+
+    overflow = browser.execute_script("return document.documentElement.scrollWidth - window.innerWidth;")
+    assert overflow <= 0
+
+    browser.assert_element_visible("#public-mobile-menu summary")
+    browser.click("#public-mobile-menu summary")
+    browser.wait_for_element_visible("#public-mobile-menu a[href='#global-evidence']")
+    browser.assert_element_visible("#public-mobile-menu a[href*='hope-hct/resources']")
+    browser.assert_element_visible("#public-mobile-menu a[href*='contact-us']")
+    browser.click("#public-mobile-menu summary")
+
+    browser.click("#country-filter-button")
+    browser.wait_for_element_visible("#country-filter-panel")
+    panel = browser.execute_script(
+        "return document.getElementById('country-filter-panel').getBoundingClientRect().toJSON();"
+    )
+    assert panel["left"] >= 0
+    assert panel["right"] <= 390
+    browser.execute_script("document.dispatchEvent(new KeyboardEvent('keydown', {key: 'Escape'}));")
+
+    for selector in ("#map-zoom-home", "#map-zoom-in", "#map-zoom-out"):
+        assert browser.get_attribute(selector, "aria-label")
+
+    assert browser.execute_script("return !!document.getElementById('icon-baby');")
+    assert browser.execute_script("return !!document.getElementById('icon-globe');")
+    assert browser.execute_script("return document.querySelectorAll('svg use').length > 5;")
+
+    for width, height in ((360, 800), (768, 1024), (1024, 768)):
+        browser.set_window_size(width, height)
+        browser.sleep(0.5)
+        overflow = browser.execute_script("return document.documentElement.scrollWidth - window.innerWidth;")
+        assert overflow <= 0, f"Horizontal overflow at {width}px: {overflow}px"
+
+
+def test_landing_separates_social_workers_and_adds_map_metric(browser):
+    year = datetime.datetime.now().year
+    DemographicAggregateFactory(
+        date=datetime.date(year, 1, 1),
+        time_grain="monthly",
+        country_slug="kenya",
+        dimension_type="sector",
+        dimension_value="HEALTH",
+        program_type="STANDARD",
+        total_beneficiaries=100,
+        total_children=20,
+        total_households=25,
+    )
+    DemographicAggregateFactory(
+        date=datetime.date(year, 1, 1),
+        time_grain="monthly",
+        country_slug="kenya",
+        dimension_type="sector",
+        dimension_value="HEALTH",
+        program_type="SOCIAL",
+        total_beneficiaries=40,
+        total_children=0,
+        total_households=0,
+    )
+
+    browser.login_as_user()
+    browser.open(f"/?year={year}")
+    browser.wait_for_element_visible("#trends-chart canvas")
+    browser.sleep(1)
+
+    browser.assert_text("100", "#kpi-individuals")
+    browser.assert_text("40", "#kpi-social-workers")
+    browser.assert_text("20", "#kpi-children")
+    browser.assert_text("25", "#kpi-families")
+
+    series_names = browser.execute_script(
+        "return echarts.getInstanceByDom(document.getElementById('trends-chart')).getOption().series.map(s => s.name);"
+    )
+    assert "Social Workers" in series_names
+
+    browser.select_option_by_value("#map-metric", "social_workers")
+    browser.sleep(0.5)
+    map_data = browser.execute_script(
+        "return echarts.getInstanceByDom(document.getElementById('world-map-chart')).getOption().series[0].data;"
+    )
+    kenya = next(item for item in map_data if item["name"] == "Kenya")
+    assert kenya["value"] == 40
+
+
+def test_landing_merges_outreach_payments_into_cash_on_site(browser):
+    year = datetime.datetime.now().year
+    for value, total in (("CASH ON SITE", 100), ("OUTREACH PAYMENTS", 50)):
+        FinancialAggregateFactory(
+            date=datetime.date(year, 1, 1),
+            time_grain="daily",
+            country_slug="kenya",
+            dimension_type="delivery_type",
+            dimension_value=value,
+            total_usd=total,
+            payment_count=1,
+        )
+
+    browser.login_as_user()
+    browser.open(f"/?year={year}")
+    browser.wait_for_element_visible("#mechanism-chart canvas")
+    browser.sleep(1)
+
+    chart_data = browser.execute_script(
+        "return echarts.getInstanceByDom(document.getElementById('mechanism-chart')).getOption().series[0].data;"
+    )
+    cash_on_site = [item for item in chart_data if item["name"] == "Cash on Site"]
+    assert len(cash_on_site) == 1
+    assert cash_on_site[0]["value"] == 150
+    assert all("Outreach" not in item["name"] for item in chart_data)
