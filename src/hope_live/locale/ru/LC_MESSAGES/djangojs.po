@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-11 22:12+0000\n"
+"POT-Creation-Date: 2026-11-16 08:41+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -47,7 +47,7 @@ msgstr "Сверено"
 #: src/hope_live/theme/static/js/completion_visuals.js:496
 #: src/hope_live/theme/static/js/completion_visuals.min.js:1
 msgid "Pending Reconciliation"
-msgstr "Ожидает сверки"
+msgstr "Ожидают сверки"
 
 #: src/hope_live/theme/static/js/completion_visuals.js:451
 #: src/hope_live/theme/static/js/completion_visuals.js:456
@@ -112,7 +112,6 @@ msgstr "Платежи, ожидающие сверки"
 
 #: src/hope_live/theme/static/js/completion_visuals.js:744
 #: src/hope_live/theme/static/js/completion_visuals.min.js:1
-#| msgid "Reconciliation Timeline (USD)"
 msgid "Reconciliation timeline"
 msgstr "Хронология сверки"
 
@@ -243,7 +242,6 @@ msgstr "Прочее"
 
 #: src/hope_live/theme/static/js/dashboard_visuals.js:704
 #: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
-#| msgid "Spending Timeline"
 msgid "In pipeline"
 msgstr "В обработке"
 
@@ -254,7 +252,6 @@ msgstr "Доставлено"
 
 #: src/hope_live/theme/static/js/dashboard_visuals.js:747
 #: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
-#| msgid "Spending Timeline"
 msgid "Pending in pipeline"
 msgstr "Ожидает в обработке"
 
@@ -295,7 +292,6 @@ msgstr "Охвачено лиц с инвалидностью"
 
 #: src/hope_live/theme/static/js/demographic_visuals.js:438
 #: src/hope_live/theme/static/js/demographic_visuals.min.js:1
-#| msgid "Spending Timeline"
 msgid "Timeline"
 msgstr "Хронология"
 
@@ -311,7 +307,6 @@ msgstr "Доля по странам:"
 
 #: src/hope_live/theme/static/js/demographic_visuals.js:472
 #: src/hope_live/theme/static/js/demographic_visuals.min.js:1
-#| msgid "PWD Reached"
 msgid "Workers reached"
 msgstr "Охвачено работников"
 
@@ -645,7 +640,6 @@ msgstr "Без изменений"
 #: src/hope_live/theme/static/js/risk_visuals.js:19
 #: src/hope_live/theme/static/js/risk_visuals.js:26
 #: src/hope_live/theme/static/js/risk_visuals.min.js:1
-#| msgid "Payment Verification"
 msgid "Payment Operations"
 msgstr "Платежные операции"
 
@@ -657,7 +651,6 @@ msgstr "Узкие места в платежах, сверке и верифи�
 
 #: src/hope_live/theme/static/js/risk_visuals.js:33
 #: src/hope_live/theme/static/js/risk_visuals.min.js:1
-#| msgid "Registration Related Complaint"
 msgid "Registration & Population"
 msgstr "Регистрация и данные о населении"
 
@@ -670,7 +663,6 @@ msgstr ""
 
 #: src/hope_live/theme/static/js/risk_visuals.js:40
 #: src/hope_live/theme/static/js/risk_visuals.min.js:1
-#| msgid "Needs Adjudication"
 msgid "Deduplication & Adjudication"
 msgstr "Дедупликация и урегулирование совпадений"
 

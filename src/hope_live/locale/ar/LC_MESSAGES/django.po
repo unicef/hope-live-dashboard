@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-12 11:24+0000\n"
+"POT-Creation-Date: 2026-11-16 08:41+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -387,7 +387,7 @@ msgstr "أسرة"
 #: src/hope_live/templates/pages/dashboard.html:44
 #: src/hope_live/templates/pages/demographic.html:51
 msgid "Social Worker"
-msgstr "عامل اجتماعي"
+msgstr "أخصائي اجتماعي"
 
 #: src/hope_live/templates/pages/dashboard.html:58
 msgid "Total amount paid"
@@ -476,7 +476,7 @@ msgstr ""
 
 #: src/hope_live/templates/pages/dashboard.html:115
 msgid "Cash disbursed (paid) by country"
-msgstr "الأموال المصروفة (المدفوعة) حسب البلد"
+msgstr "المبالغ النقدية المصروفة (المدفوعة) حسب البلد"
 
 #: src/hope_live/templates/pages/dashboard.html:120
 msgid "Outstanding by country (USD)"
@@ -499,7 +499,7 @@ msgstr "المبالغ النقدية المصروفة حسب مقدم الخد�
 
 #: src/hope_live/templates/pages/dashboard.html:148
 msgid "Cash disbursed by implementing partner"
-msgstr "الأموال المصروفة حسب الشريك المنفذ"
+msgstr "المبالغ النقدية المصروفة حسب الشريك المنفذ"
 
 #: src/hope_live/templates/pages/demographic.html:8
 msgid "Demographic dashboard"
@@ -718,7 +718,7 @@ msgstr "متوسط وقت معالجة الشكاوى حسب الفئة"
 #: src/hope_live/templates/pages/grievance.html:95
 msgid ""
 "Average days from ticket creation to the last update for closed tickets."
-msgstr "متوسط الأيام من إنشاء التذكرة إلى آخر تحديث للتذاكر المغلقة."
+msgstr "متوسط عدد الأيام من إنشاء البلاغ إلى آخر تحديث للبلاغات المغلقة."
 
 #: src/hope_live/templates/pages/grievance.html:99
 msgid "Tickets by priority"
@@ -757,14 +757,11 @@ msgid "Cash-based Assistance"
 msgstr "المساعدات النقدية"
 
 #: src/hope_live/templates/pages/landing.html:22
-#| msgid ""
-#| "Data and evidence to deliver humanitarian cash assistance safely — and to "
-#| "show where it reaches children and families."
 msgid ""
 "Data and evidence to deliver cash assistance safely — and to show where it "
 "reaches children and families."
 msgstr ""
-"بيانات وأدلة لتقديم المساعدة النقدية بأمان — وإظهار أين تصل إلى الأطفال "
+"بيانات وأدلة لتقديم المساعدات النقدية بأمان — وإظهار أين تصل إلى الأطفال "
 "والأسر."
 
 #: src/hope_live/templates/pages/landing.html:26
@@ -772,8 +769,9 @@ msgid "Explore the evidence"
 msgstr "استكشاف الأدلة"
 
 #: src/hope_live/templates/pages/landing.html:30
-msgid "About UNICEF cash assistance"
-msgstr "نبذة عن المساعدات النقدية لليونيسف"
+#| msgid "About UNICEF cash assistance"
+msgid "About the Source of Data on UNICEF Cash Assistance"
+msgstr "نبذة عن مصدر بيانات المساعدات النقدية لليونيسف"
 
 #: src/hope_live/templates/pages/landing.html:38
 msgid "Cash-based Assistance at a glance"
@@ -845,7 +843,7 @@ msgstr "الأطفال المستفيدون"
 #: src/hope_live/templates/pages/landing.html:138
 #: src/hope_live/templates/pages/landing.html:146
 msgid "HOPE reach"
-msgstr "الوصول عبر HOPE"
+msgstr "التغطية عبر HOPE"
 
 #: src/hope_live/templates/pages/landing.html:142
 msgid "Families Reached"
@@ -875,7 +873,7 @@ msgstr "المبالغ النقدية"
 
 #: src/hope_live/templates/pages/landing.html:174
 msgid "Cash Delivered (USD)"
-msgstr "النقد المسلّم (دولار أمريكي)"
+msgstr "المبالغ النقدية المسلّمة (دولار أمريكي)"
 
 #: src/hope_live/templates/pages/landing.html:179
 msgid "Payments delivered"
@@ -908,9 +906,8 @@ msgstr "الأسر"
 
 #: src/hope_live/templates/pages/landing.html:212
 #: src/hope_live/templates/pages/landing.html:338
-#| msgid "Social Worker"
 msgid "Social Workers"
-msgstr "العاملون الاجتماعيون"
+msgstr "الأخصائيون الاجتماعيون"
 
 #: src/hope_live/templates/pages/landing.html:216
 #: src/hope_live/templates/pages/landing.html:332
@@ -930,8 +927,6 @@ msgid "Zoom out"
 msgstr "تصغير"
 
 #: src/hope_live/templates/pages/landing.html:235
-#| msgid ""
-#| "Darker shading means a higher value. Select a country to open its spotlight."
 msgid ""
 "Darker shading means a higher value. Select a country to filter the page."
 msgstr "يشير اللون الأغمق إلى قيمة أعلى. اختر بلداً لتصفية الصفحة."
@@ -942,7 +937,7 @@ msgstr "المساعدات النقدية حسب القطاع"
 
 #: src/hope_live/templates/pages/landing.html:248
 msgid "Share of delivered cash by programme sector."
-msgstr "حصة المساعدة النقدية المقدمة حسب قطاع البرنامج."
+msgstr "حصة المساعدات النقدية المسلّمة حسب قطاع البرنامج."
 
 #: src/hope_live/templates/pages/landing.html:248
 #: src/hope_live/templates/pages/landing.html:281
@@ -954,12 +949,12 @@ msgid "Trends over time"
 msgstr "الاتجاهات عبر الوقت"
 
 #: src/hope_live/templates/pages/landing.html:266
-#| msgid ""
-#| "Children, families, individuals and cash for the selected country."
 msgid ""
 "Children, families, individuals, social workers and cash for the selected "
 "scope."
-msgstr "الأطفال والأسر والأفراد والعاملون الاجتماعيون والنقد للنطاق المحدد."
+msgstr ""
+"الأطفال والأسر والأفراد والأخصائيون الاجتماعيون والمبالغ النقدية للنطاق "
+"المحدد."
 
 #: src/hope_live/templates/pages/landing.html:280
 #: src/hope_live/templates/pages/landing.html:337
@@ -1081,7 +1076,7 @@ msgstr "نقد باليد"
 
 #: src/hope_live/templates/pages/landing.html:353
 msgid "Cash on Site"
-msgstr "النقد في الموقع"
+msgstr "الصرف النقدي في الموقع"
 
 #: src/hope_live/templates/pages/landing.html:354
 msgid "Paper Voucher"
@@ -1807,7 +1802,7 @@ msgstr ""
 "للمؤشر النشط."
 
 #: src/hope_live/web/chart_metadata.py:241
-#, fuzzy, python-format
+#, no-python-format
 #| msgid ""
 #| "All countries with completion data are shown. Absolute values is the "
 #| "default; 100% share shows each country's reconciled and pending split as "
@@ -1842,7 +1837,7 @@ msgstr ""
 "الموجودة في كلتا التغذيتين."
 
 #: src/hope_live/web/chart_metadata.py:256
-#, fuzzy, python-format
+#, no-python-format
 #| msgid ""
 #| "All countries present in both feeds are shown, sorted by reconciliation "
 #| "rate. The dashed 80% line is a reference guide, not a threshold."
@@ -2047,12 +2042,15 @@ msgstr ""
 "الطويلة على المحور."
 
 #: src/hope_live/web/chart_metadata.py:358
+#| msgid ""
+#| "Global delivery over time: cash disbursed and the number of individuals, "
+#| "families and children reached by household programmes."
 msgid ""
 "Global delivery over time: cash disbursed and the number of individuals, "
-"families and children reached by household programmes."
+"families, children and social workers reached."
 msgstr ""
 "التنفيذ العالمي عبر الوقت: المبالغ النقدية المصروفة وعدد الأفراد والأسر "
-"والأطفال المستفيدين من برامج الأسر."
+"والأطفال والأخصائيين الاجتماعيين المستفيدين."
 
 #: src/hope_live/web/chart_metadata.py:361
 msgid ""
@@ -2061,18 +2059,23 @@ msgid ""
 msgstr "بيانات مدفوعات HOPE وتسجيل الأسر، مجمّعة بواسطة تقرير البلد."
 
 #: src/hope_live/web/chart_metadata.py:363
+#| msgid ""
+#| "Cash sums delivered quantity in USD. Individuals sums the registered "
+#| "household size of reached households; Families counts those households; "
+#| "Children sums the children recorded in household composition. Frontline "
+#| "(incentive) workers are reported separately and are not part of these "
+#| "series."
 msgid ""
 "Cash sums delivered quantity in USD. Individuals sums the registered "
 "household size of reached households; Families counts those households; "
-"Children sums the children recorded in household composition. Frontline "
-"(incentive) workers are reported separately and are not part of these "
-"series."
+"Children sums the children recorded in household composition; Social Workers"
+" counts frontline workers reached through social-worker programmes."
 msgstr ""
 "تجمع سلسلة «المبالغ النقدية» الكمية المسلّمة بالدولار الأمريكي. وتجمع سلسلة "
 "«الأفراد» حجم الأسرة المسجل للأسر المستفيدة؛ وتحسب سلسلة «الأسر» تلك الأسر؛ "
-"وتجمع سلسلة «الأطفال» عدد الأطفال المسجلين في تركيبة الأسرة. ويُبلَّغ عن "
-"العاملين في الخطوط الأمامية (الحوافز) بشكل منفصل ولا يندرجون ضمن هذه "
-"السلاسل."
+"وتجمع سلسلة «الأطفال» عدد الأطفال المسجلين في تركيبة الأسرة؛ وتحسب سلسلة "
+"«الأخصائيون الاجتماعيون» العاملين في الخطوط الأمامية المستفيدين من خلال "
+"برامج الأخصائيين الاجتماعيين."
 
 #: src/hope_live/web/chart_metadata.py:370
 msgid ""
@@ -2229,7 +2232,8 @@ msgstr ""
 msgid ""
 "Average transfer value divides cash disbursed by the number of payment "
 "records."
-msgstr "تقسم قيمة التحويل المتوسطة النقد المصروف على عدد سجلات الدفع."
+msgstr ""
+"تقسم قيمة التحويل المتوسطة المبالغ النقدية المصروفة على عدد سجلات الدفع."
 
 #: src/hope_live/web/chart_metadata.py:448
 msgid "Frontline social workers assisted through social-worker programmes."
@@ -2260,24 +2264,3 @@ msgid ""
 msgstr ""
 "لا تندرج برامج الأخصائيين الاجتماعيين ضمن إحصاءات الأسر أو الأطفال أو "
 "الأشخاص ذوي الإعاقة."
-
-#~ msgid "Cash Transfers"
-#~ msgstr "التحويلات النقدية"
-
-#~ msgid "Select a country on the map"
-#~ msgstr "اختر بلداً على الخريطة"
-
-#~ msgid "Its children, families, individuals and cash figures will appear here."
-#~ msgstr "ستظهر هنا أرقام الأطفال والأسر والأفراد والنقد."
-
-#~ msgid "Country spotlight"
-#~ msgstr "تسليط الضوء على البلد"
-
-#~ msgid "Close country spotlight"
-#~ msgstr "إغلاق تفاصيل البلد"
-
-#~ msgid "Source: HOPE Database. Country totals follow the selected year."
-#~ msgstr "المصدر: قاعدة بيانات HOPE. تتبع الإجماليات القطرية السنة المحددة."
-
-#~ msgid "Go to Dashboards"
-#~ msgstr "الانتقال إلى لوحات المعلومات"

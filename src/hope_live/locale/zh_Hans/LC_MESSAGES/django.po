@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-12 11:24+0000\n"
+"POT-Creation-Date: 2026-11-16 08:41+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -461,7 +461,7 @@ msgstr ""
 
 #: src/hope_live/templates/pages/dashboard.html:115
 msgid "Cash disbursed (paid) by country"
-msgstr "按国家分列的已支付现金"
+msgstr "按国家分列的已发放（已支付）现金"
 
 #: src/hope_live/templates/pages/dashboard.html:120
 msgid "Outstanding by country (USD)"
@@ -484,7 +484,7 @@ msgstr "按金融服务提供商 (FSP) 分列的已发放现金"
 
 #: src/hope_live/templates/pages/dashboard.html:148
 msgid "Cash disbursed by implementing partner"
-msgstr "按执行伙伴分列的现金支出"
+msgstr "按执行伙伴分列的已发放现金"
 
 #: src/hope_live/templates/pages/demographic.html:8
 msgid "Demographic dashboard"
@@ -577,7 +577,7 @@ msgstr "受益人口部门占比"
 
 #: src/hope_live/templates/pages/demographic.html:99
 msgid "Note: children and PWD figures rely on recorded household composition."
-msgstr "注：儿童和残疾人士数据基于登记的家庭构成。"
+msgstr "注：儿童和残障人士数据基于登记的家庭构成。"
 
 #: src/hope_live/templates/pages/demographic.html:103
 msgid "Country share of reached population"
@@ -692,7 +692,7 @@ msgstr "按类别划分的平均申诉处理时间"
 #: src/hope_live/templates/pages/grievance.html:95
 msgid ""
 "Average days from ticket creation to the last update for closed tickets."
-msgstr "已关闭工单从创建到最近一次更新的平均天数。"
+msgstr "已结案工单从创建到最近一次更新的平均天数。"
 
 #: src/hope_live/templates/pages/grievance.html:99
 msgid "Tickets by priority"
@@ -727,9 +727,6 @@ msgid "Cash-based Assistance"
 msgstr "现金援助"
 
 #: src/hope_live/templates/pages/landing.html:22
-#| msgid ""
-#| "Data and evidence to deliver humanitarian cash assistance safely — and to "
-#| "show where it reaches children and families."
 msgid ""
 "Data and evidence to deliver cash assistance safely — and to show where it "
 "reaches children and families."
@@ -740,8 +737,9 @@ msgid "Explore the evidence"
 msgstr "探索数据"
 
 #: src/hope_live/templates/pages/landing.html:30
-msgid "About UNICEF cash assistance"
-msgstr "关于联合国儿童基金会现金援助"
+#| msgid "About UNICEF cash assistance"
+msgid "About the Source of Data on UNICEF Cash Assistance"
+msgstr "关于联合国儿童基金会现金援助的数据来源"
 
 #: src/hope_live/templates/pages/landing.html:38
 msgid "Cash-based Assistance at a glance"
@@ -813,7 +811,7 @@ msgstr "受益儿童数"
 #: src/hope_live/templates/pages/landing.html:138
 #: src/hope_live/templates/pages/landing.html:146
 msgid "HOPE reach"
-msgstr "HOPE 覆盖"
+msgstr "HOPE 覆盖范围"
 
 #: src/hope_live/templates/pages/landing.html:142
 msgid "Families Reached"
@@ -855,7 +853,7 @@ msgstr "平均每笔转移金额"
 
 #: src/hope_live/templates/pages/landing.html:186
 msgid "per transfer"
-msgstr "每笔转账"
+msgstr "每笔转移"
 
 #: src/hope_live/templates/pages/landing.html:202
 msgid "Where cash assistance reaches children and families"
@@ -876,7 +874,6 @@ msgstr "家庭"
 
 #: src/hope_live/templates/pages/landing.html:212
 #: src/hope_live/templates/pages/landing.html:338
-#| msgid "Social Worker"
 msgid "Social Workers"
 msgstr "社会工作者"
 
@@ -898,8 +895,6 @@ msgid "Zoom out"
 msgstr "缩小"
 
 #: src/hope_live/templates/pages/landing.html:235
-#| msgid ""
-#| "Darker shading means a higher value. Select a country to open its spotlight."
 msgid ""
 "Darker shading means a higher value. Select a country to filter the page."
 msgstr "颜色越深表示数值越高。选择国家/地区以筛选页面。"
@@ -910,7 +905,7 @@ msgstr "按部门分列的现金援助"
 
 #: src/hope_live/templates/pages/landing.html:248
 msgid "Share of delivered cash by programme sector."
-msgstr "按项目部门划分的已提供现金援助占比。"
+msgstr "按项目部门分列的已发放现金援助占比。"
 
 #: src/hope_live/templates/pages/landing.html:248
 #: src/hope_live/templates/pages/landing.html:281
@@ -922,8 +917,6 @@ msgid "Trends over time"
 msgstr "随时间变化的趋势"
 
 #: src/hope_live/templates/pages/landing.html:266
-#| msgid ""
-#| "Children, families, individuals and cash for the selected country."
 msgid ""
 "Children, families, individuals, social workers and cash for the selected "
 "scope."
@@ -1049,7 +1042,7 @@ msgstr "直接发放现金"
 
 #: src/hope_live/templates/pages/landing.html:353
 msgid "Cash on Site"
-msgstr "现场现金"
+msgstr "现场发放现金"
 
 #: src/hope_live/templates/pages/landing.html:354
 msgid "Paper Voucher"
@@ -1676,7 +1669,7 @@ msgid ""
 msgstr "采用与对账时间线相同的完成情况数据基准，并按业务区域国家分组。每个柱状条为当前激活指标下已对账与待对账数值的堆叠总计。"
 
 #: src/hope_live/web/chart_metadata.py:241
-#, fuzzy, python-format
+#, no-python-format
 #| msgid ""
 #| "All countries with completion data are shown. Absolute values is the "
 #| "default; 100% share shows each country's reconciled and pending split as "
@@ -1705,7 +1698,7 @@ msgstr ""
 "对账率等于完成数据流中已对账数量除以已对账与待对账之和。发放成功率等于财务数据流中成功状态数量除以成功与待处理状态之和。仅显示同时存在于两个数据流中的国家。"
 
 #: src/hope_live/web/chart_metadata.py:256
-#, fuzzy, python-format
+#, no-python-format
 #| msgid ""
 #| "All countries present in both feeds are shown, sorted by reconciliation "
 #| "rate. The dashed 80% line is a reference guide, not a threshold."
@@ -1877,10 +1870,13 @@ msgid ""
 msgstr "显示该周期内有工单的所有国家；较长的国家名称在坐标轴上自动换行。"
 
 #: src/hope_live/web/chart_metadata.py:358
+#| msgid ""
+#| "Global delivery over time: cash disbursed and the number of individuals, "
+#| "families and children reached by household programmes."
 msgid ""
 "Global delivery over time: cash disbursed and the number of individuals, "
-"families and children reached by household programmes."
-msgstr "随时间变化的全球发放情况：已发放现金金额以及家庭项目惠及的个人、家庭和儿童数量。"
+"families, children and social workers reached."
+msgstr "随时间变化的全球发放情况：已发放现金金额以及受益的个人、家庭、儿童和社会工作者数量。"
 
 #: src/hope_live/web/chart_metadata.py:361
 msgid ""
@@ -1889,14 +1885,19 @@ msgid ""
 msgstr "由国家报告汇总的 HOPE 付款与家庭登记数据。"
 
 #: src/hope_live/web/chart_metadata.py:363
+#| msgid ""
+#| "Cash sums delivered quantity in USD. Individuals sums the registered "
+#| "household size of reached households; Families counts those households; "
+#| "Children sums the children recorded in household composition. Frontline "
+#| "(incentive) workers are reported separately and are not part of these "
+#| "series."
 msgid ""
 "Cash sums delivered quantity in USD. Individuals sums the registered "
 "household size of reached households; Families counts those households; "
-"Children sums the children recorded in household composition. Frontline "
-"(incentive) workers are reported separately and are not part of these "
-"series."
+"Children sums the children recorded in household composition; Social Workers"
+" counts frontline workers reached through social-worker programmes."
 msgstr ""
-"“现金”汇总已发放美元金额。“个人”汇总受益家庭的登记家庭规模；“家庭”统计受益家庭户数；“儿童”汇总家庭构成中记录的儿童人数。一线（激励津贴）工作人员单独报告，不包含在这些序列中。"
+"“现金”汇总已发放美元金额。“个人”汇总受益家庭的登记家庭规模；“家庭”统计受益家庭户数；“儿童”汇总家庭构成中记录的儿童人数；“社会工作者”统计通过社会工作者项目受益的一线工作人员数量。"
 
 #: src/hope_live/web/chart_metadata.py:370
 msgid ""
@@ -2011,7 +2012,7 @@ msgstr "该数值仅涵盖直接现金转移支付，不包括全部运营预算
 
 #: src/hope_live/web/chart_metadata.py:439
 msgid "Number of cash transfers delivered in the current data."
-msgstr "当前数据中已发放的现金转账数量。"
+msgstr "当前数据中已发放的现金转移支付笔数。"
 
 #: src/hope_live/web/chart_metadata.py:442
 msgid ""
@@ -2023,7 +2024,7 @@ msgstr "按部门汇总付款记录以避免重复计算。付款记录不是唯
 msgid ""
 "Average transfer value divides cash disbursed by the number of payment "
 "records."
-msgstr "平均转账金额等于现金发放总额除以付款记录数量。"
+msgstr "平均每笔转移金额等于已发放现金总额除以付款记录数量。"
 
 #: src/hope_live/web/chart_metadata.py:448
 msgid "Frontline social workers assisted through social-worker programmes."
@@ -2046,24 +2047,3 @@ msgid ""
 "Social-worker programmes are not part of household, children or persons-"
 "with-disabilities counts."
 msgstr "社会工作者项目不计入家庭、儿童或残障人士统计数据。"
-
-#~ msgid "Cash Transfers"
-#~ msgstr "现金转移支付笔数"
-
-#~ msgid "Select a country on the map"
-#~ msgstr "在地图上选择国家"
-
-#~ msgid "Its children, families, individuals and cash figures will appear here."
-#~ msgstr "儿童、家庭、个人和现金数据将显示在此处。"
-
-#~ msgid "Country spotlight"
-#~ msgstr "国家聚焦"
-
-#~ msgid "Close country spotlight"
-#~ msgstr "关闭国家聚焦"
-
-#~ msgid "Source: HOPE Database. Country totals follow the selected year."
-#~ msgstr "来源：HOPE 数据库。国家总计按所选年份统计。"
-
-#~ msgid "Go to Dashboards"
-#~ msgstr "前往仪表板"

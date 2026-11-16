@@ -356,15 +356,15 @@ CHART_INFO = {
     "landing.trends": {
         "definition": _(
             "Global delivery over time: cash disbursed and the number of "
-            "individuals, families and children reached by household programmes."
+            "individuals, families, children and social workers reached."
         ),
         "source": _("HOPE payments and household registration data, aggregated by the country report."),
         "method": _(
             "Cash sums delivered quantity in USD. "
             "Individuals sums the registered household size of reached households; "
             "Families counts those households; Children sums the children "
-            "recorded in household composition. Frontline (incentive) workers are reported "
-            "separately and are not part of these series."
+            "recorded in household composition; Social Workers counts frontline workers "
+            "reached through social-worker programmes."
         ),
         "note": _(
             "All years is the default and shows annual totals. Selecting a single year shows its monthly breakdown."

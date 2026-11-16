@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-12 11:24+0000\n"
+"POT-Creation-Date: 2026-11-16 08:41+0100\n"
 "PO-Revision-Date: 2026-06-26 16:19+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -732,8 +732,8 @@ msgstr "Délai moyen de résolution des plaintes par catégorie"
 msgid ""
 "Average days from ticket creation to the last update for closed tickets."
 msgstr ""
-"Nombre moyen de jours entre la création du ticket et sa dernière mise à jour"
-" pour les tickets clos."
+"Nombre moyen de jours entre la création du signalement et sa dernière mise à"
+" jour pour les signalements clôturés."
 
 #: src/hope_live/templates/pages/grievance.html:99
 msgid "Tickets by priority"
@@ -773,14 +773,11 @@ msgid "Cash-based Assistance"
 msgstr "Assistance monétaire"
 
 #: src/hope_live/templates/pages/landing.html:22
-#| msgid ""
-#| "Data and evidence to deliver humanitarian cash assistance safely — and to "
-#| "show where it reaches children and families."
 msgid ""
 "Data and evidence to deliver cash assistance safely — and to show where it "
 "reaches children and families."
 msgstr ""
-"Des données et des preuves pour fournir une assistance en espèces en toute "
+"Des données et des preuves pour fournir une assistance monétaire en toute "
 "sécurité — et montrer où elle bénéficie aux enfants et aux familles."
 
 #: src/hope_live/templates/pages/landing.html:26
@@ -788,8 +785,10 @@ msgid "Explore the evidence"
 msgstr "Explorer les données"
 
 #: src/hope_live/templates/pages/landing.html:30
-msgid "About UNICEF cash assistance"
-msgstr "À propos de l'assistance monétaire de l'UNICEF"
+#| msgid "About UNICEF cash assistance"
+msgid "About the Source of Data on UNICEF Cash Assistance"
+msgstr ""
+"À propos de la source des données sur l'assistance monétaire de l'UNICEF"
 
 #: src/hope_live/templates/pages/landing.html:38
 msgid "Cash-based Assistance at a glance"
@@ -861,7 +860,7 @@ msgstr "Enfants bénéficiaires"
 #: src/hope_live/templates/pages/landing.html:138
 #: src/hope_live/templates/pages/landing.html:146
 msgid "HOPE reach"
-msgstr "Atteints via HOPE"
+msgstr "Couverture HOPE"
 
 #: src/hope_live/templates/pages/landing.html:142
 msgid "Families Reached"
@@ -891,7 +890,7 @@ msgstr "Montants versés"
 
 #: src/hope_live/templates/pages/landing.html:174
 msgid "Cash Delivered (USD)"
-msgstr "Espèces versées (USD)"
+msgstr "Montants versés (USD)"
 
 #: src/hope_live/templates/pages/landing.html:179
 msgid "Payments delivered"
@@ -924,7 +923,6 @@ msgstr "Familles"
 
 #: src/hope_live/templates/pages/landing.html:212
 #: src/hope_live/templates/pages/landing.html:338
-#| msgid "Social Worker"
 msgid "Social Workers"
 msgstr "Travailleurs sociaux"
 
@@ -946,8 +944,6 @@ msgid "Zoom out"
 msgstr "Zoom arrière"
 
 #: src/hope_live/templates/pages/landing.html:235
-#| msgid ""
-#| "Darker shading means a higher value. Select a country to open its spotlight."
 msgid ""
 "Darker shading means a higher value. Select a country to filter the page."
 msgstr ""
@@ -960,7 +956,7 @@ msgstr "Assistance monétaire par secteur"
 
 #: src/hope_live/templates/pages/landing.html:248
 msgid "Share of delivered cash by programme sector."
-msgstr "Part de l'assistance en espèces fournie par secteur du programme."
+msgstr "Part de l'assistance monétaire versée par secteur de programme."
 
 #: src/hope_live/templates/pages/landing.html:248
 #: src/hope_live/templates/pages/landing.html:281
@@ -972,14 +968,12 @@ msgid "Trends over time"
 msgstr "Tendances dans le temps"
 
 #: src/hope_live/templates/pages/landing.html:266
-#| msgid ""
-#| "Children, families, individuals and cash for the selected country."
 msgid ""
 "Children, families, individuals, social workers and cash for the selected "
 "scope."
 msgstr ""
-"Enfants, familles, personnes, travailleurs sociaux et espèces pour le "
-"périmètre sélectionné."
+"Enfants, familles, personnes, travailleurs sociaux et montants versés pour "
+"le périmètre sélectionné."
 
 #: src/hope_live/templates/pages/landing.html:280
 #: src/hope_live/templates/pages/landing.html:337
@@ -1868,7 +1862,7 @@ msgstr ""
 "cumulé des valeurs rapprochées et en attente pour l'indicateur actif."
 
 #: src/hope_live/web/chart_metadata.py:241
-#, fuzzy, python-format
+#, no-python-format
 #| msgid ""
 #| "All countries with completion data are shown. Absolute values is the "
 #| "default; 100% share shows each country's reconciled and pending split as "
@@ -1904,7 +1898,7 @@ msgstr ""
 "financier. Seuls les pays présents dans les deux flux sont affichés."
 
 #: src/hope_live/web/chart_metadata.py:256
-#, fuzzy, python-format
+#, no-python-format
 #| msgid ""
 #| "All countries present in both feeds are shown, sorted by reconciliation "
 #| "rate. The dashed 80% line is a reference guide, not a threshold."
@@ -2131,13 +2125,15 @@ msgstr ""
 " de pays longs sont renvoyés à la ligne sur l'axe."
 
 #: src/hope_live/web/chart_metadata.py:358
+#| msgid ""
+#| "Global delivery over time: cash disbursed and the number of individuals, "
+#| "families and children reached by household programmes."
 msgid ""
 "Global delivery over time: cash disbursed and the number of individuals, "
-"families and children reached by household programmes."
+"families, children and social workers reached."
 msgstr ""
 "Versements globaux au fil du temps : montants décaissés et nombre de "
-"personnes, de familles et d'enfants bénéficiaires des programmes destinés "
-"aux ménages."
+"personnes, de familles, d'enfants et de travailleurs sociaux bénéficiaires."
 
 #: src/hope_live/web/chart_metadata.py:361
 msgid ""
@@ -2148,19 +2144,24 @@ msgstr ""
 "rapport pays."
 
 #: src/hope_live/web/chart_metadata.py:363
+#| msgid ""
+#| "Cash sums delivered quantity in USD. Individuals sums the registered "
+#| "household size of reached households; Families counts those households; "
+#| "Children sums the children recorded in household composition. Frontline "
+#| "(incentive) workers are reported separately and are not part of these "
+#| "series."
 msgid ""
 "Cash sums delivered quantity in USD. Individuals sums the registered "
 "household size of reached households; Families counts those households; "
-"Children sums the children recorded in household composition. Frontline "
-"(incentive) workers are reported separately and are not part of these "
-"series."
+"Children sums the children recorded in household composition; Social Workers"
+" counts frontline workers reached through social-worker programmes."
 msgstr ""
 "La série « Montants versés » additionne les montants versés en USD. « "
 "Personnes » additionne la taille enregistrée des ménages bénéficiaires ; « "
 "Familles » compte ces ménages ; « Enfants » additionne les enfants "
-"enregistrés dans la composition du ménage. Les travailleurs de première "
-"ligne (incitations) sont comptabilisés séparément et ne font pas partie de "
-"ces séries."
+"enregistrés dans la composition du ménage ; « Travailleurs sociaux » compte "
+"les travailleurs de première ligne bénéficiaires des programmes destinés aux"
+" travailleurs sociaux."
 
 #: src/hope_live/web/chart_metadata.py:370
 msgid ""
@@ -2319,7 +2320,7 @@ msgstr ""
 
 #: src/hope_live/web/chart_metadata.py:439
 msgid "Number of cash transfers delivered in the current data."
-msgstr "Nombre de transferts en espèces effectués dans les données actuelles."
+msgstr "Nombre de transferts monétaires effectués dans les données actuelles."
 
 #: src/hope_live/web/chart_metadata.py:442
 msgid ""
@@ -2335,7 +2336,7 @@ msgid ""
 "Average transfer value divides cash disbursed by the number of payment "
 "records."
 msgstr ""
-"La valeur moyenne du transfert divise les espèces décaissées par le nombre "
+"La valeur moyenne par transfert divise les montants décaissés par le nombre "
 "d'enregistrements de paiement."
 
 #: src/hope_live/web/chart_metadata.py:448
@@ -2368,28 +2369,3 @@ msgid ""
 msgstr ""
 "Les programmes de travailleurs sociaux ne sont pas inclus dans les effectifs"
 " de ménages, d'enfants ou de personnes handicapées."
-
-#~ msgid "Cash Transfers"
-#~ msgstr "Transferts monétaires"
-
-#~ msgid "Select a country on the map"
-#~ msgstr "Sélectionnez un pays sur la carte"
-
-#~ msgid "Its children, families, individuals and cash figures will appear here."
-#~ msgstr ""
-#~ "Les chiffres des enfants, des familles, des personnes et des espèces "
-#~ "apparaîtront ici."
-
-#~ msgid "Country spotlight"
-#~ msgstr "Focus sur un pays"
-
-#~ msgid "Close country spotlight"
-#~ msgstr "Fermer le focus pays"
-
-#~ msgid "Source: HOPE Database. Country totals follow the selected year."
-#~ msgstr ""
-#~ "Source : base de données HOPE. Les totaux par pays suivent l'année "
-#~ "sélectionnée."
-
-#~ msgid "Go to Dashboards"
-#~ msgstr "Accéder aux tableaux de bord"

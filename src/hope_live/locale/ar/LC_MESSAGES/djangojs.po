@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-11 22:12+0000\n"
+"POT-Creation-Date: 2026-11-16 08:41+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -38,7 +38,7 @@ msgstr "المدفوعات"
 #: src/hope_live/theme/static/js/dashboard_visuals.js:706
 #: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
 msgid "Reconciled"
-msgstr "مسواة"
+msgstr "مسوّاة"
 
 #: src/hope_live/theme/static/js/completion_visuals.js:335
 #: src/hope_live/theme/static/js/completion_visuals.js:368
@@ -47,7 +47,7 @@ msgstr "مسواة"
 #: src/hope_live/theme/static/js/completion_visuals.js:496
 #: src/hope_live/theme/static/js/completion_visuals.min.js:1
 msgid "Pending Reconciliation"
-msgstr "التسوية المعلقة"
+msgstr "قيد التسوية"
 
 #: src/hope_live/theme/static/js/completion_visuals.js:451
 #: src/hope_live/theme/static/js/completion_visuals.js:456
@@ -87,7 +87,7 @@ msgstr "المبلغ المسوّى (بالدولار الأمريكي)"
 #: src/hope_live/theme/static/js/completion_visuals.js:738
 #: src/hope_live/theme/static/js/completion_visuals.min.js:1
 msgid "Pending Reconciliation amount (USD)"
-msgstr "مبلغ التسوية المعلقة (دولار أمريكي)"
+msgstr "مبلغ المدفوعات قيد التسوية (دولار أمريكي)"
 
 #: src/hope_live/theme/static/js/completion_visuals.js:739
 #: src/hope_live/theme/static/js/completion_visuals.min.js:1
@@ -107,18 +107,17 @@ msgstr "المدفوعات المسوّاة"
 #: src/hope_live/theme/static/js/completion_visuals.js:743
 #: src/hope_live/theme/static/js/completion_visuals.min.js:1
 msgid "Pending Reconciliation payments"
-msgstr "مدفوعات التسوية المعلقة"
+msgstr "مدفوعات قيد التسوية"
 
 #: src/hope_live/theme/static/js/completion_visuals.js:744
 #: src/hope_live/theme/static/js/completion_visuals.min.js:1
-#| msgid "Reconciliation Timeline (USD)"
 msgid "Reconciliation timeline"
 msgstr "الخط الزمني للتسوية"
 
 #: src/hope_live/theme/static/js/completion_visuals.js:745
 #: src/hope_live/theme/static/js/completion_visuals.min.js:1
 msgid "Reconciliation status by country"
-msgstr "حالة المطابقة حسب البلد"
+msgstr "حالة التسوية حسب البلد"
 
 #: src/hope_live/theme/static/js/dashboard_visuals.js:59
 #: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
@@ -178,7 +177,7 @@ msgstr "المبالغ النقدية المصروفة حسب الإقليم"
 #: src/hope_live/theme/static/js/dashboard_visuals.js:310
 #: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
 msgid "Cash disbursed (paid) by country"
-msgstr "الأموال المصروفة (المدفوعة) حسب البلد"
+msgstr "المبالغ النقدية المصروفة (المدفوعة) حسب البلد"
 
 #: src/hope_live/theme/static/js/dashboard_visuals.js:311
 #: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
@@ -242,7 +241,6 @@ msgstr "أخرى"
 
 #: src/hope_live/theme/static/js/dashboard_visuals.js:704
 #: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
-#| msgid "Spending Timeline"
 msgid "In pipeline"
 msgstr "قيد المعالجة"
 
@@ -253,7 +251,6 @@ msgstr "تم التسليم"
 
 #: src/hope_live/theme/static/js/dashboard_visuals.js:747
 #: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
-#| msgid "Spending Timeline"
 msgid "Pending in pipeline"
 msgstr "معلق قيد المعالجة"
 
@@ -294,7 +291,6 @@ msgstr "الأشخاص ذوو الإعاقة المستفيدون"
 
 #: src/hope_live/theme/static/js/demographic_visuals.js:438
 #: src/hope_live/theme/static/js/demographic_visuals.min.js:1
-#| msgid "Spending Timeline"
 msgid "Timeline"
 msgstr "الخط الزمني"
 
@@ -310,7 +306,6 @@ msgstr "حصة البلد من"
 
 #: src/hope_live/theme/static/js/demographic_visuals.js:472
 #: src/hope_live/theme/static/js/demographic_visuals.min.js:1
-#| msgid "PWD Reached"
 msgid "Workers reached"
 msgstr "العاملون المستفيدون"
 
@@ -641,7 +636,6 @@ msgstr "مستقر"
 #: src/hope_live/theme/static/js/risk_visuals.js:19
 #: src/hope_live/theme/static/js/risk_visuals.js:26
 #: src/hope_live/theme/static/js/risk_visuals.min.js:1
-#| msgid "Payment Verification"
 msgid "Payment Operations"
 msgstr "عمليات الدفع"
 
@@ -653,7 +647,6 @@ msgstr "اختناقات الدفع والتسوية والتحقق"
 
 #: src/hope_live/theme/static/js/risk_visuals.js:33
 #: src/hope_live/theme/static/js/risk_visuals.min.js:1
-#| msgid "Registration Related Complaint"
 msgid "Registration & Population"
 msgstr "التسجيل وبيانات السكان"
 
@@ -664,7 +657,6 @@ msgstr "اعرف عميلك (KYC) ووثائق الهوية والتحقق ال�
 
 #: src/hope_live/theme/static/js/risk_visuals.js:40
 #: src/hope_live/theme/static/js/risk_visuals.min.js:1
-#| msgid "Needs Adjudication"
 msgid "Deduplication & Adjudication"
 msgstr "إزالة التكرار والفصل في الحالات"
 

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-11 22:12+0000\n"
+"POT-Creation-Date: 2026-11-16 08:41+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -111,7 +111,6 @@ msgstr "待对账付款"
 
 #: src/hope_live/theme/static/js/completion_visuals.js:744
 #: src/hope_live/theme/static/js/completion_visuals.min.js:1
-#| msgid "Reconciliation Timeline (USD)"
 msgid "Reconciliation timeline"
 msgstr "对账时间线"
 
@@ -178,7 +177,7 @@ msgstr "按地区分列的已发放现金"
 #: src/hope_live/theme/static/js/dashboard_visuals.js:310
 #: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
 msgid "Cash disbursed (paid) by country"
-msgstr "按国家分列的已支付现金"
+msgstr "按国家分列的已发放（已支付）现金"
 
 #: src/hope_live/theme/static/js/dashboard_visuals.js:311
 #: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
@@ -242,7 +241,6 @@ msgstr "其他"
 
 #: src/hope_live/theme/static/js/dashboard_visuals.js:704
 #: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
-#| msgid "Spending Timeline"
 msgid "In pipeline"
 msgstr "处理中"
 
@@ -253,7 +251,6 @@ msgstr "已发放"
 
 #: src/hope_live/theme/static/js/dashboard_visuals.js:747
 #: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
-#| msgid "Spending Timeline"
 msgid "Pending in pipeline"
 msgstr "待处理"
 
@@ -294,7 +291,6 @@ msgstr "受益残障人士数"
 
 #: src/hope_live/theme/static/js/demographic_visuals.js:438
 #: src/hope_live/theme/static/js/demographic_visuals.min.js:1
-#| msgid "Spending Timeline"
 msgid "Timeline"
 msgstr "时间线"
 
@@ -310,7 +306,6 @@ msgstr "各国家占比："
 
 #: src/hope_live/theme/static/js/demographic_visuals.js:472
 #: src/hope_live/theme/static/js/demographic_visuals.min.js:1
-#| msgid "PWD Reached"
 msgid "Workers reached"
 msgstr "受益工作人员数"
 
@@ -640,7 +635,6 @@ msgstr "持平"
 #: src/hope_live/theme/static/js/risk_visuals.js:19
 #: src/hope_live/theme/static/js/risk_visuals.js:26
 #: src/hope_live/theme/static/js/risk_visuals.min.js:1
-#| msgid "Payment Verification"
 msgid "Payment Operations"
 msgstr "支付运营"
 
@@ -652,7 +646,6 @@ msgstr "支付、对账与核验瓶颈"
 
 #: src/hope_live/theme/static/js/risk_visuals.js:33
 #: src/hope_live/theme/static/js/risk_visuals.min.js:1
-#| msgid "Registration Related Complaint"
 msgid "Registration & Population"
 msgstr "登记与人口数据"
 
@@ -663,7 +656,6 @@ msgstr "身份核验 (KYC)、身份证件与地理核实"
 
 #: src/hope_live/theme/static/js/risk_visuals.js:40
 #: src/hope_live/theme/static/js/risk_visuals.min.js:1
-#| msgid "Needs Adjudication"
 msgid "Deduplication & Adjudication"
 msgstr "查重与裁决"
 

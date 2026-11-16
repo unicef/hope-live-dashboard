@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-11 22:12+0000\n"
+"POT-Creation-Date: 2026-11-16 08:41+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -48,7 +48,7 @@ msgstr "Rapproché"
 #: src/hope_live/theme/static/js/completion_visuals.js:496
 #: src/hope_live/theme/static/js/completion_visuals.min.js:1
 msgid "Pending Reconciliation"
-msgstr "Rapprochement en attente"
+msgstr "En attente de rapprochement"
 
 #: src/hope_live/theme/static/js/completion_visuals.js:451
 #: src/hope_live/theme/static/js/completion_visuals.js:456
@@ -90,7 +90,7 @@ msgstr "Montant rapproché (USD)"
 #: src/hope_live/theme/static/js/completion_visuals.js:738
 #: src/hope_live/theme/static/js/completion_visuals.min.js:1
 msgid "Pending Reconciliation amount (USD)"
-msgstr "Montant du rapprochement en attente (USD)"
+msgstr "Montant en attente de rapprochement (USD)"
 
 #: src/hope_live/theme/static/js/completion_visuals.js:739
 #: src/hope_live/theme/static/js/completion_visuals.min.js:1
@@ -114,7 +114,6 @@ msgstr "Paiements en attente de rapprochement"
 
 #: src/hope_live/theme/static/js/completion_visuals.js:744
 #: src/hope_live/theme/static/js/completion_visuals.min.js:1
-#| msgid "Reconciliation Timeline (USD)"
 msgid "Reconciliation timeline"
 msgstr "Chronologie du rapprochement"
 
@@ -245,7 +244,6 @@ msgstr "Autre"
 
 #: src/hope_live/theme/static/js/dashboard_visuals.js:704
 #: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
-#| msgid "Spending Timeline"
 msgid "In pipeline"
 msgstr "En cours de traitement"
 
@@ -256,7 +254,6 @@ msgstr "Versé"
 
 #: src/hope_live/theme/static/js/dashboard_visuals.js:747
 #: src/hope_live/theme/static/js/dashboard_visuals.min.js:1
-#| msgid "Spending Timeline"
 msgid "Pending in pipeline"
 msgstr "En attente de traitement"
 
@@ -297,7 +294,6 @@ msgstr "Personnes handicapées bénéficiaires"
 
 #: src/hope_live/theme/static/js/demographic_visuals.js:438
 #: src/hope_live/theme/static/js/demographic_visuals.min.js:1
-#| msgid "Spending Timeline"
 msgid "Timeline"
 msgstr "Chronologie"
 
@@ -313,7 +309,6 @@ msgstr "Part par pays de"
 
 #: src/hope_live/theme/static/js/demographic_visuals.js:472
 #: src/hope_live/theme/static/js/demographic_visuals.min.js:1
-#| msgid "PWD Reached"
 msgid "Workers reached"
 msgstr "Travailleurs bénéficiaires"
 
@@ -645,7 +640,6 @@ msgstr "Stable"
 #: src/hope_live/theme/static/js/risk_visuals.js:19
 #: src/hope_live/theme/static/js/risk_visuals.js:26
 #: src/hope_live/theme/static/js/risk_visuals.min.js:1
-#| msgid "Payment Verification"
 msgid "Payment Operations"
 msgstr "Opérations de paiement"
 
@@ -658,7 +652,6 @@ msgstr ""
 
 #: src/hope_live/theme/static/js/risk_visuals.js:33
 #: src/hope_live/theme/static/js/risk_visuals.min.js:1
-#| msgid "Registration Related Complaint"
 msgid "Registration & Population"
 msgstr "Enregistrement et population"
 
@@ -671,7 +664,6 @@ msgstr ""
 
 #: src/hope_live/theme/static/js/risk_visuals.js:40
 #: src/hope_live/theme/static/js/risk_visuals.min.js:1
-#| msgid "Needs Adjudication"
 msgid "Deduplication & Adjudication"
 msgstr "Déduplication et arbitrage"
 
