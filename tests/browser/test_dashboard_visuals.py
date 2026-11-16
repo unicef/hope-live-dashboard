@@ -1171,9 +1171,9 @@ def test_landing_separates_social_workers_and_adds_map_metric(browser):
     assert kenya["value"] == 40
 
 
-def test_landing_merges_outreach_payments_into_cash_on_site(browser):
+def test_landing_merges_outreach_and_unknown_into_other(browser):
     year = datetime.datetime.now().year
-    for value, total in (("CASH ON SITE", 100), ("OUTREACH PAYMENTS", 50)):
+    for value, total in (("CASH ON SITE", 100), ("OUTREACH PAYMENTS", 50), ("UNKNOWN", 25)):
         FinancialAggregateFactory(
             date=datetime.date(year, 1, 1),
             time_grain="daily",
@@ -1193,6 +1193,10 @@ def test_landing_merges_outreach_payments_into_cash_on_site(browser):
         "return echarts.getInstanceByDom(document.getElementById('mechanism-chart')).getOption().series[0].data;"
     )
     cash_on_site = [item for item in chart_data if item["name"] == "Cash on Site"]
+    other = [item for item in chart_data if item["name"] == "Other"]
     assert len(cash_on_site) == 1
     assert cash_on_site[0]["value"] == 150
+    assert len(other) == 1
+    assert other[0]["value"] == 25
     assert all("Outreach" not in item["name"] for item in chart_data)
+    assert all("UNKNOWN" not in item["name"].upper() for item in chart_data)

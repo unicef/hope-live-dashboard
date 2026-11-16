@@ -398,7 +398,12 @@ document.addEventListener('DOMContentLoaded', async function () {
     };
     const normaliseMechanism = value => {
         const key = String(value || '').trim().toUpperCase();
-        return key === 'OUTREACH PAYMENT' || key === 'OUTREACH PAYMENTS' ? 'CASH ON SITE' : String(value || '');
+        if (key === 'OUTREACH PAYMENT' || key === 'OUTREACH PAYMENTS') return 'CASH ON SITE';
+        // HOPE emits UNKNOWN when a payment has no usable delivery mechanism.
+        // It is not a real mechanism, so the mechanism chart folds it into Other
+        // instead of showing it as a separate slice or filter.
+        if (key === 'UNKNOWN' || key === '') return 'UNKNOWN';
+        return String(value || '');
     };
     const money = value => {
         const v = Number(value) || 0;
@@ -597,7 +602,12 @@ document.addEventListener('DOMContentLoaded', async function () {
             if (!countries.includes(slug)) state.selectedCountries.delete(slug);
         });
         const sectorValues = new Set(finData.filter(row => row.dimension_type === 'sector').map(row => row.dimension_value));
-        const mechanismValues = new Set(finData.filter(row => row.dimension_type === 'delivery_type').map(row => normaliseMechanism(row.dimension_value)));
+        const mechanismValues = new Set(
+            finData
+                .filter(row => row.dimension_type === 'delivery_type')
+                .map(row => normaliseMechanism(row.dimension_value))
+                .filter(value => value !== 'UNKNOWN')
+        );
         if (state.sector && !sectorValues.has(state.sector)) state.sector = null;
         if (state.mechanism && !mechanismValues.has(state.mechanism)) state.mechanism = null;
         yearSelect.value = state.year;
@@ -770,15 +780,21 @@ document.addEventListener('DOMContentLoaded', async function () {
         trendsChart.hideLoading();
     }
 
-    function renderComposition(chart, rows, metric, selected, normalise = value => value) {
+    function renderComposition(chart, rows, metric, selected, normalise = value => value, mergeIntoOther = null) {
         const grouped = {};
         rows.forEach(row => {
             const key = normalise(row.dimension_value) || '{{ t_not_specified|escapejs }}';
             grouped[key] = (grouped[key] || 0) + (Number(row[metric]) || 0);
         });
         const entries = Object.entries(grouped).filter(([, value]) => value > 0).sort((a, b) => b[1] - a[1]);
-        const top = entries.slice(0, 7);
-        const rest = entries.slice(7).reduce((total, [, value]) => total + value, 0);
+        let rest = 0;
+        const mainEntries = [];
+        entries.forEach(([name, value]) => {
+            if (mergeIntoOther && name === mergeIntoOther) rest += value;
+            else mainEntries.push([name, value]);
+        });
+        const top = mainEntries.slice(0, 7);
+        rest += mainEntries.slice(7).reduce((total, [, value]) => total + value, 0);
         const hasOther = rest > 0;
         if (hasOther) top.push(['{{ t_other|escapejs }}', rest]);
         const data = top.map(([name, value], index) => {
@@ -824,7 +840,14 @@ document.addEventListener('DOMContentLoaded', async function () {
     function updateComposition() {
         const finRows = finData.filter(row => matches(row));
         renderComposition(sectorChart, finRows.filter(row => row.dimension_type === 'sector'), 'total_usd', state.sector);
-        renderComposition(mechanismChart, finRows.filter(row => row.dimension_type === 'delivery_type'), 'total_usd', state.mechanism, normaliseMechanism);
+        renderComposition(
+            mechanismChart,
+            finRows.filter(row => row.dimension_type === 'delivery_type'),
+            'total_usd',
+            state.mechanism,
+            normaliseMechanism,
+            'UNKNOWN'
+        );
     }
 
     function updateAll() {
