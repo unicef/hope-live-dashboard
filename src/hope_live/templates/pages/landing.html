@@ -1,322 +1,361 @@
 {% extends "public_layout.html" %}
 {% load i18n icons js static %}
-
 {% block content %}
-<div id="global-evidence" tabindex="-1" class="scroll-mt-24">
-    <!-- Hero + at a glance -->
-    <section class="bg-white border-b border-slate-200">
-        <div class="max-w-[1600px] mx-auto px-4 lg:px-6 py-8 lg:py-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
-            <div class="lg:col-span-8 relative overflow-hidden rounded-md bg-sky-50 min-h-[300px] flex items-center">
-                <div class="absolute inset-y-0 right-0 w-full md:w-[62%] opacity-30 md:opacity-100 pointer-events-none">
-                    <img src="{% static 'images/background.png' %}" class="w-full h-full object-cover" style="object-position: 80% 15%;" alt="">
-                    <div class="absolute inset-y-0 left-0 w-40 bg-gradient-to-r from-sky-50 via-sky-50/80 to-transparent"></div>
-                </div>
-                <div class="relative z-10 p-7 lg:p-10 max-w-xl">
-                    <div class="inline-flex items-center mb-5 rounded-md bg-[#00adef] px-4 py-3">
-                        <img src="{% static 'images/logo-white-trimmed.png' %}" alt="UNICEF" class="h-14 w-auto">
+    <div id="global-evidence" tabindex="-1" class="scroll-mt-24">
+        <!-- Hero + at a glance -->
+        <section class="bg-white border-b border-black/10">
+            <div class="max-w-[1600px] mx-auto px-4 lg:px-6 py-8 lg:py-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
+                <div id="landing-hero"
+                     class="lg:col-span-8 relative overflow-hidden rounded-md bg-white min-h-[300px] flex items-center">
+                    <div class="absolute inset-y-0 right-0 w-full md:w-[62%] opacity-30 md:opacity-100 pointer-events-none">
+                        <img src="{% static 'images/background.png' %}"
+                             class="w-full h-full object-cover"
+                             style="object-position: 80% 15%"
+                             alt="" />
+                        <div class="absolute inset-y-0 left-0 w-40 bg-gradient-to-r from-white via-white/80 to-transparent"></div>
                     </div>
-                    <h1 class="text-4xl sm:text-5xl lg:text-6xl font-black text-[#0077a8] tracking-tight leading-[1.05]">
-                        {% translate "Cash-based Assistance" %}
-                    </h1>
-                    <p class="mt-4 text-lg font-semibold text-slate-700 leading-relaxed max-w-md">
-                        {% translate "Data and evidence to deliver cash assistance safely — and to show where it reaches children and families." %}
-                    </p>
-                    <div class="mt-6 flex flex-wrap items-center gap-3">
-                        <a href="#landing-kpis" class="bg-[#00adef] text-white px-5 py-3 rounded font-black text-base hover:bg-sky-600 transition-colors">
-                            {% translate "Explore the evidence" %}
-                        </a>
-                        <a href="https://www.unicef.org/hope-hct/resources" target="_blank" rel="noopener"
-                           class="text-[#0077a8] font-extrabold text-base hover:underline">
-                            {% translate "About the Source of Data on UNICEF Cash Assistance" %}
-                        </a>
-                    </div>
-                </div>
-            </div>
-
-            <aside class="lg:col-span-4 bg-white border border-slate-200 rounded-md p-5 lg:p-6 flex flex-col justify-center">
-                <h2 class="text-base font-black tracking-wider text-[#0077a8] mb-4">
-                    {% translate "Cash-based Assistance at a glance" %}
-                </h2>
-
-                <div class="pb-4 border-b border-slate-100">
-                    <div class="flex items-center gap-2 text-base font-black tracking-wider text-[#0077a8] mb-1">
-                        {% icon "hand-coins" "h-4 w-4" %}
-                        {% translate "Assistance Delivered" %}
-                    </div>
-                    <div id="glance-cash" class="text-4xl lg:text-5xl font-black text-[#00adef] leading-none">${{ total_cash_disbursed|default:"1.2B" }}</div>
-                    <div class="text-base font-semibold text-slate-600 mt-1">{% translate "Direct cash transfers" %}</div>
-                </div>
-
-                <div class="grid grid-cols-2 gap-4 pt-4">
-                    <div class="flex items-start gap-2">
-                        <span class="w-7 h-7 shrink-0 rounded bg-sky-50 text-[#0077a8] flex items-center justify-center mt-0.5">
-                            {% icon "globe" "h-4 w-4" %}
-                        </span>
-                        <div>
-                            <div class="text-3xl font-black text-[#0077a8] leading-none">{{ total_countries_glance }}+</div>
-                            <div class="text-base font-bold text-[#0077a8] mt-1">{% translate "Countries & territories" %}</div>
+                    <div class="relative z-10 p-7 lg:p-10 max-w-xl">
+                        <div class="inline-flex items-center mb-5 rounded-md bg-unicef-blue px-4 py-3">
+                            <img src="{% static 'images/logo-white-trimmed.png' %}" alt="UNICEF" class="h-14 w-auto" />
                         </div>
-                    </div>
-                    <div class="flex items-start gap-2">
-                        <span class="w-7 h-7 shrink-0 rounded bg-sky-50 text-[#0077a8] flex items-center justify-center mt-0.5">
-                            {% icon "layers" "h-4 w-4" %}
-                        </span>
-                        <div>
-                            <div class="text-3xl font-black text-[#0077a8] leading-none">{{ total_programs_glance }}+</div>
-                            <div class="text-base font-bold text-[#0077a8] mt-1">{% translate "Programmes" %}</div>
+                        <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold text-black tracking-tight leading-[1.05]">
+                            {% translate "Cash-based Assistance" %}
+                        </h1>
+                        <p class="mt-4 text-lg font-normal text-black leading-relaxed max-w-md">
+                            {% translate "Data and evidence to deliver cash assistance safely — and to show where it reaches children and families." %}
+                        </p>
+                        <div class="mt-6 flex flex-wrap items-center gap-3">
+                            <a href="#landing-kpis"
+                               class="bg-unicef-blue text-black px-5 py-3 rounded font-bold text-base hover:bg-unicef-blue-dark hover:text-white transition-colors">
+                                {% translate "Explore the evidence" %}
+                            </a>
+                            <a href="https://www.unicef.org/hope-hct/resources"
+                               target="_blank"
+                               rel="noopener"
+                               class="text-unicef-blue-dark font-bold text-base hover:underline">
+                                {% translate "About the Source of Data on UNICEF Cash Assistance" %}
+                            </a>
                         </div>
                     </div>
                 </div>
-
-                <div class="text-sm font-semibold text-slate-600 mt-4 pt-3 border-t border-slate-100">
-                    {% translate "Source" %}: {% translate "HOPE Database" %}
-                </div>
-            </aside>
-        </div>
-    </section>
-
-    <!-- Filter bar -->
-    <div class="static lg:sticky lg:top-0 z-30 bg-white/95 backdrop-blur border-b border-slate-200">
-        <div class="max-w-[1600px] mx-auto px-4 lg:px-6 py-3 flex flex-wrap items-end gap-3">
-            <div class="w-full sm:w-auto">
-                <label for="landing-year" class="block text-base font-black tracking-wider text-[#0077a8] mb-1">{% translate "Year" %}</label>
-                <select id="landing-year" class="w-full sm:w-auto text-base border-slate-300 rounded-md text-slate-700 py-2.5 pl-3 pr-8 focus:ring-[#00adef] focus:border-[#00adef] shadow-2xs font-bold bg-white">
-                    <option value="all">{% translate "All years" %}</option>
-                </select>
-            </div>
-            <div class="relative w-full sm:w-auto">
-                <label id="country-filter-label" class="block text-base font-black tracking-wider text-[#0077a8] mb-1">{% translate "Country" %}</label>
-                <button id="country-filter-button" type="button" aria-haspopup="listbox" aria-expanded="false" aria-controls="country-filter-panel"
-                    class="w-full sm:w-auto sm:min-w-[210px] flex items-center justify-between gap-3 text-base border border-slate-300 rounded-md text-slate-700 py-2.5 pl-3 pr-3 focus:outline-none focus:ring-2 focus:ring-[#00adef] font-bold bg-white">
-                    <span id="country-filter-value">{% translate "All countries" %}</span>
-                    {% icon "chevron-down" "h-4 w-4 text-slate-500" %}
-                </button>
-                <div id="country-filter-panel" class="hidden absolute left-0 right-0 sm:right-auto top-full mt-1 w-auto sm:w-[320px] max-w-none sm:max-w-[90vw] z-50 bg-white border border-slate-200 rounded-md shadow-lg">
-                    <div class="p-2 border-b border-slate-100">
-                        <label for="country-search" class="sr-only">{% translate "Search countries" %}</label>
-                        <div class="relative">
-                            <span class="absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none">
-                                {% icon "search" "h-4 w-4" %}
+                <aside id="landing-glance"
+                       class="lg:col-span-4 bg-white border border-black/10 rounded-md p-5 lg:p-6 flex flex-col justify-center">
+                    <h2 class="text-base font-bold tracking-wider text-black mb-4">{% translate "Cash-based Assistance at a glance" %}</h2>
+                    <div class="pb-4 border-b border-black/10">
+                        <div class="flex items-center gap-2 text-base font-bold tracking-wider text-black mb-1">
+                            {% icon "hand-coins" "h-4 w-4" %}
+                            {% translate "Assistance Delivered" %}
+                        </div>
+                        <div id="glance-cash"
+                             class="text-4xl lg:text-5xl font-bold text-black leading-none">${{ total_cash_disbursed|default:"1.2B" }}</div>
+                        <div class="text-base font-normal text-black/70 mt-1">{% translate "Direct cash transfers" %}</div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4 pt-4">
+                        <div class="flex items-start gap-2">
+                            <span class="w-7 h-7 shrink-0 rounded bg-unicef-blue text-white flex items-center justify-center mt-0.5">
+                                {% icon "globe" "h-4 w-4" %}
                             </span>
-                            <input id="country-search" type="search" placeholder="{% translate 'Search countries' %}"
-                                class="w-full text-sm border border-slate-300 rounded-md pl-8 pr-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#00adef]">
+                            <div>
+                                <div class="text-3xl font-bold text-black leading-none">{{ total_countries_glance }}+</div>
+                                <div class="text-base font-bold text-black mt-1">{% translate "Countries & territories" %}</div>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-2">
+                            <span class="w-7 h-7 shrink-0 rounded bg-unicef-blue text-white flex items-center justify-center mt-0.5">
+                                {% icon "layers" "h-4 w-4" %}
+                            </span>
+                            <div>
+                                <div class="text-3xl font-bold text-black leading-none">{{ total_programs_glance }}+</div>
+                                <div class="text-base font-bold text-black mt-1">{% translate "Programmes" %}</div>
+                            </div>
                         </div>
                     </div>
-                    <div class="flex items-center justify-between px-3 py-2 border-b border-slate-100">
-                        <button id="country-select-all" type="button" class="text-xs font-bold text-[#0077a8] hover:underline">{% translate "Select all" %}</button>
-                        <button id="country-clear" type="button" class="text-xs font-bold text-slate-500 hover:underline">{% translate "Clear" %}</button>
+                    <div class="text-sm font-normal text-black/70 mt-4 pt-3 border-t border-black/10">
+                        {% translate "Source" %}: {% translate "HOPE Database" %}
                     </div>
-                    <div id="country-options" class="max-h-64 overflow-y-auto p-2 space-y-1" role="listbox" aria-multiselectable="true"></div>
-                    <div id="country-empty" class="hidden px-3 py-4 text-sm text-slate-500 text-center">{% translate "No countries found" %}</div>
-                </div>
+                </aside>
             </div>
-            <button id="landing-reset" type="button" class="text-base font-black text-[#0077a8] hover:underline px-1 py-2">
-                {% translate "Reset" %}
-            </button>
-            <div class="ml-auto text-sm sm:text-base font-bold text-slate-700" id="latest-data-date">
-                {% translate "Data as of" %} {{ latest_data_exact|default:latest_data_str }}
-            </div>
-            <div id="country-chips" class="basis-full w-full flex flex-wrap gap-2"></div>
-        </div>
-    </div>
-
-    <div class="max-w-[1600px] mx-auto px-4 lg:px-6 py-6 lg:py-8">
-        <!-- KPI strip -->
-        <div id="landing-kpis" class="grid grid-cols-1 xl:grid-cols-12 gap-4 mb-6">
-            <div class="xl:col-span-9">
-                <div class="flex items-center gap-2 text-base font-black tracking-wider text-[#0077a8] mb-2">
-                    {% icon "users" "h-4 w-4" %}
-                    {% translate "People & Families" %}
+        </section>
+        <!-- Filter bar -->
+        <div class="static lg:sticky lg:top-0 z-30 bg-white border-b border-black/10">
+            <div class="max-w-[1600px] mx-auto px-4 lg:px-6 py-3 flex flex-wrap items-end gap-3">
+                <div class="w-full sm:w-auto">
+                    <label for="landing-year"
+                           class="block text-base font-bold tracking-wider text-black mb-1">{% translate "Year" %}</label>
+                    <select id="landing-year"
+                            class="w-full sm:w-auto text-base border-black/20 rounded-md text-black py-2.5 pl-3 pr-8 focus:ring-unicef-blue focus:border-unicef-blue shadow-2xs font-bold bg-white">
+                        <option value="all">{% translate "All years" %}</option>
+                    </select>
                 </div>
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-                    <div class="bg-white p-4 rounded-md border border-slate-200 shadow-2xs">
-                        <div class="flex items-start justify-between gap-2 mb-1">
-                            <div class="text-base text-[#0077a8] tracking-wider font-black">{% translate "Children Reached" %}</div>
-                            <span class="w-7 h-7 shrink-0 rounded bg-sky-50 text-[#0077a8] flex items-center justify-center">{% icon "baby" "h-4 w-4" %}</span>
+                <div class="relative w-full sm:w-auto">
+                    <label id="country-filter-label"
+                           class="block text-base font-bold tracking-wider text-black mb-1">{% translate "Country" %}</label>
+                    <button id="country-filter-button"
+                            type="button"
+                            aria-haspopup="listbox"
+                            aria-expanded="false"
+                            aria-controls="country-filter-panel"
+                            class="w-full sm:w-auto sm:min-w-[210px] flex items-center justify-between gap-3 text-base border border-black/20 rounded-md text-black py-2.5 pl-3 pr-3 focus:outline-none focus:ring-2 focus:ring-unicef-blue font-bold bg-white">
+                        <span id="country-filter-value">{% translate "All countries" %}</span>
+                        {% icon "chevron-down" "h-4 w-4 text-black/60" %}
+                    </button>
+                    <div id="country-filter-panel"
+                         class="hidden absolute left-0 right-0 sm:right-auto top-full mt-1 w-auto sm:w-[320px] max-w-none sm:max-w-[90vw] z-50 bg-white border border-black/10 rounded-md shadow-lg">
+                        <div class="p-2 border-b border-black/10">
+                            <label for="country-search" class="sr-only">{% translate "Search countries" %}</label>
+                            <div class="relative">
+                                <span class="absolute left-2.5 top-1/2 -translate-y-1/2 text-black/40 pointer-events-none">
+                                    {% icon "search" "h-4 w-4" %}
+                                </span>
+                                <input id="country-search"
+                                       type="search"
+                                       placeholder="{% translate 'Search countries' %}"
+                                       class="w-full text-sm border border-black/20 rounded-md pl-8 pr-3 py-2 focus:outline-none focus:ring-2 focus:ring-unicef-blue" />
+                            </div>
                         </div>
-                        <div id="kpi-children" class="text-3xl lg:text-4xl font-black text-[#00adef] leading-tight">{{ total_children|default:"0" }}</div>
-                        <div class="text-base font-bold text-slate-700 mt-1" id="kpi-children-note">{% translate "HOPE reach" %}</div>
-                    </div>
-                    <div class="bg-white p-4 rounded-md border border-slate-200 shadow-2xs">
-                        <div class="flex items-start justify-between gap-2 mb-1">
-                            <div class="text-base text-[#0077a8] tracking-wider font-black">{% translate "Families Reached" %}</div>
-                            <span class="w-7 h-7 shrink-0 rounded bg-sky-50 text-[#0077a8] flex items-center justify-center">{% icon "house" "h-4 w-4" %}</span>
+                        <div class="flex items-center justify-between px-3 py-2 border-b border-black/10">
+                            <button id="country-select-all"
+                                    type="button"
+                                    class="text-xs font-bold text-black hover:underline">{% translate "Select all" %}</button>
+                            <button id="country-clear"
+                                    type="button"
+                                    class="text-xs font-bold text-black/60 hover:underline">{% translate "Clear" %}</button>
                         </div>
-                        <div id="kpi-families" class="text-3xl lg:text-4xl font-black text-[#00adef] leading-tight">{{ total_households|default:"0" }}</div>
-                        <div class="text-base font-bold text-slate-700 mt-1">{% translate "HOPE reach" %}</div>
-                    </div>
-                    <div class="bg-white p-4 rounded-md border border-slate-200 shadow-2xs">
-                        <div class="flex items-start justify-between gap-2 mb-1">
-                            <div class="text-base text-[#0077a8] tracking-wider font-black">{% translate "Individuals Reached" %}</div>
-                            <span class="w-7 h-7 shrink-0 rounded bg-sky-50 text-[#0077a8] flex items-center justify-center">{% icon "users" "h-4 w-4" %}</span>
-                        </div>
-                        <div id="kpi-individuals" class="text-3xl lg:text-4xl font-black text-[#00adef] leading-tight">{{ total_individuals_reached|default:"0" }}</div>
-                        <div class="text-base font-bold text-slate-700 mt-1">{% translate "People reached" %}</div>
-                    </div>
-                    <div class="bg-white p-4 rounded-md border border-slate-200 shadow-2xs">
-                        <div class="flex items-start justify-between gap-2 mb-1">
-                            <div class="text-base text-[#0077a8] tracking-wider font-black">{% translate "Social Workers Reached" %}</div>
-                            <span class="w-7 h-7 shrink-0 rounded bg-sky-50 text-[#0077a8] flex items-center justify-center">{% icon "heart-handshake" "h-4 w-4" %}</span>
-                        </div>
-                        <div id="kpi-social-workers" class="text-3xl lg:text-4xl font-black text-[#00adef] leading-tight">{{ total_social_workers|default:"0" }}</div>
-                        <div class="text-base font-bold text-slate-700 mt-1">{% translate "Frontline workforce assisted" %}</div>
-                    </div>
-                </div>
-            </div>
-            <div class="xl:col-span-3">
-                <div class="flex items-center gap-2 text-base font-black tracking-wider text-[#0077a8] mb-2">
-                    {% icon "banknote" "h-4 w-4" %}
-                    {% translate "Cash" %}
-                </div>
-                <div class="bg-white p-4 rounded-md border border-slate-200 shadow-2xs h-full flex flex-col justify-between">
-                    <div>
-                        <div class="flex items-start justify-between gap-2 mb-1">
-                            <div class="text-base text-[#0077a8] tracking-wider font-black">{% translate "Cash Delivered (USD)" %}</div>
-                            <span class="w-7 h-7 shrink-0 rounded bg-sky-50 text-[#0077a8] flex items-center justify-center">{% icon "banknote" "h-4 w-4" %}</span>
-                        </div>
-                        <div id="kpi-cash" class="text-3xl lg:text-4xl font-black text-[#00adef] leading-tight">${{ total_cash_disbursed|default:"0" }}</div>
-                        <div class="text-sm font-bold text-slate-700 mt-1">
-                            {% translate "Payments delivered" %}:
-                            <span id="kpi-payments" class="font-black text-[#0077a8]">{{ total_payments|default:"0" }}</span>
-                        </div>
-                        <div class="flex items-center gap-1 text-sm font-semibold text-slate-600 mt-1">
-                            {% icon "coins" "h-3.5 w-3.5 text-[#0077a8]" %}
-                            {% translate "Average transfer" %}
-                            <span id="kpi-average-transfer" class="font-black text-[#0077a8]">${{ average_transfer|default:"0" }}</span>
-                            {% translate "per transfer" %}
-                        </div>
+                        <div id="country-options"
+                             class="max-h-64 overflow-y-auto p-2 space-y-1"
+                             role="listbox"
+                             aria-multiselectable="true"></div>
+                        <div id="country-empty"
+                             class="hidden px-3 py-4 text-sm text-black/60 text-center">{% translate "No countries found" %}</div>
                     </div>
                 </div>
+                <button id="landing-reset"
+                        type="button"
+                        class="text-base font-bold text-black hover:underline px-1 py-2">
+                    {% translate "Reset" %}
+                </button>
+                <div class="ml-auto text-sm sm:text-base font-bold text-black" id="latest-data-date">
+                    {% translate "Data as of" %} {{ latest_data_exact|default:latest_data_str }}
+                </div>
+                <div id="country-chips" class="basis-full w-full flex flex-wrap gap-2"></div>
             </div>
         </div>
-
-        <!-- Map + sector -->
-        <div class="grid grid-cols-1 xl:grid-cols-12 gap-4 mb-6">
-            <div class="xl:col-span-7 bg-white rounded-md border border-slate-200 shadow-2xs overflow-hidden">
-                <div class="p-4 lg:p-5 pb-2 flex flex-wrap items-start justify-between gap-3">
-                    <div class="flex items-start gap-2">
-                        <span class="w-8 h-8 shrink-0 rounded bg-sky-50 text-[#0077a8] flex items-center justify-center mt-0.5">
-                            {% icon "map-pin" "h-4 w-4" %}
-                        </span>
+        <div class="max-w-[1600px] mx-auto px-4 lg:px-6 py-6 lg:py-8">
+            <!-- KPI strip -->
+            <div id="landing-kpis" class="grid grid-cols-1 xl:grid-cols-12 gap-4 mb-6">
+                <div class="xl:col-span-9">
+                    <div class="flex items-center gap-2 text-base font-bold tracking-wider text-black mb-2">
+                        {% icon "users" "h-4 w-4" %}
+                        {% translate "People & Families" %}
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                        <div class="bg-white p-4 rounded-md border border-black/10 shadow-2xs">
+                            <div class="flex items-start justify-between gap-2 mb-1">
+                                <div class="text-base text-black tracking-wider font-bold">{% translate "Children Reached" %}</div>
+                                <span class="w-7 h-7 shrink-0 rounded bg-unicef-blue text-white flex items-center justify-center">{% icon "baby" "h-4 w-4" %}</span>
+                            </div>
+                            <div id="kpi-children"
+                                 class="text-3xl lg:text-4xl font-bold text-black leading-tight">{{ total_children|default:"0" }}</div>
+                            <div class="text-base font-bold text-black mt-1"
+                                 id="kpi-children-note">{% translate "HOPE reach" %}</div>
+                        </div>
+                        <div class="bg-white p-4 rounded-md border border-black/10 shadow-2xs">
+                            <div class="flex items-start justify-between gap-2 mb-1">
+                                <div class="text-base text-black tracking-wider font-bold">{% translate "Families Reached" %}</div>
+                                <span class="w-7 h-7 shrink-0 rounded bg-unicef-blue text-white flex items-center justify-center">{% icon "house" "h-4 w-4" %}</span>
+                            </div>
+                            <div id="kpi-families"
+                                 class="text-3xl lg:text-4xl font-bold text-black leading-tight">{{ total_households|default:"0" }}</div>
+                            <div class="text-base font-bold text-black mt-1">{% translate "HOPE reach" %}</div>
+                        </div>
+                        <div class="bg-white p-4 rounded-md border border-black/10 shadow-2xs">
+                            <div class="flex items-start justify-between gap-2 mb-1">
+                                <div class="text-base text-black tracking-wider font-bold">{% translate "Individuals Reached" %}</div>
+                                <span class="w-7 h-7 shrink-0 rounded bg-unicef-blue text-white flex items-center justify-center">{% icon "users" "h-4 w-4" %}</span>
+                            </div>
+                            <div id="kpi-individuals"
+                                 class="text-3xl lg:text-4xl font-bold text-black leading-tight">{{ total_individuals_reached|default:"0" }}</div>
+                            <div class="text-base font-bold text-black mt-1">{% translate "People reached" %}</div>
+                        </div>
+                        <div class="bg-white p-4 rounded-md border border-black/10 shadow-2xs">
+                            <div class="flex items-start justify-between gap-2 mb-1">
+                                <div class="text-base text-black tracking-wider font-bold">{% translate "Social Workers Reached" %}</div>
+                                <span class="w-7 h-7 shrink-0 rounded bg-unicef-blue text-white flex items-center justify-center">{% icon "heart-handshake" "h-4 w-4" %}</span>
+                            </div>
+                            <div id="kpi-social-workers"
+                                 class="text-3xl lg:text-4xl font-bold text-black leading-tight">{{ total_social_workers|default:"0" }}</div>
+                            <div class="text-base font-bold text-black mt-1">{% translate "Frontline workforce assisted" %}</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="xl:col-span-3">
+                    <div class="flex items-center gap-2 text-base font-bold tracking-wider text-black mb-2">
+                        {% icon "banknote" "h-4 w-4" %}
+                        {% translate "Cash" %}
+                    </div>
+                    <div class="bg-white p-4 rounded-md border border-black/10 shadow-2xs h-full flex flex-col justify-between">
                         <div>
-                            <h2 class="text-2xl lg:text-3xl font-black text-[#0077a8] tracking-tight">{% translate "Where cash assistance reaches children and families" %}</h2>
-                            <p class="text-base font-semibold text-slate-600 mt-1">{% translate "Country-level reach for the selected year" %}</p>
+                            <div class="flex items-start justify-between gap-2 mb-1">
+                                <div class="text-base text-black tracking-wider font-bold">{% translate "Cash Delivered (USD)" %}</div>
+                                <span class="w-7 h-7 shrink-0 rounded bg-unicef-blue text-white flex items-center justify-center">{% icon "banknote" "h-4 w-4" %}</span>
+                            </div>
+                            <div id="kpi-cash"
+                                 class="text-3xl lg:text-4xl font-bold text-black leading-tight">${{ total_cash_disbursed|default:"0" }}</div>
+                            <div class="text-sm font-bold text-black mt-1">
+                                {% translate "Payments delivered" %}:
+                                <span id="kpi-payments"
+                                      class="font-bold text-black">{{ total_payments|default:"0" }}</span>
+                            </div>
+                            <div class="flex items-center gap-1 text-sm font-normal text-black/70 mt-1">
+                                {% icon "coins" "h-3.5 w-3.5 text-black" %}
+                                {% translate "Average transfer" %}
+                                <span id="kpi-average-transfer"
+                                      class="font-bold text-black">${{ average_transfer|default:"0" }}</span>
+                                {% translate "per transfer" %}
+                            </div>
                         </div>
                     </div>
+                </div>
+            </div>
+            <!-- Map + sector -->
+            <div class="grid grid-cols-1 xl:grid-cols-12 gap-4 mb-6">
+                <div class="xl:col-span-7 bg-white rounded-md border border-black/10 shadow-2xs overflow-hidden">
+                    <div class="p-4 lg:p-5 pb-2 flex flex-wrap items-start justify-between gap-3">
+                        <div class="flex items-start gap-2">
+                            <span class="w-8 h-8 shrink-0 rounded bg-unicef-blue text-white flex items-center justify-center mt-0.5">
+                                {% icon "map-pin" "h-4 w-4" %}
+                            </span>
+                            <div>
+                                <h2 class="text-2xl lg:text-3xl font-bold text-black tracking-tight">{% translate "Where cash assistance reaches children and families" %}</h2>
+                                <p class="text-base font-normal text-black/70 mt-1">{% translate "Country-level reach for the selected year" %}</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <label for="map-metric" class="sr-only">{% translate "Map metric" %}</label>
+                            <select id="map-metric"
+                                    class="text-base border-black/20 rounded-md text-black py-2.5 pl-3 pr-8 focus:ring-unicef-blue focus:border-unicef-blue font-normal bg-white">
+                                <option value="children">{% translate "Children" %}</option>
+                                <option value="families" selected>{% translate "Families" %}</option>
+                                <option value="individuals">{% translate "Individuals" %}</option>
+                                <option value="social_workers">{% translate "Social Workers" %}</option>
+                                <option value="cash">{% translate "Cash" %}</option>
+                            </select>
+                            <button id="map-play"
+                                    type="button"
+                                    class="text-base font-bold text-black border border-black/10 rounded-md px-3 py-2.5 hover:bg-black/5">
+                                {% translate "Play years" %}
+                            </button>
+                        </div>
+                    </div>
+                    <div class="relative h-[320px] sm:h-[380px] lg:h-[430px] px-3 lg:px-5">
+                        <div id="world-map-chart" class="w-full h-full"></div>
+                        <div class="absolute left-6 top-2 flex flex-col gap-1 z-20">
+                            <button id="map-zoom-home"
+                                    class="w-9 h-9 sm:w-7 sm:h-7 bg-white border border-black/10 rounded-md shadow-2xs hover:bg-white flex items-center justify-center text-black/70"
+                                    title="{% translate 'Reset view' %}"
+                                    aria-label="{% translate 'Reset view' %}">
+                                {% icon "rotate-ccw" "h-4 w-4 sm:h-3.5 sm:w-3.5" %}
+                            </button>
+                            <button id="map-zoom-in"
+                                    class="w-9 h-9 sm:w-7 sm:h-7 bg-white border border-black/10 rounded-md shadow-2xs hover:bg-white flex items-center justify-center text-black/70"
+                                    title="{% translate 'Zoom in' %}"
+                                    aria-label="{% translate 'Zoom in' %}">
+                                {% icon "plus" "h-4 w-4 sm:h-3.5 sm:w-3.5" %}
+                            </button>
+                            <button id="map-zoom-out"
+                                    class="w-9 h-9 sm:w-7 sm:h-7 bg-white border border-black/10 rounded-md shadow-2xs hover:bg-white flex items-center justify-center text-black/70"
+                                    title="{% translate 'Zoom out' %}"
+                                    aria-label="{% translate 'Zoom out' %}">
+                                {% icon "minus" "h-4 w-4 sm:h-3.5 sm:w-3.5" %}
+                            </button>
+                        </div>
+                    </div>
+                    <div class="px-5 py-2.5 border-t border-black/10 text-sm font-normal text-black/70">
+                        {% translate "Darker shading means a higher value. Select a country to filter the page." %}
+                    </div>
+                    <p id="map-summary" class="sr-only" aria-live="polite"></p>
+                </div>
+                <div class="xl:col-span-5 bg-white rounded-md border border-black/10 shadow-2xs p-5 flex flex-col">
+                    <div class="flex items-start justify-between gap-3 mb-1">
+                        <div class="flex items-start gap-2">
+                            <span class="w-8 h-8 shrink-0 rounded bg-unicef-blue text-white flex items-center justify-center mt-0.5">
+                                {% icon "layers" "h-4 w-4" %}
+                            </span>
+                            <div>
+                                <h2 class="text-2xl lg:text-3xl font-bold text-black tracking-tight">{% translate "Cash assistance by sector" %}</h2>
+                                <p class="text-sm text-black/60">{% translate "Share of delivered cash by programme sector." %} <span class="font-bold text-black">{% translate "Click a slice to filter." %}</span></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="sector-chart" class="w-full flex-1 min-h-[280px]"></div>
+                </div>
+            </div>
+            <!-- Trends + mechanism -->
+            <div class="grid grid-cols-1 xl:grid-cols-12 gap-4 mb-6">
+                <div class="xl:col-span-7 bg-white rounded-md border border-black/10 shadow-2xs p-5 flex flex-col">
+                    <div class="flex items-start justify-between gap-3 mb-2">
+                        <div class="flex items-start gap-2">
+                            <span class="w-8 h-8 shrink-0 rounded bg-unicef-blue text-white flex items-center justify-center mt-0.5">
+                                {% icon "chart-no-axes-column" "h-4 w-4" %}
+                            </span>
+                            <div>
+                                <h2 class="text-2xl lg:text-3xl font-bold text-black tracking-tight">{% translate "Trends over time" %}</h2>
+                                <p class="text-sm text-black/60">{% translate "Children, families, individuals, social workers and cash for the selected scope." %}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="trends-chart" class="w-full flex-1 min-h-[300px]"></div>
+                </div>
+                <div class="xl:col-span-5 bg-white rounded-md border border-black/10 shadow-2xs p-5 flex flex-col">
+                    <div class="flex items-start justify-between gap-3 mb-1">
+                        <div class="flex items-start gap-2">
+                            <span class="w-8 h-8 shrink-0 rounded bg-unicef-blue text-white flex items-center justify-center mt-0.5">
+                                {% icon "wallet" "h-4 w-4" %}
+                            </span>
+                            <div>
+                                <h2 class="text-2xl lg:text-3xl font-bold text-black tracking-tight">{% translate "Delivery mechanism" %}</h2>
+                                <p class="text-sm text-black/60">{% translate "How cash reaches people: delivery mechanism share." %} <span class="font-bold text-black">{% translate "Click a slice to filter." %}</span></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="mechanism-chart" class="w-full flex-1 min-h-[280px]"></div>
+                </div>
+            </div>
+            <!-- Trust links -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+                <a href="https://unicef.sharepoint.com/:w:/t/EMOPS-NYHQ-HCT/ETNzq6Frl5JPq6U0YLp7KXEBGRRp4uP23iizPHGmZfa61A?e=NlZoym"
+                   target="_blank"
+                   rel="noopener"
+                   class="bg-white p-5 rounded-md border border-black/10 shadow-2xs hover:border-unicef-blue transition-colors group">
                     <div class="flex items-center gap-2">
-                        <label for="map-metric" class="sr-only">{% translate "Map metric" %}</label>
-                        <select id="map-metric" class="text-base border-slate-300 rounded-md text-slate-700 py-2.5 pl-3 pr-8 focus:ring-[#00adef] focus:border-[#00adef] font-semibold bg-white">
-                            <option value="children">{% translate "Children" %}</option>
-                            <option value="families" selected>{% translate "Families" %}</option>
-                            <option value="individuals">{% translate "Individuals" %}</option>
-                            <option value="social_workers">{% translate "Social Workers" %}</option>
-                            <option value="cash">{% translate "Cash" %}</option>
-                        </select>
-                        <button id="map-play" type="button" class="text-base font-black text-[#0077a8] border border-slate-200 rounded-md px-3 py-2.5 hover:bg-sky-50">
-                            {% translate "Play years" %}
-                        </button>
-                    </div>
-                </div>
-                <div class="relative h-[320px] sm:h-[380px] lg:h-[430px] px-3 lg:px-5">
-                    <div id="world-map-chart" class="w-full h-full"></div>
-                    <div class="absolute left-6 top-2 flex flex-col gap-1 z-20">
-                        <button id="map-zoom-home" class="w-9 h-9 sm:w-7 sm:h-7 bg-white/95 border border-slate-200 rounded-md shadow-2xs hover:bg-slate-50 flex items-center justify-center text-slate-600" title="{% translate 'Reset view' %}" aria-label="{% translate 'Reset view' %}">
-                            {% icon "rotate-ccw" "h-4 w-4 sm:h-3.5 sm:w-3.5" %}
-                        </button>
-                        <button id="map-zoom-in" class="w-9 h-9 sm:w-7 sm:h-7 bg-white/95 border border-slate-200 rounded-md shadow-2xs hover:bg-slate-50 flex items-center justify-center text-slate-600" title="{% translate 'Zoom in' %}" aria-label="{% translate 'Zoom in' %}">
-                            {% icon "plus" "h-4 w-4 sm:h-3.5 sm:w-3.5" %}
-                        </button>
-                        <button id="map-zoom-out" class="w-9 h-9 sm:w-7 sm:h-7 bg-white/95 border border-slate-200 rounded-md shadow-2xs hover:bg-slate-50 flex items-center justify-center text-slate-600" title="{% translate 'Zoom out' %}" aria-label="{% translate 'Zoom out' %}">
-                            {% icon "minus" "h-4 w-4 sm:h-3.5 sm:w-3.5" %}
-                        </button>
-                    </div>
-                </div>
-                <div class="px-5 py-2.5 border-t border-slate-100 text-sm font-semibold text-slate-600">
-                    {% translate "Darker shading means a higher value. Select a country to filter the page." %}
-                </div>
-                <p id="map-summary" class="sr-only" aria-live="polite"></p>
-            </div>
-
-            <div class="xl:col-span-5 bg-white rounded-md border border-slate-200 shadow-2xs p-5 flex flex-col">
-                <div class="flex items-start justify-between gap-3 mb-1">
-                    <div class="flex items-start gap-2">
-                        <span class="w-8 h-8 shrink-0 rounded bg-sky-50 text-[#0077a8] flex items-center justify-center mt-0.5">
-                            {% icon "layers" "h-4 w-4" %}
+                        <span class="w-8 h-8 shrink-0 rounded bg-unicef-blue text-white flex items-center justify-center">
+                            {% icon "shield-check" "h-4 w-4" %}
                         </span>
-                        <div>
-                            <h2 class="text-2xl lg:text-3xl font-black text-[#0077a8] tracking-tight">{% translate "Cash assistance by sector" %}</h2>
-                            <p class="text-sm text-slate-500">{% translate "Share of delivered cash by programme sector." %} <span class="font-bold text-[#0077a8]">{% translate "Click a slice to filter." %}</span></p>
-                        </div>
+                        <h3 class="text-xl font-bold text-black group-hover:text-black">{% translate "Responsible data" %}</h3>
                     </div>
-                </div>
-                <div id="sector-chart" class="w-full flex-1 min-h-[280px]"></div>
-            </div>
-        </div>
-
-        <!-- Trends + mechanism -->
-        <div class="grid grid-cols-1 xl:grid-cols-12 gap-4 mb-6">
-            <div class="xl:col-span-7 bg-white rounded-md border border-slate-200 shadow-2xs p-5 flex flex-col">
-                <div class="flex items-start justify-between gap-3 mb-2">
-                    <div class="flex items-start gap-2">
-                        <span class="w-8 h-8 shrink-0 rounded bg-sky-50 text-[#0077a8] flex items-center justify-center mt-0.5">
-                            {% icon "chart-no-axes-column" "h-4 w-4" %}
+                    <p class="text-base font-normal text-black/70 mt-2">{% translate "Read UNICEF's data protection policy." %}</p>
+                </a>
+                <a href="https://www.unicef.org/hope-hct/resources"
+                   target="_blank"
+                   rel="noopener"
+                   class="bg-white p-5 rounded-md border border-black/10 shadow-2xs hover:border-unicef-blue transition-colors group">
+                    <div class="flex items-center gap-2">
+                        <span class="w-8 h-8 shrink-0 rounded bg-unicef-blue text-white flex items-center justify-center">
+                            {% icon "book-open" "h-4 w-4" %}
                         </span>
-                        <div>
-                            <h2 class="text-2xl lg:text-3xl font-black text-[#0077a8] tracking-tight">{% translate "Trends over time" %}</h2>
-                            <p class="text-sm text-slate-500">{% translate "Children, families, individuals, social workers and cash for the selected scope." %}</p>
-                        </div>
+                        <h3 class="text-xl font-bold text-black group-hover:text-black">{% translate "Methodology" %}</h3>
                     </div>
-                </div>
-                <div id="trends-chart" class="w-full flex-1 min-h-[300px]"></div>
+                    <p class="text-base font-normal text-black/70 mt-2">{% translate "How HOPE data is produced and the standards applied." %}</p>
+                </a>
             </div>
-
-            <div class="xl:col-span-5 bg-white rounded-md border border-slate-200 shadow-2xs p-5 flex flex-col">
-                <div class="flex items-start justify-between gap-3 mb-1">
-                    <div class="flex items-start gap-2">
-                        <span class="w-8 h-8 shrink-0 rounded bg-sky-50 text-[#0077a8] flex items-center justify-center mt-0.5">
-                            {% icon "wallet" "h-4 w-4" %}
-                        </span>
-                        <div>
-                            <h2 class="text-2xl lg:text-3xl font-black text-[#0077a8] tracking-tight">{% translate "Delivery mechanism" %}</h2>
-                            <p class="text-sm text-slate-500">{% translate "How cash reaches people: delivery mechanism share." %} <span class="font-bold text-[#0077a8]">{% translate "Click a slice to filter." %}</span></p>
-                        </div>
-                    </div>
-                </div>
-                <div id="mechanism-chart" class="w-full flex-1 min-h-[280px]"></div>
-            </div>
-        </div>
-
-        <!-- Trust links -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
-            <a href="https://unicef.sharepoint.com/:w:/t/EMOPS-NYHQ-HCT/ETNzq6Frl5JPq6U0YLp7KXEBGRRp4uP23iizPHGmZfa61A?e=NlZoym" target="_blank" rel="noopener"
-               class="bg-white p-5 rounded-md border border-slate-200 shadow-2xs hover:border-[#00adef] transition-colors group">
-                <div class="flex items-center gap-2">
-                    <span class="w-8 h-8 shrink-0 rounded bg-sky-50 text-[#0077a8] flex items-center justify-center">
-                        {% icon "shield-check" "h-4 w-4" %}
-                    </span>
-                    <h3 class="text-xl font-black text-[#0077a8] group-hover:text-[#00adef]">{% translate "Responsible data" %}</h3>
-                </div>
-                <p class="text-base font-medium text-slate-600 mt-2">{% translate "Read UNICEF's data protection policy." %}</p>
-            </a>
-            <a href="https://www.unicef.org/hope-hct/resources" target="_blank" rel="noopener"
-               class="bg-white p-5 rounded-md border border-slate-200 shadow-2xs hover:border-[#00adef] transition-colors group">
-                <div class="flex items-center gap-2">
-                    <span class="w-8 h-8 shrink-0 rounded bg-sky-50 text-[#0077a8] flex items-center justify-center">
-                        {% icon "book-open" "h-4 w-4" %}
-                    </span>
-                    <h3 class="text-xl font-black text-[#0077a8] group-hover:text-[#00adef]">{% translate "Methodology" %}</h3>
-                </div>
-                <p class="text-base font-medium text-slate-600 mt-2">{% translate "How HOPE data is produced and the standards applied." %}</p>
-            </a>
         </div>
     </div>
-</div>
 {% endblock content %}
 
 {% block extra_js %}
-<script src="{% static 'js/echarts.min.js' %}"></script>
-<script src="{% static_js 'js/macarons.js' %}"></script>
-<script>
+    <script src="{% static 'js/echarts.min.js' %}"></script>
+    <script src="{% static_js 'js/macarons.js' %}"></script>
+    <script>
 {% translate "All years" as t_all_years %}
 {% translate "All countries" as t_all_countries %}
 {% translate "No data" as t_no_data %}
@@ -360,6 +399,11 @@ document.addEventListener('DOMContentLoaded', async function () {
     const formatCountry = window.HopeChart?.formatCountryName || (value => value);
     const mapFeatureByKey = new Map();
     const compact = new Intl.NumberFormat(docLang, { notation: 'compact', maximumFractionDigits: 1 });
+    const chartFont = getComputedStyle(document.body).fontFamily;
+    const DEFAULT_MAP_ZOOM = 1.2;
+    const MIN_MAP_ZOOM = 1;
+    const MAX_MAP_ZOOM = 8;
+    const BRAND_CHART_COLORS = ['#00AEEF', '#0047BB', '#004C45', '#FFB500', '#FF7100', '#9ADBE8', '#000000', '#BDBDBD'];
     const DIMENSION_LABELS = {
         'education': '{{ t_dim_education|escapejs }}',
         'health': '{{ t_dim_health|escapejs }}',
@@ -393,8 +437,12 @@ document.addEventListener('DOMContentLoaded', async function () {
     };
     const translateDimension = value => {
         if (!value) return '{{ t_not_specified|escapejs }}';
-        const key = String(value).trim().toLowerCase();
-        return DIMENSION_LABELS[key] || String(value);
+        const rawKey = String(value).trim().toLowerCase();
+        const normalizedKey = rawKey.replace(/[_-]+/g, ' ');
+        return DIMENSION_LABELS[rawKey]
+            || DIMENSION_LABELS[normalizedKey]
+            || window.HopeChart?.formatLabel?.(value)
+            || String(value);
     };
     const normaliseMechanism = value => {
         const key = String(value || '').trim().toUpperCase();
@@ -450,7 +498,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     const mechanismChart = echarts.init(document.getElementById('mechanism-chart'), 'macarons');
 
     [mapChart, trendsChart, sectorChart, mechanismChart].forEach(chart => {
-        chart.showLoading({ text: '{{ t_loading|escapejs }}', color: '#00adef', textColor: '#00adef', maskColor: 'rgba(255,255,255,0.65)' });
+        chart.showLoading({ text: '{{ t_loading|escapejs }}', color: '#00AEEF', textColor: '#000000', maskColor: 'rgba(255,255,255,0.75)' });
     });
 
     let finData = [];
@@ -545,9 +593,9 @@ document.addEventListener('DOMContentLoaded', async function () {
     function dimensionChip(dimension, label, value) {
         const displayValue = translateDimension(value);
         return `
-            <span class="inline-flex items-center gap-1.5 bg-amber-50 border border-amber-200 text-amber-900 rounded pl-3 pr-1.5 py-1 text-xs font-bold">
+            <span class="inline-flex items-center gap-1.5 bg-unicef-blue-dark border border-unicef-blue-dark text-white rounded pl-3 pr-1.5 py-1 text-xs font-bold">
                 ${escapeHtml(label)}: ${escapeHtml(displayValue)}
-                <button type="button" data-remove-dimension="${dimension}" class="w-6 h-6 sm:w-5 sm:h-5 rounded hover:bg-amber-100 flex items-center justify-center" aria-label="{{ t_remove|escapejs }} ${escapeHtml(label)}: ${escapeHtml(displayValue)}">×</button>
+                <button type="button" data-remove-dimension="${dimension}" class="w-6 h-6 sm:w-5 sm:h-5 rounded hover:bg-unicef-blue flex items-center justify-center" aria-label="{{ t_remove|escapejs }} ${escapeHtml(label)}: ${escapeHtml(displayValue)}">×</button>
             </span>`;
     }
 
@@ -555,9 +603,9 @@ document.addEventListener('DOMContentLoaded', async function () {
         countryValue.textContent = countryLabel();
         const values = Array.from(state.selectedCountries).sort((a, b) => formatCountry(a).localeCompare(formatCountry(b)));
         const chips = values.map(slug => `
-            <span class="inline-flex items-center gap-1.5 bg-sky-50 border border-sky-200 text-[#0077a8] rounded pl-3 pr-1.5 py-1 text-xs font-bold">
+            <span class="inline-flex items-center gap-1.5 bg-unicef-blue border border-unicef-blue text-white rounded pl-3 pr-1.5 py-1 text-xs font-bold">
                 ${formatCountry(slug)}
-                <button type="button" data-remove-country="${slug}" class="w-6 h-6 sm:w-5 sm:h-5 rounded hover:bg-sky-100 flex items-center justify-center" aria-label="{{ t_remove|escapejs }} ${formatCountry(slug)}">×</button>
+                <button type="button" data-remove-country="${slug}" class="w-6 h-6 sm:w-5 sm:h-5 rounded hover:bg-unicef-blue-dark flex items-center justify-center" aria-label="{{ t_remove|escapejs }} ${formatCountry(slug)}">×</button>
             </span>`);
         if (state.sector) chips.push(dimensionChip('sector', '{{ t_sector|escapejs }}', state.sector));
         if (state.mechanism) chips.push(dimensionChip('mechanism', '{{ t_mechanism|escapejs }}', state.mechanism));
@@ -574,8 +622,8 @@ document.addEventListener('DOMContentLoaded', async function () {
     function renderCountryOptions() {
         const visible = visibleCountryOptions();
         countryOptions.innerHTML = visible.map(slug => `
-            <label class="flex items-center gap-2 px-2 py-2 rounded-md hover:bg-slate-50 cursor-pointer text-sm text-slate-700 font-semibold">
-                <input type="checkbox" value="${slug}" ${state.selectedCountries.has(slug) ? 'checked' : ''} class="rounded border-slate-300 text-[#00adef] focus:ring-[#00adef]">
+            <label class="flex items-center gap-2 px-2 py-2 rounded-md hover:bg-white cursor-pointer text-sm text-black font-normal">
+                <input type="checkbox" value="${slug}" ${state.selectedCountries.has(slug) ? 'checked' : ''} class="rounded border-black/20 text-black focus:ring-unicef-blue">
                 <span>${formatCountry(slug)}</span>
             </label>`).join('');
         countryEmpty.classList.toggle('hidden', visible.length > 0);
@@ -655,12 +703,13 @@ document.addEventListener('DOMContentLoaded', async function () {
         const maxValue = Math.max(...data.map(item => item.value), 1);
 
         mapChart.setOption({
+            textStyle: { fontFamily: chartFont },
             tooltip: {
                 trigger: 'item',
                 backgroundColor: 'rgba(255,255,255,0.97)',
-                borderColor: '#e2e8f0',
+                borderColor: '#e5e5e5',
                 borderWidth: 1,
-                textStyle: { color: '#1e293b', fontSize: 13 },
+                textStyle: { color: '#000000', fontFamily: chartFont, fontSize: 13 },
                 formatter: params => {
                     if (!params.data) return `${params.name}: {{ t_no_data|escapejs }}`;
                     const d = params.data;
@@ -686,18 +735,19 @@ document.addEventListener('DOMContentLoaded', async function () {
                 bottom: 18,
                 text: ['{{ t_high|escapejs }}', '{{ t_low|escapejs }}'],
                 calculable: false,
-                inRange: { color: ['#e0f2fe', '#7dd3fc', '#0284c7', '#075985'] },
-                textStyle: { fontSize: 12, color: '#64748b' }
+                inRange: { color: ['#9ADBE8', '#00AEEF', '#0047BB'] },
+                textStyle: { fontFamily: chartFont, fontSize: 12, color: '#000000' }
             },
             series: [{
                 name: '{{ t_reach|escapejs }}',
                 type: 'map',
                 mapType: 'world',
                 roam: true,
-                zoom: 1.2,
+                zoom: DEFAULT_MAP_ZOOM,
                 center: [16, 12],
-                itemStyle: { borderColor: '#ffffff', borderWidth: 0.8, areaColor: '#f1f5f9' },
-                emphasis: { itemStyle: { areaColor: '#00adef' }, label: { show: false } },
+                scaleLimit: { min: MIN_MAP_ZOOM, max: MAX_MAP_ZOOM },
+                itemStyle: { borderColor: '#ffffff', borderWidth: 0.8, areaColor: '#eeeeee' },
+                emphasis: { itemStyle: { areaColor: '#00AEEF' }, label: { show: false } },
                 select: { disabled: true },
                 data
             }]
@@ -740,8 +790,10 @@ document.addEventListener('DOMContentLoaded', async function () {
         }
 
         trendsChart.setOption({
+            textStyle: { fontFamily: chartFont },
             tooltip: {
                 trigger: 'axis',
+                textStyle: { fontFamily: chartFont, color: '#000000' },
                 formatter: params => {
                     let html = `<b>${params[0].axisValue}</b><br/>`;
                     params.forEach(p => {
@@ -750,24 +802,24 @@ document.addEventListener('DOMContentLoaded', async function () {
                     return html;
                 }
             },
-            legend: { top: 0, right: 0, textStyle: { fontSize: 12, color: '#64748b' } },
+            legend: { top: 0, right: 0, textStyle: { fontFamily: chartFont, fontSize: 12, color: '#000000' } },
             grid: { top: 40, bottom: 30, left: 55, right: 55 },
-            xAxis: { type: 'category', data: categories, axisLabel: { fontSize: 13, color: '#64748b' }, axisLine: { lineStyle: { color: '#e2e8f0' } } },
+            xAxis: { type: 'category', data: categories, axisLabel: { fontFamily: chartFont, fontSize: 13, color: 'rgba(0,0,0,0.6)' }, axisLine: { lineStyle: { color: 'rgba(0,0,0,0.1)' } } },
             yAxis: [
-                { type: 'value', axisLabel: { fontSize: 12, color: '#94a3b8', formatter: value => money(value) }, splitLine: { lineStyle: { color: '#f1f5f9' } } },
-                { type: 'value', axisLabel: { fontSize: 12, color: '#94a3b8', formatter: value => count(value) }, splitLine: { show: false } }
+                { type: 'value', axisLabel: { fontFamily: chartFont, fontSize: 12, color: 'rgba(0,0,0,0.6)', formatter: value => money(value) }, splitLine: { lineStyle: { color: 'rgba(0,0,0,0.08)' } } },
+                { type: 'value', axisLabel: { fontFamily: chartFont, fontSize: 12, color: 'rgba(0,0,0,0.6)', formatter: value => count(value) }, splitLine: { show: false } }
             ],
             series: [
-                { name: '{{ t_cash|escapejs }}', type: 'line', smooth: true, yAxisIndex: 0, data: cash, lineStyle: { color: '#00adef', width: 2.5 }, itemStyle: { color: '#00adef' } },
-                { name: '{{ t_individuals|escapejs }}', type: 'line', smooth: true, yAxisIndex: 1, data: individuals, lineStyle: { color: '#97b552', width: 2 }, itemStyle: { color: '#97b552' } },
-                { name: '{{ t_families|escapejs }}', type: 'line', smooth: true, yAxisIndex: 1, data: families, lineStyle: { color: '#b6a2de', width: 2 }, itemStyle: { color: '#b6a2de' } },
-                { name: '{{ t_children|escapejs }}', type: 'line', smooth: true, yAxisIndex: 1, data: children, lineStyle: { color: '#d87a80', width: 2 }, itemStyle: { color: '#d87a80' } },
-                { name: '{{ t_social_workers|escapejs }}', type: 'line', smooth: true, yAxisIndex: 1, data: social_workers, lineStyle: { color: '#e5cf0d', width: 2 }, itemStyle: { color: '#e5cf0d' } }
+                { name: '{{ t_cash|escapejs }}', type: 'line', smooth: true, yAxisIndex: 0, data: cash, lineStyle: { color: '#00AEEF', width: 2.5 }, itemStyle: { color: '#00AEEF' } },
+                { name: '{{ t_individuals|escapejs }}', type: 'line', smooth: true, yAxisIndex: 1, data: individuals, lineStyle: { color: '#0047BB', width: 2 }, itemStyle: { color: '#0047BB' } },
+                { name: '{{ t_families|escapejs }}', type: 'line', smooth: true, yAxisIndex: 1, data: families, lineStyle: { color: '#004C45', width: 2 }, itemStyle: { color: '#004C45' } },
+                { name: '{{ t_children|escapejs }}', type: 'line', smooth: true, yAxisIndex: 1, data: children, lineStyle: { color: '#FFB500', width: 2 }, itemStyle: { color: '#FFB500' } },
+                { name: '{{ t_social_workers|escapejs }}', type: 'line', smooth: true, yAxisIndex: 1, data: social_workers, lineStyle: { color: '#FF7100', width: 2 }, itemStyle: { color: '#FF7100' } }
             ],
             media: [{
                 query: { maxWidth: 520 },
                 option: {
-                    legend: { top: 'auto', bottom: 0, left: 'center', right: 'auto', textStyle: { fontSize: 11, color: '#64748b' } },
+                    legend: { top: 'auto', bottom: 0, left: 'center', right: 'auto', textStyle: { fontFamily: chartFont, fontSize: 11, color: '#000000' } },
                     grid: { top: 20, bottom: 58, left: 45, right: 45 },
                     xAxis: { axisLabel: { fontSize: 11 } },
                     yAxis: [
@@ -803,14 +855,16 @@ document.addEventListener('DOMContentLoaded', async function () {
             let itemStyle;
             if (selected) {
                 itemStyle = name === selected
-                    ? { borderColor: '#0077a8', borderWidth: 3, opacity: 1 }
+                    ? { borderColor: '#0047BB', borderWidth: 3, opacity: 1 }
                     : { opacity: 0.35 };
             }
             return { name: displayName, rawKey: name, value, isOther: isOther || undefined, itemStyle };
         });
         chart.setOption({
-            tooltip: { trigger: 'item', formatter: params => `${params.name}: <b>${metric === 'total_usd' ? money(params.value) : count(params.value)}</b> (${params.percent}%)` },
-            legend: { bottom: 0, left: 'center', textStyle: { fontSize: 13, color: '#64748b' } },
+            textStyle: { fontFamily: chartFont },
+            color: BRAND_CHART_COLORS,
+            tooltip: { trigger: 'item', textStyle: { fontFamily: chartFont, color: '#000000' }, formatter: params => `${params.name}: <b>${metric === 'total_usd' ? money(params.value) : count(params.value)}</b> (${params.percent}%)` },
+            legend: { bottom: 0, left: 'center', textStyle: { fontFamily: chartFont, fontSize: 13, color: '#000000' } },
             series: [{
                 type: 'pie',
                 radius: ['42%', '68%'],
@@ -818,7 +872,7 @@ document.addEventListener('DOMContentLoaded', async function () {
                 avoidLabelOverlap: true,
                 cursor: 'pointer',
                 itemStyle: { borderRadius: 4, borderColor: '#fff', borderWidth: 2 },
-                label: { show: true, formatter: params => `${params.name}\n${params.percent}%`, fontSize: 12, color: '#475569' },
+                label: { show: true, formatter: params => `${params.name}\n${params.percent}%`, fontFamily: chartFont, fontSize: 12, color: '#000000' },
                 labelLine: { length: 8, length2: 6 },
                 data
             }],
@@ -970,14 +1024,16 @@ document.addEventListener('DOMContentLoaded', async function () {
     const zoomHome = document.getElementById('map-zoom-home');
     const zoomIn = document.getElementById('map-zoom-in');
     const zoomOut = document.getElementById('map-zoom-out');
-    if (zoomHome) zoomHome.addEventListener('click', () => mapChart.setOption({ series: [{ zoom: 1.2, center: [16, 12] }] }));
+    if (zoomHome) zoomHome.addEventListener('click', () => mapChart.setOption({ series: [{ zoom: DEFAULT_MAP_ZOOM, center: [16, 12] }] }));
     if (zoomIn) zoomIn.addEventListener('click', () => {
         const option = mapChart.getOption();
-        mapChart.setOption({ series: [{ zoom: (option.series[0].zoom || 1.2) * 1.3, center: option.series[0].center || [16, 12] }] });
+        const zoom = Math.min(MAX_MAP_ZOOM, (option.series[0].zoom || DEFAULT_MAP_ZOOM) * 1.3);
+        mapChart.setOption({ series: [{ zoom, center: option.series[0].center || [16, 12] }] });
     });
     if (zoomOut) zoomOut.addEventListener('click', () => {
         const option = mapChart.getOption();
-        mapChart.setOption({ series: [{ zoom: (option.series[0].zoom || 1.2) / 1.3, center: option.series[0].center || [16, 12] }] });
+        const zoom = Math.max(MIN_MAP_ZOOM, (option.series[0].zoom || DEFAULT_MAP_ZOOM) / 1.3);
+        mapChart.setOption({ series: [{ zoom, center: option.series[0].center || [16, 12] }] });
     });
 
     try {
@@ -1036,5 +1092,5 @@ document.addEventListener('DOMContentLoaded', async function () {
         mechanismChart.resize();
     });
 });
-</script>
+    </script>
 {% endblock extra_js %}

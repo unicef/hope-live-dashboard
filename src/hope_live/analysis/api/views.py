@@ -13,7 +13,7 @@ from rest_framework import (  # type: ignore[import-untyped]
     generics,
     serializers,
 )
-from rest_framework.permissions import AllowAny, IsAuthenticated  # type: ignore[import-untyped]
+from rest_framework.permissions import IsAuthenticated  # type: ignore[import-untyped]
 from rest_framework.renderers import JSONRenderer  # type: ignore[import-untyped]
 from rest_framework.request import Request  # type: ignore[import-untyped]
 from rest_framework.response import Response  # type: ignore[import-untyped]
@@ -154,7 +154,7 @@ def _apply_risk_filters(queryset: models.QuerySet, params: Any) -> models.QueryS
 class AggregateListView(generics.ListAPIView):  # type: ignore[misc]
     """API endpoint for listing Aggregate records with filtering."""
 
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
 
     def get_serializer_class(self) -> type[serializers.ModelSerializer]:
         dash_type = self.request.query_params.get("dashboard")

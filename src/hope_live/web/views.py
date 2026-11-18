@@ -144,11 +144,11 @@ def fetch_hope_news(limit: int | None = 3) -> list[dict[str, Any]]:
         return []
 
 
-class ContactView(TemplateView):
+class ContactView(LoginRequiredMixin, TemplateView):
     template_name = "pages/contacts.html"
 
 
-class AboutView(TemplateView):
+class AboutView(LoginRequiredMixin, TemplateView):
     template_name = "pages/about.html"
 
 
@@ -170,7 +170,7 @@ def format_large_number(num: float) -> str:
     return str(int(num))
 
 
-class IndexView(TemplateView):
+class IndexView(LoginRequiredMixin, TemplateView):
     template_name = "pages/landing.html"
 
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
@@ -289,7 +289,7 @@ class IndexView(TemplateView):
         return context
 
 
-class UpdateDetailView(TemplateView):
+class UpdateDetailView(LoginRequiredMixin, TemplateView):
     """Full text of one release update linked from the landing "Read details"."""
 
     template_name = "pages/update_detail.html"

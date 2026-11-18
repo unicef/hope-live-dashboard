@@ -60,29 +60,12 @@ def test_risk_view(user_factory):
 
 
 @pytest.mark.django_db
-def test_landing_page_unauthenticated_no_private_sections(client):
+def test_landing_page_requires_login(client):
     response = client.get("/")
-    assert response.status_code == 200
 
-    content = response.content.decode()
-
-    # Unauthenticated visitor sees the public evidence page without a sign-in CTA.
-    assert "Explore the evidence" in content
-    assert "Cash-based Assistance" in content
-    assert "Sign In" not in content
-    assert 'href="/login/"' not in content
-
-    # Unauthenticated visitor must NOT see private section grid, links, or mentions
-    assert "Explore the Dashboard" not in content
-    assert 'href="/dashboard/"' not in content
-    assert 'href="/demographic/"' not in content
-    assert 'href="/completion/"' not in content
-    assert 'href="/grievance/"' not in content
-    assert 'href="/risk/"' not in content
-
-    # Sidebar must not have Dashboards or Countries fallback link
-    assert "<span>Dashboards</span>" not in content
-    assert "<span>Countries</span>" not in content
+    assert response.status_code == 302
+    assert "/login/" in response["Location"]
+    assert "next=/" in response["Location"]
 
 
 @pytest.mark.django_db

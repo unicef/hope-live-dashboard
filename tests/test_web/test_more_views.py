@@ -181,6 +181,7 @@ def test_index_view_dynamic_context(user_factory):
 
 @pytest.mark.django_db
 def test_landing_page_shows_social_workers_kpi(client, user_factory):
+    client.force_login(user_factory())
     response = client.get("/")
 
     assert response.status_code == 200
@@ -192,7 +193,8 @@ def test_landing_page_shows_social_workers_kpi(client, user_factory):
 
 
 @pytest.mark.django_db
-def test_landing_reconciliation_rate_without_completion_data(client):
+def test_landing_reconciliation_rate_without_completion_data(client, user_factory):
+    client.force_login(user_factory())
     response = client.get("/")
 
     assert response.status_code == 200
@@ -201,7 +203,8 @@ def test_landing_reconciliation_rate_without_completion_data(client):
 
 
 @pytest.mark.django_db
-def test_language_switch_views(client):
+def test_language_switch_views(client, user_factory):
+    client.force_login(user_factory())
     response = client.get("/")
     assert response.status_code == 200
 
@@ -276,7 +279,8 @@ def _fake_update() -> dict:
 
 
 @pytest.mark.django_db
-def test_update_detail_view_renders_the_full_release_note(client, monkeypatch):
+def test_update_detail_view_renders_the_full_release_note(client, user_factory, monkeypatch):
+    client.force_login(user_factory())
     from hope_live.web import views
 
     monkeypatch.setattr(views, "fetch_hope_news", lambda limit=None: [_fake_update()])
@@ -290,7 +294,8 @@ def test_update_detail_view_renders_the_full_release_note(client, monkeypatch):
 
 
 @pytest.mark.django_db
-def test_update_detail_view_returns_404_for_unknown_slug(client, monkeypatch):
+def test_update_detail_view_returns_404_for_unknown_slug(client, user_factory, monkeypatch):
+    client.force_login(user_factory())
     from hope_live.web import views
 
     monkeypatch.setattr(views, "fetch_hope_news", lambda limit=None: [_fake_update()])
