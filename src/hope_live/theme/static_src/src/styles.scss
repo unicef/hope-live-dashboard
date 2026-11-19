@@ -88,27 +88,77 @@
   * If your final CSS file is not being updated after code changes, you may want to broaden or narrow
   * the scope of this path.
   */
+@theme {
+  --font-sans: "Noto Sans", "Noto Sans Arabic", "Noto Sans SC", sans-serif;
+  --color-unicef-blue: #00aeef;
+  --color-unicef-blue-dark: #0047bb;
+  --color-unicef-cyan: #9adbe8;
+  --color-unicef-green: #004c45;
+  --color-unicef-yellow: #ffb500;
+  --color-unicef-orange: #ff7100;
+}
+
+@font-face {
+  font-family: "Noto Sans";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("../fonts/NotoSans-Regular.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Noto Sans";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("../fonts/NotoSans-Bold.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Noto Sans Arabic";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("../fonts/NotoSansArabic-Regular.woff2") format("woff2");
+  unicode-range: U+0600-06FF, U+0750-077F, U+0870-088E, U+0890-0891, U+0898-08E1, U+08E3-08FF, U+FB50-FDFF, U+FE70-FEFF;
+}
+@font-face {
+  font-family: "Noto Sans Arabic";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("../fonts/NotoSansArabic-Bold.woff2") format("woff2");
+  unicode-range: U+0600-06FF, U+0750-077F, U+0870-088E, U+0890-0891, U+0898-08E1, U+08E3-08FF, U+FB50-FDFF, U+FE70-FEFF;
+}
+@font-face {
+  font-family: "Noto Sans SC";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("../fonts/NotoSansSC-Regular.woff2") format("woff2");
+  unicode-range: U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FF00-FFEF;
+}
+@font-face {
+  font-family: "Noto Sans SC";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("../fonts/NotoSansSC-Bold.woff2") format("woff2");
+  unicode-range: U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FF00-FFEF;
+}
+
 @source "../../../**/*.{html,py,js}";
 @source "../../../../**/*.{html,py,js}";
 @custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
 @custom-variant dark2 (&:where(.dark, .dark *));
 
 
-aside {
-  @apply text-gray-900 bg-gray-100;
-  @apply dark:text-white dark:bg-gray-900;
-
-  ul {
-    li {
-
-      a,
-      button {
-        @apply flex items-center p-2 rounded-lg;
-        @apply bg-gray-100 text-gray-700;
-        @apply dark:text-white dark:bg-gray-900;
-        @apply hover:bg-gray-300 dark:hover:bg-gray-700;
-      }
-    }
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
   }
 }
 

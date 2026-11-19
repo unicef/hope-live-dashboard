@@ -85,7 +85,8 @@ def api_client():
 
 
 @pytest.mark.django_db
-def test_aggregate_api_exposes_program_type(api_client):
+def test_aggregate_api_exposes_program_type(api_client, user_factory):
+    api_client.force_authenticate(user=user_factory())
     FinancialAggregateFactory(dimension_type="sector", program_type=ProgramType.SOCIAL)
 
     response = api_client.get(
@@ -99,7 +100,8 @@ def test_aggregate_api_exposes_program_type(api_client):
 
 
 @pytest.mark.django_db
-def test_aggregate_api_filters_by_program_type(api_client):
+def test_aggregate_api_filters_by_program_type(api_client, user_factory):
+    api_client.force_authenticate(user=user_factory())
     FinancialAggregateFactory(dimension_type="sector", dimension_value="health", program_type=ProgramType.STANDARD)
     FinancialAggregateFactory(dimension_type="sector", dimension_value="health", program_type=ProgramType.SOCIAL)
 

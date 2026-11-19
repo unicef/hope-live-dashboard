@@ -15,11 +15,10 @@ def api_client():
 
 
 @pytest.mark.django_db
-def test_aggregate_list_risk_unauthenticated_empty(api_client):
+def test_aggregate_list_risk_unauthenticated_forbidden(api_client):
     RiskAggregateFactory.create_batch(2)
     response = api_client.get("/api/analysis/daily-aggregates/", {"dashboard": "risk"})
-    assert response.status_code == 200
-    assert response.data == []
+    assert response.status_code == 403
 
 
 @pytest.mark.django_db
