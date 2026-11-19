@@ -994,7 +994,7 @@ def test_landing_sector_and_mechanism_chart_clicks(browser, financial_aggregates
     browser.assert_text("$10K", "#kpi-cash")
     browser.assert_text("5", "#kpi-payments")
     browser.assert_text("0", "#kpi-children")
-    browser.assert_text("Sector: Health-", "#country-chips")
+    browser.assert_text("Sector: Health", "#country-chips")
     assert "sector=Health-" in browser.get_current_url()
 
     click_pie_slice("#mechanism-chart canvas", "mechanism")
@@ -1003,7 +1003,7 @@ def test_landing_sector_and_mechanism_chart_clicks(browser, financial_aggregates
     browser.assert_text("2", "#kpi-payments")
     browser.assert_text("$2.5K", "#kpi-average-transfer")
     browser.assert_text("500", "#kpi-children")
-    browser.assert_text("Delivery mechanism: Delivery-", "#country-chips")
+    browser.assert_text("Delivery mechanism: Delivery", "#country-chips")
     assert "mechanism=Delivery-" in browser.get_current_url()
     assert "sector=" not in browser.get_current_url()
 
@@ -1200,3 +1200,47 @@ def test_landing_merges_outreach_and_unknown_into_other(browser):
     assert other[0]["value"] == 25
     assert all("Outreach" not in item["name"] for item in chart_data)
     assert all("UNKNOWN" not in item["name"].upper() for item in chart_data)
+
+
+def test_brand_header_and_mobile_sidebar(browser, financial_aggregates):
+    browser.set_window_size(1600, 1000)
+    browser.login_as_user()
+    browser.open("/")
+    browser.wait_for_element_visible("#landing-hero")
+
+    landing = browser.execute_script(
+        """
+        const header = document.querySelector('header');
+        const styles = getComputedStyle(header);
+        const kpis = getComputedStyle(document.getElementById('landing-kpis'));
+        return {
+            background: styles.backgroundColor,
+            color: styles.color,
+            columns: kpis.gridTemplateColumns.split(' ').length,
+            heroLogo: !!document.querySelector('#landing-hero img[alt="UNICEF"]')
+        };
+        """
+    )
+    assert landing["background"] == "rgb(0, 174, 239)"
+    assert landing["color"] == "rgb(255, 255, 255)"
+    assert landing["columns"] == 5
+    assert landing["heroLogo"] is False
+
+    browser.open("/dashboard/")
+    browser.wait_for_element_visible("#time-filter-container")
+    internal = browser.execute_script(
+        """
+        const header = document.querySelector('header');
+        const styles = getComputedStyle(header);
+        return {background: styles.backgroundColor, color: styles.color};
+        """
+    )
+    assert internal["background"] == "rgb(0, 174, 239)"
+    assert internal["color"] == "rgb(255, 255, 255)"
+
+    browser.set_window_size(390, 844)
+    browser.sleep(0.5)
+    sidebar_width = browser.execute_script("return document.querySelector('aside').getBoundingClientRect().width;")
+    assert sidebar_width <= 60
+    overflow = browser.execute_script("return document.documentElement.scrollWidth - window.innerWidth;")
+    assert overflow <= 0

@@ -8,6 +8,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% translate "HOPE Dashboard" %}</title>
+    <link rel="preload"
+          href="{% static 'fonts/NotoSans-Regular.woff2' %}"
+          as="font"
+          type="font/woff2"
+          crossorigin />
+    <link rel="preload" href="{% static 'fonts/NotoSans-Bold.woff2' %}" as="font" type="font/woff2" crossorigin />
     <script src="{% static 'js/d3.min.js' %}"></script>
     <script src="{% static 'js/topojson-client.min.js' %}"></script>
     <script src="{% static_js 'js/theme.js' %}"></script>
@@ -20,40 +26,6 @@
     {% issues_tags %}
 
     <style>
-        /* 1. Sidebar styling overrides to match image1.png */
-        aside {
-            background-color: #00adef !important;
-            color: #ffffff !important;
-        }
-
-        aside span {
-            color: inherit !important;
-            font-weight: inherit !important;
-        }
-
-        aside nav a,
-        aside ul li a,
-        aside ul li button {
-            background-color: transparent !important;
-            color: rgba(255, 255, 255, 0.8) !important;
-            padding: 10px 16px !important;
-            border-radius: 8px !important;
-            font-weight: 500 !important;
-        }
-
-        aside nav a:hover,
-        aside ul li a:hover,
-        aside ul li button:hover {
-            background-color: rgba(255, 255, 255, 0.1) !important;
-            color: #ffffff !important;
-        }
-
-        aside nav a.bg-white\/20 {
-            background-color: rgba(255, 255, 255, 0.2) !important;
-            color: #ffffff !important;
-            font-weight: 700 !important;
-        }
-
         /* Sidebar collapse display controls */
         #nav-toggle:not(:checked) ~ aside span,
         #nav-toggle:not(:checked) ~ aside .peer-checked\:block {
@@ -70,16 +42,17 @@
     </style>
 </head>
 
-<body class="flex min-h-screen bg-gray-50">
+<body class="flex min-h-screen bg-white text-black antialiased font-sans">
+    {% include "includes/icons_sprite.html" %}
     {% block menu %}
         {% include "menu.html" %}
     {% endblock menu %}
-    <div class="flex flex-col flex-grow">
+    <div class="flex flex-col flex-grow min-w-0">
         {% block header %}
             {% include "header.html" %}
         {% endblock header %}
 
-        <main class="flex-grow p-6">
+        <main class="flex-grow p-4 lg:p-6">
             {% block content %}{% endblock %}
         </main>
 

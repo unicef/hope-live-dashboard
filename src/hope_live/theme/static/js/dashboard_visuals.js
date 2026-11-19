@@ -357,22 +357,22 @@ document.addEventListener('DOMContentLoaded', function () {
             grid: { top: 15, bottom: 25, left: 60, right: 20 },
             xAxis: {
                 type: 'time',
-                axisLabel: { color: '#64748b', formatter: value => d3.timeFormat('%b %y')(new Date(value)) }
+                axisLabel: { color: 'rgba(0,0,0,0.6)', formatter: value => d3.timeFormat('%b %y')(new Date(value)) }
             },
             yAxis: {
                 type: 'value',
                 axisLabel: {
                     formatter: val => formatMetric(val),
-                    color: '#64748b'
+                    color: 'rgba(0,0,0,0.6)'
                 },
-                splitLine: { lineStyle: { type: 'dashed', color: '#f1f5f9' } }
+                splitLine: { lineStyle: { type: 'dashed', color: 'rgba(0,0,0,0.08)' } }
             },
             series: [{
                 name: metricName,
                 type: 'line',
                 smooth: true,
                 symbol: 'none',
-                lineStyle: { color: '#5ab1ef', width: 2.5 },
+                lineStyle: { color: '#00AEEF', width: 2.5 },
                 areaStyle: {
                     color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
                         { offset: 0, color: 'rgba(90, 177, 239, 0.4)' },
@@ -417,7 +417,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     value: d.value,
                     isOther: !!d.isOther,
                     itemStyle: {
-                        color: (hasAnySelection && !d.isOther && !activeSet.has(d.key)) ? '#cbd5e1' : baseColor
+                        color: (hasAnySelection && !d.isOther && !activeSet.has(d.key)) ? '#BDBDBD' : baseColor
                     }
                 };
             });
@@ -431,22 +431,22 @@ document.addEventListener('DOMContentLoaded', function () {
                 grid: { top: 15, bottom: 25, left: leftMargin, right: percentTotal ? 110 : 70 },
                 xAxis: {
                     type: 'value',
-                    axisLabel: { formatter: val => formatMetric(val, metric), color: '#64748b', fontSize: 10 },
-                    splitLine: { lineStyle: { color: '#f1f5f9' } }
+                    axisLabel: { formatter: val => formatMetric(val, metric), color: 'rgba(0,0,0,0.6)', fontSize: 10 },
+                    splitLine: { lineStyle: { color: 'rgba(0,0,0,0.08)' } }
                 },
                 yAxis: {
                     type: 'category',
                     data: rows.map(d => d.key),
                     inverse: true,
                     axisTick: { show: false },
-                    axisLine: { show: true, lineStyle: { color: '#f1f5f9' } },
+                    axisLine: { show: true, lineStyle: { color: 'rgba(0,0,0,0.08)' } },
                     axisLabel: {
                         show: true,
                         width: leftMargin - 20,
                         overflow: wrapLabels ? 'break' : 'truncate',
                         lineHeight: 12,
                         formatter: val => axisLabelFor(val),
-                        color: '#374151',
+                        color: '#000000',
                         fontSize: 10
                     }
                 },
@@ -462,7 +462,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         position: 'right',
                         distance: 6,
                         formatter: params => `${formatMetric(params.value, metric)}${percentSuffix(params.value)}`,
-                        color: '#0f172a',
+                        color: '#000000',
                         fontWeight: 600,
                         fontSize: 11
                     }
@@ -506,7 +506,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 name: d.key,
                 value: d.value[currentMetric],
                 itemStyle: {
-                    color: selectedSectors.has(d.key) ? stableColor : (hasAnySectorSelection ? '#cbd5e1' : stableColor)
+                    color: selectedSectors.has(d.key) ? stableColor : (hasAnySectorSelection ? '#BDBDBD' : stableColor)
                 }
             };
         });
@@ -527,7 +527,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     position: 'outside',
                     formatter: '{b}\n({d}%)',
                     fontSize: 11,
-                    color: '#374151'
+                    color: '#000000'
                 },
                 labelLine: {
                     show: true,
@@ -561,7 +561,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 name: d.name,
                 value: d.value,
                 itemStyle: {
-                    color: selectedDeliveries.has(d.name) ? stableColor : (hasAnyDeliverySelection ? '#cbd5e1' : stableColor)
+                    color: selectedDeliveries.has(d.name) ? stableColor : (hasAnyDeliverySelection ? '#BDBDBD' : stableColor)
                 }
             };
         });
@@ -582,7 +582,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     position: 'outside',
                     formatter: '{b}\n({d}%)',
                     fontSize: 11,
-                    color: '#374151'
+                    color: '#000000'
                 },
                 labelLine: {
                     show: true,
@@ -616,7 +616,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         const regionScale = d3.scaleLinear()
             .domain([0, Math.max(regionRows.length - 1, 1)])
-            .range(['#084081', '#cfe8f3']);
+            .range(['#0047BB', '#9ADBE8']);
 
         renderHorizontalBars(regionChart, regionRows, {
             leftMargin: 90,
@@ -701,9 +701,9 @@ document.addEventListener('DOMContentLoaded', function () {
         const rate = rates[field] !== undefined ? rates[field] : rates.payments;
 
         const stages = [
-            { name: gettext('In pipeline'), value: total[field], color: '#5ab1ef' },
-            { name: gettext('Delivered'), value: delivered[field], color: '#2ec7c9' },
-            { name: gettext('Reconciled'), value: Math.round(delivered[field] * rate * 100) / 100, color: '#97b552' }
+            { name: gettext('In pipeline'), value: total[field], color: '#00AEEF' },
+            { name: gettext('Delivered'), value: delivered[field], color: '#00AEEF' },
+            { name: gettext('Reconciled'), value: Math.round(delivered[field] * rate * 100) / 100, color: '#004C45' }
         ];
 
         pipelineChart.setOption({
@@ -727,7 +727,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     color: '#ffffff',
                     fontWeight: 600,
                     fontSize: 12,
-                    textBorderColor: 'rgba(15, 23, 42, 0.35)',
+                    textBorderColor: 'rgba(0, 0, 0, 0.35)',
                     textBorderWidth: 2
                 },
                 itemStyle: { borderColor: '#ffffff', borderWidth: 2 },
@@ -806,11 +806,11 @@ document.addEventListener('DOMContentLoaded', function () {
     metricTabs.forEach(btn => {
         btn.addEventListener('click', function() {
             metricTabs.forEach(b => {
-                b.classList.remove('bg-white', 'shadow', 'text-blue-800', 'active-metric');
-                b.classList.add('text-gray-600');
+                b.classList.remove('bg-white', 'shadow-sm', 'text-unicef-blue-dark', 'active-metric');
+                b.classList.add('text-black/60');
             });
-            this.classList.add('bg-white', 'shadow', 'text-blue-800', 'active-metric');
-            this.classList.remove('text-gray-600');
+            this.classList.add('bg-white', 'shadow-sm', 'text-unicef-blue-dark', 'active-metric');
+            this.classList.remove('text-black/60');
             currentMetric = this.dataset.metric;
             updateAll();
         });
@@ -822,11 +822,11 @@ document.addEventListener('DOMContentLoaded', function () {
     cohortTabs.forEach(btn => {
         btn.addEventListener('click', function () {
             cohortTabs.forEach(b => {
-                b.classList.remove('bg-white', 'shadow', 'text-blue-800');
-                b.classList.add('text-gray-600');
+                b.classList.remove('bg-white', 'shadow-sm', 'text-unicef-blue-dark');
+                b.classList.add('text-black/60');
             });
-            this.classList.add('bg-white', 'shadow', 'text-blue-800');
-            this.classList.remove('text-gray-600');
+            this.classList.add('bg-white', 'shadow-sm', 'text-unicef-blue-dark');
+            this.classList.remove('text-black/60');
             activeCohort = this.dataset.cohort || 'ALL';
             applyCohortFilter();
             updateAll();

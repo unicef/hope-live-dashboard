@@ -27,7 +27,7 @@
     </head>
     <body class="min-h-screen bg-white text-black antialiased font-sans">
         {% include "includes/icons_sprite.html" %}
-        <header class="bg-unicef-blue text-black">
+        <header class="bg-unicef-blue text-white">
             <div class="max-w-[1600px] mx-auto px-4 lg:px-6">
                 <div class="flex items-center justify-between gap-3 py-2 sm:py-3">
                     <a href="{% url 'web:index' %}"
@@ -68,13 +68,13 @@
                                     <option value="{{ lang.code }}"
                                             {% if lang.code == LANGUAGE_CODE %}selected{% endif %}
                                             class="text-black">
-                                        {{ lang.name_local }}
+                                        {{ lang.name_local|capfirst }}
                                     </option>
                                 {% endfor %}
                             </select>
                         </form>
                         <details id="public-mobile-menu" class="relative lg:hidden">
-                            <summary class="list-none [&::-webkit-details-marker]:hidden cursor-pointer p-2 -mr-1 rounded hover:bg-black/10 focus:outline-none focus:ring-2 focus:ring-white/60"
+                            <summary class="list-none [&::-webkit-details-marker]:hidden cursor-pointer p-2 -mr-1 rounded hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-white/60"
                                      aria-label="{% translate 'Menu' %}">
                                 {% icon "menu" "h-6 w-6" %}
                             </summary>
@@ -112,20 +112,6 @@
                 <div class="max-w-[1600px] mx-auto px-4 lg:px-6 flex flex-col md:flex-row justify-between items-center gap-3 text-sm text-black/70">
                     <p>UNICEF © {% now "Y" %}</p>
                     <div class="flex flex-wrap items-center gap-5">
-                        <a href="https://www.unicef.org/hope-hct/resources"
-                           target="_blank"
-                           rel="noopener"
-                           class="inline-flex items-center gap-1.5 hover:text-unicef-blue-dark">
-                            {% icon "book-open" "h-4 w-4" %}
-                            {% translate "Methodology" %}
-                        </a>
-                        <a href="https://unicef.sharepoint.com/:w:/t/EMOPS-NYHQ-HCT/ETNzq6Frl5JPq6U0YLp7KXEBGRRp4uP23iizPHGmZfa61A?e=NlZoym"
-                           target="_blank"
-                           rel="noopener"
-                           class="inline-flex items-center gap-1.5 hover:text-unicef-blue-dark">
-                            {% icon "shield-check" "h-4 w-4" %}
-                            {% translate "Data protection" %}
-                        </a>
                         <span>{% blocktranslate with version=app.version %}Version {{ version }}{% endblocktranslate %}</span>
                     </div>
                 </div>

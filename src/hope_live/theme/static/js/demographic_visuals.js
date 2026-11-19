@@ -178,15 +178,15 @@ document.addEventListener('DOMContentLoaded', function () {
             },
             xAxis: {
                 type: 'time',
-                axisLabel: { color: '#64748b', formatter: value => d3.timeFormat('%b %y')(new Date(value)) }
+                axisLabel: { color: 'rgba(0,0,0,0.6)', formatter: value => d3.timeFormat('%b %y')(new Date(value)) }
             },
             yAxis: {
                 type: 'value',
                 axisLabel: {
                     formatter: val => d3.format(".2s")(val).replace('G', 'B'),
-                    color: '#64748b'
+                    color: 'rgba(0,0,0,0.6)'
                 },
-                splitLine: { lineStyle: { type: 'dashed', color: '#f1f5f9' } }
+                splitLine: { lineStyle: { type: 'dashed', color: 'rgba(0,0,0,0.08)' } }
             },
             series: [{
                 name: activeLabel,
@@ -194,13 +194,13 @@ document.addEventListener('DOMContentLoaded', function () {
                 smooth: true,
                 symbol: 'none',
                 lineStyle: {
-                    color: '#2ec7c9',
+                    color: '#00AEEF',
                     width: 2.5
                 },
                 areaStyle: {
                     color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-                        { offset: 0, color: 'rgba(46, 199, 201, 0.4)' },
-                        { offset: 1, color: 'rgba(46, 199, 201, 0.02)' }
+                        { offset: 0, color: 'rgba(0, 174, 239, 0.4)' },
+                        { offset: 1, color: 'rgba(0, 174, 239, 0.02)' }
                     ])
                 },
                 data: timelineData
@@ -220,7 +220,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 name: d.key,
                 value: d.value[activeField],
                 itemStyle: {
-                    color: isSelected ? stableColor : (hasAnySectorSelection ? '#cbd5e1' : stableColor)
+                    color: isSelected ? stableColor : (hasAnySectorSelection ? '#BDBDBD' : stableColor)
                 }
             };
         }).filter(d => d.value > 0);
@@ -236,7 +236,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 center: ['50%', '50%'],
                 avoidLabelOverlap: true,
                 itemStyle: { borderRadius: 6, borderColor: '#fff', borderWidth: 2 },
-                label: { show: true, position: 'outside', formatter: params => `${params.name}\n${d3.format(',')(params.value)} (${params.percent}%)`, fontSize: 11, color: '#374151' },
+                label: { show: true, position: 'outside', formatter: params => `${params.name}\n${d3.format(',')(params.value)} (${params.percent}%)`, fontSize: 11, color: '#000000' },
                 labelLine: { show: true, length: 15, length2: 10, smooth: false },
                 emphasis: { label: { show: true, fontSize: 13, fontWeight: 'bold' } },
                 data: sectorDonutData
@@ -270,29 +270,29 @@ document.addEventListener('DOMContentLoaded', function () {
             grid: { top: 15, bottom: 20, left: 170, right: 110 },
             xAxis: {
                 type: 'value',
-                axisLabel: { formatter: val => d3.format('.2s')(val).replace('G', 'B'), color: '#64748b', fontSize: 10 },
-                splitLine: { lineStyle: { color: '#f1f5f9' } }
+                axisLabel: { formatter: val => d3.format('.2s')(val).replace('G', 'B'), color: 'rgba(0,0,0,0.6)', fontSize: 10 },
+                splitLine: { lineStyle: { color: 'rgba(0,0,0,0.08)' } }
             },
             yAxis: {
                 type: 'category',
                 data: countryBars.map(d => d.name),
                 inverse: true,
                 axisTick: { show: false },
-                axisLine: { show: true, lineStyle: { color: '#f1f5f9' } },
-                axisLabel: { width: 155, overflow: 'truncate', color: '#374151', fontSize: 10 }
+                axisLine: { show: true, lineStyle: { color: 'rgba(0,0,0,0.08)' } },
+                axisLabel: { width: 155, overflow: 'truncate', color: '#000000', fontSize: 10 }
             },
             series: [{
                 type: 'bar',
                 data: countryBars.map(d => {
                     const isSelected = selectedCountries.has(d.key);
-                    const baseColor = d.isOther ? '#cbd5e1' : getStableColor(d.key);
+                    const baseColor = d.isOther ? '#BDBDBD' : getStableColor(d.key);
                     return {
                         name: d.name,
                         value: d.value,
                         slug: d.key,
                         isOther: !!d.isOther,
                         itemStyle: {
-                            color: isSelected ? getStableColor(d.key) : (hasAnyCountrySelection && !d.isOther ? '#cbd5e1' : baseColor)
+                            color: isSelected ? getStableColor(d.key) : (hasAnyCountrySelection && !d.isOther ? '#BDBDBD' : baseColor)
                         }
                     };
                 }),
@@ -308,7 +308,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         const value = +params.value || 0;
                         return `${d3.format(',')(value)} (${countryShare(value).toFixed(1)}%)`;
                     },
-                    color: '#0f172a',
+                    color: '#000000',
                     fontWeight: 600,
                     fontSize: 10
                 }
@@ -335,16 +335,16 @@ document.addEventListener('DOMContentLoaded', function () {
             grid: { top: 15, bottom: 25, left: 180, right: 110 },
             xAxis: {
                 type: 'value',
-                axisLabel: { formatter: val => d3.format('.2s')(val).replace('G', 'B'), color: '#64748b', fontSize: 10 },
-                splitLine: { lineStyle: { color: '#f1f5f9' } }
+                axisLabel: { formatter: val => d3.format('.2s')(val).replace('G', 'B'), color: 'rgba(0,0,0,0.6)', fontSize: 10 },
+                splitLine: { lineStyle: { color: 'rgba(0,0,0,0.08)' } }
             },
             yAxis: {
                 type: 'category',
                 data: regionData.map(d => d.key),
                 inverse: true,
                 axisTick: { show: false },
-                axisLine: { show: true, lineStyle: { color: '#f1f5f9' } },
-                axisLabel: { width: 160, overflow: 'truncate', color: '#374151', fontSize: 10 }
+                axisLine: { show: true, lineStyle: { color: 'rgba(0,0,0,0.08)' } },
+                axisLabel: { width: 160, overflow: 'truncate', color: '#000000', fontSize: 10 }
             },
             series: [{
                 type: 'bar',
@@ -366,7 +366,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         const value = +params.value || 0;
                         return `${d3.format(',')(value)} (${regionShare(value).toFixed(1)}%)`;
                     },
-                    color: '#0f172a',
+                    color: '#000000',
                     fontWeight: 600,
                     fontSize: 10
                 }
@@ -421,13 +421,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function setActiveMetricTab(metric) {
         metricTabs.forEach(b => {
-            b.classList.remove('bg-white', 'shadow', 'text-blue-800', 'active-metric');
-            b.classList.add('text-gray-600');
+            b.classList.remove('bg-white', 'shadow-sm', 'text-unicef-blue-dark', 'active-metric');
+            b.classList.add('text-black/60');
         });
         const tab = document.getElementById(`btn-${metric}`);
         if (tab) {
-            tab.classList.add('bg-white', 'shadow', 'text-blue-800', 'active-metric');
-            tab.classList.remove('text-gray-600');
+            tab.classList.add('bg-white', 'shadow-sm', 'text-unicef-blue-dark', 'active-metric');
+            tab.classList.remove('text-black/60');
         }
     }
 
@@ -487,11 +487,11 @@ document.addEventListener('DOMContentLoaded', function () {
     cohortTabs.forEach(btn => {
         btn.addEventListener('click', function () {
             cohortTabs.forEach(b => {
-                b.classList.remove('bg-white', 'shadow', 'text-blue-800');
-                b.classList.add('text-gray-600');
+                b.classList.remove('bg-white', 'shadow-sm', 'text-unicef-blue-dark');
+                b.classList.add('text-black/60');
             });
-            this.classList.add('bg-white', 'shadow', 'text-blue-800');
-            this.classList.remove('text-gray-600');
+            this.classList.add('bg-white', 'shadow-sm', 'text-unicef-blue-dark');
+            this.classList.remove('text-black/60');
             activeCohort = this.dataset.cohort || 'ALL';
             applyCohortFilter();
             applyCohortUI();

@@ -265,7 +265,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         const timelineOption = {
             // Explicit palette so the legend swatches match the line colours.
-            color: ['#97b552', '#d87a80'],
+            color: ['#004C45', '#FF7100'],
             tooltip: {
                 trigger: 'axis',
                 formatter: function (params) {
@@ -287,15 +287,15 @@ document.addEventListener('DOMContentLoaded', function () {
             grid: { top: 30, bottom: 25, left: 60, right: 20 },
             xAxis: {
                 type: 'time',
-                axisLabel: { color: '#64748b', formatter: value => d3.timeFormat('%b %y')(new Date(value)) }
+                axisLabel: { color: 'rgba(0,0,0,0.6)', formatter: value => d3.timeFormat('%b %y')(new Date(value)) }
             },
             yAxis: {
                 type: 'value',
                 axisLabel: {
                     formatter: val => d3.format(".2s")(val).replace('G', 'B'),
-                    color: '#64748b'
+                    color: 'rgba(0,0,0,0.6)'
                 },
-                splitLine: { lineStyle: { type: 'dashed', color: '#f1f5f9' } }
+                splitLine: { lineStyle: { type: 'dashed', color: 'rgba(0,0,0,0.08)' } }
             },
             series: [
                 {
@@ -304,12 +304,12 @@ document.addEventListener('DOMContentLoaded', function () {
                     stack: 'total',
                     smooth: true,
                     symbol: 'none',
-                    lineStyle: { color: '#97b552', width: 2 },
-                    itemStyle: { color: '#97b552' },
+                    lineStyle: { color: '#004C45', width: 2 },
+                    itemStyle: { color: '#004C45' },
                     areaStyle: {
                         color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-                            { offset: 0, color: 'rgba(151, 181, 82, 0.4)' },
-                            { offset: 1, color: 'rgba(151, 181, 82, 0.02)' }
+                            { offset: 0, color: 'rgba(0, 76, 69, 0.4)' },
+                            { offset: 1, color: 'rgba(0, 76, 69, 0.02)' }
                         ])
                     },
                     data: timelineDataResolved
@@ -320,12 +320,12 @@ document.addEventListener('DOMContentLoaded', function () {
                     stack: 'total',
                     smooth: true,
                     symbol: 'none',
-                    lineStyle: { color: '#d87a80', width: 2 },
-                    itemStyle: { color: '#d87a80' },
+                    lineStyle: { color: '#FF7100', width: 2 },
+                    itemStyle: { color: '#FF7100' },
                     areaStyle: {
                         color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-                            { offset: 0, color: 'rgba(216, 122, 128, 0.4)' },
-                            { offset: 1, color: 'rgba(216, 122, 128, 0.02)' }
+                            { offset: 0, color: 'rgba(255, 113, 0, 0.4)' },
+                            { offset: 1, color: 'rgba(255, 113, 0, 0.02)' }
                         ])
                     },
                     data: timelineDataOpen
@@ -345,7 +345,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 center: ['50%', '50%'],
                 avoidLabelOverlap: true,
                 itemStyle: { borderRadius: 6, borderColor: '#fff', borderWidth: 2 },
-                label: { show: true, position: 'outside', formatter: '{b}: {c} ({d}%)', fontSize: 11, color: '#374151' },
+                label: { show: true, position: 'outside', formatter: '{b}: {c} ({d}%)', fontSize: 11, color: '#000000' },
                 labelLine: { show: true, length: 15, length2: 10, smooth: false },
                 emphasis: { label: { show: true, fontSize: 13, fontWeight: 'bold' } },
                 data: statusData.map(d => ({ name: d.key, value: d.value }))
@@ -388,20 +388,20 @@ document.addEventListener('DOMContentLoaded', function () {
                 grid: { top: 15, bottom: 25, left: 220, right: 80 },
                 xAxis: {
                     type: 'value',
-                    axisLabel: { formatter: val => `${val}d`, color: '#64748b', fontSize: 10 },
-                    splitLine: { lineStyle: { color: '#f1f5f9' } }
+                    axisLabel: { formatter: val => `${val}d`, color: 'rgba(0,0,0,0.6)', fontSize: 10 },
+                    splitLine: { lineStyle: { color: 'rgba(0,0,0,0.08)' } }
                 },
                 yAxis: {
                     type: 'category',
                     data: resolutionData.map(d => d.key),
                     inverse: true,
                     axisTick: { show: false },
-                    axisLine: { show: true, lineStyle: { color: '#f1f5f9' } },
+                    axisLine: { show: true, lineStyle: { color: 'rgba(0,0,0,0.08)' } },
                     axisLabel: {
                         show: true,
                         width: 200,
                         overflow: 'truncate',
-                        color: '#374151',
+                        color: '#000000',
                         fontSize: 10
                     }
                 },
@@ -420,7 +420,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         position: 'right',
                         distance: 6,
                         formatter: params => `${Number(params.value).toFixed(1)} ${gettext('days')}`,
-                        color: '#0f172a',
+                        color: '#000000',
                         fontWeight: 600,
                         fontSize: 11
                     }
@@ -438,7 +438,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 center: ['50%', '50%'],
                 avoidLabelOverlap: true,
                 itemStyle: { borderRadius: 6, borderColor: '#fff', borderWidth: 2 },
-                label: { show: true, position: 'outside', formatter: '{b}: {c} ({d}%)', fontSize: 11, color: '#374151' },
+                label: { show: true, position: 'outside', formatter: '{b}: {c} ({d}%)', fontSize: 11, color: '#000000' },
                 labelLine: { show: true, length: 15, length2: 10, smooth: false },
                 emphasis: { label: { show: true, fontSize: 13, fontWeight: 'bold' } },
                 data: priorityData.map(d => ({ name: d.key, value: d.value }))
@@ -462,7 +462,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 name: d.key,
                 value: d.value,
                 itemStyle: {
-                    color: selectedCategories.has(d.key) ? stableColor : (hasAnyCategorySelection ? '#cbd5e1' : stableColor)
+                    color: selectedCategories.has(d.key) ? stableColor : (hasAnyCategorySelection ? '#BDBDBD' : stableColor)
                 }
             };
         });
@@ -479,20 +479,20 @@ document.addEventListener('DOMContentLoaded', function () {
             grid: { top: 15, bottom: 25, left: 220, right: 105 },
             xAxis: {
                 type: 'value',
-                axisLabel: { formatter: val => d3.format(".2s")(val).replace('G', 'B'), color: '#64748b', fontSize: 10 },
-                splitLine: { lineStyle: { color: '#f1f5f9' } }
+                axisLabel: { formatter: val => d3.format(".2s")(val).replace('G', 'B'), color: 'rgba(0,0,0,0.6)', fontSize: 10 },
+                splitLine: { lineStyle: { color: 'rgba(0,0,0,0.08)' } }
             },
             yAxis: {
                 type: 'category',
                 data: categoryData.map(d => d.key),
                 inverse: true,
                 axisTick: { show: false },
-                axisLine: { show: true, lineStyle: { color: '#f1f5f9' } },
+                axisLine: { show: true, lineStyle: { color: 'rgba(0,0,0,0.08)' } },
                 axisLabel: {
                     show: true,
                     width: 200,
                     overflow: 'truncate',
-                    color: '#374151',
+                    color: '#000000',
                     fontSize: 10
                 }
             },
@@ -511,7 +511,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         const value = +params.value || 0;
                         return `${formatCompactCount(value)} (${categoryShare(value).toFixed(1)}%)`;
                     },
-                    color: '#0f172a',
+                    color: '#000000',
                     fontWeight: 600,
                     fontSize: 10
                 }
@@ -535,7 +535,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 name: d.key,
                 value: d.value,
                 itemStyle: {
-                    color: selectedIssueTypes.has(d.key) ? stableColor : (hasAnyIssueTypeSelection ? '#cbd5e1' : stableColor)
+                    color: selectedIssueTypes.has(d.key) ? stableColor : (hasAnyIssueTypeSelection ? '#BDBDBD' : stableColor)
                 }
             };
         });
@@ -552,20 +552,20 @@ document.addEventListener('DOMContentLoaded', function () {
             grid: { top: 15, bottom: 25, left: 220, right: 105 },
             xAxis: {
                 type: 'value',
-                axisLabel: { formatter: val => d3.format(".2s")(val).replace('G', 'B'), color: '#64748b', fontSize: 10 },
-                splitLine: { lineStyle: { color: '#f1f5f9' } }
+                axisLabel: { formatter: val => d3.format(".2s")(val).replace('G', 'B'), color: 'rgba(0,0,0,0.6)', fontSize: 10 },
+                splitLine: { lineStyle: { color: 'rgba(0,0,0,0.08)' } }
             },
             yAxis: {
                 type: 'category',
                 data: issueTypeData.map(d => d.key),
                 inverse: true,
                 axisTick: { show: false },
-                axisLine: { show: true, lineStyle: { color: '#f1f5f9' } },
+                axisLine: { show: true, lineStyle: { color: 'rgba(0,0,0,0.08)' } },
                 axisLabel: {
                     show: true,
                     width: 200,
                     overflow: 'truncate',
-                    color: '#374151',
+                    color: '#000000',
                     fontSize: 10
                 }
             },
@@ -584,7 +584,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         const value = +params.value || 0;
                         return `${formatCompactCount(value)} (${issueTypeShare(value).toFixed(1)}%)`;
                     },
-                    color: '#0f172a',
+                    color: '#000000',
                     fontWeight: 600,
                     fontSize: 10
                 }
@@ -615,7 +615,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 value: d.resolved,
                 total: d.total,
                 share: countryTicketTotal > 0 ? (d.total / countryTicketTotal) * 100 : 0,
-                itemStyle: { color: '#97b552', opacity: opacity }
+                itemStyle: { color: '#004C45', opacity: opacity }
             };
         });
 
@@ -626,7 +626,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 value: d.open,
                 total: d.total,
                 share: countryTicketTotal > 0 ? (d.total / countryTicketTotal) * 100 : 0,
-                itemStyle: { color: '#d87a80', opacity: opacity }
+                itemStyle: { color: '#FF7100', opacity: opacity }
             };
         });
 
@@ -637,7 +637,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         countryChart.setOption({
-            color: ['#97b552', '#d87a80'],
+            color: ['#004C45', '#FF7100'],
             tooltip: {
                 trigger: 'axis',
                 axisPointer: { type: 'shadow' },
@@ -660,16 +660,16 @@ document.addEventListener('DOMContentLoaded', function () {
             grid: { top: 45, bottom: 20, left: 190, right: 130 },
             xAxis: {
                 type: 'value',
-                axisLabel: { formatter: val => d3.format(".2s")(val).replace('G', 'B'), color: '#64748b', fontSize: 10 },
-                splitLine: { lineStyle: { color: '#f1f5f9' } }
+                axisLabel: { formatter: val => d3.format(".2s")(val).replace('G', 'B'), color: 'rgba(0,0,0,0.6)', fontSize: 10 },
+                splitLine: { lineStyle: { color: 'rgba(0,0,0,0.08)' } }
             },
             yAxis: {
                 type: 'category',
                 data: countryData.map(d => formatCountry(d.key)),
                 inverse: true,
                 axisTick: { show: false },
-                axisLine: { show: true, lineStyle: { color: '#f1f5f9' } },
-                axisLabel: { width: 180, overflow: 'break', color: '#374151', fontSize: 10 }
+                axisLine: { show: true, lineStyle: { color: 'rgba(0,0,0,0.08)' } },
+                axisLabel: { width: 180, overflow: 'break', color: '#000000', fontSize: 10 }
             },
             series: [
                 {
@@ -678,7 +678,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     stack: 'total',
                     barMaxWidth: 18,
                     data: countrySeriesDataResolved,
-                    itemStyle: { color: '#97b552', borderRadius: [4, 0, 0, 4] }
+                    itemStyle: { color: '#004C45', borderRadius: [4, 0, 0, 4] }
                 },
                 {
                     name: gettext('Open & Active'),
@@ -686,7 +686,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     stack: 'total',
                     barMaxWidth: 18,
                     data: countrySeriesDataOpen,
-                    itemStyle: { color: '#d87a80', borderRadius: [0, 4, 4, 0] },
+                    itemStyle: { color: '#FF7100', borderRadius: [0, 4, 4, 0] },
                     label: {
                         show: true,
                         position: 'right',
@@ -697,7 +697,7 @@ document.addEventListener('DOMContentLoaded', function () {
                             const share = data.share != null ? data.share : 0;
                             return `${formatCompactCount(total)} (${share.toFixed(1)}%)`;
                         },
-                        color: '#0f172a',
+                        color: '#000000',
                         fontWeight: 600,
                         fontSize: 10
                     }
@@ -877,11 +877,11 @@ document.addEventListener('DOMContentLoaded', function () {
     sourceTabs.forEach(btn => {
         btn.addEventListener('click', function () {
             sourceTabs.forEach(b => {
-                b.classList.remove('bg-white', 'shadow', 'text-blue-800');
-                b.classList.add('text-gray-600');
+                b.classList.remove('bg-white', 'shadow-sm', 'text-unicef-blue-dark');
+                b.classList.add('text-black/60');
             });
-            this.classList.add('bg-white', 'shadow', 'text-blue-800');
-            this.classList.remove('text-gray-600');
+            this.classList.add('bg-white', 'shadow-sm', 'text-unicef-blue-dark');
+            this.classList.remove('text-black/60');
             activeSource = this.dataset.source || 'GRIEVANCE';
             applySourceFilter();
             updateAll();

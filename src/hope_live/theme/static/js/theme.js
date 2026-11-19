@@ -15,6 +15,16 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
+    // Keep the sidebar usable on small screens: collapsed by default below the
+    // desktop breakpoint and expanded by default on larger screens.
+    const navToggle = document.getElementById("nav-toggle");
+    if (navToggle) {
+        const navQuery = window.matchMedia("(min-width: 1024px)");
+        navQuery.addEventListener("change", (event) => {
+            navToggle.checked = event.matches;
+        });
+    }
+
     // Language dropdown (replaces Flowbite's data-dropdown-toggle behavior)
     const langBtn = document.getElementById("language-dropdown-menu-button");
     const langMenu = document.getElementById("language-dropdown-menu");

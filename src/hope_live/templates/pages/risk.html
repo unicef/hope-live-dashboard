@@ -1,16 +1,16 @@
 {% extends "layout.html" %}
-{% load i18n js static %}
+{% load i18n icons js static %}
 
 {% block content %}
-<div class="container mx-auto px-4 lg:px-6 py-4 lg:py-5">
+<div class="max-w-[1600px] mx-auto px-4 lg:px-6 py-4 lg:py-5">
     <div class="mb-3 flex flex-wrap justify-between items-center gap-2">
         <div>
-            <h1 class="text-xl lg:text-2xl font-black text-gray-900 leading-tight">{% translate "Operational risk dashboard" %}</h1>
-            <p class="text-xs text-gray-500">{% translate "Operational risk indicators, systemic bottlenecks & exception management" %}</p>
+            <h1 class="text-2xl lg:text-3xl font-bold text-black tracking-tight leading-tight">{% translate "Operational risk dashboard" %}</h1>
+            <p class="text-sm text-black/60">{% translate "Operational risk indicators, systemic bottlenecks & exception management" %}</p>
         </div>
         <div class="flex items-center gap-2">
-            <span class="bg-unicef-blue text-white text-[11px] font-bold px-2 py-0.5 rounded">{% translate "Live data" %}</span>
-            <span class="text-[10px] text-gray-400 font-semibold">{% translate "Data as of" %} <span id="data-as-of">—</span></span>
+            <span class="bg-unicef-blue text-white text-[11px] font-bold px-2.5 py-1 rounded-md">{% translate "Live data" %}</span>
+            <span class="text-xs text-black/50 font-semibold">{% translate "Data as of" %} <span id="data-as-of">—</span></span>
         </div>
     </div>
 
@@ -20,59 +20,59 @@
     <!-- Category Tabs & Programme Filter -->
     <div class="mb-3.5 flex flex-wrap items-center justify-between gap-2.5">
         <div id="risk-category-tabs" class="flex flex-wrap items-center gap-1.5">
-            <button type="button" class="risk-category-tab px-3 py-1 text-xs font-bold rounded-md bg-blue-50 text-blue-800 border border-blue-200 active-category cursor-pointer" data-category="all">
+            <button type="button" class="risk-category-tab px-3 py-1 text-xs font-bold rounded-md bg-unicef-blue text-white border border-unicef-blue active-category cursor-pointer" data-category="all">
                 {% translate "All categories" %}
             </button>
-            <button type="button" class="risk-category-tab px-3 py-1 text-xs font-bold rounded-md bg-gray-100 text-gray-700 hover:bg-gray-200 cursor-pointer" data-category="fiduciary">
+            <button type="button" class="risk-category-tab px-3 py-1 text-xs font-bold rounded-md bg-black/5 text-black/70 hover:bg-black/10 cursor-pointer" data-category="fiduciary">
                 {% translate "Fiduciary" %}
             </button>
-            <button type="button" class="risk-category-tab px-3 py-1 text-xs font-bold rounded-md bg-gray-100 text-gray-700 hover:bg-gray-200 cursor-pointer" data-category="safeguarding">
+            <button type="button" class="risk-category-tab px-3 py-1 text-xs font-bold rounded-md bg-black/5 text-black/70 hover:bg-black/10 cursor-pointer" data-category="safeguarding">
                 {% translate "Safeguarding" %}
             </button>
-            <button type="button" class="risk-category-tab px-3 py-1 text-xs font-bold rounded-md bg-gray-100 text-gray-700 hover:bg-gray-200 cursor-pointer" data-category="programmatic">
+            <button type="button" class="risk-category-tab px-3 py-1 text-xs font-bold rounded-md bg-black/5 text-black/70 hover:bg-black/10 cursor-pointer" data-category="programmatic">
                 {% translate "Programmatic" %}
             </button>
-            <button type="button" class="risk-category-tab px-3 py-1 text-xs font-bold rounded-md bg-gray-100 text-gray-700 hover:bg-gray-200 cursor-pointer" data-category="operational">
+            <button type="button" class="risk-category-tab px-3 py-1 text-xs font-bold rounded-md bg-black/5 text-black/70 hover:bg-black/10 cursor-pointer" data-category="operational">
                 {% translate "Operational" %}
             </button>
-            <button type="button" class="risk-category-tab px-3 py-1 text-xs font-bold rounded-md bg-gray-100 text-gray-700 hover:bg-gray-200 cursor-pointer" data-category="compliance">
+            <button type="button" class="risk-category-tab px-3 py-1 text-xs font-bold rounded-md bg-black/5 text-black/70 hover:bg-black/10 cursor-pointer" data-category="compliance">
                 {% translate "Compliance" %}
             </button>
         </div>
         <div class="flex flex-wrap items-center gap-3">
             <!-- Country filter -->
             <div class="flex items-center gap-1.5">
-                <label id="country-filter-label" class="text-xs font-bold text-gray-500">{% translate "Country:" %}</label>
+                <label id="country-filter-label" class="text-xs font-bold text-black/60">{% translate "Country:" %}</label>
                 <div class="relative">
                     <input id="country-filter-input" type="text" role="combobox" aria-expanded="false"
                         aria-controls="country-filter-list" aria-autocomplete="list" aria-labelledby="country-filter-label"
                         autocomplete="off" spellcheck="false" placeholder="{% translate 'All countries' %}"
-                        class="w-44 text-xs font-semibold text-gray-900 bg-white border border-gray-300 rounded-md pl-2.5 pr-7 py-1 focus:outline-hidden focus:ring-2 focus:ring-blue-500 shadow-2xs">
+                        class="w-44 text-xs font-semibold text-black bg-white border border-black/20 rounded-md pl-2.5 pr-7 py-1 focus:outline-hidden focus:ring-2 focus:ring-unicef-blue/30 shadow-sm">
                     <button id="country-filter-clear" type="button" style="display:none"
                         aria-label="{% translate 'Clear country filter' %}" title="{% translate 'Clear country filter' %}"
-                        class="absolute inset-y-0 right-1 my-auto h-5 w-5 items-center justify-center rounded-full text-gray-400 hover:bg-gray-100 hover:text-gray-700">
+                        class="absolute inset-y-0 right-1 my-auto h-5 w-5 items-center justify-center rounded-full text-black/50 hover:bg-black/5 hover:text-black/80">
                         <svg class="w-3.5 h-3.5 pointer-events-none" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
                     </button>
                     <ul id="country-filter-list" role="listbox" aria-labelledby="country-filter-label"
-                        class="hidden absolute right-0 z-50 mt-1 w-64 max-h-72 overflow-auto rounded-md border border-gray-200 bg-white py-1 text-xs shadow-lg"></ul>
+                        class="hidden absolute right-0 z-50 mt-1 w-64 max-h-72 overflow-auto rounded-md border border-black/10 bg-white py-1 text-xs shadow-lg"></ul>
                 </div>
             </div>
 
             <!-- Programme filter -->
             <div class="flex items-center gap-1.5">
-                <label id="program-filter-label" class="text-xs font-bold text-gray-500">{% translate "Programme:" %}</label>
+                <label id="program-filter-label" class="text-xs font-bold text-black/60">{% translate "Programme:" %}</label>
                 <div class="relative">
                     <input id="program-filter-input" type="text" role="combobox" aria-expanded="false"
                         aria-controls="program-filter-list" aria-autocomplete="list" aria-labelledby="program-filter-label"
                         autocomplete="off" spellcheck="false" placeholder="{% translate 'All programmes' %}"
-                        class="w-64 text-xs font-semibold text-gray-900 bg-white border border-gray-300 rounded-md pl-2.5 pr-7 py-1 focus:outline-hidden focus:ring-2 focus:ring-blue-500 shadow-2xs">
+                        class="w-64 text-xs font-semibold text-black bg-white border border-black/20 rounded-md pl-2.5 pr-7 py-1 focus:outline-hidden focus:ring-2 focus:ring-unicef-blue/30 shadow-sm">
                     <button id="program-filter-clear" type="button" style="display:none"
                         aria-label="{% translate 'Clear programme filter' %}" title="{% translate 'Clear programme filter' %}"
-                        class="absolute inset-y-0 right-1 my-auto h-5 w-5 items-center justify-center rounded-full text-gray-400 hover:bg-gray-100 hover:text-gray-700">
+                        class="absolute inset-y-0 right-1 my-auto h-5 w-5 items-center justify-center rounded-full text-black/50 hover:bg-black/5 hover:text-black/80">
                         <svg class="w-3.5 h-3.5 pointer-events-none" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
                     </button>
                     <ul id="program-filter-list" role="listbox" aria-labelledby="program-filter-label"
-                        class="hidden absolute right-0 z-50 mt-1 w-80 max-h-72 overflow-auto rounded-md border border-gray-200 bg-white py-1 text-xs shadow-lg"></ul>
+                        class="hidden absolute right-0 z-50 mt-1 w-80 max-h-72 overflow-auto rounded-md border border-black/10 bg-white py-1 text-xs shadow-lg"></ul>
                 </div>
             </div>
         </div>
@@ -83,48 +83,48 @@
         <!-- LEFT COLUMN (4 cols on lg: ~1/3) -->
         <div class="lg:col-span-4 space-y-3.5">
             <!-- Total risk items KPI Card -->
-            <div class="bg-white rounded-xl shadow-2xs border border-gray-200 p-3.5 border-l-4 border-unicef-blue flex items-center justify-between min-h-[84px]">
+            <div class="bg-white rounded-lg shadow-sm border border-black/10 p-3.5 border-l-4 border-unicef-blue flex items-center justify-between min-h-[84px]">
                 <div>
-                    <h3 class="text-gray-500 text-[10px] sm:text-[11px] font-bold">{% translate "Total risk items" %}</h3>
-                    <p id="total-issues" class="text-2xl sm:text-3xl font-black text-gray-900 mt-0.5 leading-none">0</p>
-                    <p class="text-[11px] text-gray-500 mt-1">{% translate "Across all operational modules" %}</p>
+                    <h3 class="text-black/60 text-[10px] sm:text-[11px] font-bold">{% translate "Total risk items" %}</h3>
+                    <p id="total-issues" class="text-2xl sm:text-3xl font-bold text-black mt-0.5 leading-none">0</p>
+                    <p class="text-[11px] text-black/60 mt-1">{% translate "Across all operational modules" %}</p>
                     {% include "includes/chart_info.html" with definition=_("Total count of operational risk issues across all active modules.") source=_("HOPE") method=_("Count of flagged risk indicators across all modules.") %}
                 </div>
-                <div class="w-11 h-11 rounded-xl bg-blue-50 text-unicef-blue flex items-center justify-center font-bold text-xl">
-                    📊
+                <div class="w-11 h-11 rounded-lg bg-unicef-blue text-white flex items-center justify-center">
+                    {% icon "chart-no-axes-column" "h-5 w-5" %}
                 </div>
             </div>
 
             <!-- Critical risks KPI Card -->
-            <div class="bg-white rounded-xl shadow-2xs border border-gray-200 p-3.5 border-l-4 border-red-500 flex items-center justify-between min-h-[84px]">
+            <div class="bg-white rounded-lg shadow-sm border border-black/10 p-3.5 border-l-4 border-red-500 flex items-center justify-between min-h-[84px]">
                 <div>
-                    <h3 class="text-gray-500 text-[10px] sm:text-[11px] font-bold">{% translate "Critical risks" %}</h3>
-                    <p id="total-critical" class="text-2xl sm:text-3xl font-black text-red-600 mt-0.5 leading-none">0</p>
+                    <h3 class="text-black/60 text-[10px] sm:text-[11px] font-bold">{% translate "Critical risks" %}</h3>
+                    <p id="total-critical" class="text-2xl sm:text-3xl font-bold text-red-600 mt-0.5 leading-none">0</p>
                     <p class="text-[11px] text-red-600/80 font-bold mt-1">{% translate "Requires immediate action" %}</p>
                     {% include "includes/chart_info.html" with definition=_("Risks at or above the 150% threshold requiring immediate action.") source=_("HOPE") method=_("Count of risk indicators at critical severity.") %}
                 </div>
-                <div class="w-11 h-11 rounded-xl bg-red-50 text-red-600 flex items-center justify-center font-bold text-xl">
-                    🚨
+                <div class="w-11 h-11 rounded-lg bg-red-600 text-white flex items-center justify-center">
+                    {% icon "shield-check" "h-5 w-5" %}
                 </div>
             </div>
 
             <!-- Risk distribution by module Card -->
-            <div class="bg-white rounded-xl shadow-2xs border border-gray-200 p-3.5">
+            <div class="bg-white rounded-lg shadow-sm border border-black/10 p-3.5">
                 <div class="flex items-center justify-between mb-2">
-                    <h3 class="text-xs font-bold text-gray-700">{% translate "Risk distribution by module" %}</h3>
-                    <span id="modules-monitored-count" class="text-[10px] font-bold text-gray-500 bg-gray-100 px-2 py-0.5 rounded-full">{% translate "5 modules" %}</span>
+                    <h3 class="text-xs font-bold text-black/80">{% translate "Risk distribution by module" %}</h3>
+                    <span id="modules-monitored-count" class="text-[10px] font-bold text-black/60 bg-black/5 px-2 py-0.5 rounded-full">{% translate "5 modules" %}</span>
                 </div>
-                <p class="text-[11px] text-gray-400 mb-3">{% translate "Click any module to filter operational cards" %}</p>
+                <p class="text-[11px] text-black/50 mb-3">{% translate "Click any module to filter operational cards" %}</p>
                 <div id="module-distribution-list" class="space-y-2.5">
                     <!-- Populated dynamically via risk_visuals.js -->
                 </div>
             </div>
 
             <!-- Issue Timeline Chart Card -->
-            <div class="bg-white rounded-xl shadow-2xs border border-gray-200 p-3.5">
+            <div class="bg-white rounded-lg shadow-sm border border-black/10 p-3.5">
                 <div class="flex items-center justify-between mb-1">
-                    <h3 id="timeline-title" class="text-xs font-bold text-gray-700">{% translate "Issues timeline" %}</h3>
-                    <span class="text-[10px] text-gray-400">{% translate "Daily volume" %}</span>
+                    <h3 id="timeline-title" class="text-xs font-bold text-black/80">{% translate "Issues timeline" %}</h3>
+                    <span class="text-[11px] text-black/50">{% translate "Daily volume" %}</span>
                 </div>
                 <div id="time-focus-chart" class="w-full h-[180px]"></div>
                 <div id="time-range-chart" style="display: none;"></div>
@@ -134,28 +134,28 @@
         <!-- RIGHT COLUMN (8 cols on lg: ~2/3) -->
         <div class="lg:col-span-8 space-y-3.5">
             <!-- Risk Status Color Guide Legend -->
-            <div class="bg-white rounded-xl shadow-2xs border border-gray-200 p-2.5 sm:p-3 flex flex-wrap items-center justify-between gap-2">
-                <div class="text-[11px] font-bold text-gray-700">{% translate "Risk status color guide:" %}</div>
+            <div class="bg-white rounded-lg shadow-sm border border-black/10 p-2.5 sm:p-3 flex flex-wrap items-center justify-between gap-2">
+                <div class="text-[11px] font-bold text-black/80">{% translate "Risk status color guide:" %}</div>
                 <div class="flex flex-wrap items-center gap-3 text-xs">
                     <div class="flex items-center gap-1.5">
                         <span class="w-2.5 h-2.5 rounded-full bg-red-500"></span>
-                        <span class="font-bold text-gray-900">{% translate "Critical" %}</span>
-                        <span class="text-[10px] text-gray-400">(≥150%)</span>
+                        <span class="font-bold text-black">{% translate "Critical" %}</span>
+                        <span class="text-[11px] text-black/50">(≥150%)</span>
                     </div>
                     <div class="flex items-center gap-1.5">
                         <span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span>
-                        <span class="font-bold text-gray-900">{% translate "Warning" %}</span>
-                        <span class="text-[10px] text-gray-400">(100-149%)</span>
+                        <span class="font-bold text-black">{% translate "Warning" %}</span>
+                        <span class="text-[11px] text-black/50">(100-149%)</span>
                     </div>
                     <div class="flex items-center gap-1.5">
                         <span class="w-2.5 h-2.5 rounded-full bg-yellow-400"></span>
-                        <span class="font-bold text-gray-900">{% translate "Caution" %}</span>
-                        <span class="text-[10px] text-gray-400">(80-99%)</span>
+                        <span class="font-bold text-black">{% translate "Caution" %}</span>
+                        <span class="text-[11px] text-black/50">(80-99%)</span>
                     </div>
                     <div class="flex items-center gap-1.5">
                         <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
-                        <span class="font-bold text-gray-900">{% translate "Normal" %}</span>
-                        <span class="text-[10px] text-gray-400">(&lt;80%)</span>
+                        <span class="font-bold text-black">{% translate "Normal" %}</span>
+                        <span class="text-[11px] text-black/50">(&lt;80%)</span>
                     </div>
                 </div>
             </div>
@@ -166,15 +166,15 @@
             </div>
 
             <!-- Risk Indicators Breakdown Table -->
-            <div class="bg-white rounded-xl shadow-2xs border border-gray-200 p-3.5">
+            <div class="bg-white rounded-lg shadow-sm border border-black/10 p-3.5">
                 <div class="mb-2.5">
-                    <h3 class="text-xs font-bold text-gray-900">{% translate "All risk indicators" %}</h3>
-                    <p class="text-[11px] text-gray-500">{% translate "Itemized operational metrics by indicator and programme" %}</p>
+                    <h3 class="text-xs font-bold text-black">{% translate "All risk indicators" %}</h3>
+                    <p class="text-[11px] text-black/60">{% translate "Itemized operational metrics by indicator and programme" %}</p>
                 </div>
-                <div class="overflow-x-auto rounded-lg border border-gray-200 max-h-[360px] overflow-y-auto">
-                    <table class="min-w-full divide-y divide-gray-200 text-xs">
-                        <thead class="bg-gray-50 sticky top-0 z-10">
-                            <tr class="text-[10px] font-bold text-gray-500">
+                <div class="overflow-x-auto rounded-lg border border-black/10 max-h-[360px] overflow-y-auto">
+                    <table class="min-w-full divide-y divide-black/10 text-xs">
+                        <thead class="bg-black/[0.03] sticky top-0 z-10">
+                            <tr class="text-[10px] font-bold text-black/60">
                                 <th scope="col" class="py-2 px-3 text-left">{% translate "Risk Indicator" %}</th>
                                 <th scope="col" class="py-2 px-3 text-left">{% translate "Country" %}</th>
                                 <th scope="col" class="py-2 px-3 text-left">{% translate "Module" %}</th>
@@ -185,7 +185,7 @@
                                 <th scope="col" class="py-2 px-3 text-right">{% translate "%" %}</th>
                             </tr>
                         </thead>
-                        <tbody id="risk-top-table" class="bg-white divide-y divide-gray-100"></tbody>
+                        <tbody id="risk-top-table" class="bg-white divide-y divide-black/5"></tbody>
                     </table>
                 </div>
             </div>

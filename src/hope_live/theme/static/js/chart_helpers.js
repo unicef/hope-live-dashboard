@@ -5,23 +5,24 @@
  * page.
  */
 (function () {
+    // UNICEF Brand Book 4.0 palette, with tints for charts that need more
+    // categories than the core palette provides.
     const palette = [
-        '#2ec7c9', '#b6a2de', '#5ab1ef', '#ffb980', '#d87a80',
-        '#8d98b3', '#e5cf0d', '#97b552', '#95706d', '#dc69aa',
-        '#07a2a4', '#9a7fd1', '#588dd5', '#f5994e', '#c05050',
-        '#59678c', '#c9ab00', '#76933c', '#bc65a6'
+        '#00AEEF', '#0047BB', '#004C45', '#FFB500', '#FF7100', '#9ADBE8',
+        '#66CBF4', '#4D8FD6', '#007A6E', '#FFD466', '#FFA64D', '#C7EBF4',
+        '#BDBDBD'
     ];
 
     // Fixed colours for the seven UNICEF regions, so the region chart does not
     // depend on a hash that can collide with a country or programme.
     const regionColors = {
-        MENAR: '#5ab1ef',
-        ESAR: '#2ec7c9',
-        ECAR: '#b6a2de',
-        WCAR: '#ffb980',
-        LACR: '#97b552',
-        EAPR: '#d87a80',
-        SAR: '#e5cf0d'
+        MENAR: '#00AEEF',
+        ESAR: '#0047BB',
+        ECAR: '#004C45',
+        WCAR: '#FFB500',
+        LACR: '#FF7100',
+        EAPR: '#9ADBE8',
+        SAR: '#BDBDBD'
     };
 
     function getStableColor(name) {
@@ -52,6 +53,29 @@
         st: 'saint'
     };
     const countryStopWords = new Set(['of', 'the', 'and', 'state', 'old', 'republic']);
+
+    // Display-only labels for values that arrive as database keys. These never
+    // replace the raw value used for filtering or URL state.
+    const labelAliases = {
+        'social policy': 'Social Policy',
+        'multi purpose': 'Multi-Purpose Cash',
+        'multi purpose cash': 'Multi-Purpose Cash',
+        'multipurpose cash': 'Multi-Purpose Cash',
+        'mpc': 'Multi-Purpose Cash',
+        'transfer to account': 'Transfer to Account',
+        'cash over the counter': 'Cash Over the Counter',
+        'pre paid card': 'Pre-Paid Card',
+        'prepaid card': 'Pre-Paid Card',
+        'atm card': 'ATM Card',
+        'wash': 'WASH'
+    };
+
+    function formatLabel(value) {
+        if (!value) return '';
+        const key = String(value).trim().toLowerCase().replace(/[_-]+/g, ' ');
+        if (labelAliases[key]) return labelAliases[key];
+        return key.replace(/\b\w/g, char => char.toUpperCase());
+    }
 
     function formatCountryName(name) {
         if (!name) return '';
@@ -165,6 +189,7 @@
         getStableColor: getStableColor,
         getRegionColor: getRegionColor,
         timeAxisLabel: timeAxisLabel,
+        formatLabel: formatLabel,
         formatCountryName: formatCountryName,
         countryKey: countryKey,
         initCountryFilter: initCountryFilter,

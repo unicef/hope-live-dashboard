@@ -14,61 +14,65 @@ document.addEventListener('DOMContentLoaded', function () {
         neutral: gettext('Neutral')
     };
 
+    function spriteIcon(name, className = 'h-4 w-4') {
+        return `<svg class="${className}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><use href="#icon-${name}"></use></svg>`;
+    }
+
     const moduleMeta = {
         payment: {
             label: gettext('Payment Operations'),
             subtitle: gettext('Payment, Reconciliation & Verification bottlenecks'),
-            icon: '💳',
-            barColor: '#10b981',
-            badgeBg: 'bg-emerald-100 text-emerald-800'
+            icon: spriteIcon('banknote'),
+            barColor: '#004C45',
+            badgeBg: 'bg-unicef-green/10 text-unicef-green'
         },
         payments: {
             label: gettext('Payment Operations'),
             subtitle: gettext('Payment, Reconciliation & Verification bottlenecks'),
-            icon: '💳',
-            barColor: '#10b981',
-            badgeBg: 'bg-emerald-100 text-emerald-800'
+            icon: spriteIcon('banknote'),
+            barColor: '#004C45',
+            badgeBg: 'bg-unicef-green/10 text-unicef-green'
         },
         registration: {
             label: gettext('Registration & Population'),
             subtitle: gettext('KYC, Identity documents & Geographic verification'),
-            icon: '📝',
-            barColor: '#3b82f6',
-            badgeBg: 'bg-blue-100 text-blue-800'
+            icon: spriteIcon('users'),
+            barColor: '#00AEEF',
+            badgeBg: 'bg-unicef-blue/10 text-unicef-blue-dark'
         },
         deduplication: {
             label: gettext('Deduplication & Adjudication'),
             subtitle: gettext('Biometric, Needs-Adjudication & Cross-channel duplicate issues'),
-            icon: '🔍',
-            barColor: '#a855f7',
-            badgeBg: 'bg-purple-100 text-purple-800'
+            icon: spriteIcon('search'),
+            barColor: '#0047BB',
+            badgeBg: 'bg-unicef-blue-dark/10 text-unicef-blue-dark'
         },
         verification: {
             label: gettext('Payment Verification'),
             subtitle: gettext('PVP execution, overdue tickets & high failure rates'),
-            icon: '✅',
-            barColor: '#f97316',
-            badgeBg: 'bg-orange-100 text-orange-800'
+            icon: spriteIcon('shield-check'),
+            barColor: '#FF7100',
+            badgeBg: 'bg-unicef-orange/10 text-black/80'
         },
         grievance: {
             label: gettext('Grievances & Safeguarding'),
             subtitle: gettext('Sensitive complaints, zero-reporting & FSP concentrations'),
-            icon: '📣',
-            barColor: '#ef4444',
+            icon: spriteIcon('mail'),
+            barColor: '#EF4444',
             badgeBg: 'bg-red-100 text-red-800'
         },
         grievances: {
             label: gettext('Grievances & Safeguarding'),
             subtitle: gettext('Sensitive complaints, zero-reporting & FSP concentrations'),
-            icon: '📣',
-            barColor: '#ef4444',
+            icon: spriteIcon('mail'),
+            barColor: '#EF4444',
             badgeBg: 'bg-red-100 text-red-800'
         },
         targeting: {
             label: gettext('Targeting & Eligibility'),
             subtitle: gettext('Vulnerability criteria & payment readiness anomalies'),
-            icon: '🎯',
-            barColor: '#f59e0b',
+            icon: spriteIcon('map-pin'),
+            barColor: '#FFB500',
             badgeBg: 'bg-amber-100 text-amber-800'
         }
     };
@@ -182,7 +186,7 @@ document.addEventListener('DOMContentLoaded', function () {
             caution: `<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-yellow-400 text-yellow-950 shadow-xs">${severityLabels.caution}</span>`,
             normal: `<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-600 text-white shadow-xs">${severityLabels.normal}</span>`
         };
-        return badges[sev] || `<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-gray-200 text-gray-800">${sev}</span>`;
+        return badges[sev] || `<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-black/10 text-black">${sev}</span>`;
     }
 
     function renderTrendBadge(trend) {
@@ -192,7 +196,7 @@ document.addEventListener('DOMContentLoaded', function () {
         if (trend === 'down') {
             return '<span class="inline-flex items-center gap-0.5 text-xs font-bold text-emerald-600" title="' + gettext('Decreasing') + '"><span class="text-sm">↘</span> ' + gettext('Down') + '</span>';
         }
-        return '<span class="inline-flex items-center gap-0.5 text-xs font-semibold text-gray-400" title="' + gettext('Neutral') + '"><span class="text-sm">—</span> ' + gettext('Stable') + '</span>';
+        return '<span class="inline-flex items-center gap-0.5 text-xs font-semibold text-black/50" title="' + gettext('Neutral') + '"><span class="text-sm">—</span> ' + gettext('Stable') + '</span>';
     }
 
     function updateModuleBars() {
@@ -210,35 +214,35 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         if (modData.length === 0) {
-            container.innerHTML = `<div class="text-xs text-gray-400 py-3 text-center italic">${gettext('No active module issues')}</div>`;
+            container.innerHTML = `<div class="text-xs text-black/50 py-3 text-center italic">${gettext('No active module issues')}</div>`;
             return;
         }
 
         container.innerHTML = modData.map(d => {
             const meta = moduleMeta[d.key.toLowerCase()] || {
                 label: d.key.charAt(0).toUpperCase() + d.key.slice(1),
-                barColor: '#3b82f6',
-                icon: '📁'
+                barColor: '#00AEEF',
+                icon: spriteIcon('layers')
             };
             const pct = total > 0 ? ((d.value / total) * 100).toFixed(1) : '0.0';
             const isSelected = selectedModule === d.key;
             const selectedClass = isSelected
-                ? 'ring-2 ring-blue-500 bg-blue-50/70 shadow-xs'
-                : 'hover:bg-gray-50';
+                ? 'ring-2 ring-unicef-blue bg-unicef-blue/10 shadow-sm'
+                : 'hover:bg-black/[0.03]';
 
             return `
-            <div class="p-2.5 rounded-lg cursor-pointer transition-all border border-gray-200/80 ${selectedClass} module-bar-item" data-module="${d.key}">
+            <div class="p-2.5 rounded-lg cursor-pointer transition-all border border-black/10 ${selectedClass} module-bar-item" data-module="${d.key}">
                 <div class="flex items-center justify-between text-xs mb-1.5">
-                    <div class="flex items-center gap-1.5 font-bold text-gray-800">
-                        <span>${meta.icon}</span>
+                    <div class="flex items-center gap-1.5 font-bold text-black">
+                        <span class="w-5 h-5 shrink-0 rounded bg-unicef-blue text-white inline-flex items-center justify-center">${meta.icon}</span>
                         <span>${meta.label}</span>
                     </div>
-                    <div class="text-gray-700 font-bold tabular-nums">
+                    <div class="text-black/80 font-bold tabular-nums">
                         <span>${formatCount(d.value)}</span>
-                        <span class="text-[10px] font-normal text-gray-400 ml-1">(${pct}%)</span>
+                        <span class="text-[10px] font-normal text-black/50 ml-1">(${pct}%)</span>
                     </div>
                 </div>
-                <div class="w-full bg-gray-100 rounded-full h-1.5 overflow-hidden">
+                <div class="w-full bg-black/5 rounded-full h-1.5 overflow-hidden">
                     <div class="h-full rounded-full transition-all duration-300" style="width: ${pct}%; background-color: ${meta.barColor}"></div>
                 </div>
             </div>`;
@@ -267,10 +271,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
         if (activeRisks.length === 0) {
             container.innerHTML = `
-            <div class="bg-white rounded-xl shadow-2xs border border-gray-200 p-8 text-center">
-                <div class="text-2xl mb-2">🎉</div>
-                <h4 class="text-sm font-bold text-gray-900">${gettext('No Operational Risk Anomalies')}</h4>
-                <p class="text-xs text-gray-500 mt-1">${gettext('All operational thresholds are within normal tolerances for the selected filters.')}</p>
+            <div class="bg-white rounded-lg shadow-sm border border-black/10 p-8 text-center">
+                <div class="w-10 h-10 mx-auto mb-2 rounded bg-unicef-blue text-white flex items-center justify-center">${spriteIcon('shield-check', 'h-5 w-5')}</div>
+                <h4 class="text-sm font-bold text-black">${gettext('No Operational Risk Anomalies')}</h4>
+                <p class="text-xs text-black/60 mt-1">${gettext('All operational thresholds are within normal tolerances for the selected filters.')}</p>
             </div>`;
             return;
         }
@@ -287,9 +291,9 @@ document.addEventListener('DOMContentLoaded', function () {
             const meta = moduleMeta[modKey] || {
                 label: modKey.toUpperCase(),
                 subtitle: gettext('Operational metrics and bottlenecks'),
-                icon: '📁',
-                barColor: '#3b82f6',
-                badgeBg: 'bg-blue-100 text-blue-800'
+                icon: spriteIcon('layers'),
+                barColor: '#00AEEF',
+                badgeBg: 'bg-unicef-blue/10 text-unicef-blue-dark'
             };
             const items = byModule[modKey].sort((a, b) => {
                 const rank = { critical: 4, warning: 3, caution: 2, normal: 1 };
@@ -307,43 +311,43 @@ document.addEventListener('DOMContentLoaded', function () {
                 };
                 const styleClass = sevStyles[sev] || sevStyles.normal;
 
-                let trendIcon = '<span class="text-gray-400 font-black text-sm" title="' + gettext('Stable') + '">—</span>';
+                let trendIcon = '<span class="text-black/50 font-bold text-sm" title="' + gettext('Stable') + '">—</span>';
                 if (v.trend === 'up') {
-                    trendIcon = '<span class="text-red-600 font-black text-sm" title="' + gettext('Increasing') + '">↗</span>';
+                    trendIcon = '<span class="text-red-600 font-bold text-sm" title="' + gettext('Increasing') + '">↗</span>';
                 } else if (v.trend === 'down') {
-                    trendIcon = '<span class="text-emerald-600 font-black text-sm" title="' + gettext('Decreasing') + '">↘</span>';
+                    trendIcon = '<span class="text-emerald-600 font-bold text-sm" title="' + gettext('Decreasing') + '">↘</span>';
                 }
 
                 const unit = v.unit_label || gettext('issues');
                 const valDisplay = v.percentage !== null && v.percentage !== undefined
-                    ? `${v.percentage}% <span class="text-[11px] font-normal text-gray-500">(${formatCount(v.issue_count)})</span>`
-                    : `${formatCount(v.issue_count)} <span class="text-[11px] font-normal text-gray-500">${unit}</span>`;
+                    ? `${v.percentage}% <span class="text-[11px] font-normal text-black/60">(${formatCount(v.issue_count)})</span>`
+                    : `${formatCount(v.issue_count)} <span class="text-[11px] font-normal text-black/60">${unit}</span>`;
 
                 return `
-                <div class="rounded-xl border p-3 border-l-4 transition-all shadow-2xs ${styleClass} flex flex-col justify-between">
+                <div class="rounded-lg border p-3 border-l-4 transition-all shadow-sm ${styleClass} flex flex-col justify-between">
                     <div class="flex items-start justify-between gap-2 mb-1.5">
-                        <h5 class="text-xs font-bold text-gray-900 leading-snug">${v.risk_name || v.risk_code}</h5>
+                        <h5 class="text-xs font-bold text-black leading-snug">${v.risk_name || v.risk_code}</h5>
                         <div class="flex items-center gap-1 shrink-0">
                             ${trendIcon}
                         </div>
                     </div>
-                    <div class="text-lg font-black leading-none mb-1 tabular-nums">
+                    <div class="text-lg font-bold leading-none mb-1 tabular-nums">
                         ${valDisplay}
                     </div>
-                    <div class="text-[10px] text-gray-600 line-clamp-2 leading-tight">
+                    <div class="text-[10px] text-black/70 line-clamp-2 leading-tight">
                         ${v.description || ''}
                     </div>
                 </div>`;
             }).join('');
 
             return `
-            <div class="bg-white rounded-xl shadow-2xs border border-gray-200 p-3.5 transition-all">
-                <div class="flex flex-wrap items-center justify-between gap-2 pb-2.5 mb-3 border-b border-gray-100">
+            <div class="bg-white rounded-lg shadow-sm border border-black/10 p-3.5 transition-all">
+                <div class="flex flex-wrap items-center justify-between gap-2 pb-2.5 mb-3 border-b border-black/5">
                     <div class="flex items-center gap-2">
-                        <span class="text-lg">${meta.icon}</span>
+                        <span class="w-7 h-7 shrink-0 rounded bg-unicef-blue text-white inline-flex items-center justify-center">${meta.icon}</span>
                         <div>
-                            <h4 class="text-xs font-bold uppercase tracking-wider text-gray-900 leading-tight">${meta.label}</h4>
-                            <p class="text-[10px] text-gray-500">${meta.subtitle}</p>
+                            <h4 class="text-xs font-bold uppercase tracking-wider text-black leading-tight">${meta.label}</h4>
+                            <p class="text-[10px] text-black/60">${meta.subtitle}</p>
                         </div>
                     </div>
                     <span class="text-[11px] font-bold px-2.5 py-0.5 rounded-full ${meta.badgeBg}">
@@ -368,15 +372,15 @@ document.addEventListener('DOMContentLoaded', function () {
 
         tableBody.innerHTML = rows.map(v => {
             const pct = v.percentage !== null && v.percentage !== undefined ? `${v.percentage}%` : '—';
-            return `<tr class="hover:bg-slate-50/80 transition-colors">
-                <td class="py-2.5 px-3 font-semibold text-gray-900 text-xs">${escapeHtml(v.risk_name || v.risk_code)}</td>
-                <td class="py-2.5 px-3 text-gray-600 text-xs">${escapeHtml(formatCountry(v.country))}</td>
-                <td class="py-2.5 px-3 text-gray-600 text-xs">${escapeHtml(v.module)}</td>
-                <td class="py-2.5 px-3 text-gray-600 text-xs">${escapeHtml(v.program_name || '—')}</td>
+            return `<tr class="hover:bg-black/[0.03] transition-colors">
+                <td class="py-2.5 px-3 font-semibold text-black text-xs">${escapeHtml(v.risk_name || v.risk_code)}</td>
+                <td class="py-2.5 px-3 text-black/70 text-xs">${escapeHtml(formatCountry(v.country))}</td>
+                <td class="py-2.5 px-3 text-black/70 text-xs">${escapeHtml(v.module)}</td>
+                <td class="py-2.5 px-3 text-black/70 text-xs">${escapeHtml(v.program_name || '—')}</td>
                 <td class="py-2.5 px-3 text-center">${renderSeverityBadge(v.severity)}</td>
                 <td class="py-2.5 px-3 text-center">${renderTrendBadge(v.trend)}</td>
-                <td class="py-2.5 px-3 text-right font-bold text-gray-900 text-xs tabular-nums">${formatCount(v.issue_count)}</td>
-                <td class="py-2.5 px-3 text-right font-semibold text-gray-700 text-xs tabular-nums">${pct}</td>
+                <td class="py-2.5 px-3 text-right font-bold text-black text-xs tabular-nums">${formatCount(v.issue_count)}</td>
+                <td class="py-2.5 px-3 text-right font-semibold text-black/80 text-xs tabular-nums">${pct}</td>
             </tr>`;
         }).join('');
     }
@@ -416,11 +420,11 @@ document.addEventListener('DOMContentLoaded', function () {
                     }
                 },
                 grid: { top: 15, bottom: 25, left: 45, right: 15 },
-                xAxis: { type: 'time', axisLabel: { color: '#64748b', fontSize: 10, formatter: value => d3.timeFormat('%b %y')(new Date(value)) } },
+                xAxis: { type: 'time', axisLabel: { color: 'rgba(0,0,0,0.6)', fontSize: 10, formatter: value => d3.timeFormat('%b %y')(new Date(value)) } },
                 yAxis: {
                     type: 'value',
-                    axisLabel: { color: '#64748b', fontSize: 10 },
-                    splitLine: { lineStyle: { type: 'dashed', color: '#f1f5f9' } }
+                    axisLabel: { color: 'rgba(0,0,0,0.6)', fontSize: 10 },
+                    splitLine: { lineStyle: { type: 'dashed', color: 'rgba(0,0,0,0.08)' } }
                 },
                 series: [{
                     name: gettext('Issues'),
@@ -505,11 +509,11 @@ document.addEventListener('DOMContentLoaded', function () {
         btn.addEventListener('click', function () {
             currentCategory = this.dataset.category;
             categoryTabs.forEach(b => {
-                b.classList.remove('bg-blue-50', 'text-blue-800', 'border-blue-200', 'active-category');
-                b.classList.add('bg-gray-100', 'text-gray-700');
+                b.classList.remove('bg-unicef-blue', 'text-white', 'border-unicef-blue', 'active-category');
+                b.classList.add('bg-black/5', 'text-black/70');
             });
-            this.classList.add('bg-blue-50', 'text-blue-800', 'border-blue-200', 'active-category');
-            this.classList.remove('bg-gray-100', 'text-gray-700');
+            this.classList.add('bg-unicef-blue', 'text-white', 'border-unicef-blue', 'active-category');
+            this.classList.remove('bg-black/5', 'text-black/70');
 
             if (currentCategory === 'all') {
                 categoryDimension.filterAll();
@@ -574,7 +578,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             if (!visible.length) {
                 activeIndex = -1;
-                list.innerHTML = `<li class="px-3 py-2 text-gray-400" role="presentation">${escapeHtml(gettext('No matching results'))}</li>`;
+                list.innerHTML = `<li class="px-3 py-2 text-black/50" role="presentation">${escapeHtml(gettext('No matching results'))}</li>`;
                 input.removeAttribute('aria-activedescendant');
                 return;
             }
@@ -583,7 +587,7 @@ document.addEventListener('DOMContentLoaded', function () {
             list.innerHTML = visible.map((item, index) => {
                 const isActive = index === activeIndex;
                 const isSelected = item.value === selectedValue;
-                return `<li id="${list.id}-option-${index}" role="option" data-index="${index}" aria-selected="${isSelected}" title="${escapeHtml(item.label)}" class="cursor-pointer truncate px-3 py-1.5 ${isActive ? 'bg-sky-50 text-[#00adef]' : 'text-gray-700'} ${isSelected ? 'font-bold' : ''}">${escapeHtml(item.label)}</li>`;
+                return `<li id="${list.id}-option-${index}" role="option" data-index="${index}" aria-selected="${isSelected}" title="${escapeHtml(item.label)}" class="cursor-pointer truncate px-3 py-1.5 ${isActive ? 'bg-unicef-blue/10 text-unicef-blue-dark' : 'text-black/80'} ${isSelected ? 'font-bold' : ''}">${escapeHtml(item.label)}</li>`;
             }).join('');
             input.setAttribute('aria-activedescendant', `${list.id}-option-${activeIndex}`);
         }

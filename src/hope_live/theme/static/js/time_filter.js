@@ -192,11 +192,11 @@ class DashboardTimeFilter {
     setActiveButton(btn) {
         if (!btn) return;
         this.container.querySelectorAll('.time-preset-btn').forEach(b => {
-            b.classList.remove('bg-blue-50', 'text-blue-800', 'active-preset', 'shadow-sm');
-            b.classList.add('bg-gray-100', 'text-gray-700');
+            b.classList.remove('bg-unicef-blue', 'text-white', 'active-preset', 'shadow-sm');
+            b.classList.add('bg-black/5', 'text-black/70');
         });
-        btn.classList.add('bg-blue-50', 'text-blue-800', 'active-preset', 'shadow-sm');
-        btn.classList.remove('bg-gray-100', 'text-gray-700');
+        btn.classList.add('bg-unicef-blue', 'text-white', 'active-preset', 'shadow-sm');
+        btn.classList.remove('bg-black/5', 'text-black/70');
     }
 }
 

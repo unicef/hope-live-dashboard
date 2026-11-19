@@ -6,10 +6,10 @@ document.addEventListener('DOMContentLoaded', function () {
     let countryView = 'absolute'; // Country chart: 'absolute' or 'share' (100% stacked)
 
     // Shared semantic colours: green = reconciled, amber = still open,
-    // teal = delivered (matches the financial dashboard's Delivered stage).
-    const RECONCILED_COLOR = '#97b552';
-    const OPEN_COLOR = '#ffb980';
-    const DELIVERY_COLOR = '#2ec7c9';
+    // blue = delivered (matches the financial dashboard's Delivered stage).
+    const RECONCILED_COLOR = '#004C45';
+    const OPEN_COLOR = '#FFB500';
+    const DELIVERY_COLOR = '#00AEEF';
 
     const formatCompact = (val) => {
         if (currentMetric === 'usd') {
@@ -245,9 +245,9 @@ document.addEventListener('DOMContentLoaded', function () {
                     lineStyle: {
                         width: 5,
                         color: [
-                            [0.3, '#d87a80'],
-                            [0.7, '#ffb980'],
-                            [1, '#2ec7c9']
+                            [0.3, '#FF7100'],
+                            [0.7, '#FFB500'],
+                            [1, '#004C45']
                         ]
                     }
                 },
@@ -345,15 +345,15 @@ document.addEventListener('DOMContentLoaded', function () {
             },
             xAxis: {
                 type: 'time',
-                axisLabel: { color: '#64748b', formatter: value => d3.timeFormat('%b %y')(new Date(value)) }
+                axisLabel: { color: 'rgba(0,0,0,0.6)', formatter: value => d3.timeFormat('%b %y')(new Date(value)) }
             },
             yAxis: {
                 type: 'value',
                 axisLabel: {
                     formatter: val => formatMetric(val),
-                    color: '#64748b'
+                    color: 'rgba(0,0,0,0.6)'
                 },
-                splitLine: { lineStyle: { type: 'dashed', color: '#f1f5f9' } }
+                splitLine: { lineStyle: { type: 'dashed', color: 'rgba(0,0,0,0.08)' } }
             },
             series: [
                 {
@@ -470,17 +470,17 @@ document.addEventListener('DOMContentLoaded', function () {
                 max: isShareView ? 100 : null,
                 axisLabel: {
                     formatter: val => isShareView ? `${val}%` : formatMetric(val),
-                    color: '#64748b'
+                    color: 'rgba(0,0,0,0.6)'
                 },
-                splitLine: { lineStyle: { color: '#f1f5f9' } }
+                splitLine: { lineStyle: { color: 'rgba(0,0,0,0.08)' } }
             },
             yAxis: {
                 type: 'category',
                 data: countryData.map(d => formatCountryName(d.key)),
                 inverse: true,
                 axisTick: { show: false },
-                axisLine: { show: true, lineStyle: { color: '#f1f5f9' } },
-                axisLabel: { width: 180, overflow: 'break', color: '#374151', fontSize: 10 }
+                axisLine: { show: true, lineStyle: { color: 'rgba(0,0,0,0.08)' } },
+                axisLabel: { width: 180, overflow: 'break', color: '#000000', fontSize: 10 }
             },
             series: [
                 {
@@ -606,8 +606,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 type: 'value',
                 min: 0,
                 max: 100,
-                axisLabel: { formatter: '{value}%', color: '#64748b' },
-                splitLine: { lineStyle: { color: '#f1f5f9' } }
+                axisLabel: { formatter: '{value}%', color: 'rgba(0,0,0,0.6)' },
+                splitLine: { lineStyle: { color: 'rgba(0,0,0,0.08)' } }
             },
             yAxis: {
                 type: 'category',
@@ -636,14 +636,14 @@ document.addEventListener('DOMContentLoaded', function () {
                         position: 'right',
                         distance: 4,
                         formatter: rateFormatter,
-                        color: '#0f172a',
+                        color: '#000000',
                         fontWeight: 600,
                         fontSize: 10
                     },
                     markLine: {
                         silent: true,
                         symbol: 'none',
-                        lineStyle: { type: 'dashed', color: '#cbd5e1' },
+                        lineStyle: { type: 'dashed', color: '#BDBDBD' },
                         label: {
                             formatter: gettext('80% reference'),
                             position: 'insideEndTop',
@@ -720,11 +720,11 @@ document.addEventListener('DOMContentLoaded', function () {
     metricTabs.forEach(btn => {
         btn.addEventListener('click', function() {
             metricTabs.forEach(b => {
-                b.classList.remove('bg-white', 'shadow', 'text-blue-800', 'active-metric');
-                b.classList.add('text-gray-600');
+                b.classList.remove('bg-white', 'shadow-sm', 'text-unicef-blue-dark', 'active-metric');
+                b.classList.add('text-black/60');
             });
-            this.classList.add('bg-white', 'shadow', 'text-blue-800', 'active-metric');
-            this.classList.remove('text-gray-600');
+            this.classList.add('bg-white', 'shadow-sm', 'text-unicef-blue-dark', 'active-metric');
+            this.classList.remove('text-black/60');
             currentMetric = this.dataset.metric;
 
             // Update card and chart titles
@@ -756,11 +756,11 @@ document.addEventListener('DOMContentLoaded', function () {
         btn.addEventListener('click', function() {
             countryView = this.id === 'country-view-share' ? 'share' : 'absolute';
             countryViewTabs.forEach(b => {
-                b.classList.remove('bg-white', 'shadow', 'text-blue-800');
-                b.classList.add('text-gray-600');
+                b.classList.remove('bg-white', 'shadow-sm', 'text-unicef-blue-dark');
+                b.classList.add('text-black/60');
             });
-            this.classList.add('bg-white', 'shadow', 'text-blue-800');
-            this.classList.remove('text-gray-600');
+            this.classList.add('bg-white', 'shadow-sm', 'text-unicef-blue-dark');
+            this.classList.remove('text-black/60');
             updateAll();
         });
     });

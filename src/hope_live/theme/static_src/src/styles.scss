@@ -92,6 +92,10 @@
   --font-sans: "Noto Sans", "Noto Sans Arabic", "Noto Sans SC", sans-serif;
   --color-unicef-blue: #00aeef;
   --color-unicef-blue-dark: #0047bb;
+  --color-unicef-cyan: #9adbe8;
+  --color-unicef-green: #004c45;
+  --color-unicef-yellow: #ffb500;
+  --color-unicef-orange: #ff7100;
 }
 
 @font-face {
@@ -147,21 +151,14 @@
 @custom-variant dark2 (&:where(.dark, .dark *));
 
 
-aside {
-  @apply text-gray-900 bg-gray-100;
-  @apply dark:text-white dark:bg-gray-900;
-
-  ul {
-    li {
-
-      a,
-      button {
-        @apply flex items-center p-2 rounded-lg;
-        @apply bg-gray-100 text-gray-700;
-        @apply dark:text-white dark:bg-gray-900;
-        @apply hover:bg-gray-300 dark:hover:bg-gray-700;
-      }
-    }
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
   }
 }
 
