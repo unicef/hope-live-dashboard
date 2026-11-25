@@ -47,7 +47,7 @@ document.addEventListener('DOMContentLoaded', function () {
     };
 
     const chartHelpers = window.HopeChart || {};
-    const getStableColor = chartHelpers.getStableColor || (() => '#5470c6');
+    const getStableColor = chartHelpers.getStableColor || (() => '#00AEEF');
 
     let ndx = crossfilter([]);
 
@@ -480,7 +480,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 inverse: true,
                 axisTick: { show: false },
                 axisLine: { show: true, lineStyle: { color: 'rgba(0,0,0,0.08)' } },
-                axisLabel: { width: 180, overflow: 'break', color: '#000000', fontSize: 10 }
+                axisLabel: { width: 180, overflow: 'break', color: '#000000', fontSize: 11 }
             },
             series: [
                 {
@@ -574,7 +574,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     text: gettext('No country has both completion and financial data for this period.'),
                     left: 'center',
                     top: 'middle',
-                    textStyle: { color: '#94a3b8', fontSize: 12, fontWeight: 400 }
+                    textStyle: { color: 'rgba(0,0,0,0.6)', fontSize: 12, fontWeight: 400 }
                 }
             }, { notMerge: true });
             return;
@@ -613,15 +613,15 @@ document.addEventListener('DOMContentLoaded', function () {
                 type: 'category',
                 data: visible.map(p => formatCountryName(p.country)),
                 axisLabel: {
-                    color: '#1f2937',
+                    color: '#000000',
                     fontWeight: 500,
-                    fontSize: 10,
+                    fontSize: 11,
                     lineHeight: 11,
                     width: 130,
                     overflow: 'break'
                 },
                 axisTick: { show: false },
-                axisLine: { lineStyle: { color: '#e2e8f0' } }
+                axisLine: { lineStyle: { color: 'rgba(0,0,0,0.08)' } }
             },
             series: [
                 {
@@ -638,7 +638,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         formatter: rateFormatter,
                         color: '#000000',
                         fontWeight: 600,
-                        fontSize: 10
+                        fontSize: 11
                     },
                     markLine: {
                         silent: true,
@@ -648,8 +648,8 @@ document.addEventListener('DOMContentLoaded', function () {
                             formatter: gettext('80% reference'),
                             position: 'insideEndTop',
                             rotate: 0,
-                            color: '#94a3b8',
-                            fontSize: 10
+                            color: 'rgba(0,0,0,0.6)',
+                            fontSize: 11
                         },
                         data: [{ xAxis: 80 }]
                     }
@@ -665,9 +665,9 @@ document.addEventListener('DOMContentLoaded', function () {
                         position: 'right',
                         distance: 4,
                         formatter: rateFormatter,
-                        color: '#475569',
+                        color: 'rgba(0,0,0,0.7)',
                         fontWeight: 600,
-                        fontSize: 10
+                        fontSize: 11
                     }
                 }
             ]

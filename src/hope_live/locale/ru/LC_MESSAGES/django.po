@@ -2320,3 +2320,27 @@ msgid ""
 msgstr ""
 "Программы для социальных работников не входят в показатели по "
 "домохозяйствам, детям или лицам с инвалидностью."
+
+#: src/hope_live/templates/pages/landing.html
+msgid "Social Policy"
+msgstr "Социальная политика"
+
+#: src/hope_live/templates/pages/landing.html
+msgid "Transfer to Account"
+msgstr "Перевод на счёт"
+
+#: src/hope_live/templates/pages/landing.html
+msgid "Cash Over the Counter"
+msgstr "Наличные через кассу"
+
+#: src/hope_live/templates/pages/landing.html
+msgid "Voucher"
+msgstr "Ваучер"
+
+#: src/hope_live/templates/pages/landing.html
+msgid "ATM Card"
+msgstr "Банковская карта (банкомат)"
+
+#: src/hope_live/templates/includes/kpi_card.html
+msgid "Disclaimer: All figures shown are indicative only and may vary due to rounding"
+msgstr "Примечание: все представленные данные носят ориентировочный характер и могут незначительно отличаться из-за округления"

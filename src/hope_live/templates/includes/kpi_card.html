@@ -9,23 +9,27 @@
     <div id="{{ id }}" class="text-3xl lg:text-4xl font-bold text-black leading-tight">
         {% if prefix %}{{ prefix }}{% endif %}{{ value }}
     </div>
-    <div class="mt-auto pt-2">
-        {% if note %}
-            <div class="text-base font-bold text-black">{% translate note %}</div>
-        {% endif %}
-        {% if payments_id %}
-            <div class="text-sm font-bold text-black">
-                {% translate "Payments delivered" %}:
-                <span id="{{ payments_id }}">{{ payments_value }}</span>
-            </div>
-        {% endif %}
-        {% if average_id %}
-            <div class="flex items-center gap-1 text-sm font-normal text-black/70 mt-1">
-                {% icon "coins" "h-3.5 w-3.5 text-black" %}
-                {% translate "Average transfer" %}
-                <span id="{{ average_id }}" class="font-bold text-black">${{ average_value }}</span>
-                {% translate "per transfer" %}
-            </div>
-        {% endif %}
-    </div>
+    {% if payments_id or average_id or disclaimer %}
+        <div class="mt-auto pt-2">
+            {% if payments_id %}
+                <div class="text-sm font-bold text-black">
+                    {% translate "Payments delivered" %}:
+                    <span id="{{ payments_id }}">{{ payments_value }}</span>
+                </div>
+            {% endif %}
+            {% if average_id %}
+                <div class="flex items-center gap-1 text-sm font-normal text-black/70 mt-1">
+                    {% icon "coins" "h-3.5 w-3.5 text-black" %}
+                    {% translate "Average transfer" %}
+                    <span id="{{ average_id }}" class="font-bold text-black">${{ average_value }}</span>
+                    {% translate "per transfer" %}
+                </div>
+            {% endif %}
+            {% if disclaimer %}
+                <p class="mt-2 text-[11px] leading-snug text-black/60">
+                    {% translate "Disclaimer: All figures shown are indicative only and may vary due to rounding" %}
+                </p>
+            {% endif %}
+        </div>
+    {% endif %}
 </div>

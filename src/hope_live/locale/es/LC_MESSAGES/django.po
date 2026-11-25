@@ -2336,3 +2336,27 @@ msgid ""
 msgstr ""
 "Los programas de trabajadores sociales no forman parte de los recuentos de "
 "hogares, niños ni personas con discapacidad."
+
+#: src/hope_live/templates/pages/landing.html
+msgid "Social Policy"
+msgstr "Política social"
+
+#: src/hope_live/templates/pages/landing.html
+msgid "Transfer to Account"
+msgstr "Transferencia a cuenta"
+
+#: src/hope_live/templates/pages/landing.html
+msgid "Cash Over the Counter"
+msgstr "Efectivo por ventanilla"
+
+#: src/hope_live/templates/pages/landing.html
+msgid "Voucher"
+msgstr "Cupón"
+
+#: src/hope_live/templates/pages/landing.html
+msgid "ATM Card"
+msgstr "Tarjeta de cajero automático"
+
+#: src/hope_live/templates/includes/kpi_card.html
+msgid "Disclaimer: All figures shown are indicative only and may vary due to rounding"
+msgstr "Aviso legal: Todas las cifras mostradas son meramente indicativas y pueden variar debido al redondeo"

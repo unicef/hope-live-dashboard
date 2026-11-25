@@ -19,7 +19,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // desktop breakpoint and expanded by default on larger screens.
     const navToggle = document.getElementById("nav-toggle");
     if (navToggle) {
-        const navQuery = window.matchMedia("(min-width: 1024px)");
+        const navQuery = window.matchMedia("(min-width: 1280px)");
         navQuery.addEventListener("change", (event) => {
             navToggle.checked = event.matches;
         });

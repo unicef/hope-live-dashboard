@@ -8,12 +8,15 @@
                 <div id="landing-hero"
                      class="lg:col-span-8 relative overflow-hidden rounded-lg bg-white min-h-[300px] flex items-center shadow-sm">
                     <div class="absolute inset-y-0 right-0 w-full md:w-[62%] opacity-30 md:opacity-100 pointer-events-none">
-                        <img src="{% static 'images/background.png' %}"
+                        <img src="{% static 'images/hero-unicef.jpg' %}"
                              class="w-full h-full object-cover"
-                             style="object-position: 80% 15%"
+                             style="object-position: 65% 32%"
                              alt="" />
                         <div class="absolute inset-y-0 left-0 w-40 bg-gradient-to-r from-white via-white/80 to-transparent"></div>
                     </div>
+                    <span class="absolute bottom-2 right-3 z-10 rounded bg-black/55 px-2 py-0.5 text-[11px] leading-tight text-white">
+                        © UNICEF/UNI503920/Madina Qati Musadiq
+                    </span>
                     <div class="relative z-10 p-7 lg:p-10 max-w-xl">
                         <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold text-black tracking-tight leading-[1.05]">
                             {% translate "Cash-based Assistance" %}
@@ -74,26 +77,26 @@
             </div>
         </section>
         <!-- Filter bar -->
-        <div class="static lg:sticky lg:top-0 z-30 bg-white border-b border-black/10">
-            <div class="max-w-[1600px] mx-auto px-4 lg:px-6 py-3">
-                <div class="rounded-lg border border-black/10 bg-white p-3 shadow-sm flex flex-wrap items-end gap-3">
+        <div class="static lg:sticky lg:top-0 z-30 bg-neutral-100 border-b border-black/10">
+            <div class="max-w-[1600px] mx-auto px-4 lg:px-6 py-4">
+                <div class="flex flex-wrap items-end gap-3">
                     <div class="w-full sm:w-auto">
                         <label for="landing-year"
-                               class="block text-base font-bold tracking-wider text-black mb-1">{% translate "Year" %}</label>
+                               class="block text-sm font-bold tracking-wide text-black mb-1.5">{% translate "Year" %}</label>
                         <select id="landing-year"
-                                class="h-11 w-full sm:w-auto rounded-md border border-black/20 bg-white pl-3 pr-8 text-base font-bold text-black shadow-sm focus:border-unicef-blue focus:outline-none focus:ring-2 focus:ring-unicef-blue/30">
+                                class="h-11 w-full sm:w-auto rounded-md border border-black/20 bg-white pl-3 pr-8 text-sm font-bold text-black focus:border-unicef-blue focus:outline-none focus:ring-2 focus:ring-unicef-blue/30">
                             <option value="all">{% translate "All years" %}</option>
                         </select>
                     </div>
                     <div class="relative w-full sm:w-auto">
                         <label id="country-filter-label"
-                               class="block text-base font-bold tracking-wider text-black mb-1">{% translate "Country" %}</label>
+                               class="block text-sm font-bold tracking-wide text-black mb-1.5">{% translate "Country" %}</label>
                         <button id="country-filter-button"
                                 type="button"
                                 aria-haspopup="listbox"
                                 aria-expanded="false"
                                 aria-controls="country-filter-panel"
-                                class="h-11 w-full sm:w-auto sm:min-w-[210px] flex items-center justify-between gap-3 rounded-md border border-black/20 bg-white px-3 text-base font-bold text-black shadow-sm focus:outline-none focus:ring-2 focus:ring-unicef-blue/30">
+                                class="h-11 w-full sm:w-auto sm:min-w-[210px] flex items-center justify-between gap-3 rounded-md border border-black/20 bg-white px-3 text-sm font-bold text-black focus:outline-none focus:ring-2 focus:ring-unicef-blue/30">
                             <span id="country-filter-value">{% translate "All countries" %}</span>
                             {% icon "chevron-down" "h-4 w-4 text-black/60" %}
                         </button>
@@ -129,21 +132,21 @@
                     </div>
                     <button id="landing-reset"
                             type="button"
-                            class="inline-flex h-11 w-full sm:w-auto items-center justify-center gap-2 rounded-md border border-black/20 bg-white px-3 text-base font-bold text-black shadow-sm hover:bg-black/5 focus:outline-none focus:ring-2 focus:ring-unicef-blue/30">
+                            class="inline-flex h-11 w-full sm:w-auto items-center justify-center gap-2 rounded-md border border-black/20 bg-white px-3 text-sm font-bold text-black hover:bg-black/5 focus:outline-none focus:ring-2 focus:ring-unicef-blue/30">
                         {% icon "rotate-ccw" "h-4 w-4" %}
                         {% translate "Reset" %}
                     </button>
                     <button id="map-play"
                             type="button"
                             aria-pressed="false"
-                            class="inline-flex h-11 w-full sm:w-auto items-center justify-center rounded-md border border-black/20 bg-white px-3 text-base font-bold text-black shadow-sm hover:bg-black/5 focus:outline-none focus:ring-2 focus:ring-unicef-blue/30">
+                            class="inline-flex h-11 w-full sm:w-auto items-center justify-center rounded-md border border-black/20 bg-white px-3 text-sm font-bold text-black hover:bg-black/5 focus:outline-none focus:ring-2 focus:ring-unicef-blue/30">
                         {% translate "Play years" %}
                     </button>
                     <div class="ml-auto self-center text-sm sm:text-base font-bold text-black" id="latest-data-date">
                         {% translate "Data as of" %} {{ latest_data_exact|default:latest_data_str }}
                     </div>
                 </div>
-                <div id="country-chips" class="mt-2 w-full flex flex-wrap gap-2"></div>
+                <div id="country-chips" class="mt-3 w-full flex flex-wrap gap-2"></div>
             </div>
         </div>
         <div class="max-w-[1600px] mx-auto px-4 lg:px-6 py-6 lg:py-8">
@@ -155,10 +158,10 @@
                         {% translate "People & Families" %}
                     </div>
                     <div class="grid flex-1 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-                        {% include "includes/kpi_card.html" with id="kpi-children" label="Children Reached" value=total_children|default:"0" note="HOPE reach" icon="baby" only %}
-                        {% include "includes/kpi_card.html" with id="kpi-families" label="Families Reached" value=total_households|default:"0" note="HOPE reach" icon="house" only %}
-                        {% include "includes/kpi_card.html" with id="kpi-individuals" label="Individuals Reached" value=total_individuals_reached|default:"0" note="People reached" icon="users" only %}
-                        {% include "includes/kpi_card.html" with id="kpi-social-workers" label="Social Workers Reached" value=total_social_workers|default:"0" note="Frontline workforce assisted" icon="heart-handshake" only %}
+                        {% include "includes/kpi_card.html" with id="kpi-children" label="Children Reached" value=total_children|default:"0" icon="baby" only %}
+                        {% include "includes/kpi_card.html" with id="kpi-families" label="Families Reached" value=total_households|default:"0" icon="house" only %}
+                        {% include "includes/kpi_card.html" with id="kpi-individuals" label="Individuals Reached" value=total_individuals_reached|default:"0" icon="users" only %}
+                        {% include "includes/kpi_card.html" with id="kpi-social-workers" label="Social Workers Reached" value=total_social_workers|default:"0" icon="heart-handshake" only %}
                     </div>
                 </div>
                 <div class="xl:col-span-1 flex flex-col">
@@ -167,7 +170,7 @@
                         {% translate "Cash" %}
                     </div>
                     <div class="flex-1">
-                        {% include "includes/kpi_card.html" with id="kpi-cash" label="Cash Delivered (USD)" value=total_cash_disbursed|default:"0" prefix="$" icon="banknote" payments_id="kpi-payments" payments_value=total_payments|default:"0" average_id="kpi-average-transfer" average_value=average_transfer|default:"0" only %}
+                        {% include "includes/kpi_card.html" with id="kpi-cash" label="Cash Delivered (USD)" value=total_cash_disbursed|default:"0" prefix="$" icon="banknote" payments_id="kpi-payments" payments_value=total_payments|default:"0" average_id="kpi-average-transfer" average_value=average_transfer|default:"0" disclaimer=True only %}
                     </div>
                 </div>
             </div>
@@ -272,7 +275,7 @@
             </div>
             <!-- Trust links -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
-                <a href="https://unicef.sharepoint.com/:w:/t/EMOPS-NYHQ-HCT/ETNzq6Frl5JPq6U0YLp7KXEBGRRp4uP23iizPHGmZfa61A?e=NlZoym"
+                <a href="https://www.unicef.org/documents/policy-personal-data-protection"
                    target="_blank"
                    rel="noopener"
                    class="bg-white p-5 rounded-lg border border-black/10 shadow-sm hover:border-unicef-blue hover:shadow-md transition group">
@@ -334,15 +337,20 @@
 {% translate "Nutrition" as t_dim_nutrition %}
 {% translate "Child Protection" as t_dim_child_protection %}
 {% translate "Social Protection" as t_dim_social_protection %}
+{% translate "Social Policy" as t_dim_social_policy %}
 {% translate "Multi-purpose Cash" as t_dim_mpc %}
 {% translate "Winterization" as t_dim_winterization %}
 {% translate "Mobile Money" as t_dim_mobile_money %}
 {% translate "Bank Transfer" as t_dim_bank_transfer %}
+{% translate "Transfer to Account" as t_dim_transfer_to_account %}
 {% translate "Cash in Hand" as t_dim_cash_in_hand %}
 {% translate "Cash on Site" as t_dim_cash_on_site %}
+{% translate "Cash Over the Counter" as t_dim_cash_otc %}
 {% translate "Paper Voucher" as t_dim_paper_voucher %}
 {% translate "e-Voucher" as t_dim_evoucher %}
+{% translate "Voucher" as t_dim_voucher %}
 {% translate "Prepaid Card" as t_dim_prepaid_card %}
+{% translate "ATM Card" as t_dim_atm_card %}
 document.addEventListener('DOMContentLoaded', async function () {
     const docLang = document.documentElement.lang || 'en';
     const countryKey = window.HopeChart?.countryKey || (value => String(value || '').toLowerCase());
@@ -365,7 +373,13 @@ document.addEventListener('DOMContentLoaded', async function () {
         'child_protection': '{{ t_dim_child_protection|escapejs }}',
         'social protection': '{{ t_dim_social_protection|escapejs }}',
         'social_protection': '{{ t_dim_social_protection|escapejs }}',
+        'social policy': '{{ t_dim_social_policy|escapejs }}',
+        'social_policy': '{{ t_dim_social_policy|escapejs }}',
         'multi-purpose cash': '{{ t_dim_mpc|escapejs }}',
+        'multi purpose cash': '{{ t_dim_mpc|escapejs }}',
+        'multi_purpose_cash': '{{ t_dim_mpc|escapejs }}',
+        'multi purpose': '{{ t_dim_mpc|escapejs }}',
+        'multi_purpose': '{{ t_dim_mpc|escapejs }}',
         'multipurpose cash': '{{ t_dim_mpc|escapejs }}',
         'mpc': '{{ t_dim_mpc|escapejs }}',
         'winterization': '{{ t_dim_winterization|escapejs }}',
@@ -373,6 +387,8 @@ document.addEventListener('DOMContentLoaded', async function () {
         'mobile_money': '{{ t_dim_mobile_money|escapejs }}',
         'bank transfer': '{{ t_dim_bank_transfer|escapejs }}',
         'bank_transfer': '{{ t_dim_bank_transfer|escapejs }}',
+        'transfer to account': '{{ t_dim_transfer_to_account|escapejs }}',
+        'transfer_to_account': '{{ t_dim_transfer_to_account|escapejs }}',
         'cash in hand': '{{ t_dim_cash_in_hand|escapejs }}',
         'cash_in_hand': '{{ t_dim_cash_in_hand|escapejs }}',
         'direct cash': '{{ t_dim_cash_in_hand|escapejs }}',
@@ -380,12 +396,20 @@ document.addEventListener('DOMContentLoaded', async function () {
         'cash_on_site': '{{ t_dim_cash_on_site|escapejs }}',
         'outreach payment': '{{ t_dim_cash_on_site|escapejs }}',
         'outreach payments': '{{ t_dim_cash_on_site|escapejs }}',
+        'cash over the counter': '{{ t_dim_cash_otc|escapejs }}',
+        'cash_over_the_counter': '{{ t_dim_cash_otc|escapejs }}',
         'paper voucher': '{{ t_dim_paper_voucher|escapejs }}',
         'paper_voucher': '{{ t_dim_paper_voucher|escapejs }}',
         'e-voucher': '{{ t_dim_evoucher|escapejs }}',
         'electronic voucher': '{{ t_dim_evoucher|escapejs }}',
+        'voucher': '{{ t_dim_voucher|escapejs }}',
         'prepaid card': '{{ t_dim_prepaid_card|escapejs }}',
-        'debit card': '{{ t_dim_prepaid_card|escapejs }}'
+        'pre-paid card': '{{ t_dim_prepaid_card|escapejs }}',
+        'pre paid card': '{{ t_dim_prepaid_card|escapejs }}',
+        'pre_paid_card': '{{ t_dim_prepaid_card|escapejs }}',
+        'debit card': '{{ t_dim_prepaid_card|escapejs }}',
+        'atm card': '{{ t_dim_atm_card|escapejs }}',
+        'atm_card': '{{ t_dim_atm_card|escapejs }}'
     };
     const translateDimension = value => {
         if (!value) return '{{ t_not_specified|escapejs }}';
@@ -407,8 +431,8 @@ document.addEventListener('DOMContentLoaded', async function () {
     };
     const money = value => {
         const v = Number(value) || 0;
-        if (Math.abs(v) >= 1e9) return `$${(v / 1e9).toFixed(1)}B`;
-        if (Math.abs(v) >= 1e6) return `$${(v / 1e6).toFixed(1)}M`;
+        if (Math.abs(v) >= 1e9) return `$${(v / 1e9).toFixed(1).replace(/\.0$/, '')}B`;
+        if (Math.abs(v) >= 1e6) return `$${(v / 1e6).toFixed(1).replace(/\.0$/, '')}M`;
         if (Math.abs(v) >= 1e3) return `$${(v / 1e3).toFixed(0)}K`;
         return `$${Math.round(v).toLocaleString(docLang)}`;
     };
@@ -839,7 +863,7 @@ document.addEventListener('DOMContentLoaded', async function () {
             media: [{
                 query: { maxWidth: 520 },
                 option: {
-                    legend: { type: 'scroll', bottom: 0, left: 'center', right: 'auto', width: '90%', textStyle: { fontSize: 11, color: '#64748b' } },
+                    legend: { type: 'scroll', bottom: 0, left: 'center', right: 'auto', width: '90%', textStyle: { fontSize: 11, color: 'rgba(0,0,0,0.6)' } },
                     series: [{
                         radius: ['48%', '72%'],
                         label: { show: false },

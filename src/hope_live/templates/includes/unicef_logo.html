@@ -1,0 +1,17 @@
+{% load i18n static %}
+{% if LANGUAGE_CODE == "fr" %}
+    {% static 'images/unicef-logo-white-fr.png' as unicef_logo %}
+{% elif LANGUAGE_CODE == "es" %}
+    {% static 'images/unicef-logo-white-es.png' as unicef_logo %}
+{% elif LANGUAGE_CODE == "ar" %}
+    {% static 'images/unicef-logo-white-ar.png' as unicef_logo %}
+{% elif LANGUAGE_CODE == "ru" %}
+    {% static 'images/unicef-logo-white-ru.png' as unicef_logo %}
+{% elif LANGUAGE_CODE == "zh-hans" %}
+    {% static 'images/unicef-logo-white-zh.png' as unicef_logo %}
+{% else %}
+    {% static 'images/unicef-logo-white-en.png' as unicef_logo %}
+{% endif %}
+<img src="{{ unicef_logo }}"
+     alt="UNICEF"
+     class="{{ logo_class|default:'h-10 w-auto max-w-full object-contain object-left' }}" />

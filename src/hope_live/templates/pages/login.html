@@ -2,10 +2,10 @@
 {% load i18n static %}
 
 {% block header %}
-<div class="bg-unicef-blue text-white border-b border-white/20 shadow-sm">
+<div class="bg-unicef-blue text-black border-b border-black/10 shadow-sm">
     <div class="max-w-[1600px] mx-auto px-4 lg:px-6 py-3 flex items-center gap-3">
-        <img src="{% static 'images/logo-white.png' %}" alt="UNICEF" class="h-10 w-auto" />
-        <span class="text-lg font-bold tracking-tight">{% translate "HOPE Live Dashboard" %}</span>
+        {% include "includes/unicef_logo.html" with logo_class="max-h-10 w-auto max-w-[220px] object-contain object-left" %}
+        <span class="text-lg font-bold tracking-tight text-black">{% translate "HOPE Live Dashboard" %}</span>
     </div>
 </div>
 {% endblock header %}

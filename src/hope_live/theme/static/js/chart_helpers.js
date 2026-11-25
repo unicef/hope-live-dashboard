@@ -26,7 +26,7 @@
     };
 
     function getStableColor(name) {
-        if (!name) return '#5470c6';
+        if (!name) return '#00AEEF';
         let hash = 0;
         for (let i = 0; i < name.length; i++) {
             // Equivalent to ((hash << 5) - hash), but avoids the shift that

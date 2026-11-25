@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', function () {
     };
 
     const chartHelpers = window.HopeChart || {};
-    const getStableColor = chartHelpers.getStableColor || (() => '#5470c6');
+    const getStableColor = chartHelpers.getStableColor || (() => '#00AEEF');
 
     const fallbackCountryToRegion = {
         'afghanistan': 'SAR',
@@ -327,6 +327,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function updateAll() {
         updateChartTitles();
+        const compactPie = window.innerWidth < 640;
+        const pieRadius = compactPie ? ['35%', '55%'] : ['45%', '70%'];
+        const pieLabelLength = compactPie ? 8 : 15;
+        const pieLabelLength2 = compactPie ? 5 : 10;
         let activeDimType = 'sector';
         if (selectedPrograms.size > 0) activeDimType = 'program';
         else if (selectedDeliveries.size > 0) activeDimType = 'delivery_type';
@@ -431,7 +435,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 grid: { top: 15, bottom: 25, left: leftMargin, right: percentTotal ? 110 : 70 },
                 xAxis: {
                     type: 'value',
-                    axisLabel: { formatter: val => formatMetric(val, metric), color: 'rgba(0,0,0,0.6)', fontSize: 10 },
+                    axisLabel: { formatter: val => formatMetric(val, metric), color: 'rgba(0,0,0,0.6)', fontSize: 11 },
                     splitLine: { lineStyle: { color: 'rgba(0,0,0,0.08)' } }
                 },
                 yAxis: {
@@ -447,7 +451,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         lineHeight: 12,
                         formatter: val => axisLabelFor(val),
                         color: '#000000',
-                        fontSize: 10
+                        fontSize: 11
                     }
                 },
                 series: [{
@@ -518,9 +522,10 @@ document.addEventListener('DOMContentLoaded', function () {
             },
             series: [{
                 type: 'pie',
-                radius: ['45%', '70%'],
+                radius: pieRadius,
                 center: ['50%', '50%'],
                 avoidLabelOverlap: true,
+                labelLayout: { hideOverlap: true, moveOverlap: 'shiftY' },
                 itemStyle: { borderRadius: 6, borderColor: '#fff', borderWidth: 2 },
                 label: {
                     show: true,
@@ -531,8 +536,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 },
                 labelLine: {
                     show: true,
-                    length: 15,
-                    length2: 10,
+                    length: pieLabelLength,
+                    length2: pieLabelLength2,
                     smooth: false
                 },
                 emphasis: {
@@ -573,9 +578,10 @@ document.addEventListener('DOMContentLoaded', function () {
             },
             series: [{
                 type: 'pie',
-                radius: ['45%', '70%'],
+                radius: pieRadius,
                 center: ['50%', '50%'],
                 avoidLabelOverlap: true,
+                labelLayout: { hideOverlap: true, moveOverlap: 'shiftY' },
                 itemStyle: { borderRadius: 6, borderColor: '#fff', borderWidth: 2 },
                 label: {
                     show: true,
@@ -586,8 +592,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 },
                 labelLine: {
                     show: true,
-                    length: 15,
-                    length2: 10,
+                    length: pieLabelLength,
+                    length2: pieLabelLength2,
                     smooth: false
                 },
                 emphasis: {
@@ -701,9 +707,9 @@ document.addEventListener('DOMContentLoaded', function () {
         const rate = rates[field] !== undefined ? rates[field] : rates.payments;
 
         const stages = [
-            { name: gettext('In pipeline'), value: total[field], color: '#00AEEF' },
-            { name: gettext('Delivered'), value: delivered[field], color: '#00AEEF' },
-            { name: gettext('Reconciled'), value: Math.round(delivered[field] * rate * 100) / 100, color: '#004C45' }
+            { name: gettext('In pipeline'), value: total[field], color: '#FFB500', labelColor: '#000000' },
+            { name: gettext('Delivered'), value: delivered[field], color: '#00AEEF', labelColor: '#000000' },
+            { name: gettext('Reconciled'), value: Math.round(delivered[field] * rate * 100) / 100, color: '#004C45', labelColor: '#FFFFFF' }
         ];
 
         pipelineChart.setOption({
@@ -724,18 +730,18 @@ document.addEventListener('DOMContentLoaded', function () {
                     show: true,
                     position: 'inside',
                     formatter: params => `${params.name}  •  ${formatMetric(params.value)}`,
-                    color: '#ffffff',
+                    color: '#000000',
                     fontWeight: 600,
                     fontSize: 12,
-                    textBorderColor: 'rgba(0, 0, 0, 0.35)',
-                    textBorderWidth: 2
+                    textBorderWidth: 0
                 },
                 itemStyle: { borderColor: '#ffffff', borderWidth: 2 },
                 emphasis: { label: { fontSize: 14 } },
                 data: stages.map(s => ({
                     name: s.name,
                     value: s.value,
-                    itemStyle: { color: s.color }
+                    itemStyle: { color: s.color },
+                    label: { color: s.labelColor }
                 }))
             }]
         }, { notMerge: true });

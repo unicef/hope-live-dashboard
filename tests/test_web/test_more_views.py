@@ -1,4 +1,5 @@
 import datetime as dt
+import re
 
 import pytest
 import responses
@@ -187,9 +188,38 @@ def test_landing_page_shows_social_workers_kpi(client, user_factory):
     assert response.status_code == 200
     content = response.content.decode("utf-8")
     assert "Social Workers Reached" in content
-    assert "Frontline workforce assisted" in content
+    assert "HOPE reach" not in content
+    assert "Frontline workforce assisted" not in content
     assert "Reconciled Transactions" not in content
     assert "Verified Transactions" not in content
+
+
+@pytest.mark.django_db
+def test_landing_page_uses_unicef_brand_assets(client, user_factory):
+    client.force_login(user_factory())
+    response = client.get("/")
+
+    assert response.status_code == 200
+    content = response.content.decode("utf-8")
+    assert "Disclaimer: All figures shown are indicative only and may vary due to rounding" in content
+    assert "© UNICEF/UNI503920/Madina Qati Musadiq" in content
+    assert "unicef-logo-white-en.png" in content
+    assert "hero-unicef.jpg" in content
+    assert "https://www.unicef.org/documents/policy-personal-data-protection" in content
+    assert "© United Nations Children’s Fund (UNICEF)" in content
+
+
+@pytest.mark.django_db
+def test_landing_page_uses_only_local_assets(client, user_factory):
+    client.force_login(user_factory())
+    content = client.get("/").content.decode("utf-8")
+
+    script_sources = re.findall(r'<script[^>]+src="([^"]+)"', content)
+    stylesheet_sources = re.findall(r'<link[^>]+href="([^"]+)"', content)
+
+    assert script_sources
+    assert all(source.startswith("/") for source in script_sources), script_sources
+    assert all(source.startswith("/") for source in stylesheet_sources), stylesheet_sources
 
 
 @pytest.mark.django_db
@@ -214,6 +244,28 @@ def test_language_switch_views(client, user_factory):
     response_fr = client.get("/fr/")
     assert response_fr.status_code == 200
     assert "Familles bénéficiaires" in response_fr.content.decode("utf-8")
+
+
+@pytest.mark.parametrize(
+    ("language", "logo", "expected"),
+    [
+        ("es", "unicef-logo-white-es.png", "Política social"),
+        ("fr", "unicef-logo-white-fr.png", "Politique sociale"),
+        ("ar", "unicef-logo-white-ar.png", "السياسات الاجتماعية"),
+        ("ru", "unicef-logo-white-ru.png", "Социальная политика"),
+        ("zh-hans", "unicef-logo-white-zh.png", "社会政策"),
+    ],
+)
+@pytest.mark.django_db
+def test_landing_localized_logo_and_brand_strings(client, user_factory, language, logo, expected):
+    client.force_login(user_factory())
+    response = client.get(f"/{language}/")
+
+    assert response.status_code == 200
+    content = response.content.decode("utf-8")
+    assert logo in content
+    assert expected in content
+    assert f'lang="{language}"' in content
 
 
 @pytest.mark.django_db

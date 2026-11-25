@@ -57,7 +57,7 @@
         '#C7EBF4',
         '#BDBDBD',
         '#BDBDBD',
-        '#EF4444',
+        '#E2231A',
         '#004C45',
         '#00AEEF',
         '#0047BB',
@@ -67,6 +67,9 @@
 
     var theme = {
         color: colorPalette,
+        textStyle: {
+            fontFamily: '"Noto Sans", "Noto Sans Arabic", "Noto Sans SC", sans-serif'
+        },
 
         title: {
             textStyle: {
@@ -178,7 +181,7 @@
             },
             areaStyle: {
                 color: '#00AEEF',
-                color0: '#b6a2de'
+                color0: '#0047BB'
             }
         },
 

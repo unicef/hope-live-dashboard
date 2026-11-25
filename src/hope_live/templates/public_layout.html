@@ -27,20 +27,18 @@
     </head>
     <body class="min-h-screen bg-white text-black antialiased font-sans">
         {% include "includes/icons_sprite.html" %}
-        <header class="bg-unicef-blue text-white">
+        <header class="bg-unicef-blue text-black">
             <div class="max-w-[1600px] mx-auto px-4 lg:px-6">
                 <div class="flex items-center justify-between gap-3 py-2 sm:py-3">
                     <a href="{% url 'web:index' %}"
                        class="flex items-center gap-3 shrink-0"
                        aria-label="{% translate 'UNICEF Cash-based Assistance home' %}">
-                        <img src="{% static 'images/logo-white-trimmed.png' %}"
-                             alt="UNICEF"
-                             class="h-12 sm:h-16 w-auto" />
-                        <span class="hidden sm:block text-base lg:text-xl font-bold tracking-tight leading-tight border-l border-white/40 pl-3">
+                        {% include "includes/unicef_logo.html" with logo_class="max-h-10 sm:max-h-12 w-auto max-w-[180px] sm:max-w-[280px] object-contain object-left" %}
+                        <span class="hidden xl:block text-base lg:text-lg font-bold tracking-tight leading-tight border-l border-black/20 pl-3 text-black">
                             {% translate "UNICEF Cash-based Assistance" %}
                         </span>
                     </a>
-                    <nav class="hidden lg:flex items-center gap-5 text-base lg:text-lg font-bold"
+                    <nav class="hidden lg:flex items-center gap-5 text-base lg:text-lg font-bold text-black"
                          aria-label="{% translate 'Public navigation' %}">
                         <a href="#global-evidence"
                            class="hover:underline transition-colors">{% translate "Evidence" %}</a>
@@ -53,17 +51,17 @@
                            rel="noopener"
                            class="hover:underline transition-colors">{% translate "Contact" %}</a>
                     </nav>
+                    {% get_available_languages as LANGUAGES %}
+                    {% get_language_info_list for LANGUAGES as langs %}
                     <div class="flex items-center gap-2">
-                        <form action="{% url 'set_language' %}" method="post" class="m-0">
+                        <form action="{% url 'set_language' %}" method="post" class="m-0 hidden sm:block">
                             {% csrf_token %}
                             <input name="next" type="hidden" value="{{ request.get_full_path }}" />
-                            {% get_available_languages as LANGUAGES %}
-                            {% get_language_info_list for LANGUAGES as langs %}
                             <label class="sr-only" for="public-language">{% translate "Language" %}</label>
                             <select id="public-language"
                                     name="language"
                                     onchange="this.form.submit()"
-                                    class="text-sm font-bold bg-unicef-blue-dark border border-white/30 text-white rounded px-2 py-1.5 focus:outline-none focus:ring-2 focus:ring-white/60">
+                                    class="h-9 sm:h-10 min-w-[100px] rounded-md border border-white/30 bg-unicef-blue-dark px-3 pr-8 text-sm font-bold text-white focus:outline-none focus:ring-2 focus:ring-white/60">
                                 {% for lang in langs %}
                                     <option value="{{ lang.code }}"
                                             {% if lang.code == LANGUAGE_CODE %}selected{% endif %}
@@ -74,7 +72,7 @@
                             </select>
                         </form>
                         <details id="public-mobile-menu" class="relative lg:hidden">
-                            <summary class="list-none [&::-webkit-details-marker]:hidden cursor-pointer p-2 -mr-1 rounded hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-white/60"
+                            <summary class="list-none [&::-webkit-details-marker]:hidden cursor-pointer p-2 -mr-1 rounded text-black hover:bg-black/10 focus:outline-none focus:ring-2 focus:ring-black/40"
                                      aria-label="{% translate 'Menu' %}">
                                 {% icon "menu" "h-6 w-6" %}
                             </summary>
@@ -98,6 +96,23 @@
                                     {% icon "mail" "h-5 w-5 text-black" %}
                                     {% translate "Contact" %}
                                 </a>
+                                <form action="{% url 'set_language' %}"
+                                      method="post"
+                                      class="sm:hidden mt-2 border-t border-black/10 pt-2">
+                                    {% csrf_token %}
+                                    <input name="next" type="hidden" value="{{ request.get_full_path }}" />
+                                    <label class="block px-3 py-1 text-xs font-bold uppercase tracking-wide text-black/60"
+                                           for="mobile-language">{% translate "Language" %}</label>
+                                    <select id="mobile-language"
+                                            name="language"
+                                            onchange="this.form.submit()"
+                                            class="w-full rounded-md border border-black/20 bg-white px-3 py-2 text-sm font-bold text-black focus:outline-none focus:ring-2 focus:ring-unicef-blue">
+                                        {% for lang in langs %}
+                                            <option value="{{ lang.code }}"
+                                                    {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>{{ lang.name_local|capfirst }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </form>
                             </div>
                         </details>
                     </div>
@@ -110,7 +125,7 @@
         {% block footer %}
             <footer class="bg-white border-t border-black/10 py-8">
                 <div class="max-w-[1600px] mx-auto px-4 lg:px-6 flex flex-col md:flex-row justify-between items-center gap-3 text-sm text-black/70">
-                    <p>UNICEF © {% now "Y" %}</p>
+                    <p>© United Nations Children’s Fund (UNICEF) {% now "Y" %}</p>
                     <div class="flex flex-wrap items-center gap-5">
                         <span>{% blocktranslate with version=app.version %}Version {{ version }}{% endblocktranslate %}</span>
                     </div>

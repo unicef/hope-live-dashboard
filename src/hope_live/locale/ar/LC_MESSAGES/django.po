@@ -2253,3 +2253,27 @@ msgid ""
 msgstr ""
 "لا تندرج برامج الأخصائيين الاجتماعيين ضمن إحصاءات الأسر أو الأطفال أو "
 "الأشخاص ذوي الإعاقة."
+
+#: src/hope_live/templates/pages/landing.html
+msgid "Social Policy"
+msgstr "السياسات الاجتماعية"
+
+#: src/hope_live/templates/pages/landing.html
+msgid "Transfer to Account"
+msgstr "تحويل إلى حساب"
+
+#: src/hope_live/templates/pages/landing.html
+msgid "Cash Over the Counter"
+msgstr "صرف نقدي عبر منافذ الخدمة"
+
+#: src/hope_live/templates/pages/landing.html
+msgid "Voucher"
+msgstr "قسيمة"
+
+#: src/hope_live/templates/pages/landing.html
+msgid "ATM Card"
+msgstr "بطاقة صراف آلي"
+
+#: src/hope_live/templates/includes/kpi_card.html
+msgid "Disclaimer: All figures shown are indicative only and may vary due to rounding"
+msgstr "إخلاء مسؤولية: جميع الأرقام المعروضة استرشادية فقط وقد تختلف بسبب التقريب"

@@ -9,8 +9,8 @@
             <p class="text-sm text-black/60">{% translate "Payment reconciliation and completion status tracking" %}</p>
         </div>
         <div class="flex items-center gap-2">
-            <span class="bg-unicef-blue text-white text-[11px] font-bold px-2.5 py-1 rounded-md">{% translate "Live data" %}</span>
-            <span class="text-xs text-black/50 font-semibold">{% translate "Data as of" %} <span id="data-as-of">—</span></span>
+            <span class="bg-unicef-blue-dark text-white text-xs font-bold px-2.5 py-1 rounded-md">{% translate "Live data" %}</span>
+            <span class="text-xs text-black/60 font-semibold">{% translate "Data as of" %} <span id="data-as-of">—</span></span>
         </div>
     </div>
 
@@ -20,7 +20,7 @@
     <!-- Metric Selector Pills -->
     <div class="mb-3 flex flex-wrap gap-2 items-center justify-between">
         <div class="text-xs font-bold text-black/60">{% translate "View reconciliation metrics by:" %}</div>
-        <div class="flex bg-black/5 p-0.5 rounded-lg space-x-1 border border-black/10">
+        <div class="flex w-full flex-wrap gap-1 bg-black/5 p-0.5 rounded-lg border border-black/10 sm:w-auto sm:flex-nowrap">
             <button id="btn-count" class="metric-tab px-3 py-1 text-xs font-bold rounded-md bg-white shadow-sm text-unicef-blue-dark transition-all duration-200 active-metric cursor-pointer" data-metric="payments">
                 {% translate "Payments count" %}
             </button>
@@ -40,7 +40,7 @@
     <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-3.5">
         <div class="bg-white rounded-lg shadow-sm border border-black/10 p-3.5 border-l-4 border-unicef-green flex items-center justify-between gap-3 min-h-[92px]">
             <div class="min-w-0">
-                <h3 id="reconciled-card-title" class="text-black/60 text-[10px] sm:text-[11px] font-bold">{% translate "Reconciled payments" %}</h3>
+                <h3 id="reconciled-card-title" class="text-black/60 text-xs font-bold">{% translate "Reconciled payments" %}</h3>
                 <p id="total-reconciled" class="text-xl sm:text-2xl font-bold text-black mt-0.5 leading-none">0</p>
                 {% include "includes/chart_info.html" with definition=_("Payments that have been reconciled.") source=_("HOPE payments") method=_("Count of payments with reconciled status.") %}
             </div>
@@ -48,19 +48,19 @@
                 {% icon "shield-check" "h-4 w-4" %}
             </span>
         </div>
-        <div class="bg-white rounded-lg shadow-sm border border-black/10 p-3.5 border-l-4 border-amber-500 flex items-center justify-between gap-3 min-h-[92px]">
+        <div class="bg-white rounded-lg shadow-sm border border-black/10 p-3.5 border-l-4 border-unicef-yellow flex items-center justify-between gap-3 min-h-[92px]">
             <div class="min-w-0">
-                <h3 id="opened-card-title" class="text-black/60 text-[10px] sm:text-[11px] font-bold">{% translate "Pending Reconciliation" %}</h3>
-                <p id="total-opened" class="text-xl sm:text-2xl font-bold text-amber-600 mt-0.5 leading-none">0</p>
+                <h3 id="opened-card-title" class="text-black/60 text-xs font-bold">{% translate "Pending Reconciliation" %}</h3>
+                <p id="total-opened" class="text-xl sm:text-2xl font-bold text-black mt-0.5 leading-none">0</p>
                 {% include "includes/chart_info.html" with definition=_("Payments pending reconciliation.") source=_("HOPE payments") method=_("Count of payments still awaiting reconciliation.") %}
             </div>
-            <span class="w-9 h-9 shrink-0 rounded bg-amber-500 text-white flex items-center justify-center">
+            <span class="w-9 h-9 shrink-0 rounded bg-unicef-yellow text-black flex items-center justify-center">
                 {% icon "rotate-ccw" "h-4 w-4" %}
             </span>
         </div>
         <div class="bg-white rounded-lg shadow-sm border border-black/10 p-3.5 border-l-4 border-unicef-blue flex justify-between items-center min-h-[92px]">
             <div>
-                <h3 class="text-black/60 text-[10px] sm:text-[11px] font-bold">{% translate "Reconciliation rate" %}</h3>
+                <h3 class="text-black/60 text-xs font-bold">{% translate "Reconciliation rate" %}</h3>
                 <p id="completion-rate-text" class="text-xl sm:text-2xl font-bold text-black mt-0.5 leading-none">0%</p>
                 {% include "includes/chart_info.html" with definition=_("Share of payments reconciled.") source=_("HOPE payments") method=_("Reconciled payments divided by total payments.") %}
             </div>
@@ -70,7 +70,7 @@
 
     <!-- Timeline Filter (Full Width) -->
     <div class="bg-white rounded-lg shadow-sm border border-black/10 p-3.5 mb-4">
-        <h3 id="timeline-title" class="text-sm font-bold text-black mb-1">{% translate "Reconciliation timeline" %}</h3>
+        <h3 id="timeline-title" class="text-base font-bold text-black mb-1">{% translate "Reconciliation timeline" %}</h3>
         {% chart_info "completion.timeline" %}
         <div id="time-focus-chart" class="w-full h-[220px]"></div>
         <div id="time-range-chart" style="display: none;"></div>
@@ -80,12 +80,12 @@
     <div class="grid grid-cols-1 gap-4 mb-4">
         <div class="bg-white rounded-lg shadow-sm border border-black/10 p-3.5">
             <div class="flex flex-wrap justify-between items-center gap-2 mb-2">
-                <h3 id="country-chart-title" class="text-sm font-bold text-black">{% translate "Reconciliation status by country" %}</h3>
-                <div class="flex bg-black/5 p-0.5 rounded-lg space-x-1 border border-black/10">
-                    <button id="country-view-absolute" type="button" class="country-view-tab px-2.5 py-1 text-[11px] font-bold rounded-md bg-white shadow-sm text-unicef-blue-dark transition-all duration-200 cursor-pointer">
+                <h3 id="country-chart-title" class="text-base font-bold text-black">{% translate "Reconciliation status by country" %}</h3>
+                <div class="flex w-full flex-wrap gap-1 bg-black/5 p-0.5 rounded-lg border border-black/10 sm:w-auto sm:flex-nowrap">
+                    <button id="country-view-absolute" type="button" class="country-view-tab px-2.5 py-1 text-xs font-bold rounded-md bg-white shadow-sm text-unicef-blue-dark transition-all duration-200 cursor-pointer">
                         {% translate "Absolute values" %}
                     </button>
-                    <button id="country-view-share" type="button" class="country-view-tab px-2.5 py-1 text-[11px] font-bold rounded-md text-black/60 hover:text-black transition-all duration-200 cursor-pointer">
+                    <button id="country-view-share" type="button" class="country-view-tab px-2.5 py-1 text-xs font-bold rounded-md text-black/60 hover:text-black transition-all duration-200 cursor-pointer">
                         {% translate "Percentages" %}
                     </button>
                 </div>
@@ -97,27 +97,27 @@
 
     <!-- Payment verification (appears once the feed provides verification rows) -->
     <div id="verification-card" class="bg-white rounded-lg shadow-sm border border-black/10 p-3.5 mb-4 hidden">
-        <h3 class="text-sm font-bold text-black mb-2">{% translate "Payment verification" %}</h3>
+        <h3 class="text-base font-bold text-black mb-2">{% translate "Payment verification" %}</h3>
         {% chart_info "completion.verification" %}
         <div class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-3 mt-2">
-            <div class="p-3 bg-black/[0.03] rounded-lg border border-black/10">
-                <div class="text-[10px] text-black/60 uppercase tracking-wider font-bold mb-1">{% translate "Selected for verification" %}</div>
+            <div class="p-3 bg-black/[0.03] rounded-lg border border-black/10 border-l-4 border-unicef-blue">
+                <div class="text-xs text-black/60 uppercase tracking-wider font-bold mb-1">{% translate "Selected for verification" %}</div>
                 <p id="verification-selected" class="text-lg font-bold text-black leading-none">0</p>
             </div>
-            <div class="p-3 bg-black/[0.03] rounded-lg border border-black/10">
-                <div class="text-[10px] text-black/60 uppercase tracking-wider font-bold mb-1">{% translate "Successfully verified" %}</div>
-                <p id="verification-verified" class="text-lg font-bold text-emerald-600 leading-none">0</p>
+            <div class="p-3 bg-black/[0.03] rounded-lg border border-black/10 border-l-4 border-unicef-green">
+                <div class="text-xs text-black/60 uppercase tracking-wider font-bold mb-1">{% translate "Successfully verified" %}</div>
+                <p id="verification-verified" class="text-lg font-bold text-unicef-green leading-none">0</p>
             </div>
-            <div class="p-3 bg-black/[0.03] rounded-lg border border-black/10">
-                <div class="text-[10px] text-black/60 uppercase tracking-wider font-bold mb-1">{% translate "Pending verification" %}</div>
-                <p id="verification-pending" class="text-lg font-bold text-amber-600 leading-none">0</p>
+            <div class="p-3 bg-black/[0.03] rounded-lg border border-black/10 border-l-4 border-unicef-yellow">
+                <div class="text-xs text-black/60 uppercase tracking-wider font-bold mb-1">{% translate "Pending verification" %}</div>
+                <p id="verification-pending" class="text-lg font-bold text-black leading-none">0</p>
             </div>
-            <div class="p-3 bg-black/[0.03] rounded-lg border border-black/10">
-                <div class="text-[10px] text-black/60 uppercase tracking-wider font-bold mb-1">{% translate "With discrepancies" %}</div>
-                <p id="verification-discrepancies" class="text-lg font-bold text-rose-600 leading-none">0</p>
+            <div class="p-3 bg-black/[0.03] rounded-lg border border-black/10 border-l-4 border-unicef-red">
+                <div class="text-xs text-black/60 uppercase tracking-wider font-bold mb-1">{% translate "With discrepancies" %}</div>
+                <p id="verification-discrepancies" class="text-lg font-bold text-unicef-red leading-none">0</p>
             </div>
-            <div class="p-3 bg-black/[0.03] rounded-lg border border-black/10">
-                <div class="text-[10px] text-black/60 uppercase tracking-wider font-bold mb-1">{% translate "Verification completion rate" %}</div>
+            <div class="p-3 bg-black/[0.03] rounded-lg border border-black/10 border-l-4 border-unicef-blue-dark">
+                <div class="text-xs text-black/60 uppercase tracking-wider font-bold mb-1">{% translate "Verification completion rate" %}</div>
                 <p id="verification-rate" class="text-lg font-bold text-black leading-none">0%</p>
             </div>
         </div>
@@ -125,8 +125,8 @@
 
     <!-- Reconciliation and delivery success rates -->
     <div class="bg-white rounded-lg shadow-sm border border-black/10 p-3.5 mb-4">
-        <h3 class="text-sm font-bold text-black mb-1">{% translate "Reconciliation and delivery success by country" %}</h3>
-        <p class="text-[11px] text-black/50 mb-2 italic">{% translate "Two rates per country, sorted by reconciliation rate. The dashed line is the 80 percent reference." %}</p>
+        <h3 class="text-base font-bold text-black mb-1">{% translate "Reconciliation and delivery success by country" %}</h3>
+        <p class="text-xs text-black/60 mb-2 italic">{% translate "Two rates per country, sorted by reconciliation rate. The dashed line is the 80 percent reference." %}</p>
         {% chart_info "completion.rates" %}
         <div id="completion-rates-chart" class="w-full h-[420px]"></div>
     </div>

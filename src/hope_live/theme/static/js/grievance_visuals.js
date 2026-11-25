@@ -61,7 +61,7 @@ document.addEventListener('DOMContentLoaded', function () {
     };
 
     const chartHelpers = window.HopeChart || {};
-    const getStableColor = chartHelpers.getStableColor || (() => '#5470c6');
+    const getStableColor = chartHelpers.getStableColor || (() => '#00AEEF');
     const formatCountry = chartHelpers.formatCountryName || (value => value);
 
     const formatCompactCount = val => {
@@ -254,6 +254,10 @@ document.addEventListener('DOMContentLoaded', function () {
     function updateAll() {
         updateTotals();
 
+        const compactPie = window.innerWidth < 640;
+        const pieRadius = compactPie ? ['35%', '55%'] : ['45%', '70%'];
+        const pieLabelLength = compactPie ? 8 : 15;
+        const pieLabelLength2 = compactPie ? 5 : 10;
         // 1. Timeline Chart (Stacked Area Chart of Open vs Resolved Tickets)
         const timelineDataOpen = ticketsByDayGroup.all()
             .filter(d => d.key !== null)
@@ -341,12 +345,13 @@ document.addEventListener('DOMContentLoaded', function () {
             tooltip: { trigger: 'item', formatter: '{b}: <b>{c}</b> ({d}%)' },
             series: [{
                 type: 'pie',
-                radius: ['45%', '70%'],
+                radius: pieRadius,
                 center: ['50%', '50%'],
                 avoidLabelOverlap: true,
+                labelLayout: { hideOverlap: true, moveOverlap: 'shiftY' },
                 itemStyle: { borderRadius: 6, borderColor: '#fff', borderWidth: 2 },
                 label: { show: true, position: 'outside', formatter: '{b}: {c} ({d}%)', fontSize: 11, color: '#000000' },
-                labelLine: { show: true, length: 15, length2: 10, smooth: false },
+                labelLine: { show: true, length: pieLabelLength, length2: pieLabelLength2, smooth: false },
                 emphasis: { label: { show: true, fontSize: 13, fontWeight: 'bold' } },
                 data: statusData.map(d => ({ name: d.key, value: d.value }))
             }]
@@ -388,7 +393,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 grid: { top: 15, bottom: 25, left: 220, right: 80 },
                 xAxis: {
                     type: 'value',
-                    axisLabel: { formatter: val => `${val}d`, color: 'rgba(0,0,0,0.6)', fontSize: 10 },
+                    axisLabel: { formatter: val => `${val}d`, color: 'rgba(0,0,0,0.6)', fontSize: 11 },
                     splitLine: { lineStyle: { color: 'rgba(0,0,0,0.08)' } }
                 },
                 yAxis: {
@@ -402,7 +407,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         width: 200,
                         overflow: 'truncate',
                         color: '#000000',
-                        fontSize: 10
+                        fontSize: 11
                     }
                 },
                 series: [{
@@ -434,12 +439,13 @@ document.addEventListener('DOMContentLoaded', function () {
             tooltip: { trigger: 'item', formatter: '{b}: <b>{c}</b> ({d}%)' },
             series: [{
                 type: 'pie',
-                radius: ['45%', '70%'],
+                radius: pieRadius,
                 center: ['50%', '50%'],
                 avoidLabelOverlap: true,
+                labelLayout: { hideOverlap: true, moveOverlap: 'shiftY' },
                 itemStyle: { borderRadius: 6, borderColor: '#fff', borderWidth: 2 },
                 label: { show: true, position: 'outside', formatter: '{b}: {c} ({d}%)', fontSize: 11, color: '#000000' },
-                labelLine: { show: true, length: 15, length2: 10, smooth: false },
+                labelLine: { show: true, length: pieLabelLength, length2: pieLabelLength2, smooth: false },
                 emphasis: { label: { show: true, fontSize: 13, fontWeight: 'bold' } },
                 data: priorityData.map(d => ({ name: d.key, value: d.value }))
             }]
@@ -479,7 +485,7 @@ document.addEventListener('DOMContentLoaded', function () {
             grid: { top: 15, bottom: 25, left: 220, right: 105 },
             xAxis: {
                 type: 'value',
-                axisLabel: { formatter: val => d3.format(".2s")(val).replace('G', 'B'), color: 'rgba(0,0,0,0.6)', fontSize: 10 },
+                axisLabel: { formatter: val => d3.format(".2s")(val).replace('G', 'B'), color: 'rgba(0,0,0,0.6)', fontSize: 11 },
                 splitLine: { lineStyle: { color: 'rgba(0,0,0,0.08)' } }
             },
             yAxis: {
@@ -493,7 +499,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     width: 200,
                     overflow: 'truncate',
                     color: '#000000',
-                    fontSize: 10
+                    fontSize: 11
                 }
             },
             series: [{
@@ -513,7 +519,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     },
                     color: '#000000',
                     fontWeight: 600,
-                    fontSize: 10
+                    fontSize: 11
                 }
             }]
         }, { notMerge: true });
@@ -552,7 +558,7 @@ document.addEventListener('DOMContentLoaded', function () {
             grid: { top: 15, bottom: 25, left: 220, right: 105 },
             xAxis: {
                 type: 'value',
-                axisLabel: { formatter: val => d3.format(".2s")(val).replace('G', 'B'), color: 'rgba(0,0,0,0.6)', fontSize: 10 },
+                axisLabel: { formatter: val => d3.format(".2s")(val).replace('G', 'B'), color: 'rgba(0,0,0,0.6)', fontSize: 11 },
                 splitLine: { lineStyle: { color: 'rgba(0,0,0,0.08)' } }
             },
             yAxis: {
@@ -566,7 +572,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     width: 200,
                     overflow: 'truncate',
                     color: '#000000',
-                    fontSize: 10
+                    fontSize: 11
                 }
             },
             series: [{
@@ -586,7 +592,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     },
                     color: '#000000',
                     fontWeight: 600,
-                    fontSize: 10
+                    fontSize: 11
                 }
             }]
         }, { notMerge: true });
@@ -660,7 +666,7 @@ document.addEventListener('DOMContentLoaded', function () {
             grid: { top: 45, bottom: 20, left: 190, right: 130 },
             xAxis: {
                 type: 'value',
-                axisLabel: { formatter: val => d3.format(".2s")(val).replace('G', 'B'), color: 'rgba(0,0,0,0.6)', fontSize: 10 },
+                axisLabel: { formatter: val => d3.format(".2s")(val).replace('G', 'B'), color: 'rgba(0,0,0,0.6)', fontSize: 11 },
                 splitLine: { lineStyle: { color: 'rgba(0,0,0,0.08)' } }
             },
             yAxis: {
@@ -669,7 +675,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 inverse: true,
                 axisTick: { show: false },
                 axisLine: { show: true, lineStyle: { color: 'rgba(0,0,0,0.08)' } },
-                axisLabel: { width: 180, overflow: 'break', color: '#000000', fontSize: 10 }
+                axisLabel: { width: 180, overflow: 'break', color: '#000000', fontSize: 11 }
             },
             series: [
                 {
@@ -699,7 +705,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         },
                         color: '#000000',
                         fontWeight: 600,
-                        fontSize: 10
+                        fontSize: 11
                     }
                 }
             ]

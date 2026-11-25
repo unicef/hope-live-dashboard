@@ -1222,7 +1222,7 @@ def test_brand_header_and_mobile_sidebar(browser, financial_aggregates):
         """
     )
     assert landing["background"] == "rgb(0, 174, 239)"
-    assert landing["color"] == "rgb(255, 255, 255)"
+    assert landing["color"] == "rgb(0, 0, 0)"
     assert landing["columns"] == 5
     assert landing["heroLogo"] is False
 
@@ -1232,15 +1232,92 @@ def test_brand_header_and_mobile_sidebar(browser, financial_aggregates):
         """
         const header = document.querySelector('header');
         const styles = getComputedStyle(header);
-        return {background: styles.backgroundColor, color: styles.color};
+        const active = document.querySelector('aside a[href="/dashboard/"]');
+        const inactive = document.querySelector('aside a[href="/demographic/"]');
+        const kpiLabel = document.querySelector('#total-amount-paid').previousElementSibling;
+        return {
+            background: styles.backgroundColor,
+            color: styles.color,
+            activeBackground: getComputedStyle(active).backgroundColor,
+            activeColor: getComputedStyle(active).color,
+            inactiveColor: getComputedStyle(inactive).color,
+            kpiLabelSize: parseFloat(getComputedStyle(kpiLabel).fontSize),
+            chartPalette: window.HopeChart.palette,
+            bodyFont: getComputedStyle(document.body).fontFamily
+        };
         """
     )
     assert internal["background"] == "rgb(0, 174, 239)"
-    assert internal["color"] == "rgb(255, 255, 255)"
+    assert internal["color"] == "rgb(0, 0, 0)"
+    assert internal["activeBackground"] == "rgb(0, 71, 187)"
+    assert internal["activeColor"] == "rgb(255, 255, 255)"
+    assert internal["inactiveColor"] == "rgb(0, 0, 0)"
+    assert internal["kpiLabelSize"] >= 12
+    assert "Noto Sans" in internal["bodyFont"]
+    for color in ("#00AEEF", "#0047BB", "#004C45", "#FFB500", "#FF7100"):
+        assert color in internal["chartPalette"]
 
     browser.set_window_size(390, 844)
     browser.sleep(0.5)
     sidebar_width = browser.execute_script("return document.querySelector('aside').getBoundingClientRect().width;")
     assert sidebar_width <= 60
-    overflow = browser.execute_script("return document.documentElement.scrollWidth - window.innerWidth;")
-    assert overflow <= 0
+
+    for path in ("/dashboard/", "/demographic/", "/completion/", "/grievance/", "/risk/"):
+        browser.open(path)
+        browser.wait_for_element_visible("main")
+        browser.sleep(0.3)
+        overflow = browser.execute_script("return document.documentElement.scrollWidth - window.innerWidth;")
+        assert overflow <= 1, f"{path} overflows by {overflow}px"
+
+    browser.set_window_size(1024, 900)
+    browser.open("/dashboard/")
+    browser.wait_for_element_visible("main")
+    tablet = browser.execute_script(
+        "return {header: document.querySelector('header').scrollWidth, viewport: window.innerWidth};"
+    )
+    assert tablet["header"] <= tablet["viewport"] + 1
+
+
+def test_landing_mobile_header_language_and_localized_logo(browser):
+    browser.set_window_size(360, 800)
+    browser.login_as_user()
+    browser.open("/")
+    browser.wait_for_element_visible("#landing-hero")
+
+    layout = browser.execute_script(
+        """
+        const header = document.querySelector('header');
+        return {
+            viewport: document.documentElement.clientWidth,
+            page: document.documentElement.scrollWidth,
+            header: header.scrollWidth,
+            desktopLanguageVisible: getComputedStyle(
+                document.querySelector('#public-language').closest('form')
+            ).display !== 'none'
+        };
+        """
+    )
+    assert layout["page"] <= layout["viewport"] + 1
+    assert layout["header"] <= layout["viewport"] + 1
+    assert layout["desktopLanguageVisible"] is False
+
+    browser.click("#public-mobile-menu summary")
+    browser.wait_for_element_visible("#mobile-language", timeout=5)
+    browser.select_option_by_value("#mobile-language", "fr")
+    browser.wait_for_text("Explorer les données", timeout=10)
+
+    assert "unicef-logo-white-fr.png" in browser.get_attribute("header img", "src")
+
+
+def test_internal_mobile_sidebar_language_switcher(browser):
+    browser.set_window_size(390, 844)
+    browser.login_as_user()
+    browser.open("/dashboard/")
+    browser.wait_for_element_visible("#time-filter-container")
+
+    browser.click('label[for="nav-toggle"]')
+    browser.wait_for_element_visible("#sidebar-language", timeout=5)
+    browser.select_option_by_value("#sidebar-language", "fr")
+    browser.wait_for_text("Aperçu financier", timeout=10)
+
+    assert "/fr/" in browser.get_current_url()

@@ -2141,3 +2141,27 @@ msgid ""
 "Social-worker programmes are not part of household, children or persons-with-"
 "disabilities counts."
 msgstr "社会工作者项目不计入家庭、儿童或残障人士统计数据。"
+
+#: src/hope_live/templates/pages/landing.html
+msgid "Social Policy"
+msgstr "社会政策"
+
+#: src/hope_live/templates/pages/landing.html
+msgid "Transfer to Account"
+msgstr "账户转账"
+
+#: src/hope_live/templates/pages/landing.html
+msgid "Cash Over the Counter"
+msgstr "柜台现金支取"
+
+#: src/hope_live/templates/pages/landing.html
+msgid "Voucher"
+msgstr "代金券"
+
+#: src/hope_live/templates/pages/landing.html
+msgid "ATM Card"
+msgstr "ATM 卡"
+
+#: src/hope_live/templates/includes/kpi_card.html
+msgid "Disclaimer: All figures shown are indicative only and may vary due to rounding"
+msgstr "免责声明：所示数据仅供参考，因四舍五入可能存在差异"

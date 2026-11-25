@@ -2357,3 +2357,27 @@ msgid ""
 msgstr ""
 "Les programmes de travailleurs sociaux ne sont pas inclus dans les effectifs "
 "de ménages, d'enfants ou de personnes handicapées."
+
+#: src/hope_live/templates/pages/landing.html
+msgid "Social Policy"
+msgstr "Politique sociale"
+
+#: src/hope_live/templates/pages/landing.html
+msgid "Transfer to Account"
+msgstr "Virement sur compte"
+
+#: src/hope_live/templates/pages/landing.html
+msgid "Cash Over the Counter"
+msgstr "Retrait d'espèces au guichet"
+
+#: src/hope_live/templates/pages/landing.html
+msgid "Voucher"
+msgstr "Bon"
+
+#: src/hope_live/templates/pages/landing.html
+msgid "ATM Card"
+msgstr "Carte bancaire (GAB)"
+
+#: src/hope_live/templates/includes/kpi_card.html
+msgid "Disclaimer: All figures shown are indicative only and may vary due to rounding"
+msgstr "Avertissement : tous les chiffres indiqués le sont à titre indicatif uniquement et peuvent varier en raison des arrondis"

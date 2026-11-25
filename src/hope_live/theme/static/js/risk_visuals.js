@@ -24,56 +24,56 @@ document.addEventListener('DOMContentLoaded', function () {
             subtitle: gettext('Payment, Reconciliation & Verification bottlenecks'),
             icon: spriteIcon('banknote'),
             barColor: '#004C45',
-            badgeBg: 'bg-unicef-green/10 text-unicef-green'
+            badgeBg: 'bg-unicef-green text-white'
         },
         payments: {
             label: gettext('Payment Operations'),
             subtitle: gettext('Payment, Reconciliation & Verification bottlenecks'),
             icon: spriteIcon('banknote'),
             barColor: '#004C45',
-            badgeBg: 'bg-unicef-green/10 text-unicef-green'
+            badgeBg: 'bg-unicef-green text-white'
         },
         registration: {
             label: gettext('Registration & Population'),
             subtitle: gettext('KYC, Identity documents & Geographic verification'),
             icon: spriteIcon('users'),
             barColor: '#00AEEF',
-            badgeBg: 'bg-unicef-blue/10 text-unicef-blue-dark'
+            badgeBg: 'bg-unicef-blue text-black'
         },
         deduplication: {
             label: gettext('Deduplication & Adjudication'),
             subtitle: gettext('Biometric, Needs-Adjudication & Cross-channel duplicate issues'),
             icon: spriteIcon('search'),
             barColor: '#0047BB',
-            badgeBg: 'bg-unicef-blue-dark/10 text-unicef-blue-dark'
+            badgeBg: 'bg-unicef-blue-dark text-white'
         },
         verification: {
             label: gettext('Payment Verification'),
             subtitle: gettext('PVP execution, overdue tickets & high failure rates'),
             icon: spriteIcon('shield-check'),
             barColor: '#FF7100',
-            badgeBg: 'bg-unicef-orange/10 text-black/80'
+            badgeBg: 'bg-unicef-orange text-black'
         },
         grievance: {
             label: gettext('Grievances & Safeguarding'),
             subtitle: gettext('Sensitive complaints, zero-reporting & FSP concentrations'),
             icon: spriteIcon('mail'),
-            barColor: '#EF4444',
-            badgeBg: 'bg-red-100 text-red-800'
+            barColor: '#E2231A',
+            badgeBg: 'bg-unicef-red text-white'
         },
         grievances: {
             label: gettext('Grievances & Safeguarding'),
             subtitle: gettext('Sensitive complaints, zero-reporting & FSP concentrations'),
             icon: spriteIcon('mail'),
-            barColor: '#EF4444',
-            badgeBg: 'bg-red-100 text-red-800'
+            barColor: '#E2231A',
+            badgeBg: 'bg-unicef-red text-white'
         },
         targeting: {
             label: gettext('Targeting & Eligibility'),
             subtitle: gettext('Vulnerability criteria & payment readiness anomalies'),
             icon: spriteIcon('map-pin'),
             barColor: '#FFB500',
-            badgeBg: 'bg-amber-100 text-amber-800'
+            badgeBg: 'bg-unicef-yellow text-black'
         }
     };
 
@@ -181,22 +181,22 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function renderSeverityBadge(sev) {
         const badges = {
-            critical: `<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-red-600 text-white shadow-xs">${severityLabels.critical}</span>`,
-            warning: `<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-500 text-white shadow-xs">${severityLabels.warning}</span>`,
-            caution: `<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-yellow-400 text-yellow-950 shadow-xs">${severityLabels.caution}</span>`,
-            normal: `<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-600 text-white shadow-xs">${severityLabels.normal}</span>`
+            critical: `<span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-bold bg-unicef-red text-white shadow-xs">${severityLabels.critical}</span>`,
+            warning: `<span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-bold bg-unicef-orange text-black shadow-xs">${severityLabels.warning}</span>`,
+            caution: `<span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-bold bg-unicef-yellow text-black shadow-xs">${severityLabels.caution}</span>`,
+            normal: `<span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-bold bg-unicef-green text-white shadow-xs">${severityLabels.normal}</span>`
         };
-        return badges[sev] || `<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-black/10 text-black">${sev}</span>`;
+        return badges[sev] || `<span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-bold bg-black/10 text-black">${sev}</span>`;
     }
 
     function renderTrendBadge(trend) {
         if (trend === 'up') {
-            return '<span class="inline-flex items-center gap-0.5 text-xs font-bold text-red-600" title="' + gettext('Increasing') + '"><span class="text-sm">↗</span> ' + gettext('Up') + '</span>';
+            return '<span class="inline-flex items-center gap-0.5 text-xs font-bold text-unicef-red" title="' + gettext('Increasing') + '"><span class="text-sm">↗</span> ' + gettext('Up') + '</span>';
         }
         if (trend === 'down') {
-            return '<span class="inline-flex items-center gap-0.5 text-xs font-bold text-emerald-600" title="' + gettext('Decreasing') + '"><span class="text-sm">↘</span> ' + gettext('Down') + '</span>';
+            return '<span class="inline-flex items-center gap-0.5 text-xs font-bold text-unicef-green" title="' + gettext('Decreasing') + '"><span class="text-sm">↘</span> ' + gettext('Down') + '</span>';
         }
-        return '<span class="inline-flex items-center gap-0.5 text-xs font-semibold text-black/50" title="' + gettext('Neutral') + '"><span class="text-sm">—</span> ' + gettext('Stable') + '</span>';
+        return '<span class="inline-flex items-center gap-0.5 text-xs font-semibold text-black/60" title="' + gettext('Neutral') + '"><span class="text-sm">—</span> ' + gettext('Stable') + '</span>';
     }
 
     function updateModuleBars() {
@@ -214,7 +214,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         if (modData.length === 0) {
-            container.innerHTML = `<div class="text-xs text-black/50 py-3 text-center italic">${gettext('No active module issues')}</div>`;
+            container.innerHTML = `<div class="text-xs text-black/60 py-3 text-center italic">${gettext('No active module issues')}</div>`;
             return;
         }
 
@@ -227,7 +227,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const pct = total > 0 ? ((d.value / total) * 100).toFixed(1) : '0.0';
             const isSelected = selectedModule === d.key;
             const selectedClass = isSelected
-                ? 'ring-2 ring-unicef-blue bg-unicef-blue/10 shadow-sm'
+                ? 'ring-2 ring-unicef-blue border-unicef-blue bg-white shadow-sm'
                 : 'hover:bg-black/[0.03]';
 
             return `
@@ -239,7 +239,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     </div>
                     <div class="text-black/80 font-bold tabular-nums">
                         <span>${formatCount(d.value)}</span>
-                        <span class="text-[10px] font-normal text-black/50 ml-1">(${pct}%)</span>
+                        <span class="text-xs font-normal text-black/60 ml-1">(${pct}%)</span>
                     </div>
                 </div>
                 <div class="w-full bg-black/5 rounded-full h-1.5 overflow-hidden">
@@ -293,7 +293,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 subtitle: gettext('Operational metrics and bottlenecks'),
                 icon: spriteIcon('layers'),
                 barColor: '#00AEEF',
-                badgeBg: 'bg-unicef-blue/10 text-unicef-blue-dark'
+                badgeBg: 'bg-unicef-blue text-black'
             };
             const items = byModule[modKey].sort((a, b) => {
                 const rank = { critical: 4, warning: 3, caution: 2, normal: 1 };
@@ -304,24 +304,24 @@ document.addEventListener('DOMContentLoaded', function () {
             const cardsHtml = items.map(v => {
                 const sev = v.severity || 'normal';
                 const sevStyles = {
-                    critical: 'bg-red-50/80 border-red-500 text-red-700',
-                    warning: 'bg-amber-50/80 border-amber-500 text-amber-700',
-                    caution: 'bg-yellow-50/80 border-yellow-400 text-yellow-800',
-                    normal: 'bg-emerald-50/80 border-emerald-500 text-emerald-700'
+                    critical: 'bg-white border-l-4 border-unicef-red text-black',
+                    warning: 'bg-white border-l-4 border-unicef-orange text-black',
+                    caution: 'bg-white border-l-4 border-unicef-yellow text-black',
+                    normal: 'bg-white border-l-4 border-unicef-green text-black'
                 };
                 const styleClass = sevStyles[sev] || sevStyles.normal;
 
-                let trendIcon = '<span class="text-black/50 font-bold text-sm" title="' + gettext('Stable') + '">—</span>';
+                let trendIcon = '<span class="text-black/60 font-bold text-sm" title="' + gettext('Stable') + '">—</span>';
                 if (v.trend === 'up') {
-                    trendIcon = '<span class="text-red-600 font-bold text-sm" title="' + gettext('Increasing') + '">↗</span>';
+                    trendIcon = '<span class="text-unicef-red font-bold text-sm" title="' + gettext('Increasing') + '">↗</span>';
                 } else if (v.trend === 'down') {
-                    trendIcon = '<span class="text-emerald-600 font-bold text-sm" title="' + gettext('Decreasing') + '">↘</span>';
+                    trendIcon = '<span class="text-unicef-green font-bold text-sm" title="' + gettext('Decreasing') + '">↘</span>';
                 }
 
                 const unit = v.unit_label || gettext('issues');
                 const valDisplay = v.percentage !== null && v.percentage !== undefined
-                    ? `${v.percentage}% <span class="text-[11px] font-normal text-black/60">(${formatCount(v.issue_count)})</span>`
-                    : `${formatCount(v.issue_count)} <span class="text-[11px] font-normal text-black/60">${unit}</span>`;
+                    ? `${v.percentage}% <span class="text-xs font-normal text-black/60">(${formatCount(v.issue_count)})</span>`
+                    : `${formatCount(v.issue_count)} <span class="text-xs font-normal text-black/60">${unit}</span>`;
 
                 return `
                 <div class="rounded-lg border p-3 border-l-4 transition-all shadow-sm ${styleClass} flex flex-col justify-between">
@@ -334,7 +334,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     <div class="text-lg font-bold leading-none mb-1 tabular-nums">
                         ${valDisplay}
                     </div>
-                    <div class="text-[10px] text-black/70 line-clamp-2 leading-tight">
+                    <div class="text-xs text-black/70 line-clamp-2 leading-tight">
                         ${v.description || ''}
                     </div>
                 </div>`;
@@ -346,11 +346,11 @@ document.addEventListener('DOMContentLoaded', function () {
                     <div class="flex items-center gap-2">
                         <span class="w-7 h-7 shrink-0 rounded bg-unicef-blue text-white inline-flex items-center justify-center">${meta.icon}</span>
                         <div>
-                            <h4 class="text-xs font-bold uppercase tracking-wider text-black leading-tight">${meta.label}</h4>
-                            <p class="text-[10px] text-black/60">${meta.subtitle}</p>
+                            <h4 class="text-sm font-bold uppercase tracking-wider text-black leading-tight">${meta.label}</h4>
+                            <p class="text-xs text-black/60">${meta.subtitle}</p>
                         </div>
                     </div>
-                    <span class="text-[11px] font-bold px-2.5 py-0.5 rounded-full ${meta.badgeBg}">
+                    <span class="text-xs font-bold px-2.5 py-0.5 rounded-full ${meta.badgeBg}">
                         ${formatCount(moduleTotal)} ${gettext('Issues')}
                     </span>
                 </div>
@@ -420,17 +420,17 @@ document.addEventListener('DOMContentLoaded', function () {
                     }
                 },
                 grid: { top: 15, bottom: 25, left: 45, right: 15 },
-                xAxis: { type: 'time', axisLabel: { color: 'rgba(0,0,0,0.6)', fontSize: 10, formatter: value => d3.timeFormat('%b %y')(new Date(value)) } },
+                xAxis: { type: 'time', axisLabel: { color: 'rgba(0,0,0,0.6)', fontSize: 11, formatter: value => d3.timeFormat('%b %y')(new Date(value)) } },
                 yAxis: {
                     type: 'value',
-                    axisLabel: { color: 'rgba(0,0,0,0.6)', fontSize: 10 },
+                    axisLabel: { color: 'rgba(0,0,0,0.6)', fontSize: 11 },
                     splitLine: { lineStyle: { type: 'dashed', color: 'rgba(0,0,0,0.08)' } }
                 },
                 series: [{
                     name: gettext('Issues'),
                     type: 'bar',
                     data: timelineData,
-                    itemStyle: { color: '#00adef', borderRadius: [2, 2, 0, 0] },
+                    itemStyle: { color: '#00AEEF', borderRadius: [2, 2, 0, 0] },
                     barMaxWidth: 16
                 }]
             }, { notMerge: true });
@@ -509,10 +509,10 @@ document.addEventListener('DOMContentLoaded', function () {
         btn.addEventListener('click', function () {
             currentCategory = this.dataset.category;
             categoryTabs.forEach(b => {
-                b.classList.remove('bg-unicef-blue', 'text-white', 'border-unicef-blue', 'active-category');
+                b.classList.remove('bg-unicef-blue-dark', 'text-white', 'border-unicef-blue-dark', 'active-category');
                 b.classList.add('bg-black/5', 'text-black/70');
             });
-            this.classList.add('bg-unicef-blue', 'text-white', 'border-unicef-blue', 'active-category');
+            this.classList.add('bg-unicef-blue-dark', 'text-white', 'border-unicef-blue-dark', 'active-category');
             this.classList.remove('bg-black/5', 'text-black/70');
 
             if (currentCategory === 'all') {
@@ -578,7 +578,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             if (!visible.length) {
                 activeIndex = -1;
-                list.innerHTML = `<li class="px-3 py-2 text-black/50" role="presentation">${escapeHtml(gettext('No matching results'))}</li>`;
+                list.innerHTML = `<li class="px-3 py-2 text-black/60" role="presentation">${escapeHtml(gettext('No matching results'))}</li>`;
                 input.removeAttribute('aria-activedescendant');
                 return;
             }
@@ -587,7 +587,7 @@ document.addEventListener('DOMContentLoaded', function () {
             list.innerHTML = visible.map((item, index) => {
                 const isActive = index === activeIndex;
                 const isSelected = item.value === selectedValue;
-                return `<li id="${list.id}-option-${index}" role="option" data-index="${index}" aria-selected="${isSelected}" title="${escapeHtml(item.label)}" class="cursor-pointer truncate px-3 py-1.5 ${isActive ? 'bg-unicef-blue/10 text-unicef-blue-dark' : 'text-black/80'} ${isSelected ? 'font-bold' : ''}">${escapeHtml(item.label)}</li>`;
+                return `<li id="${list.id}-option-${index}" role="option" data-index="${index}" aria-selected="${isSelected}" title="${escapeHtml(item.label)}" class="cursor-pointer truncate px-3 py-1.5 ${isActive ? 'bg-unicef-blue text-black' : 'text-black/80'} ${isSelected ? 'font-bold' : ''}">${escapeHtml(item.label)}</li>`;
             }).join('');
             input.setAttribute('aria-activedescendant', `${list.id}-option-${activeIndex}`);
         }
