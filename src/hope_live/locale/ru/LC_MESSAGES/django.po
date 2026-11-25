@@ -2344,3 +2344,87 @@ msgstr "Банковская карта (банкомат)"
 #: src/hope_live/templates/includes/kpi_card.html
 msgid "Disclaimer: All figures shown are indicative only and may vary due to rounding"
 msgstr "Примечание: все представленные данные носят ориентировочный характер и могут незначительно отличаться из-за округления"
+
+#: src/hope_live/templates/includes/methodology_panel.html
+msgid "Formula"
+msgstr "Формула"
+
+#: src/hope_live/templates/includes/methodology_panel.html
+msgid "How to read"
+msgstr "Как читать"
+
+#: src/hope_live/templates/includes/methodology_panel.html
+msgid "How each metric on this page is calculated."
+msgstr "Как рассчитывается каждый показатель на этой странице."
+
+#: src/hope_live/templates/includes/methodology_panel.html
+msgid "How calculated"
+msgstr "Как рассчитано"
+
+#: src/hope_live/templates/includes/methodology_panel.html
+msgid "In scope"
+msgstr "В рамках"
+
+#: src/hope_live/templates/includes/methodology_panel.html
+msgid "Delivered (paid)"
+msgstr "Доставлено (оплачено)"
+
+#: src/hope_live/templates/includes/methodology_panel.html
+msgid "Outstanding"
+msgstr "Не оплачено"
+
+#: src/hope_live/templates/includes/methodology_panel.html
+msgid "Other statuses"
+msgstr "Другие статусы"
+
+#: src/hope_live/templates/includes/methodology_panel.html
+msgid "Reconciliation estimate"
+msgstr "Оценка сверки"
+
+#: src/hope_live/templates/includes/methodology_panel.html
+msgid "Reconciled (estimated)"
+msgstr "Сверено (оценка)"
+
+#: src/hope_live/templates/includes/methodology_panel.html
+msgid "Awaiting reconciliation"
+msgstr "Ожидает сверки"
+
+#: src/hope_live/templates/includes/methodology_panel.html
+msgid "Total payment volume"
+msgstr "Общий объём платежей"
+
+#: src/hope_live/templates/includes/methodology_panel.html
+msgid "How to read this"
+msgstr "Как это читать"
+
+#: src/hope_live/templates/includes/methodology_panel.html
+msgid "Total payment volume = Delivered + Outstanding + Other statuses."
+msgstr "Общий объём платежей = Доставлено + Не оплачено + Другие статусы."
+
+#: src/hope_live/templates/includes/methodology_panel.html
+msgid "Delivered = Total amount paid card. Outstanding = Outstanding payments card."
+msgstr "Доставлено = карточка «Общая выплаченная сумма». Не оплачено = карточка «Невыплаченные суммы»."
+
+#: src/hope_live/templates/includes/methodology_panel.html
+msgid "Estimated reconciled = Delivered × reconciliation rate. Awaiting reconciliation = Delivered − estimated reconciled."
+msgstr "Оценка сверки = Доставлено × коэффициент сверки. Ожидает сверки = Доставлено − оценка сверки."
+
+#: src/hope_live/templates/includes/methodology_panel.html
+msgid "Delivered and Outstanding are the actual payment-status segments. In Amount (USD), they match the Total amount paid and Outstanding payments cards."
+msgstr "«Доставлено» и «Не оплачено» — фактические сегменты статуса платежа. В разделе «Сумма (USD)» они соответствуют карточкам «Общая выплаченная сумма» и «Невыплаченные суммы»."
+
+#: src/hope_live/templates/includes/methodology_panel.html
+msgid "Estimated as Delivered × the reconciliation rate from the completion dashboard. This is not a financial payment status."
+msgstr "Оценка: Доставлено × коэффициент сверки с панели завершения. Это не финансовый статус платежа."
+
+#: src/hope_live/templates/includes/methodology_panel.html
+msgid "How the selected payments move from total volume to delivered and estimated reconciliation."
+msgstr "Как выбранные платежи проходят от общего объёма к доставке и оценке сверки."
+
+#: src/hope_live/templates/includes/methodology_panel.html
+msgid "No methodology notes are available for this page."
+msgstr "Для этой страницы нет примечаний по методологии."
+
+#: src/hope_live/templates/pages/dashboard.html
+msgid "In Amount (USD), Delivered = Total amount paid card and Outstanding = Outstanding payments card."
+msgstr "В разделе «Сумма (USD)»: Доставлено = карточка «Общая выплаченная сумма», Не оплачено = карточка «Невыплаченные суммы»."

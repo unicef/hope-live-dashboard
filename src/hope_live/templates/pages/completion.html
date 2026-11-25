@@ -11,6 +11,7 @@
         <div class="flex items-center gap-2">
             <span class="bg-unicef-blue-dark text-white text-xs font-bold px-2.5 py-1 rounded-md">{% translate "Live data" %}</span>
             <span class="text-xs text-black/60 font-semibold">{% translate "Data as of" %} <span id="data-as-of">—</span></span>
+            {% methodology_panel "completion" %}
         </div>
     </div>
 
@@ -42,7 +43,7 @@
             <div class="min-w-0">
                 <h3 id="reconciled-card-title" class="text-black/60 text-xs font-bold">{% translate "Reconciled payments" %}</h3>
                 <p id="total-reconciled" class="text-xl sm:text-2xl font-bold text-black mt-0.5 leading-none">0</p>
-                {% include "includes/chart_info.html" with definition=_("Payments that have been reconciled.") source=_("HOPE payments") method=_("Count of payments with reconciled status.") %}
+                {% chart_info "completion.kpi_reconciled" %}
             </div>
             <span class="w-9 h-9 shrink-0 rounded bg-unicef-green text-white flex items-center justify-center">
                 {% icon "shield-check" "h-4 w-4" %}
@@ -52,7 +53,7 @@
             <div class="min-w-0">
                 <h3 id="opened-card-title" class="text-black/60 text-xs font-bold">{% translate "Pending Reconciliation" %}</h3>
                 <p id="total-opened" class="text-xl sm:text-2xl font-bold text-black mt-0.5 leading-none">0</p>
-                {% include "includes/chart_info.html" with definition=_("Payments pending reconciliation.") source=_("HOPE payments") method=_("Count of payments still awaiting reconciliation.") %}
+                {% chart_info "completion.kpi_pending" %}
             </div>
             <span class="w-9 h-9 shrink-0 rounded bg-unicef-yellow text-black flex items-center justify-center">
                 {% icon "rotate-ccw" "h-4 w-4" %}
@@ -62,7 +63,7 @@
             <div>
                 <h3 class="text-black/60 text-xs font-bold">{% translate "Reconciliation rate" %}</h3>
                 <p id="completion-rate-text" class="text-xl sm:text-2xl font-bold text-black mt-0.5 leading-none">0%</p>
-                {% include "includes/chart_info.html" with definition=_("Share of payments reconciled.") source=_("HOPE payments") method=_("Reconciled payments divided by total payments.") %}
+                {% chart_info "completion.kpi_rate" %}
             </div>
             <div id="completion-gauge" style="width: 100px; height: 60px;"></div>
         </div>

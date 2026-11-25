@@ -2360,3 +2360,87 @@ msgstr "Tarjeta de cajero automático"
 #: src/hope_live/templates/includes/kpi_card.html
 msgid "Disclaimer: All figures shown are indicative only and may vary due to rounding"
 msgstr "Aviso legal: Todas las cifras mostradas son meramente indicativas y pueden variar debido al redondeo"
+
+#: src/hope_live/templates/includes/methodology_panel.html
+msgid "Formula"
+msgstr "Fórmula"
+
+#: src/hope_live/templates/includes/methodology_panel.html
+msgid "How to read"
+msgstr "Cómo leerlo"
+
+#: src/hope_live/templates/includes/methodology_panel.html
+msgid "How each metric on this page is calculated."
+msgstr "Cómo se calcula cada métrica de esta página."
+
+#: src/hope_live/templates/includes/methodology_panel.html
+msgid "How calculated"
+msgstr "Cómo se calcula"
+
+#: src/hope_live/templates/includes/methodology_panel.html
+msgid "In scope"
+msgstr "En el alcance"
+
+#: src/hope_live/templates/includes/methodology_panel.html
+msgid "Delivered (paid)"
+msgstr "Entregado (pagado)"
+
+#: src/hope_live/templates/includes/methodology_panel.html
+msgid "Outstanding"
+msgstr "Pendiente"
+
+#: src/hope_live/templates/includes/methodology_panel.html
+msgid "Other statuses"
+msgstr "Otros estados"
+
+#: src/hope_live/templates/includes/methodology_panel.html
+msgid "Reconciliation estimate"
+msgstr "Estimación de conciliación"
+
+#: src/hope_live/templates/includes/methodology_panel.html
+msgid "Reconciled (estimated)"
+msgstr "Conciliado (estimado)"
+
+#: src/hope_live/templates/includes/methodology_panel.html
+msgid "Awaiting reconciliation"
+msgstr "Pendiente de conciliación"
+
+#: src/hope_live/templates/includes/methodology_panel.html
+msgid "Total payment volume"
+msgstr "Volumen total de pagos"
+
+#: src/hope_live/templates/includes/methodology_panel.html
+msgid "How to read this"
+msgstr "Cómo leer esto"
+
+#: src/hope_live/templates/includes/methodology_panel.html
+msgid "Total payment volume = Delivered + Outstanding + Other statuses."
+msgstr "Volumen total de pagos = Entregado + Pendiente + Otros estados."
+
+#: src/hope_live/templates/includes/methodology_panel.html
+msgid "Delivered = Total amount paid card. Outstanding = Outstanding payments card."
+msgstr "Entregado = tarjeta Monto total desembolsado. Pendiente = tarjeta Pagos pendientes."
+
+#: src/hope_live/templates/includes/methodology_panel.html
+msgid "Estimated reconciled = Delivered × reconciliation rate. Awaiting reconciliation = Delivered − estimated reconciled."
+msgstr "Conciliado estimado = Entregado × tasa de conciliación. Pendiente de conciliación = Entregado − conciliado estimado."
+
+#: src/hope_live/templates/includes/methodology_panel.html
+msgid "Delivered and Outstanding are the actual payment-status segments. In Amount (USD), they match the Total amount paid and Outstanding payments cards."
+msgstr "Entregado y Pendiente son los segmentos reales del estado de pago. En Importe (USD), coinciden con las tarjetas Monto total desembolsado y Pagos pendientes."
+
+#: src/hope_live/templates/includes/methodology_panel.html
+msgid "Estimated as Delivered × the reconciliation rate from the completion dashboard. This is not a financial payment status."
+msgstr "Estimado como Entregado × la tasa de conciliación del panel de finalización. No es un estado financiero del pago."
+
+#: src/hope_live/templates/includes/methodology_panel.html
+msgid "How the selected payments move from total volume to delivered and estimated reconciliation."
+msgstr "Cómo pasan los pagos seleccionados del volumen total a lo entregado y a la conciliación estimada."
+
+#: src/hope_live/templates/includes/methodology_panel.html
+msgid "No methodology notes are available for this page."
+msgstr "No hay notas de metodología disponibles para esta página."
+
+#: src/hope_live/templates/pages/dashboard.html
+msgid "In Amount (USD), Delivered = Total amount paid card and Outstanding = Outstanding payments card."
+msgstr "En Importe (USD), Entregado = tarjeta Monto total desembolsado y Pendiente = tarjeta Pagos pendientes."

@@ -217,10 +217,10 @@ CHART_INFO = {
         "definition": _("Reconciled and still-open payments or amount over time."),
         "source": _("HOPE payments — country report completion feed."),
         "method": _(
-            "Reconciled includes Sent to Payment Gateway, Sent to FSP, Distribution Successful, "
-            "Partially Distributed and Transaction Successful. All other non-failed statuses are "
-            "Pending Reconciliation. Only payments in accepted, finished or closed plans are included; "
-            "failed, removed and conflicted payments are excluded. USD is entitlement USD."
+            "Reconciled uses the completion feed's RECONCILED reconciliation status. Open covers "
+            "every other non-failed reconciliation status. Only payments in accepted, finished or "
+            "closed plans are included; failed, removed and conflicted payments are excluded. USD "
+            "is entitlement USD."
         ),
         "note": _(
             "Reconciled is green and Pending Reconciliation is amber across the timeline and country charts. "
@@ -452,5 +452,349 @@ CHART_INFO = {
             "each record represents one worker, so the beneficiary total is the workforce count."
         ),
         "note": _("Social-worker programmes are not part of household, children or persons-with-disabilities counts."),
+    },
+}
+
+
+# KPI and risk entries kept separate from the chart entries above so the
+# methodology drawer can present cards and charts in one consistent order.
+CHART_INFO.update(
+    {
+        "financial.kpi_total_paid": {
+            "definition": _("Cash delivered to beneficiaries for successful payment statuses."),
+            "source": _("HOPE payments — country report financial feed."),
+            "method": _(
+                "Sums USD for Distribution Successful, Partially Distributed and Transaction "
+                "Successful statuses. Uses delivered quantity when present, otherwise entitlement "
+                "quantity, under the selected period, country and cohort."
+            ),
+            "note": _("This is the Delivered amount, not the reconciled amount."),
+        },
+        "financial.kpi_payment_records": {
+            "definition": _("Number of payment records in the selected period and filters."),
+            "source": _("HOPE payments — country report financial feed."),
+            "method": _(
+                "Counts payment records once from the active breakdown: sector by default, "
+                "programme, delivery mechanism or FSP when one of those filters is active."
+            ),
+            "note": _(
+                "Not payment plans, unique recipients, or only completed payments. Do not add "
+                "this count across different breakdowns."
+            ),
+        },
+        "financial.kpi_outstanding": {
+            "definition": _("Entitlement amount for payments still pending."),
+            "source": _("HOPE payments — country report financial feed."),
+            "method": _(
+                "Sums USD for SENT TO PAYMENT GATEWAY, SENT TO FSP and PENDING statuses under "
+                "the selected period, country and cohort."
+            ),
+            "note": _("This is the Outstanding amount in the payment pipeline, not a failure rate."),
+        },
+        "demographic.kpi_individuals": {
+            "definition": _("People reached through standard household programmes in the period."),
+            "source": _("HOPE household and payment data — country report demographic feed."),
+            "method": _(
+                "Sums total_beneficiaries for STANDARD programme sector rows. Each household is "
+                "counted through its recorded composition for the selected period."
+            ),
+            "note": _("Period reach, not annual unique people. Social-worker programmes are reported separately."),
+        },
+        "demographic.kpi_households": {
+            "definition": _("Households reached through standard programmes in the period."),
+            "source": _("HOPE household and payment data — country report demographic feed."),
+            "method": _("Sums total_households for STANDARD programme sector rows in the selected period."),
+            "note": _("Households, not payment records or unique payment plans."),
+        },
+        "demographic.kpi_pwd": {
+            "definition": _("Confirmed persons with disabilities reached in the period."),
+            "source": _("HOPE household and payment data — country report demographic feed."),
+            "method": _("Sums total_pwd for STANDARD programme sector rows in the selected period."),
+            "note": _("Some programmes do not collect disability data, so this is a minimum."),
+        },
+        "completion.kpi_reconciled": {
+            "definition": _("Payments or amount with reconciliation status Reconciled in the period."),
+            "source": _("HOPE payments — country report completion feed."),
+            "method": _("Sums the active metric for rows whose reconciliation status is RECONCILED."),
+            "note": _("Uses the completion reconciliation status, not the financial delivery status."),
+        },
+        "completion.kpi_pending": {
+            "definition": _("Payments or amount with reconciliation status Open in the period."),
+            "source": _("HOPE payments — country report completion feed."),
+            "method": _("Sums the active metric for rows whose reconciliation status is OPEN or PENDING."),
+            "note": _("Pending Reconciliation covers all non-reconciled statuses in the completion feed."),
+        },
+        "completion.kpi_rate": {
+            "definition": _("Share of completion-feed records that are reconciled."),
+            "source": _("HOPE payments — country report completion feed."),
+            "method": _("Reconciled divided by Reconciled plus Pending Reconciliation for the active metric."),
+            "note": _("This is a completion-feed rate, not the financial delivery success rate."),
+        },
+        "grievance.kpi_total": {
+            "definition": _("Grievance tickets in the selected period and source."),
+            "source": _("HOPE grievances — country report grievance feed."),
+            "method": _("Sums ticket_count for the active ticket source, country and period."),
+            "note": _("Use Include system flags to count system-generated tickets as well."),
+        },
+        "risk.kpi_total": {
+            "definition": _("Total flagged operational risk issues in scope."),
+            "source": _("HOPE risk feed."),
+            "method": _(
+                "Sums issue_count across risk indicators under the active period, country, "
+                "programme, category and module filters."
+            ),
+            "note": _("A flag count, not a count of unique people or payments."),
+        },
+        "risk.kpi_critical": {
+            "definition": _("Risk issues at critical severity."),
+            "source": _("HOPE risk feed."),
+            "method": _("Sums issue_count where severity is critical, at or above the 150% threshold."),
+            "note": _("Critical is the highest severity band in the risk status guide."),
+        },
+        "risk.status_guide": {
+            "definition": _("Severity thresholds used by the risk dashboard."),
+            "source": _("HOPE risk feed."),
+            "method": _("Critical is 150% or more, Warning is 100–149%, Caution is 80–99%, and Normal is below 80%."),
+            "note": _("Thresholds compare the indicator value with its reference; they are not payment success rates."),
+        },
+        "risk.modules": {
+            "definition": _("Distribution of risk issues by operational module."),
+            "source": _("HOPE risk feed."),
+            "method": _("Sums issue_count by module and shows each module's share of the filtered total."),
+            "note": _("Click a module to narrow the operational cards; the percentage is of the filtered total."),
+        },
+        "risk.timeline": {
+            "definition": _("Daily volume of flagged risk issues."),
+            "source": _("HOPE risk feed."),
+            "method": _("Sums issue_count by date for the active filters."),
+            "note": _("The timeline shows when flags were reported, not when the underlying operational issue began."),
+        },
+        "risk.indicators": {
+            "definition": _("Itemized risk indicators by country and programme."),
+            "source": _("HOPE risk feed."),
+            "method": _(
+                "One row per risk code, country and programme. Issue counts are summed; severity, "
+                "percentage, trend and description come from the latest record in the period."
+            ),
+            "note": _("The table respects the active country, programme, category and module filters."),
+        },
+        "risk.cards": {
+            "definition": _("Operational risk cards grouped by module."),
+            "source": _("HOPE risk feed."),
+            "method": _(
+                "Issue counts are summed by risk code; severity, percentage, trend and description "
+                "come from the latest record. Cards are grouped under their operational module."
+            ),
+            "note": _("Select a module in Risk distribution by module to focus the cards."),
+        },
+    }
+)
+
+
+CHART_GUIDANCE = {
+    "financial.kpi_total_paid": {
+        "formula": _("Sum USD for Distribution Successful + Partially Distributed + Transaction Successful statuses."),
+        "how_to_read": _(
+            "This is the Delivered amount. It is not the reconciled amount and it matches the "
+            "Delivered segment of the payment pipeline."
+        ),
+    },
+    "financial.kpi_payment_records": {
+        "formula": _("Count payment records once from the active breakdown; sector is the default."),
+        "how_to_read": _("Not unique recipients, payment plans, or only completed payments."),
+    },
+    "financial.kpi_outstanding": {
+        "formula": _("Sum USD for SENT TO PAYMENT GATEWAY + SENT TO FSP + PENDING statuses."),
+        "how_to_read": _("This is the Outstanding amount in the payment pipeline."),
+    },
+    "financial.timeline": {
+        "formula": _("Sum the selected metric by delivery date; fall back to entitlement date, then status date."),
+        "how_to_read": _("The line shows the selected metric over time under the active filters."),
+    },
+    "financial.pipeline": {
+        "formula": _(
+            "Total payment volume = Delivered + Outstanding + Other statuses. "
+            "Estimated reconciled = Delivered × reconciliation rate. "
+            "Awaiting reconciliation = Delivered − Estimated reconciled."
+        ),
+        "how_to_read": _(
+            "The payment-status breakdown is actual financial data. Reconciliation is a separate "
+            "estimate from the completion feed. The cards show Delivered and Outstanding; there "
+            "is no reconciled card. The stages are not independent buckets."
+        ),
+    },
+    "financial.sector": {
+        "formula": _("Group the selected metric by programme sector."),
+        "how_to_read": _("The metric toggle switches between USD and payment records."),
+    },
+    "financial.delivery": {
+        "formula": _("Group the selected metric by delivery mechanism."),
+        "how_to_read": _("The metric toggle switches between USD and payment records."),
+    },
+    "financial.region": {
+        "formula": _("Group the selected metric by UNICEF region."),
+        "how_to_read": _("Bars are ordered by value and shaded from highest to lowest."),
+    },
+    "financial.country": {
+        "formula": _("Group the selected metric by country."),
+        "how_to_read": _("Outstanding by country is shown separately and is always in USD."),
+    },
+    "financial.outstanding_country": {
+        "formula": _("Sum USD for pending statuses by country."),
+        "how_to_read": _("Always USD, independent of the amount/payment-count toggle."),
+    },
+    "financial.program": {
+        "formula": _("Group the selected metric by programme."),
+        "how_to_read": _("Top 10 programmes plus an Other bucket."),
+    },
+    "financial.fsp": {
+        "formula": _("Group the selected metric by financial service provider."),
+        "how_to_read": _("Top 10 providers plus an Other bucket."),
+    },
+    "financial.implementing_partner": {
+        "formula": _("Group the selected metric by implementing partner."),
+        "how_to_read": _("The card appears when the feed provides the implementing-partner dimension."),
+    },
+    "demographic.kpi_individuals": {
+        "formula": _("Sum total_beneficiaries for STANDARD programme sector rows."),
+        "how_to_read": _("Period reach, not annual unique people. Social workers are reported separately."),
+    },
+    "demographic.kpi_households": {
+        "formula": _("Sum total_households for STANDARD programme sector rows."),
+        "how_to_read": _("Households, not payment records or unique payment plans."),
+    },
+    "demographic.children": {
+        "formula": _("Sum the recorded children in reached households."),
+        "how_to_read": _("Missing household composition understates the count; this is period reach."),
+    },
+    "demographic.kpi_pwd": {
+        "formula": _("Sum total_pwd for STANDARD programme sector rows."),
+        "how_to_read": _("Some programmes do not collect disability data, so treat this as a minimum."),
+    },
+    "demographic.reached": {
+        "formula": _(
+            "Count households with at least one qualifying payment; individuals, children and PWD "
+            "come from household composition."
+        ),
+        "how_to_read": _("Qualifying payments must belong to accepted, finished or closed plans."),
+    },
+    "demographic.timeline": {
+        "formula": _("Show the selected demographic metric by period."),
+        "how_to_read": _(
+            "Social-worker programmes report workforce counts separately; household metrics do not apply to them."
+        ),
+    },
+    "demographic.sector": {
+        "formula": _("Share of the selected metric by programme sector."),
+        "how_to_read": _("Shares use the active metric and respect the cohort and country filters."),
+    },
+    "demographic.country": {
+        "formula": _("Share of the selected metric by country."),
+        "how_to_read": _("All countries with data in the period are shown."),
+    },
+    "demographic.region": {
+        "formula": _("Share of the selected metric by UNICEF region."),
+        "how_to_read": _("An intermediate view between the global cards and the country chart."),
+    },
+    "completion.kpi_reconciled": {
+        "formula": _("Sum the active metric for reconciliation status RECONCILED."),
+        "how_to_read": _("Uses the completion reconciliation status, not the financial delivery status."),
+    },
+    "completion.kpi_pending": {
+        "formula": _("Sum the active metric for reconciliation status OPEN/PENDING."),
+        "how_to_read": _("Pending Reconciliation covers all non-reconciled statuses in the completion feed."),
+    },
+    "completion.kpi_rate": {
+        "formula": _("Reconciled ÷ (Reconciled + Pending Reconciliation) for the active metric."),
+        "how_to_read": _("This is a completion-feed rate, not the financial delivery success rate."),
+    },
+    "completion.timeline": {
+        "formula": _("Show Reconciled and Open amounts or counts by period."),
+        "how_to_read": _("Reconciled is the completion reconciliation status; Open is every other non-failed status."),
+    },
+    "completion.country": {
+        "formula": _("Show Reconciled and Open by country, stacked."),
+        "how_to_read": _("Absolute values is the default; percentages show the split within each country."),
+    },
+    "completion.rates": {
+        "formula": _(
+            "Reconciliation rate = Reconciled ÷ (Reconciled + Pending Reconciliation). "
+            "Delivery success = successful ÷ (successful + pending financial statuses)."
+        ),
+        "how_to_read": _("The dashed 80% line is a reference guide, not a threshold."),
+    },
+    "completion.verification": {
+        "formula": _(
+            "Selected = sample size; verified = received; pending = sample − responded; "
+            "discrepancies = not received + received with issues."
+        ),
+        "how_to_read": _("Completion rate = verified ÷ selected. The panel appears when verification plans exist."),
+    },
+    "grievance.kpi_total": {
+        "formula": _("Sum ticket_count for the active ticket source and filters."),
+        "how_to_read": _("System flags are excluded by default; use the ticket-source toggle to include them."),
+    },
+    "grievance.timeline": {
+        "formula": _("Count open/active and closed/resolved tickets by created date."),
+        "how_to_read": _("Closed covers Closed and Resolved; Open & Active covers the remaining workflow statuses."),
+    },
+    "grievance.status": {
+        "formula": _("Count tickets by status for the active source and period."),
+        "how_to_read": _("The doughnut is replaced by resolution time when resolution rows exist."),
+    },
+    "grievance.resolution": {
+        "formula": _("Average days from ticket creation to last update for closed tickets, grouped by category."),
+        "how_to_read": _("updated_at is the closure proxy; tickets without both timestamps are excluded."),
+    },
+    "grievance.priority": {
+        "formula": _("Count tickets by priority value."),
+        "how_to_read": _("Priority is optional in HOPE; missing values appear as Not Set."),
+    },
+    "grievance.category": {
+        "formula": _("Count tickets by category."),
+        "how_to_read": _("Top 10 categories are shown. Not specified means the category was blank."),
+    },
+    "grievance.subcategory": {
+        "formula": _("Count tickets by subcategory for categories that define one."),
+        "how_to_read": _(
+            "Payment Verification, feedback, referral, system-flagging and beneficiary categories have no subcategory."
+        ),
+    },
+    "grievance.country": {
+        "formula": _("Stack closed/resolved and open/active tickets by country."),
+        "how_to_read": _("Uses the same ticket base as the grievance timeline."),
+    },
+    "risk.kpi_total": {
+        "formula": _("Sum issue_count across risk indicators under the active filters."),
+        "how_to_read": _("A flag count, not a count of unique people or payments."),
+    },
+    "risk.kpi_critical": {
+        "formula": _("Sum issue_count where severity is critical, at or above 150%."),
+        "how_to_read": _("Critical is the highest severity band in the risk status guide."),
+    },
+    "risk.status_guide": {
+        "formula": _("Critical ≥150%; Warning 100–149%; Caution 80–99%; Normal <80%."),
+        "how_to_read": _("Thresholds compare the indicator with its reference; they are not payment success rates."),
+    },
+    "risk.modules": {
+        "formula": _("Share of issue_count by operational module."),
+        "how_to_read": _("Click a module to narrow the operational cards; percentages are of the filtered total."),
+    },
+    "risk.timeline": {
+        "formula": _("Sum issue_count by date for the active filters."),
+        "how_to_read": _("Shows when flags were reported, not when the underlying issue began."),
+    },
+    "risk.indicators": {
+        "formula": _(
+            "One row per risk code × country × programme; sum issue_count and use the latest "
+            "severity, percentage and trend."
+        ),
+        "how_to_read": _("Respects the active country, programme, category and module filters."),
+    },
+    "risk.cards": {
+        "formula": _(
+            "Sum issue_count by risk code; use the latest percentage, severity, trend and description; group by module."
+        ),
+        "how_to_read": _("Select a module in Risk distribution by module to focus the cards."),
     },
 }

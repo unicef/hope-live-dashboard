@@ -676,7 +676,7 @@ def test_financial_dashboard_cohort_toggle_and_pipeline(browser, financial_aggre
     browser.open("/dashboard/")
     browser.wait_for_element_visible("#time-filter-container")
     browser.wait_for_element_visible("#total-payments")
-    browser.wait_for_element_visible("#pipeline-funnel-chart canvas")
+    browser.wait_for_element_visible("#pipeline-delivered")
 
     # All cohorts: standard (25) plus social-worker (14) sector rows
     browser.wait_for_text_visible("39", "#total-payments")
@@ -1321,3 +1321,79 @@ def test_internal_mobile_sidebar_language_switcher(browser):
     browser.wait_for_text("Aperçu financier", timeout=10)
 
     assert "/fr/" in browser.get_current_url()
+
+
+def test_financial_pipeline_maps_cards_and_methodology(browser, db):
+    year = datetime.datetime.now().year
+    FinancialAggregateFactory(
+        date=datetime.date(year, 1, 1),
+        time_grain="daily",
+        country_slug="kenya",
+        dimension_type="status",
+        dimension_value="DISTRIBUTION SUCCESSFUL",
+        total_usd=269_270_193,
+        payment_count=1000,
+    )
+    FinancialAggregateFactory(
+        date=datetime.date(year, 1, 1),
+        time_grain="daily",
+        country_slug="kenya",
+        dimension_type="status",
+        dimension_value="PENDING",
+        total_usd=45_239_413,
+        payment_count=100,
+    )
+    CompletionAggregateFactory(
+        date=datetime.date(year, 1, 1),
+        time_grain="daily",
+        country_slug="kenya",
+        dimension_type="status",
+        dimension_value="RECONCILED",
+        total_usd=800_000,
+        payment_count=80,
+    )
+    CompletionAggregateFactory(
+        date=datetime.date(year, 1, 1),
+        time_grain="daily",
+        country_slug="kenya",
+        dimension_type="status",
+        dimension_value="OPEN",
+        total_usd=200_000,
+        payment_count=20,
+    )
+
+    browser.login_as_user()
+    browser.open("/dashboard/")
+    browser.wait_for_element_visible("#pipeline-delivered")
+    browser.wait_for_text("$269,270,193", "#total-amount-paid")
+    browser.wait_for_text("$45,239,413", "#outstanding-payments")
+    browser.wait_for_text("80.0%", "#pipeline-rate")
+
+    browser.assert_text("$314,509,606", "#pipeline-total")
+    browser.assert_text("$269,270,193", "#pipeline-delivered")
+    browser.assert_text("$45,239,413", "#pipeline-outstanding")
+    browser.assert_text("$0", "#pipeline-other")
+    browser.assert_text("$215,416,154", "#pipeline-reconciled")
+    browser.assert_text("$53,854,039", "#pipeline-awaiting")
+
+    browser.click("[data-methodology-toggle]")
+    browser.wait_for_element_visible("[data-methodology-panel] [role='dialog']")
+    browser.assert_text("Methodology", "#methodology-title-financial")
+    browser.assert_text(
+        "Total payment volume = Delivered + Outstanding + Other statuses",
+        "[data-methodology-panel]",
+    )
+    browser.click("[data-methodology-panel] button[data-methodology-close]")
+    browser.assert_element_not_visible("[data-methodology-panel] [role='dialog']")
+
+
+def test_every_dashboard_has_a_methodology_drawer(browser):
+    browser.login_as_user()
+    for path in ("/dashboard/", "/demographic/", "/completion/", "/grievance/", "/risk/"):
+        browser.open(path)
+        browser.wait_for_element_visible("main")
+        browser.click("[data-methodology-toggle]")
+        browser.wait_for_element_visible("[data-methodology-panel] [role='dialog']")
+        browser.assert_text("Methodology", "[data-methodology-panel] h2")
+        browser.click("[data-methodology-panel] button[data-methodology-close]")
+        browser.assert_element_not_visible("[data-methodology-panel] [role='dialog']")

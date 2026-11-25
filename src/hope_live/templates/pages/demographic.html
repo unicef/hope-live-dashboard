@@ -12,6 +12,7 @@
         <div class="flex items-center gap-2">
             <span class="bg-unicef-blue-dark text-white text-xs font-bold px-2.5 py-1 rounded-md">{% translate "Live data" %}</span>
             <span class="text-xs text-black/60 font-semibold">{% translate "Data as of" %} <span id="data-as-of">—</span></span>
+            {% methodology_panel "demographic" %}
         </div>
     </div>
 
@@ -65,7 +66,7 @@
             <div class="min-w-0">
                 <h3 id="individuals-card-title" class="text-black/60 text-xs font-bold">{% translate "Individuals reached" %}</h3>
                 <p id="total-individuals" class="text-xl sm:text-2xl font-bold text-black mt-0.5 leading-none">0</p>
-                {% include "includes/chart_info.html" with definition=_("Number of individuals reached.") source=_("HOPE demographics") method=_("Sum of total_beneficiaries for the sector dimension.") %}
+                {% chart_info "demographic.kpi_individuals" %}
             </div>
             <span class="w-9 h-9 shrink-0 rounded bg-unicef-blue text-white flex items-center justify-center">
                 {% icon "users" "h-4 w-4" %}
@@ -75,7 +76,7 @@
             <div class="min-w-0">
                 <h3 class="text-black/60 text-xs font-bold">{% translate "Households reached" %}</h3>
                 <p id="total-households" class="text-xl sm:text-2xl font-bold text-black mt-0.5 leading-none">0</p>
-                {% include "includes/chart_info.html" with definition=_("Number of households reached.") source=_("HOPE demographics") method=_("Sum of total_households for the sector dimension.") %}
+                {% chart_info "demographic.kpi_households" %}
             </div>
             <span class="w-9 h-9 shrink-0 rounded bg-unicef-green text-white flex items-center justify-center">
                 {% icon "house" "h-4 w-4" %}
@@ -95,7 +96,7 @@
             <div class="min-w-0">
                 <h3 class="text-black/60 text-xs font-bold">{% translate "Persons with disabilities reached" %}</h3>
                 <p id="total-pwd" class="text-xl sm:text-2xl font-bold text-black mt-0.5 leading-none">0</p>
-                {% include "includes/chart_info.html" with definition=_("Confirmed persons with disabilities reached.") source=_("HOPE demographics") method=_("Some programmes do not collect this data, so the figure may be under-represented.") %}
+                {% chart_info "demographic.kpi_pwd" %}
             </div>
             <span class="w-9 h-9 shrink-0 rounded bg-unicef-blue-dark text-white flex items-center justify-center">
                 {% icon "heart-handshake" "h-4 w-4" %}

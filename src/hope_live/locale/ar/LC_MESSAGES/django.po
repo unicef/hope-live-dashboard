@@ -2277,3 +2277,87 @@ msgstr "بطاقة صراف آلي"
 #: src/hope_live/templates/includes/kpi_card.html
 msgid "Disclaimer: All figures shown are indicative only and may vary due to rounding"
 msgstr "إخلاء مسؤولية: جميع الأرقام المعروضة استرشادية فقط وقد تختلف بسبب التقريب"
+
+#: src/hope_live/templates/includes/methodology_panel.html
+msgid "Formula"
+msgstr "الصيغة"
+
+#: src/hope_live/templates/includes/methodology_panel.html
+msgid "How to read"
+msgstr "كيفية القراءة"
+
+#: src/hope_live/templates/includes/methodology_panel.html
+msgid "How each metric on this page is calculated."
+msgstr "كيفية حساب كل مؤشر في هذه الصفحة."
+
+#: src/hope_live/templates/includes/methodology_panel.html
+msgid "How calculated"
+msgstr "كيفية الحساب"
+
+#: src/hope_live/templates/includes/methodology_panel.html
+msgid "In scope"
+msgstr "ضمن النطاق"
+
+#: src/hope_live/templates/includes/methodology_panel.html
+msgid "Delivered (paid)"
+msgstr "تم التسليم (مدفوع)"
+
+#: src/hope_live/templates/includes/methodology_panel.html
+msgid "Outstanding"
+msgstr "معلّق"
+
+#: src/hope_live/templates/includes/methodology_panel.html
+msgid "Other statuses"
+msgstr "حالات أخرى"
+
+#: src/hope_live/templates/includes/methodology_panel.html
+msgid "Reconciliation estimate"
+msgstr "تقدير المطابقة"
+
+#: src/hope_live/templates/includes/methodology_panel.html
+msgid "Reconciled (estimated)"
+msgstr "مطابق (تقديري)"
+
+#: src/hope_live/templates/includes/methodology_panel.html
+msgid "Awaiting reconciliation"
+msgstr "بانتظار المطابقة"
+
+#: src/hope_live/templates/includes/methodology_panel.html
+msgid "Total payment volume"
+msgstr "إجمالي حجم المدفوعات"
+
+#: src/hope_live/templates/includes/methodology_panel.html
+msgid "How to read this"
+msgstr "كيفية قراءة ذلك"
+
+#: src/hope_live/templates/includes/methodology_panel.html
+msgid "Total payment volume = Delivered + Outstanding + Other statuses."
+msgstr "إجمالي حجم المدفوعات = تم التسليم + معلّق + حالات أخرى."
+
+#: src/hope_live/templates/includes/methodology_panel.html
+msgid "Delivered = Total amount paid card. Outstanding = Outstanding payments card."
+msgstr "تم التسليم = بطاقة «إجمالي المبالغ المدفوعة». معلّق = بطاقة «المدفوعات المعلقة»."
+
+#: src/hope_live/templates/includes/methodology_panel.html
+msgid "Estimated reconciled = Delivered × reconciliation rate. Awaiting reconciliation = Delivered − estimated reconciled."
+msgstr "المطابقة التقديرية = تم التسليم × معدل المطابقة. بانتظار المطابقة = تم التسليم − المطابقة التقديرية."
+
+#: src/hope_live/templates/includes/methodology_panel.html
+msgid "Delivered and Outstanding are the actual payment-status segments. In Amount (USD), they match the Total amount paid and Outstanding payments cards."
+msgstr "«تم التسليم» و«معلّق» هما شريحتان فعليتان من حالة الدفع. في «المبلغ (دولار أمريكي)»، يتطابقان مع بطاقتي «إجمالي المبالغ المدفوعة» و«المدفوعات المعلقة»."
+
+#: src/hope_live/templates/includes/methodology_panel.html
+msgid "Estimated as Delivered × the reconciliation rate from the completion dashboard. This is not a financial payment status."
+msgstr "يُقدّر كـ «تم التسليم × معدل المطابقة من لوحة الإنجاز». هذا ليس حالة مالية للدفع."
+
+#: src/hope_live/templates/includes/methodology_panel.html
+msgid "How the selected payments move from total volume to delivered and estimated reconciliation."
+msgstr "كيف تنتقل المدفوعات المحددة من الحجم الإجمالي إلى التسليم والمطابقة التقديرية."
+
+#: src/hope_live/templates/includes/methodology_panel.html
+msgid "No methodology notes are available for this page."
+msgstr "لا توجد ملاحظات منهجية متاحة لهذه الصفحة."
+
+#: src/hope_live/templates/pages/dashboard.html
+msgid "In Amount (USD), Delivered = Total amount paid card and Outstanding = Outstanding payments card."
+msgstr "في «المبلغ (دولار أمريكي)»، تم التسليم = بطاقة «إجمالي المبالغ المدفوعة» و«معلّق» = بطاقة «المدفوعات المعلقة»."

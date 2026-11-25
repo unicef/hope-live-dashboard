@@ -24,6 +24,14 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     };
 
+    const formatExactMetric = (val, metric = currentMetric) => {
+        const value = Number(val) || 0;
+        if (metric === 'usd') {
+            return '$' + d3.format(",.0f")(value);
+        }
+        return d3.format(",")(Math.round(value));
+    };
+
     const chartHelpers = window.HopeChart || {};
     const getStableColor = chartHelpers.getStableColor || (() => '#00AEEF');
 
@@ -251,9 +259,6 @@ document.addEventListener('DOMContentLoaded', function () {
     const ipCard = document.getElementById('ip-card');
     const ipChartEl = document.getElementById('ip-chart');
     let ipChart = null;
-    const pipelineEl = document.getElementById('pipeline-funnel-chart');
-    const pipelineChart = pipelineEl ? echarts.init(pipelineEl, 'macarons') : null;
-
     // Resize Handler
     window.addEventListener('resize', function () {
         timelineChart.resize();
@@ -265,7 +270,6 @@ document.addEventListener('DOMContentLoaded', function () {
         countryChart.resize();
         outstandingCountryChart.resize();
         if (ipChart) ipChart.resize();
-        if (pipelineChart) pipelineChart.resize();
     });
 
     function updateTotals() {
@@ -684,74 +688,58 @@ document.addEventListener('DOMContentLoaded', function () {
         updatePipeline();
     }
 
-    // Payment pipeline funnel: financial status buckets plus the reconciliation rate
+    // Payment pipeline: actual status buckets plus a separate reconciliation estimate.
     function updatePipeline() {
-        if (!pipelineChart) return;
-
-        const total = { usd: 0, qty: 0, payments: 0 };
-        const pending = { usd: 0, qty: 0, payments: 0 };
-        const delivered = { usd: 0, qty: 0, payments: 0 };
+        const total = { usd: 0, payments: 0 };
+        const pending = { usd: 0, payments: 0 };
+        const delivered = { usd: 0, payments: 0 };
 
         statusFunnelGroup.all().forEach(d => {
             if (d.key === '' || d.key === null) return;
             const key = String(d.key).toUpperCase();
-            ['usd', 'qty', 'payments'].forEach(f => {
+            ['usd', 'payments'].forEach(f => {
                 total[f] += d.value[f];
                 if (pendingList.includes(key)) pending[f] += d.value[f];
                 else if (successfulList.includes(key)) delivered[f] += d.value[f];
             });
         });
 
-        const field = currentMetric;
+        const field = currentMetric === 'usd' ? 'usd' : 'payments';
+        const totalValue = total[field];
+        const deliveredValue = delivered[field];
+        const outstandingValue = pending[field];
+        const otherValue = Math.max(0, totalValue - deliveredValue - outstandingValue);
         const rates = getReconciliationRate();
-        const rate = rates[field] !== undefined ? rates[field] : rates.payments;
+        const rate = Math.max(0, Math.min(1, rates[field] !== undefined ? rates[field] : 0));
+        const reconciledValue = deliveredValue * rate;
+        const awaitingValue = Math.max(0, deliveredValue - reconciledValue);
 
-        const stages = [
-            { name: gettext('In pipeline'), value: total[field], color: '#FFB500', labelColor: '#000000' },
-            { name: gettext('Delivered'), value: delivered[field], color: '#00AEEF', labelColor: '#000000' },
-            { name: gettext('Reconciled'), value: Math.round(delivered[field] * rate * 100) / 100, color: '#004C45', labelColor: '#FFFFFF' }
-        ];
+        const setText = (id, value) => {
+            const el = document.getElementById(id);
+            if (el) el.textContent = value;
+        };
+        const setWidth = (id, pct) => {
+            const el = document.getElementById(id);
+            if (el) el.style.width = `${Math.max(0, Math.min(100, pct))}%`;
+        };
 
-        pipelineChart.setOption({
-            tooltip: {
-                trigger: 'item',
-                formatter: params => `${params.name}: <b>${formatFullVal(params.value)}</b>`
-            },
-            series: [{
-                type: 'funnel',
-                left: '4%',
-                right: '4%',
-                top: 10,
-                bottom: 10,
-                minSize: '25%',
-                sort: 'descending',
-                gap: 3,
-                label: {
-                    show: true,
-                    position: 'inside',
-                    formatter: params => `${params.name}  •  ${formatMetric(params.value)}`,
-                    color: '#000000',
-                    fontWeight: 600,
-                    fontSize: 12,
-                    textBorderWidth: 0
-                },
-                itemStyle: { borderColor: '#ffffff', borderWidth: 2 },
-                emphasis: { label: { fontSize: 14 } },
-                data: stages.map(s => ({
-                    name: s.name,
-                    value: s.value,
-                    itemStyle: { color: s.color },
-                    label: { color: s.labelColor }
-                }))
-            }]
-        }, { notMerge: true });
+        setText('pipeline-total', formatExactMetric(totalValue, field));
+        setText('pipeline-delivered', formatExactMetric(deliveredValue, field));
+        setText('pipeline-outstanding', formatExactMetric(outstandingValue, field));
+        setText('pipeline-other', formatExactMetric(otherValue, field));
+        setText('pipeline-reconciled', formatExactMetric(reconciledValue, field));
+        setText('pipeline-reconciled-detail', formatExactMetric(reconciledValue, field));
+        setText('pipeline-awaiting', formatExactMetric(awaitingValue, field));
+        setText('pipeline-rate', `${(rate * 100).toFixed(1)}%`);
 
-        const noteEl = document.getElementById('pipeline-note');
-        if (noteEl) {
-            const totalValue = total[field];
-            const pendingPct = totalValue > 0 ? ((pending[field] / totalValue) * 100).toFixed(0) : '0';
-            noteEl.textContent = `${gettext('Pending in pipeline')}: ${formatFullVal(pending[field])} (${pendingPct}%)`;
-        }
+        const deliveredPct = totalValue > 0 ? (deliveredValue / totalValue) * 100 : 0;
+        const outstandingPct = totalValue > 0 ? (outstandingValue / totalValue) * 100 : 0;
+        const otherPct = Math.max(0, 100 - deliveredPct - outstandingPct);
+        setWidth('pipeline-delivered-bar', deliveredPct);
+        setWidth('pipeline-outstanding-bar', outstandingPct);
+        setWidth('pipeline-other-bar', otherPct);
+        setWidth('pipeline-reconciled-bar', rate * 100);
+        setWidth('pipeline-awaiting-bar', (1 - rate) * 100);
     }
 
     // --- Interactive Filters Bindings ---

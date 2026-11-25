@@ -3,14 +3,21 @@ from pathlib import Path
 
 from django.template import Context, Template
 
-from hope_live.web.chart_metadata import CHART_INFO
+from hope_live.web.chart_metadata import CHART_GUIDANCE, CHART_INFO
 
 PAGES = Path(__file__).parents[2] / "src" / "hope_live" / "templates" / "pages"
 
 
 def _template_keys() -> set[str]:
     keys: set[str] = set()
-    for name in ("dashboard.html", "demographic.html", "completion.html", "grievance.html", "landing.html"):
+    for name in (
+        "dashboard.html",
+        "demographic.html",
+        "completion.html",
+        "grievance.html",
+        "risk.html",
+        "landing.html",
+    ):
         text = (PAGES / name).read_text(encoding="utf-8")
         keys.update(re.findall(r'{%\s*chart_info\s+"([^"]+)"', text))
     return keys
@@ -41,3 +48,26 @@ def test_unknown_chart_key_renders_an_empty_panel() -> None:
     rendered = Template('{% load chart_info %}{% chart_info "missing.key" %}').render(Context())
 
     assert 'data-chart-info="missing.key"' in rendered
+
+
+def test_every_internal_metric_has_formula_and_how_to_read() -> None:
+    internal_prefixes = ("financial.", "demographic.", "completion.", "grievance.", "risk.")
+    internal_keys = [key for key in CHART_INFO if key.startswith(internal_prefixes)]
+
+    assert internal_keys
+    for key in internal_keys:
+        meta = CHART_INFO[key]
+        guidance = CHART_GUIDANCE.get(key, {})
+        assert meta.get("definition"), key
+        assert guidance.get("formula"), key
+        assert guidance.get("how_to_read"), key
+
+
+def test_methodology_panel_renders_page_definitions() -> None:
+    rendered = Template('{% load chart_info %}{% methodology_panel "financial" %}').render(Context())
+
+    assert "data-methodology-toggle" in rendered
+    assert "data-methodology-panel" in rendered
+    assert "Payment pipeline" in rendered
+    assert "Total payment volume = Delivered + Outstanding + Other statuses" in rendered
+    assert "Cash delivered to beneficiaries for successful payment statuses" in rendered

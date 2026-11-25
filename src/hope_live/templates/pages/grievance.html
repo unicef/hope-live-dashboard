@@ -11,6 +11,7 @@
         <div class="flex items-center gap-2">
             <span class="bg-unicef-blue-dark text-white text-xs font-bold px-2.5 py-1 rounded-md">{% translate "Live data" %}</span>
             <span class="text-xs text-black/60 font-semibold">{% translate "Data as of" %} <span id="data-as-of">—</span></span>
+            {% methodology_panel "grievance" %}
         </div>
     </div>
 
@@ -42,7 +43,7 @@
             <div class="min-w-0">
                 <h3 class="text-black/60 text-xs font-bold">{% translate "Total tickets" %}</h3>
                 <p id="total-tickets" class="text-xl sm:text-2xl font-bold text-black mt-0.5 leading-none">0</p>
-                {% include "includes/chart_info.html" with definition=_("Number of grievance tickets.") source=_("HOPE grievances") method=_("Sum of ticket_count.") %}
+                {% chart_info "grievance.kpi_total" %}
             </div>
             <span class="w-9 h-9 shrink-0 rounded bg-unicef-blue text-white flex items-center justify-center">
                 {% icon "chart-no-axes-column" "h-4 w-4" %}

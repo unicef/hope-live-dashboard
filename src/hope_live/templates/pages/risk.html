@@ -1,5 +1,5 @@
 {% extends "layout.html" %}
-{% load i18n icons js static %}
+{% load chart_info i18n icons js static %}
 
 {% block content %}
 <div class="max-w-[1600px] mx-auto px-4 lg:px-6 py-4 lg:py-5">
@@ -11,6 +11,7 @@
         <div class="flex items-center gap-2">
             <span class="bg-unicef-blue-dark text-white text-xs font-bold px-2.5 py-1 rounded-md">{% translate "Live data" %}</span>
             <span class="text-xs text-black/60 font-semibold">{% translate "Data as of" %} <span id="data-as-of">—</span></span>
+            {% methodology_panel "risk" %}
         </div>
     </div>
 
@@ -88,7 +89,7 @@
                     <h3 class="text-black/60 text-xs font-bold">{% translate "Total risk items" %}</h3>
                     <p id="total-issues" class="text-2xl sm:text-3xl font-bold text-black mt-0.5 leading-none">0</p>
                     <p class="text-xs text-black/60 mt-1">{% translate "Across all operational modules" %}</p>
-                    {% include "includes/chart_info.html" with definition=_("Total count of operational risk issues across all active modules.") source=_("HOPE") method=_("Count of flagged risk indicators across all modules.") %}
+                    {% chart_info "risk.kpi_total" %}
                 </div>
                 <div class="w-11 h-11 rounded-lg bg-unicef-blue text-white flex items-center justify-center">
                     {% icon "chart-no-axes-column" "h-5 w-5" %}
@@ -101,7 +102,7 @@
                     <h3 class="text-black/60 text-xs font-bold">{% translate "Critical risks" %}</h3>
                     <p id="total-critical" class="text-2xl sm:text-3xl font-bold text-unicef-red mt-0.5 leading-none">0</p>
                     <p class="text-xs text-unicef-red font-bold mt-1">{% translate "Requires immediate action" %}</p>
-                    {% include "includes/chart_info.html" with definition=_("Risks at or above the 150% threshold requiring immediate action.") source=_("HOPE") method=_("Count of risk indicators at critical severity.") %}
+                    {% chart_info "risk.kpi_critical" %}
                 </div>
                 <div class="w-11 h-11 rounded-lg bg-unicef-red text-white flex items-center justify-center">
                     {% icon "shield-check" "h-5 w-5" %}
@@ -111,7 +112,7 @@
             <!-- Risk distribution by module Card -->
             <div class="bg-white rounded-lg shadow-sm border border-black/10 p-3.5">
                 <div class="flex items-center justify-between mb-2">
-                    <h3 class="text-sm font-bold text-black">{% translate "Risk distribution by module" %}</h3>
+                    <div class="flex items-center gap-1.5"><h3 class="text-sm font-bold text-black">{% translate "Risk distribution by module" %}</h3>{% chart_info "risk.modules" %}</div>
                     <span id="modules-monitored-count" class="text-xs font-bold text-black/60 bg-black/5 px-2 py-0.5 rounded-full">{% translate "5 modules" %}</span>
                 </div>
                 <p class="text-xs text-black/60 mb-3">{% translate "Click any module to filter operational cards" %}</p>
@@ -123,7 +124,7 @@
             <!-- Issue Timeline Chart Card -->
             <div class="bg-white rounded-lg shadow-sm border border-black/10 p-3.5">
                 <div class="flex items-center justify-between mb-1">
-                    <h3 id="timeline-title" class="text-sm font-bold text-black">{% translate "Issues timeline" %}</h3>
+                    <div class="flex items-center gap-1.5"><h3 id="timeline-title" class="text-sm font-bold text-black">{% translate "Issues timeline" %}</h3>{% chart_info "risk.timeline" %}</div>
                     <span class="text-xs text-black/60">{% translate "Daily volume" %}</span>
                 </div>
                 <div id="time-focus-chart" class="w-full h-[180px]"></div>
@@ -135,7 +136,7 @@
         <div class="lg:col-span-8 space-y-3.5">
             <!-- Risk Status Color Guide Legend -->
             <div class="bg-white rounded-lg shadow-sm border border-black/10 p-2.5 sm:p-3 flex flex-wrap items-center justify-between gap-2">
-                <div class="text-sm font-bold text-black">{% translate "Risk status color guide:" %}</div>
+                <div class="flex items-center gap-1.5 text-sm font-bold text-black">{% translate "Risk status color guide:" %}{% chart_info "risk.status_guide" %}</div>
                 <div class="flex flex-wrap items-center gap-3 text-xs">
                     <div class="flex items-center gap-1.5">
                         <span class="w-2.5 h-2.5 rounded-full bg-unicef-red"></span>
@@ -168,7 +169,7 @@
             <!-- Risk Indicators Breakdown Table -->
             <div class="bg-white rounded-lg shadow-sm border border-black/10 p-3.5">
                 <div class="mb-2.5">
-                    <h3 class="text-sm font-bold text-black">{% translate "All risk indicators" %}</h3>
+                    <div class="flex items-center gap-1.5"><h3 class="text-sm font-bold text-black">{% translate "All risk indicators" %}</h3>{% chart_info "risk.indicators" %}</div>
                     <p class="text-xs text-black/60">{% translate "Itemized operational metrics by indicator and programme" %}</p>
                 </div>
                 <div class="overflow-x-auto rounded-lg border border-black/10 max-h-[360px] overflow-y-auto">

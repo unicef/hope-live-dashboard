@@ -2381,3 +2381,87 @@ msgstr "Carte bancaire (GAB)"
 #: src/hope_live/templates/includes/kpi_card.html
 msgid "Disclaimer: All figures shown are indicative only and may vary due to rounding"
 msgstr "Avertissement : tous les chiffres indiqués le sont à titre indicatif uniquement et peuvent varier en raison des arrondis"
+
+#: src/hope_live/templates/includes/methodology_panel.html
+msgid "Formula"
+msgstr "Formule"
+
+#: src/hope_live/templates/includes/methodology_panel.html
+msgid "How to read"
+msgstr "Comment le lire"
+
+#: src/hope_live/templates/includes/methodology_panel.html
+msgid "How each metric on this page is calculated."
+msgstr "Comment chaque indicateur de cette page est calculé."
+
+#: src/hope_live/templates/includes/methodology_panel.html
+msgid "How calculated"
+msgstr "Comment est calculé"
+
+#: src/hope_live/templates/includes/methodology_panel.html
+msgid "In scope"
+msgstr "Dans le périmètre"
+
+#: src/hope_live/templates/includes/methodology_panel.html
+msgid "Delivered (paid)"
+msgstr "Distribué (payé)"
+
+#: src/hope_live/templates/includes/methodology_panel.html
+msgid "Outstanding"
+msgstr "En attente"
+
+#: src/hope_live/templates/includes/methodology_panel.html
+msgid "Other statuses"
+msgstr "Autres statuts"
+
+#: src/hope_live/templates/includes/methodology_panel.html
+msgid "Reconciliation estimate"
+msgstr "Estimation du rapprochement"
+
+#: src/hope_live/templates/includes/methodology_panel.html
+msgid "Reconciled (estimated)"
+msgstr "Rapproché (estimé)"
+
+#: src/hope_live/templates/includes/methodology_panel.html
+msgid "Awaiting reconciliation"
+msgstr "En attente de rapprochement"
+
+#: src/hope_live/templates/includes/methodology_panel.html
+msgid "Total payment volume"
+msgstr "Volume total des paiements"
+
+#: src/hope_live/templates/includes/methodology_panel.html
+msgid "How to read this"
+msgstr "Comment lire ceci"
+
+#: src/hope_live/templates/includes/methodology_panel.html
+msgid "Total payment volume = Delivered + Outstanding + Other statuses."
+msgstr "Volume total des paiements = Distribué + En attente + Autres statuts."
+
+#: src/hope_live/templates/includes/methodology_panel.html
+msgid "Delivered = Total amount paid card. Outstanding = Outstanding payments card."
+msgstr "Distribué = carte Montant total versé. En attente = carte Paiements en attente."
+
+#: src/hope_live/templates/includes/methodology_panel.html
+msgid "Estimated reconciled = Delivered × reconciliation rate. Awaiting reconciliation = Delivered − estimated reconciled."
+msgstr "Rapproché estimé = Distribué × taux de rapprochement. En attente de rapprochement = Distribué − rapproché estimé."
+
+#: src/hope_live/templates/includes/methodology_panel.html
+msgid "Delivered and Outstanding are the actual payment-status segments. In Amount (USD), they match the Total amount paid and Outstanding payments cards."
+msgstr "Distribué et En attente sont les segments réels du statut de paiement. En Montant (USD), ils correspondent aux cartes Montant total versé et Paiements en attente."
+
+#: src/hope_live/templates/includes/methodology_panel.html
+msgid "Estimated as Delivered × the reconciliation rate from the completion dashboard. This is not a financial payment status."
+msgstr "Estimé comme Distribué × le taux de rapprochement du tableau de finalisation. Ce n’est pas un statut financier du paiement."
+
+#: src/hope_live/templates/includes/methodology_panel.html
+msgid "How the selected payments move from total volume to delivered and estimated reconciliation."
+msgstr "Comment les paiements sélectionnés passent du volume total à la livraison et au rapprochement estimé."
+
+#: src/hope_live/templates/includes/methodology_panel.html
+msgid "No methodology notes are available for this page."
+msgstr "Aucune note de méthodologie n’est disponible pour cette page."
+
+#: src/hope_live/templates/pages/dashboard.html
+msgid "In Amount (USD), Delivered = Total amount paid card and Outstanding = Outstanding payments card."
+msgstr "En Montant (USD), Distribué = carte Montant total versé et En attente = carte Paiements en attente."

@@ -2165,3 +2165,87 @@ msgstr "ATM 卡"
 #: src/hope_live/templates/includes/kpi_card.html
 msgid "Disclaimer: All figures shown are indicative only and may vary due to rounding"
 msgstr "免责声明：所示数据仅供参考，因四舍五入可能存在差异"
+
+#: src/hope_live/templates/includes/methodology_panel.html
+msgid "Formula"
+msgstr "公式"
+
+#: src/hope_live/templates/includes/methodology_panel.html
+msgid "How to read"
+msgstr "如何解读"
+
+#: src/hope_live/templates/includes/methodology_panel.html
+msgid "How each metric on this page is calculated."
+msgstr "本页各项指标的计算方式。"
+
+#: src/hope_live/templates/includes/methodology_panel.html
+msgid "How calculated"
+msgstr "计算方式"
+
+#: src/hope_live/templates/includes/methodology_panel.html
+msgid "In scope"
+msgstr "范围内"
+
+#: src/hope_live/templates/includes/methodology_panel.html
+msgid "Delivered (paid)"
+msgstr "已交付（已支付）"
+
+#: src/hope_live/templates/includes/methodology_panel.html
+msgid "Outstanding"
+msgstr "未支付"
+
+#: src/hope_live/templates/includes/methodology_panel.html
+msgid "Other statuses"
+msgstr "其他状态"
+
+#: src/hope_live/templates/includes/methodology_panel.html
+msgid "Reconciliation estimate"
+msgstr "对账估算"
+
+#: src/hope_live/templates/includes/methodology_panel.html
+msgid "Reconciled (estimated)"
+msgstr "已对账（估算）"
+
+#: src/hope_live/templates/includes/methodology_panel.html
+msgid "Awaiting reconciliation"
+msgstr "待对账"
+
+#: src/hope_live/templates/includes/methodology_panel.html
+msgid "Total payment volume"
+msgstr "支付总额"
+
+#: src/hope_live/templates/includes/methodology_panel.html
+msgid "How to read this"
+msgstr "如何解读"
+
+#: src/hope_live/templates/includes/methodology_panel.html
+msgid "Total payment volume = Delivered + Outstanding + Other statuses."
+msgstr "支付总额 = 已交付 + 未支付 + 其他状态。"
+
+#: src/hope_live/templates/includes/methodology_panel.html
+msgid "Delivered = Total amount paid card. Outstanding = Outstanding payments card."
+msgstr "已交付 = “已发放总金额”卡片。未支付 = “待发放款项”卡片。"
+
+#: src/hope_live/templates/includes/methodology_panel.html
+msgid "Estimated reconciled = Delivered × reconciliation rate. Awaiting reconciliation = Delivered − estimated reconciled."
+msgstr "对账估算 = 已交付 × 对账率。待对账 = 已交付 − 对账估算。"
+
+#: src/hope_live/templates/includes/methodology_panel.html
+msgid "Delivered and Outstanding are the actual payment-status segments. In Amount (USD), they match the Total amount paid and Outstanding payments cards."
+msgstr "“已交付”和“未支付”是实际支付状态的两个部分。在“金额（USD）”模式下，它们分别对应“已发放总金额”和“待发放款项”卡片。"
+
+#: src/hope_live/templates/includes/methodology_panel.html
+msgid "Estimated as Delivered × the reconciliation rate from the completion dashboard. This is not a financial payment status."
+msgstr "按“已交付 × 完成情况仪表板中的对账率”估算。这不是财务支付状态。"
+
+#: src/hope_live/templates/includes/methodology_panel.html
+msgid "How the selected payments move from total volume to delivered and estimated reconciliation."
+msgstr "所选付款如何从总金额流转到已交付和估算对账。"
+
+#: src/hope_live/templates/includes/methodology_panel.html
+msgid "No methodology notes are available for this page."
+msgstr "此页面暂无方法说明。"
+
+#: src/hope_live/templates/pages/dashboard.html
+msgid "In Amount (USD), Delivered = Total amount paid card and Outstanding = Outstanding payments card."
+msgstr "在“金额（USD）”模式下，已交付 = “已发放总金额”卡片，未支付 = “待发放款项”卡片。"

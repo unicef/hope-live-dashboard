@@ -46,6 +46,37 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
+    // Page-level methodology drawer. Each dashboard has one panel containing
+    // all card and chart definitions in a single scrollable view.
+    const methodologyToggle = document.querySelector("[data-methodology-toggle]");
+    const methodologyPanel = document.querySelector("[data-methodology-panel]");
+    if (methodologyToggle && methodologyPanel) {
+        const methodologyDialog = methodologyPanel.querySelector('[role="dialog"]');
+        const openMethodology = () => {
+            methodologyPanel.classList.remove("hidden");
+            methodologyPanel.setAttribute("aria-hidden", "false");
+            methodologyToggle.setAttribute("aria-expanded", "true");
+            document.body.classList.add("overflow-hidden");
+            if (methodologyDialog) methodologyDialog.focus();
+        };
+        const closeMethodology = () => {
+            methodologyPanel.classList.add("hidden");
+            methodologyPanel.setAttribute("aria-hidden", "true");
+            methodologyToggle.setAttribute("aria-expanded", "false");
+            document.body.classList.remove("overflow-hidden");
+            methodologyToggle.focus();
+        };
+        methodologyToggle.addEventListener("click", openMethodology);
+        methodologyPanel.querySelectorAll("[data-methodology-close]").forEach((button) => {
+            button.addEventListener("click", closeMethodology);
+        });
+        document.addEventListener("keydown", (event) => {
+            if (event.key === "Escape" && !methodologyPanel.classList.contains("hidden")) {
+                closeMethodology();
+            }
+        });
+    }
+
     // Chart information popovers. The panel is fixed and moved to <body> so it
     // never expands or clips inside the card that owns the info button.
     let openInfo = null;
