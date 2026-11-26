@@ -60,32 +60,16 @@ def test_risk_view(user_factory):
 
 
 @pytest.mark.django_db
-def test_landing_page_unauthenticated_no_private_sections(client):
+def test_landing_page_requires_login(client):
     response = client.get("/")
-    assert response.status_code == 200
 
-    content = response.content.decode()
-
-    # Unauthenticated visitor must see public evidence CTA
-    assert "Explore evidence" in content
-    assert "HOPE Ecosystem Pillars" in content
-
-    # Unauthenticated visitor must NOT see private section grid, links, Sign In, or mentions
-    assert "Sign In" not in content
-    assert "Explore Dashboards" not in content
-    assert 'href="/dashboard/"' not in content
-    assert 'href="/demographic/"' not in content
-    assert 'href="/completion/"' not in content
-    assert 'href="/grievance/"' not in content
-    assert 'href="/risk/"' not in content
-
-    # Sidebar must not have Dashboards or Countries fallback link
-    assert "<span>Dashboards</span>" not in content
-    assert "<span>Countries</span>" not in content
+    assert response.status_code == 302
+    assert "/login/" in response["Location"]
+    assert "next=/" in response["Location"]
 
 
 @pytest.mark.django_db
-def test_landing_page_authenticated_shows_dashboards(client, user_factory):
+def test_landing_page_authenticated_shows_sidebar_without_public_launcher(client, user_factory):
     user = user_factory()
     client.force_login(user)
 
@@ -94,12 +78,12 @@ def test_landing_page_authenticated_shows_dashboards(client, user_factory):
 
     content = response.content.decode()
 
-    # Authenticated user sees operational dashboards launcher and sign out
-    assert "Go to Dashboards" in content
-    assert "Explore Dashboards" in content
-    assert "Sign Out" in content
-    assert 'href="/dashboard/"' in content
-    assert 'href="/risk/"' in content
+    # The public header no longer advertises a dashboard launcher, but the
+    # authenticated sidebar links to every internal dashboard.
+    assert "Go to Dashboards" not in content
+    assert 'aria-label="Sidebar"' in content
+    for path in ("/dashboard/", "/demographic/", "/completion/", "/grievance/", "/risk/"):
+        assert path in content
 
 
 @pytest.mark.django_db
@@ -109,3 +93,37 @@ def test_protected_dashboards_redirect_unauthenticated(client):
         response = client.get(url)
         assert response.status_code == 302
         assert "/login/" in response["Location"]
+
+
+@pytest.mark.django_db
+def test_sidebar_is_present_on_all_authenticated_pages(client, user_factory, monkeypatch):
+    client.force_login(user_factory())
+    from hope_live.web import views
+
+    monkeypatch.setattr(
+        views,
+        "fetch_hope_news",
+        lambda limit=None: [
+            {
+                "version": "HOPE v1",
+                "slug": "hope-v1",
+                "date": None,
+                "snippet": "",
+                "description": "Update body",
+            }
+        ],
+    )
+
+    for url in ("/", "/about/", "/contacts/", "/updates/hope-v1/"):
+        response = client.get(url)
+        assert response.status_code == 200, url
+        content = response.content.decode()
+        assert 'aria-label="Sidebar"' in content, url
+        assert "/dashboard/" in content, url
+
+
+@pytest.mark.django_db
+def test_login_page_does_not_show_the_sidebar(client):
+    response = client.get("/login/")
+    assert response.status_code == 200
+    assert 'aria-label="Sidebar"' not in response.content.decode()

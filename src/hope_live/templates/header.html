@@ -1,28 +1,33 @@
 {% load i18n static %}
-<header class="bg-white border-b border-gray-200 text-gray-800 flex justify-between items-center px-6 py-3 shadow-sm z-40">
-    <div class="flex items-center">
-        <label for="nav-toggle" class="cursor-pointer p-2 text-gray-600">
+<header class="bg-unicef-blue text-black border-b border-black/10 flex justify-between items-center px-4 lg:px-6 py-2.5 shadow-sm z-40">
+    <div class="flex items-center gap-2 min-w-0">
+        <label for="nav-toggle" class="cursor-pointer p-2 rounded-md text-black hover:bg-black/10 focus-within:ring-2 focus-within:ring-black/40">
              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
         </label>
-        <div class="relative hidden md:block ml-4"></div>
+        <a href="{% url 'web:index' %}" class="flex items-center gap-2 min-w-0">
+            {% include "includes/unicef_logo.html" with logo_class="max-h-8 sm:max-h-10 lg:max-h-12 w-auto max-w-[150px] sm:max-w-[190px] lg:max-w-[220px] object-contain object-left" %}
+            <span class="hidden sm:block text-base lg:text-lg font-bold tracking-tight leading-tight truncate text-black">
+                {% translate "HOPE Dashboard" %}
+            </span>
+        </a>
     </div>
 
-    <div class="flex items-center gap-4">
-        <div class="relative">
+    <div class="flex items-center gap-2 sm:gap-3">
+        <div class="relative hidden sm:block">
             {% get_current_language as LANGUAGE_CODE %}
-            <button id="language-dropdown-menu-button" aria-haspopup="true" aria-expanded="false" aria-controls="language-dropdown-menu" class="flex items-center gap-1.5 text-gray-650 hover:text-[#00adef] p-2 px-3 rounded-full hover:bg-gray-100 focus:outline-none transition-all duration-150" type="button">
+            <button id="language-dropdown-menu-button" aria-haspopup="true" aria-expanded="false" aria-controls="language-dropdown-menu" class="flex items-center gap-1.5 text-black hover:bg-black/10 p-2 px-3 rounded-full focus:outline-none focus:ring-2 focus:ring-black/40 transition-all duration-150" type="button">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"></path>
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"></path>
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2 12h20"></path>
                 </svg>
-                <span class="text-sm font-bold text-gray-700 uppercase">{{ LANGUAGE_CODE|slice:":2" }}</span>
-                <svg class="w-3.5 h-3.5 text-gray-550 ml-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5"/></svg>
+                <span class="text-xs font-bold text-black uppercase">{{ LANGUAGE_CODE|slice:":2" }}</span>
+                <svg class="w-3.5 h-3.5 text-black/70 ml-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5"/></svg>
             </button>
 
             <!-- Language Dropdown Menu -->
-            <div id="language-dropdown-menu" class="hidden z-50 my-4 text-base list-none bg-white rounded-lg shadow-lg border border-gray-150 min-w-[12rem] divide-y divide-gray-100">
-                <div class="px-4 py-2 text-[10px] uppercase tracking-wider font-bold text-gray-400 bg-gray-50 rounded-t-lg border-b border-gray-100">
+            <div id="language-dropdown-menu" class="hidden absolute right-0 z-50 my-4 text-base list-none bg-white text-black rounded-lg shadow-lg border border-black/10 min-w-[12rem] divide-y divide-black/10">
+                <div class="px-4 py-2 text-xs uppercase tracking-wider font-bold text-black/60 bg-black/[0.03] rounded-t-lg border-b border-black/10">
                     {% translate "Select Language" %}
                 </div>
                 <ul class="py-1" aria-labelledby="language-dropdown-menu-button">
@@ -34,9 +39,9 @@
                             {% csrf_token %}
                             <input name="next" type="hidden" value="{{ request.get_full_path }}">
                             <input name="language" type="hidden" value="{{ lang.code }}">
-                            <button type="submit" class="flex items-center justify-between w-full px-4 py-2.5 text-sm text-left hover:bg-sky-50/50 text-gray-750 font-semibold transition-colors {% if lang.code == LANGUAGE_CODE %}bg-sky-50 text-[#00adef] font-bold{% endif %}">
-                                <span>{{ lang.name_local }}</span>
-                                <span class="text-[9px] text-gray-400 uppercase font-bold px-1.5 py-0.5 bg-gray-100 rounded">{{ lang.code }}</span>
+                            <button type="submit" class="flex items-center justify-between w-full px-4 py-2.5 text-sm text-left hover:bg-black/5 text-black/80 font-semibold transition-colors {% if lang.code == LANGUAGE_CODE %}bg-unicef-blue text-black font-bold{% endif %}">
+                                <span>{{ lang.name_local|capfirst }}</span>
+                                <span class="text-xs text-black uppercase font-bold px-1.5 py-0.5 bg-white/40 rounded">{{ lang.code }}</span>
                             </button>
                         </form>
                     </li>
@@ -45,25 +50,30 @@
             </div>
         </div>
 
-        <button class="text-gray-600 hover:text-[#00adef] p-2 rounded-full hover:bg-gray-100">
+        <button class="hidden sm:block text-black hover:bg-black/10 p-2 rounded-full focus:outline-none focus:ring-2 focus:ring-black/40" aria-label="{% translate 'Notifications' %}">
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>
         </button>
 
         {% if user.is_authenticated %}
             <form action="{% url 'web:logout' %}" method="post" class="inline">
                 {% csrf_token %}
-                <button type="submit" class="bg-[#00adef] text-white px-4 py-2 rounded-md font-bold text-sm shadow hover:bg-sky-600 transition-colors">{% translate "Sign Out" %}</button>
+                <button type="submit" class="inline-flex items-center gap-1.5 bg-white text-unicef-blue-dark border border-white/40 px-3 sm:px-4 py-2 rounded-md font-bold text-sm shadow-sm hover:bg-unicef-blue-dark hover:text-white transition-colors" aria-label="{% translate 'Sign Out' %}">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6A2.25 2.25 0 005.25 5.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m3 0l2.25-2.25M21 12l-2.25-2.25M21 12H9"/></svg>
+                    <span class="hidden sm:inline">{% translate "Sign Out" %}</span>
+                </button>
             </form>
+        {% elif request.resolver_match.url_name != "login" %}
+            <a href="{% url 'web:login' %}" class="bg-white text-unicef-blue-dark border border-white/40 px-4 py-2 rounded-md font-bold text-sm shadow-sm hover:bg-unicef-blue-dark hover:text-white transition-colors">{% translate "Sign In" %}</a>
         {% endif %}
 
         {% if request.user.is_staff %}
-        <a id="issue-opener" class="btn btn-warning text-gray-900 ml-2 px-1">
+        <a id="issue-opener" class="hidden sm:inline-flex items-center gap-1 rounded-md border border-black/20 bg-white text-black px-2.5 py-2 text-sm font-bold shadow-sm hover:bg-black/5">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                stroke="currentColor" class="size-6">
+                stroke="currentColor" class="size-5">
                 <path stroke-linecap="round" stroke-linejoin="round"
                     d="M12 12.75c1.148 0 2.278.08 3.383.237 1.037.146 1.866.966 1.866 2.013 0 3.728-2.35 6.75-5.25 6.75S6.75 18.728 6.75 15c0-1.046.83-1.867 1.866-2.013A24.204 24.204 0 0 1 12 12.75Zm0 0c2.883 0 5.647.508 8.207 1.44a23.91 23.91 0 0 1-1.152 6.06M12 12.75c-2.883 0-5.647.508-8.208 1.44.125 2.104.52 4.136 1.153 6.06M12 12.75a2.25 2.25 0 0 0 2.248-2.354M12 12.75a2.25 2.25 0 0 1-2.248-2.354M12 8.25c.995 0 1.971-.08 2.922-.236.403-.066.74-.358.795-.762a3.778 3.778 0 0 0-.399-2.25M12 8.25c-.995 0-1.97-.08-2.922-.236-.402-.066-.74-.358-.795-.762a3.734 3.734 0 0 1 .4-2.253M12 8.25a2.25 2.25 0 0 0-2.248 2.146M12 8.25a2.25 2.25 0 0 1 2.248 2.146M8.683 5a6.032 6.032 0 0 1-1.155-1.002c.07-.63.27-1.222.574-1.747m.581 2.749A3.75 3.75 0 0 1 15.318 5m0 0c.427-.283.815-.62 1.155-.999a4.471 4.471 0 0 0-.575-1.752M4.921 6a24.048 24.048 0 0 0-.392 3.314c1.668.546 3.416.914 5.223 1.082M19.08 6c.205 1.08.337 2.187.392 3.314a23.882 23.882 0 0 1-5.223 1.082" />
             </svg>
-            <span class="mr-2 hidden sm:flex">{% translate "Open Issue" %}</span>
+            <span class="hidden lg:inline">{% translate "Open Issue" %}</span>
         </a>
         {% endif %}
     </div>

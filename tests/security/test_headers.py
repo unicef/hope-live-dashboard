@@ -88,3 +88,10 @@ def test_hsts_behind_tls_terminating_proxy():
     res = client.get("/login/", HTTP_X_FORWARDED_PROTO="https")
     assert res.status_code == 200
     assert "Strict-Transport-Security" in res.headers
+
+
+def test_csp_does_not_allow_cdns(settings):
+    directives = settings.CONTENT_SECURITY_POLICY["DIRECTIVES"]
+    sources = [source for values in directives.values() for source in values]
+
+    assert not any("cdn" in source or "unpkg" in source or "jsdelivr" in source for source in sources)

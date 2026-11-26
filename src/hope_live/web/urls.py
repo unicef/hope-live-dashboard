@@ -1,6 +1,5 @@
 from django.contrib.auth.views import LoginView, LogoutView
 from django.urls import path
-from django.views.generic import TemplateView
 
 from . import views
 
@@ -16,5 +15,6 @@ urlpatterns = [
     path("grievance/", views.GrievanceView.as_view(), name="grievance"),
     path("risk/", views.RiskView.as_view(), name="risk"),
     path("about/", views.AboutView.as_view(), name="about"),
-    path("contacts/", TemplateView.as_view(template_name="pages/contacts.html"), name="contacts"),
+    path("updates/<slug:slug>/", views.UpdateDetailView.as_view(), name="update-detail"),
+    path("contacts/", views.ContactView.as_view(), name="contacts"),
 ]

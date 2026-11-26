@@ -1,0 +1,153 @@
+{% load i18n icons issues js static tailwind_tags %}
+{% get_current_language as LANGUAGE_CODE %}
+{% get_current_language_bidi as LANGUAGE_BIDI %}
+<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE }}" {% if LANGUAGE_BIDI %}dir="rtl"{% endif %} data-theme="light">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>
+            {% block title %}
+                {% translate "UNICEF Cash-based Assistance" %}
+            {% endblock title %}
+        </title>
+        <link rel="preload"
+              href="{% static 'fonts/NotoSans-Regular.woff2' %}"
+              as="font"
+              type="font/woff2"
+              crossorigin />
+        <link rel="preload" href="{% static 'fonts/NotoSans-Bold.woff2' %}" as="font" type="font/woff2" crossorigin />
+        <script src="{% static 'js/d3.min.js' %}"></script>
+        <script src="{% static 'js/topojson-client.min.js' %}"></script>
+        <script src="{% static_js 'js/theme.js' %}"></script>
+        <script src="{% static_js 'js/chart_helpers.js' %}"></script>
+        <script src="{% url 'javascript-catalog' %}"></script>
+        {% tailwind_css %}
+        {% issues_tags %}
+    </head>
+    <body class="min-h-screen bg-white text-black antialiased font-sans">
+        {% include "includes/icons_sprite.html" %}
+        {% if sidebar %}
+        <div class="flex min-h-screen">
+            {% include "menu.html" %}
+            <div class="flex flex-col flex-grow min-w-0">
+        {% endif %}
+        <header class="bg-unicef-blue text-black">
+            <div class="max-w-[1600px] mx-auto px-4 lg:px-6">
+                <div class="flex items-center justify-between gap-3 py-2 sm:py-3">
+                    <div class="flex items-center gap-2 min-w-0">
+                        {% if sidebar %}
+                        <label for="nav-toggle" class="cursor-pointer p-2 -ml-1 rounded-md text-black hover:bg-black/10 focus-within:ring-2 focus-within:ring-black/40" aria-label="{% translate 'Menu' %}">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+                        </label>
+                        {% endif %}
+                        <a href="{% url 'web:index' %}"
+                           class="flex items-center gap-3 min-w-0"
+                           aria-label="{% translate 'UNICEF Cash-based Assistance home' %}">
+                            {% include "includes/unicef_logo.html" with logo_class="max-h-10 sm:max-h-12 w-auto max-w-[160px] sm:max-w-[260px] object-contain object-left" %}
+                            <span class="hidden xl:block text-base lg:text-lg font-bold tracking-tight leading-tight border-l border-black/20 pl-3 text-black">
+                                {% translate "UNICEF Cash-based Assistance" %}
+                            </span>
+                        </a>
+                    </div>
+                    <nav class="hidden lg:flex items-center gap-5 text-base lg:text-lg font-bold text-black"
+                         aria-label="{% translate 'Public navigation' %}">
+                        <a href="#global-evidence"
+                           class="hover:underline transition-colors">{% translate "Evidence" %}</a>
+                        <a href="https://www.unicef.org/hope-hct/resources"
+                           target="_blank"
+                           rel="noopener"
+                           class="hover:underline transition-colors">{% translate "Resources" %}</a>
+                        <a href="https://www.unicef.org/about/contact-us"
+                           target="_blank"
+                           rel="noopener"
+                           class="hover:underline transition-colors">{% translate "Contact" %}</a>
+                    </nav>
+                    {% get_available_languages as LANGUAGES %}
+                    {% get_language_info_list for LANGUAGES as langs %}
+                    <div class="flex items-center gap-2">
+                        <form action="{% url 'set_language' %}" method="post" class="m-0 hidden sm:block">
+                            {% csrf_token %}
+                            <input name="next" type="hidden" value="{{ request.get_full_path }}" />
+                            <label class="sr-only" for="public-language">{% translate "Language" %}</label>
+                            <select id="public-language"
+                                    name="language"
+                                    onchange="this.form.submit()"
+                                    class="h-9 sm:h-10 min-w-[100px] rounded-md border border-white/30 bg-unicef-blue-dark px-3 pr-8 text-sm font-bold text-white focus:outline-none focus:ring-2 focus:ring-white/60">
+                                {% for lang in langs %}
+                                    <option value="{{ lang.code }}"
+                                            {% if lang.code == LANGUAGE_CODE %}selected{% endif %}
+                                            class="text-black">
+                                        {{ lang.name_local|capfirst }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </form>
+                        <details id="public-mobile-menu" class="relative lg:hidden">
+                            <summary class="list-none [&::-webkit-details-marker]:hidden cursor-pointer p-2 -mr-1 rounded text-black hover:bg-black/10 focus:outline-none focus:ring-2 focus:ring-black/40"
+                                     aria-label="{% translate 'Menu' %}">
+                                {% icon "menu" "h-6 w-6" %}
+                            </summary>
+                            <div class="absolute right-0 top-full mt-2 w-64 max-w-[calc(100vw-2rem)] z-50 rounded-md border border-black/10 bg-white text-black shadow-lg p-2">
+                                <a href="#global-evidence"
+                                   class="flex items-center gap-3 px-3 py-2.5 rounded text-base font-bold hover:bg-black/5">
+                                    {% icon "chart-no-axes-column" "h-5 w-5 text-black" %}
+                                    {% translate "Evidence" %}
+                                </a>
+                                <a href="https://www.unicef.org/hope-hct/resources"
+                                   target="_blank"
+                                   rel="noopener"
+                                   class="flex items-center gap-3 px-3 py-2.5 rounded text-base font-bold hover:bg-black/5">
+                                    {% icon "library" "h-5 w-5 text-black" %}
+                                    {% translate "Resources" %}
+                                </a>
+                                <a href="https://www.unicef.org/about/contact-us"
+                                   target="_blank"
+                                   rel="noopener"
+                                   class="flex items-center gap-3 px-3 py-2.5 rounded text-base font-bold hover:bg-black/5">
+                                    {% icon "mail" "h-5 w-5 text-black" %}
+                                    {% translate "Contact" %}
+                                </a>
+                                <form action="{% url 'set_language' %}"
+                                      method="post"
+                                      class="sm:hidden mt-2 border-t border-black/10 pt-2">
+                                    {% csrf_token %}
+                                    <input name="next" type="hidden" value="{{ request.get_full_path }}" />
+                                    <label class="block px-3 py-1 text-xs font-bold uppercase tracking-wide text-black/60"
+                                           for="mobile-language">{% translate "Language" %}</label>
+                                    <select id="mobile-language"
+                                            name="language"
+                                            onchange="this.form.submit()"
+                                            class="w-full rounded-md border border-black/20 bg-white px-3 py-2 text-sm font-bold text-black focus:outline-none focus:ring-2 focus:ring-unicef-blue">
+                                        {% for lang in langs %}
+                                            <option value="{{ lang.code }}"
+                                                    {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>{{ lang.name_local|capfirst }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </form>
+                            </div>
+                        </details>
+                    </div>
+                </div>
+            </div>
+        </header>
+        <main>
+            {% block content %}{% endblock %}
+        </main>
+        {% block footer %}
+            <footer class="bg-white border-t border-black/10 py-8">
+                <div class="max-w-[1600px] mx-auto px-4 lg:px-6 flex flex-col md:flex-row justify-between items-center gap-3 text-sm text-black/70">
+                    <p>© United Nations Children’s Fund (UNICEF) {% now "Y" %}</p>
+                    <div class="flex flex-wrap items-center gap-5">
+                        <span>{% blocktranslate with version=app.version %}Version {{ version }}{% endblocktranslate %}</span>
+                    </div>
+                </div>
+            </footer>
+        {% endblock footer %}
+        {% if sidebar %}
+            </div>
+        </div>
+        {% endif %}
+        {% block extra_js %}{% endblock %}
+    </body>
+</html>

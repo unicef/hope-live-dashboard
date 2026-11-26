@@ -9,9 +9,35 @@ class DashboardTimeFilter {
 
         this.onFilterChange = options.onFilterChange || (() => {});
         this.granularity = this.container.dataset.granularity || 'daily';
-        this.currentPreset = options.defaultPreset || 'this_year';
-        this.currentRange = this.calculatePresetRange(this.currentPreset);
         this.buffer = { start: null, end: null };
+
+        const validPresets = ['today', 'this_week', 'this_month', 'last_3_months', 'this_year', 'custom'];
+        let storedPreset = null;
+        let storedFrom = null;
+        let storedTo = null;
+        try {
+            storedPreset = window.localStorage.getItem('hopePeriod');
+            storedFrom = window.localStorage.getItem('hopeFrom');
+            storedTo = window.localStorage.getItem('hopeTo');
+        } catch (error) {
+            storedPreset = null;
+        }
+
+        this.currentPreset = validPresets.includes(storedPreset) ? storedPreset : (options.defaultPreset || 'this_year');
+        if (this.currentPreset === 'custom' && storedFrom && storedTo) {
+            const start = DashboardTimeFilter.parseLocalDate(storedFrom);
+            const end = DashboardTimeFilter.parseLocalDate(storedTo);
+            end.setHours(23, 59, 59, 999);
+            if (start <= end) {
+                this.currentRange = { start, end };
+            } else {
+                this.currentPreset = 'this_year';
+                this.currentRange = this.calculatePresetRange(this.currentPreset);
+            }
+        } else {
+            if (this.currentPreset === 'custom') this.currentPreset = 'this_year';
+            this.currentRange = this.calculatePresetRange(this.currentPreset);
+        }
 
         this.initUI();
     }
@@ -119,6 +145,7 @@ class DashboardTimeFilter {
                 this.currentPreset = preset;
                 this.currentRange = this.calculatePresetRange(preset);
                 this.updateLabel(this.currentRange.start, this.currentRange.end);
+                this.persist(preset, this.currentRange.start, this.currentRange.end);
                 this.onFilterChange(this.currentRange.start, this.currentRange.end, preset);
             });
         });
@@ -132,22 +159,44 @@ class DashboardTimeFilter {
                 this.currentPreset = 'custom';
                 this.currentRange = { start, end };
                 this.updateLabel(start, end);
+                this.persist('custom', start, end);
                 this.onFilterChange(start, end, 'custom');
             }
         });
 
         this.setActiveButton(this.container.querySelector(`[data-preset="${this.currentPreset}"]`));
         this.updateLabel(this.currentRange.start, this.currentRange.end);
+        if (this.currentPreset === 'custom') {
+            customInputs.classList.remove('hidden');
+            customInputs.classList.add('flex');
+            dateFromInput.value = this.formatDateStr(this.currentRange.start);
+            dateToInput.value = this.formatDateStr(this.currentRange.end);
+        }
+    }
+
+    persist(preset, start, end) {
+        try {
+            window.localStorage.setItem('hopePeriod', preset);
+            if (preset === 'custom') {
+                window.localStorage.setItem('hopeFrom', this.formatDateStr(start));
+                window.localStorage.setItem('hopeTo', this.formatDateStr(end));
+            } else {
+                window.localStorage.removeItem('hopeFrom');
+                window.localStorage.removeItem('hopeTo');
+            }
+        } catch (error) {
+            // Private browsing or a blocked storage API: keep the in-memory range.
+        }
     }
 
     setActiveButton(btn) {
         if (!btn) return;
         this.container.querySelectorAll('.time-preset-btn').forEach(b => {
-            b.classList.remove('bg-blue-50', 'text-blue-800', 'active-preset', 'shadow-sm');
-            b.classList.add('bg-gray-100', 'text-gray-700');
+            b.classList.remove('bg-unicef-blue-dark', 'text-white', 'active-preset', 'shadow-sm');
+            b.classList.add('bg-black/5', 'text-black/70');
         });
-        btn.classList.add('bg-blue-50', 'text-blue-800', 'active-preset', 'shadow-sm');
-        btn.classList.remove('bg-gray-100', 'text-gray-700');
+        btn.classList.add('bg-unicef-blue-dark', 'text-white', 'active-preset', 'shadow-sm');
+        btn.classList.remove('bg-black/5', 'text-black/70');
     }
 }
 

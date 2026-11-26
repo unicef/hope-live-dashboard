@@ -7,6 +7,7 @@ from celery import shared_task  # type: ignore[import-untyped]
 from constance import config
 from django.apps import apps
 from django.contrib.auth import get_user_model
+from django.core.cache import cache
 from django.db import models, transaction
 from tenacity import retry, stop_after_attempt, wait_exponential
 
@@ -35,6 +36,8 @@ PROGRAM_TYPE_ALIASES: dict[str, str] = {
     "HOUSEHOLD": ProgramType.STANDARD,
     "HOUSEHOLDS": ProgramType.STANDARD,
     "STANDARD": ProgramType.STANDARD,
+    "UNSPECIFIED": ProgramType.UNSPECIFIED,
+    "UNKNOWN": ProgramType.UNSPECIFIED,
 }
 
 
@@ -52,7 +55,15 @@ def _fetch_url_with_retry(url: str, headers: dict[str, str], timeout: int) -> re
     return response
 
 
+def _is_year_partitioned(datasets: list[dict[str, Any]]) -> bool:
+    """Report queries are normally split into one dataset per year."""
+    return any(dataset.get("arguments", {}).get("year") is not None for dataset in datasets)
+
+
 def _determine_target_years(datasets: list[dict[str, Any]], requested_years: list[int] | None) -> list[int]:
+    if not _is_year_partitioned(datasets):
+        # One dataset holds every year: it only needs to be processed once.
+        return [datetime.date.today().year]
     if requested_years:
         return requested_years
     years = []
@@ -92,6 +103,20 @@ def _process_year_data(  # noqa: PLR0913
     return len(all_rows)
 
 
+def _invalidate_aggregates_cache() -> None:
+    """Drop cached aggregates API responses so dashboards show freshly synced data.
+
+    The API is decorated with ``cache_page`` (6 hours). Without this, a dashboard loaded
+    before a sync keeps receiving the previous - possibly empty - payload until the TTL
+    expires, even though the database has been updated.
+    """
+    try:
+        cache.delete_pattern("views.decorators.cache.cache_page.*")
+        cache.delete_pattern("views.decorators.cache.cache_header.*")
+    except AttributeError:  # cache backend without delete_pattern support
+        cache.clear()
+
+
 @shared_task(name="hope_live.analysis.tasks.sync_daily_aggregates", bind=True)  # type: ignore[untyped-decorator]
 def sync_daily_aggregates(
     self: Any, pk: int | None = None, version: int | None = None, target_years: list[int] | None = None
@@ -110,14 +135,22 @@ def sync_daily_aggregates(
         headers = {"Authorization": f"Token {token}"}
 
         configs = [
-            (config.HOPE_FINANCIAL_REPORT_QUERY_ID, "FinancialAggregate", ["total_usd", "total_qty", "payment_count"]),
+            (
+                config.HOPE_FINANCIAL_REPORT_QUERY_ID,
+                "FinancialAggregate",
+                ["total_usd", "entitlement_usd", "total_qty", "payment_count"],
+            ),
             (
                 config.HOPE_DEMOGRAPHIC_REPORT_QUERY_ID,
                 "DemographicAggregate",
                 ["total_beneficiaries", "total_children", "total_pwd", "total_households"],
             ),
             (config.HOPE_COMPLETION_REPORT_QUERY_ID, "CompletionAggregate", ["payment_count", "total_usd"]),
-            (config.HOPE_GRIEVANCE_REPORT_QUERY_ID, "GrievanceAggregate", ["ticket_count"]),
+            (
+                config.HOPE_GRIEVANCE_REPORT_QUERY_ID,
+                "GrievanceAggregate",
+                ["ticket_count", "avg_resolution_days", "ticket_source"],
+            ),
             (
                 getattr(config, "HOPE_RISK_REPORT_QUERY_ID", 10),
                 "RiskAggregate",
@@ -165,6 +198,8 @@ def sync_daily_aggregates(
                     logger.exception(f"[Job {job_id}] Error syncing {model_name} for year {target_year}: {e}")
                     errors.append(f"{model_name} Year {target_year}: {e}")
 
+        _invalidate_aggregates_cache()
+
         if errors and job:
             job.error_message = "\n".join(errors)
             job.save(update_fields=["error_message"])
@@ -207,10 +242,17 @@ def _prepare_sync_context(
 
 
 def _find_dataset_id_for_year(datasets: list[dict[str, Any]], year: int) -> int | None:
-    """Locate the dataset ID matching the target year."""
+    """Locate the dataset ID matching the target year.
+
+    Not every report query is partitioned by year: some expose a single dataset with no
+    ``year`` argument that holds every year's rows (e.g. the risk feed). Such a dataset is
+    processed once instead of being skipped for lacking a ``year`` argument.
+    """
     for dataset in datasets:
         if dataset.get("arguments", {}).get("year") == year:
             return int(dataset["id"])
+    if len(datasets) == 1 and not _is_year_partitioned(datasets):
+        return int(datasets[0]["id"])
     return None
 
 

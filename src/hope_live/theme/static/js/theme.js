@@ -15,6 +15,16 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
+    // Keep the sidebar usable on small screens: collapsed by default below the
+    // desktop breakpoint and expanded by default on larger screens.
+    const navToggle = document.getElementById("nav-toggle");
+    if (navToggle) {
+        const navQuery = window.matchMedia("(min-width: 1280px)");
+        navQuery.addEventListener("change", (event) => {
+            navToggle.checked = event.matches;
+        });
+    }
+
     // Language dropdown (replaces Flowbite's data-dropdown-toggle behavior)
     const langBtn = document.getElementById("language-dropdown-menu-button");
     const langMenu = document.getElementById("language-dropdown-menu");
@@ -36,4 +46,90 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
+    // Chart information popovers. The panel is fixed and moved to <body> so it
+    // never expands or clips inside the card that owns the info button.
+    let openInfo = null;
+
+    function positionInfo(button, panel) {
+        const rect = button.getBoundingClientRect();
+        const panelRect = panel.getBoundingClientRect();
+        const gap = 8;
+        const margin = 8;
+        const sidebar = document.querySelector('aside[aria-label="Sidebar"]');
+        const sidebarRight = sidebar ? sidebar.getBoundingClientRect().right : 0;
+        const minLeft = Math.max(margin, sidebarRight + gap);
+        let left = rect.right - panelRect.width;
+        let top = rect.bottom + gap;
+
+        if (left < minLeft) {
+            // Prefer the right of the icon so the popover does not cover the
+            // dashboard sidebar when the icon is near the left edge.
+            left = Math.min(rect.left, window.innerWidth - panelRect.width - margin);
+        }
+        if (left < minLeft) left = minLeft;
+        if (left + panelRect.width > window.innerWidth - margin) {
+            left = window.innerWidth - panelRect.width - margin;
+        }
+        if (top + panelRect.height > window.innerHeight - margin) {
+            top = rect.top - panelRect.height - gap;
+        }
+        if (top < margin) top = margin;
+
+        panel.style.left = `${Math.max(margin, left)}px`;
+        panel.style.top = `${Math.max(margin, top)}px`;
+    }
+
+    function closeInfo(returnFocus = false) {
+        if (!openInfo) return;
+        const { button, panel } = openInfo;
+        panel.classList.add("hidden");
+        panel.setAttribute("aria-hidden", "true");
+        button.setAttribute("aria-expanded", "false");
+        openInfo = null;
+        if (returnFocus) button.focus();
+    }
+
+    function openInfoPanel(button, panel) {
+        closeInfo();
+        if (panel.parentElement !== document.body) document.body.appendChild(panel);
+        panel.classList.remove("hidden");
+        panel.setAttribute("aria-hidden", "false");
+        button.setAttribute("aria-expanded", "true");
+        openInfo = { button, panel };
+        positionInfo(button, panel);
+        panel.focus({ preventScroll: true });
+    }
+
+    document.querySelectorAll("[data-chart-info]").forEach((wrapper) => {
+        const button = wrapper.querySelector("[data-chart-info-toggle]");
+        const panel = wrapper.querySelector("[data-chart-info-panel]");
+        if (!button || !panel) return;
+
+        panel.setAttribute("tabindex", "-1");
+        button.addEventListener("click", (event) => {
+            event.stopPropagation();
+            if (openInfo && openInfo.panel === panel) closeInfo(true);
+            else openInfoPanel(button, panel);
+        });
+        panel.addEventListener("click", (event) => event.stopPropagation());
+
+        const closeButton = panel.querySelector("[data-chart-info-close]");
+        if (closeButton) {
+            closeButton.addEventListener("click", (event) => {
+                event.stopPropagation();
+                closeInfo(true);
+            });
+        }
+    });
+
+    document.addEventListener("click", () => closeInfo());
+    document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape") closeInfo(true);
+    });
+    window.addEventListener("resize", () => {
+        if (openInfo) positionInfo(openInfo.button, openInfo.panel);
+    });
+    window.addEventListener("scroll", () => {
+        if (openInfo) positionInfo(openInfo.button, openInfo.panel);
+    }, true);
 })

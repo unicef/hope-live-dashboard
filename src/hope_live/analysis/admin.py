@@ -119,6 +119,8 @@ class GrievanceAggregateAdmin(ReadOnlyDeletableAdmin):
         "dimension_type",
         "dimension_value",
         "ticket_count",
+        "avg_resolution_days",
+        "ticket_source",
     )
     list_filter = ("time_grain", "country_slug", "dimension_type", "date")
     search_fields = ("country_slug", "dimension_type", "dimension_value")

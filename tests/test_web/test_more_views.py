@@ -1,3 +1,6 @@
+import datetime as dt
+import re
+
 import pytest
 import responses
 from django.test import RequestFactory
@@ -173,21 +176,65 @@ def test_index_view_dynamic_context(user_factory):
     assert context["total_programs_glance"] == 1  # DCT-Somalia
     assert context["total_sources_glance"] == "HOPE Database"
     assert context["latest_data_str"] == "June 2026"
-    assert context["verification_success_rate"] == 80.0
+    assert context["latest_data_exact"] == "01 Jun 2026"
+    assert context["reconciliation_rate"] == 80.0
 
 
 @pytest.mark.django_db
 def test_landing_page_shows_social_workers_kpi(client, user_factory):
+    client.force_login(user_factory())
     response = client.get("/")
 
     assert response.status_code == 200
     content = response.content.decode("utf-8")
     assert "Social Workers Reached" in content
-    assert "Frontline workforce assisted" in content
+    assert "HOPE reach" not in content
+    assert "Frontline workforce assisted" not in content
+    assert "Reconciled Transactions" not in content
+    assert "Verified Transactions" not in content
 
 
 @pytest.mark.django_db
-def test_language_switch_views(client):
+def test_landing_page_uses_unicef_brand_assets(client, user_factory):
+    client.force_login(user_factory())
+    response = client.get("/")
+
+    assert response.status_code == 200
+    content = response.content.decode("utf-8")
+    assert "Disclaimer: All figures shown are indicative only and may vary due to rounding" in content
+    assert "© UNICEF/UNI503920/Madina Qati Musadiq" in content
+    assert "unicef-logo-white-en.png" in content
+    assert "hero-unicef.jpg" in content
+    assert "https://www.unicef.org/documents/policy-personal-data-protection" in content
+    assert "© United Nations Children’s Fund (UNICEF)" in content
+
+
+@pytest.mark.django_db
+def test_landing_page_uses_only_local_assets(client, user_factory):
+    client.force_login(user_factory())
+    content = client.get("/").content.decode("utf-8")
+
+    script_sources = re.findall(r'<script[^>]+src="([^"]+)"', content)
+    stylesheet_sources = re.findall(r'<link[^>]+href="([^"]+)"', content)
+
+    assert script_sources
+    assert all(source.startswith("/") for source in script_sources), script_sources
+    assert all(source.startswith("/") for source in stylesheet_sources), stylesheet_sources
+
+
+@pytest.mark.django_db
+def test_landing_reconciliation_rate_without_completion_data(client, user_factory):
+    client.force_login(user_factory())
+    response = client.get("/")
+
+    assert response.status_code == 200
+    assert response.context["reconciliation_rate"] is None
+    assert "98.7" not in response.content.decode("utf-8")
+
+
+@pytest.mark.django_db
+def test_language_switch_views(client, user_factory):
+    client.force_login(user_factory())
     response = client.get("/")
     assert response.status_code == 200
 
@@ -196,7 +243,29 @@ def test_language_switch_views(client):
 
     response_fr = client.get("/fr/")
     assert response_fr.status_code == 200
-    assert "HOPE en bref" in response_fr.content.decode("utf-8")
+    assert "Familles bénéficiaires" in response_fr.content.decode("utf-8")
+
+
+@pytest.mark.parametrize(
+    ("language", "logo", "expected"),
+    [
+        ("es", "unicef-logo-white-es.png", "Política social"),
+        ("fr", "unicef-logo-white-fr.png", "Politique sociale"),
+        ("ar", "unicef-logo-white-ar.png", "السياسات الاجتماعية"),
+        ("ru", "unicef-logo-white-ru.png", "Социальная политика"),
+        ("zh-hans", "unicef-logo-white-zh.png", "社会政策"),
+    ],
+)
+@pytest.mark.django_db
+def test_landing_localized_logo_and_brand_strings(client, user_factory, language, logo, expected):
+    client.force_login(user_factory())
+    response = client.get(f"/{language}/")
+
+    assert response.status_code == 200
+    content = response.content.decode("utf-8")
+    assert logo in content
+    assert expected in content
+    assert f'lang="{language}"' in content
 
 
 @pytest.mark.django_db
@@ -244,3 +313,45 @@ def test_fetch_hope_news():
     assert len(news) == 1
     assert news[0]["version"] == "HOPE v2025.4.15.0"
     assert news[0]["snippet"] == "New features 1. Added bio details."
+
+    # The cached list keeps every update; the limit only slices what callers show.
+    assert news[0]["slug"] == "hope-v20254150"
+    assert len(fetch_hope_news(limit=None)) == 1
+    assert fetch_hope_news(limit=0) == []
+
+
+def _fake_update() -> dict:
+    return {
+        "version": "HOPE v2025.4.15.0",
+        "slug": "hope-v20254150",
+        "date": dt.date(2026, 5, 19),
+        "snippet": "New features 1. Added bio details.",
+        "description": "New features and enhancements 1. Added bio details.",
+    }
+
+
+@pytest.mark.django_db
+def test_update_detail_view_renders_the_full_release_note(client, user_factory, monkeypatch):
+    client.force_login(user_factory())
+    from hope_live.web import views
+
+    monkeypatch.setattr(views, "fetch_hope_news", lambda limit=None: [_fake_update()])
+
+    response = client.get("/updates/hope-v20254150/")
+    content = response.content.decode()
+
+    assert response.status_code == 200
+    assert "HOPE v2025.4.15.0" in content
+    assert "New features and enhancements 1. Added bio details." in content
+
+
+@pytest.mark.django_db
+def test_update_detail_view_returns_404_for_unknown_slug(client, user_factory, monkeypatch):
+    client.force_login(user_factory())
+    from hope_live.web import views
+
+    monkeypatch.setattr(views, "fetch_hope_news", lambda limit=None: [_fake_update()])
+
+    response = client.get("/updates/not-a-real-update/")
+
+    assert response.status_code == 404

@@ -2,7 +2,7 @@
 <svg width="512" height="512" viewBox="0 0 512 512"
      xmlns="http://www.w3.org/2000/svg" role="img" aria-label="HOPE dashboard icon">
   <!-- Background rounded square -->
-  <rect x="12" y="12" width="488" height="488" rx="72" ry="72" fill="#2196F3"/>
+  <rect x="12" y="12" width="488" height="488" rx="72" ry="72" fill="#00AEEF"/>
 
   <!-- Inner panel -->
   <g transform="translate(56,56)">
@@ -14,7 +14,7 @@
 
     <!-- HOPE text -->
     <text x="200" y="64" text-anchor="middle"
-          font-family="Segoe UI, Roboto, Helvetica, Arial, sans-serif"
+          font-family="Noto Sans, sans-serif"
           font-weight="700" font-size="44" fill="#FFFFFF" letter-spacing="2">HOPE</text>
 
     <!-- Content grid outline (sub-panel) -->
@@ -27,9 +27,9 @@
       <!-- mask a slice to make it look like pie with a slice removed -->
       <path d="M56 56 L56 8
                A48 48 0 0 1 103 86
-               Z" fill="#2196F3"/>
+               Z" fill="#00AEEF"/>
       <!-- smaller slice to show segmentation -->
-      <path d="M56 56 L20 96 A48 48 0 0 0 56 8 Z" fill="#BBDEFB" opacity="0.85"/>
+      <path d="M56 56 L20 96 A48 48 0 0 0 56 8 Z" fill="#9ADBE8" opacity="0.85"/>
     </g>
 
     <!-- Bar chart (left-bottom) -->
@@ -58,7 +58,7 @@
 
     <!-- UNICEF wordmark (simple text, generic font) -->
     <text x="200" y="390" text-anchor="middle"
-          font-family="Segoe UI, Roboto, Helvetica, Arial, sans-serif"
+          font-family="Noto Sans, sans-serif"
           font-weight="600" font-size="36" fill="#FFFFFF" letter-spacing="2">unicef</text>
   </g>
 </svg>

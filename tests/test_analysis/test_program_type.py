@@ -5,7 +5,7 @@ from hope_live.analysis.models import FinancialAggregate, ProgramType
 from hope_live.analysis.tasks import _normalise_program_type, save_aggregates
 from tests.extras.testutils.factories.analysis import FinancialAggregateFactory
 
-FINANCIAL_UPDATE_FIELDS = ["total_usd", "total_qty", "payment_count"]
+FINANCIAL_UPDATE_FIELDS = ["total_usd", "entitlement_usd", "total_qty", "payment_count"]
 
 
 def _payment_row(**overrides):
@@ -16,6 +16,7 @@ def _payment_row(**overrides):
         "dimension_type": "sector",
         "dimension_value": "health",
         "total_usd": 100,
+        "entitlement_usd": 125,
         "total_qty": 10,
         "payment_count": 5,
     }
@@ -35,6 +36,8 @@ def _payment_row(**overrides):
         ("standard", ProgramType.STANDARD),
         (None, ProgramType.STANDARD),
         ("", ProgramType.STANDARD),
+        ("UNSPECIFIED", ProgramType.UNSPECIFIED),
+        ("unknown", ProgramType.UNSPECIFIED),
         ("unexpected-value", ProgramType.STANDARD),
     ],
 )
@@ -85,7 +88,8 @@ def api_client():
 
 
 @pytest.mark.django_db
-def test_aggregate_api_exposes_program_type(api_client):
+def test_aggregate_api_exposes_program_type(api_client, user_factory):
+    api_client.force_authenticate(user=user_factory())
     FinancialAggregateFactory(dimension_type="sector", program_type=ProgramType.SOCIAL)
 
     response = api_client.get(
@@ -99,7 +103,8 @@ def test_aggregate_api_exposes_program_type(api_client):
 
 
 @pytest.mark.django_db
-def test_aggregate_api_filters_by_program_type(api_client):
+def test_aggregate_api_filters_by_program_type(api_client, user_factory):
+    api_client.force_authenticate(user=user_factory())
     FinancialAggregateFactory(dimension_type="sector", dimension_value="health", program_type=ProgramType.STANDARD)
     FinancialAggregateFactory(dimension_type="sector", dimension_value="health", program_type=ProgramType.SOCIAL)
 
@@ -111,3 +116,35 @@ def test_aggregate_api_filters_by_program_type(api_client):
     assert response.status_code == 200
     assert len(response.data) == 1
     assert response.data[0]["program_type"] == ProgramType.SOCIAL
+
+
+@pytest.mark.django_db
+def test_save_aggregates_keeps_entitlement_separate_from_delivered():
+    save_aggregates(
+        [_payment_row(total_usd=60, entitlement_usd=100)], 2024, "FinancialAggregate", FINANCIAL_UPDATE_FIELDS
+    )
+
+    agg = FinancialAggregate.objects.get()
+    assert agg.total_usd == 60
+    assert agg.entitlement_usd == 100
+
+
+@pytest.mark.django_db
+def test_aggregate_api_exposes_entitlement_usd(api_client, user_factory):
+    api_client.force_authenticate(user=user_factory())
+    FinancialAggregateFactory(
+        dimension_type="status",
+        dimension_value="PENDING",
+        total_usd=0,
+        entitlement_usd=45_000,
+    )
+
+    response = api_client.get(
+        "/api/analysis/daily-aggregates/",
+        {"dashboard": "financial", "dimension_type": "status"},
+    )
+
+    assert response.status_code == 200
+    assert len(response.data) == 1
+    assert response.data[0]["total_usd"] == "0.00"
+    assert response.data[0]["entitlement_usd"] == "45000.00"

@@ -14,6 +14,7 @@ class FinancialAggregateSerializer(serializers.ModelSerializer):  # type: ignore
             "dimension_value",
             "program_type",
             "total_usd",
+            "entitlement_usd",
             "total_qty",
             "payment_count",
         ]
@@ -62,6 +63,8 @@ class GrievanceAggregateSerializer(serializers.ModelSerializer):  # type: ignore
             "dimension_value",
             "program_type",
             "ticket_count",
+            "avg_resolution_days",
+            "ticket_source",
         ]
 
 

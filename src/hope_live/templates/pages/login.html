@@ -2,9 +2,10 @@
 {% load i18n static %}
 
 {% block header %}
-<div class="flex flex-1 flex-col bg-primary shadow-md w-full">
-    <div class="flex-grow py-2">
-        <img src="{% static 'images/hope_logo.png' %}" class="pl-8 h-16">
+<div class="bg-unicef-blue text-black border-b border-black/10 shadow-sm">
+    <div class="max-w-[1600px] mx-auto px-4 lg:px-6 py-3 flex items-center gap-3">
+        {% include "includes/unicef_logo.html" with logo_class="max-h-10 w-auto max-w-[220px] object-contain object-left" %}
+        <span class="text-lg font-bold tracking-tight text-black">{% translate "HOPE Live Dashboard" %}</span>
     </div>
 </div>
 {% endblock header %}
@@ -12,29 +13,29 @@
 {% block menu %}{% endblock %}
 
 {% block content %}
-<div class="flex items-center justify-center">
-    <div class="text-5xl pt-20">{% translate "HOPE Live Dashboard" %}</div>
-</div>
+<div class="flex items-center justify-center px-4">
+    <div class="w-full max-w-xl pt-16 text-center">
+        <h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-black tracking-tight leading-tight">
+            {% translate "HOPE Live Dashboard" %}
+        </h1>
 
-<div class="flex items-center justify-center">
-    <div class="w-1/4 pt-20">
-        <div class="text-center mt-10">
+        <div class="mt-10">
             <form action="{% url 'social:begin' 'azuread-tenant-oauth2' %}" method="post" class="inline">
                 {% csrf_token %}
-                <button type="submit" class="px-8 py-3 btn btn-primary text-white border-none text-lg font-bold rounded shadow hover:bg-unicef-dark transition duration-200">
+                <button type="submit" class="px-8 py-3 bg-unicef-blue-dark text-white text-lg font-bold rounded-md shadow-sm hover:bg-unicef-blue focus:outline-none focus:ring-2 focus:ring-unicef-blue/40 transition duration-200">
                     {% translate "SSO Login" %}
                 </button>
             </form>
         </div>
 
         {% if debug %}
-        <div class="mt-8 p-4 border rounded bg-white w-full">
-            <h3 class="text-sm font-bold text-gray-500 mb-2 uppercase">{% translate "Debug Login" %}</h3>
+        <div class="mt-10 p-5 border border-black/10 rounded-lg bg-white shadow-sm text-left">
+            <h3 class="text-xs font-bold text-black/60 mb-3 uppercase tracking-wider">{% translate "Debug Login" %}</h3>
             <form method="post" class="space-y-4">
                 {% csrf_token %}
-                <input type="text" name="username" placeholder="{% translate 'Username' %}" class="w-full p-2 border rounded">
-                <input type="password" name="password" placeholder="{% translate 'Password' %}" class="w-full p-2 border rounded">
-                <button type="submit" class="w-full py-2 bg-gray-200 hover:bg-gray-300 rounded">{% translate "Sign In" %}</button>
+                <input type="text" name="username" placeholder="{% translate 'Username' %}" class="w-full p-2.5 border border-black/20 rounded-md text-black focus:outline-none focus:ring-2 focus:ring-unicef-blue/30">
+                <input type="password" name="password" placeholder="{% translate 'Password' %}" class="w-full p-2.5 border border-black/20 rounded-md text-black focus:outline-none focus:ring-2 focus:ring-unicef-blue/30">
+                <button type="submit" class="w-full py-2.5 bg-black/5 hover:bg-black/10 text-black font-bold rounded-md transition-colors">{% translate "Sign In" %}</button>
             </form>
         </div>
         {% endif %}
@@ -43,7 +44,7 @@
 {% endblock content %}
 
 {% block footer %}
-<div class="flex justify-center text-xs footer m-auto pt-1 pb-2 border-t-2 text-gray-400 border-gray-400 bg-white">
+<div class="text-center text-xs py-4 border-t border-black/10 text-black/60 bg-white">
     {% blocktranslate with year=year version=app.version %}Hope Country Report dev - {{ year }} - {{ version }}{% endblocktranslate %}
 </div>
 {% endblock footer %}

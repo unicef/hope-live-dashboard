@@ -252,6 +252,7 @@ def browser(sb, live_server_with_static, admin_user):
         cookie_name = settings.SESSION_COOKIE_NAME
         cookie_value = client.cookies[cookie_name].value
         sb.open("/login/")
+        sb.execute_script("window.localStorage.clear();")
         sb.add_cookie({"name": cookie_name, "value": cookie_value, "path": "/"})
 
     sb.login_as_user = login_as_user
