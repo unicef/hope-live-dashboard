@@ -71,3 +71,15 @@ def test_methodology_panel_renders_page_definitions() -> None:
     assert "Payment status breakdown plus a separate reconciliation estimate" in rendered
     assert "Total payment volume = Delivered + Outstanding + Other statuses" in rendered
     assert "Cash delivered to beneficiaries for successful payment statuses" in rendered
+
+
+def test_methodology_matches_the_delivered_and_children_rules() -> None:
+    financial = str(CHART_INFO["financial.timeline"]["method"])
+    children = str(CHART_INFO["demographic.children"]["method"])
+    grievance = str(CHART_INFO["grievance.payee_type"]["method"])
+
+    assert "delivered quantity only" in financial
+    assert "entitlement is not used for paid amounts" in financial
+    assert "TFR" in children
+    assert "household_size - 1" in children
+    assert "UNSPECIFIED" in grievance
