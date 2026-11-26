@@ -14,6 +14,7 @@ class FinancialAggregateSerializer(serializers.ModelSerializer):  # type: ignore
             "dimension_value",
             "program_type",
             "total_usd",
+            "entitlement_usd",
             "total_qty",
             "payment_count",
         ]

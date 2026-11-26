@@ -194,13 +194,13 @@ document.addEventListener('DOMContentLoaded', function () {
     const outstandingByCountryGroup = countryDimension.group().reduce(
         (p, v) => {
             if (v.dimension_type === 'status' && pendingList.includes(String(v.dimension_value).toUpperCase())) {
-                p.usd += +v.total_usd;
+                p.usd += +v.entitlement_usd;
             }
             return p;
         },
         (p, v) => {
             if (v.dimension_type === 'status' && pendingList.includes(String(v.dimension_value).toUpperCase())) {
-                p.usd -= +v.total_usd;
+                p.usd -= +v.entitlement_usd;
             }
             return p;
         },
@@ -212,6 +212,7 @@ document.addEventListener('DOMContentLoaded', function () {
         (p, v) => {
             if (v.dimension_type === 'status') {
                 p.usd += +v.total_usd;
+                p.entitlement += +v.entitlement_usd;
                 p.qty += +v.total_qty || 0;
                 p.payments += +v.payment_count;
             }
@@ -220,12 +221,13 @@ document.addEventListener('DOMContentLoaded', function () {
         (p, v) => {
             if (v.dimension_type === 'status') {
                 p.usd -= +v.total_usd;
+                p.entitlement -= +v.entitlement_usd;
                 p.qty -= +v.total_qty || 0;
                 p.payments -= +v.payment_count;
             }
             return p;
         },
-        () => ({ usd: 0, qty: 0, payments: 0 })
+        () => ({ usd: 0, entitlement: 0, qty: 0, payments: 0 })
     );
 
     // Active filters
@@ -289,9 +291,11 @@ document.addEventListener('DOMContentLoaded', function () {
             (d.dimension_type === 'status' && successfulList.includes(String(d.dimension_value).toUpperCase())) ? d.total_usd : 0
         ).value();
 
-        // Outstanding: Sum only the Status rows matching pending statuses
+        // Outstanding: entitlement for pending statuses only. Failed,
+        // not-delivered and partially reconciled amounts are intentionally
+        // excluded from this card.
         const totalOutstanding = ndx.groupAll().reduceSum(d =>
-            (d.dimension_type === 'status' && pendingList.includes(String(d.dimension_value).toUpperCase())) ? d.total_usd : 0
+            (d.dimension_type === 'status' && pendingList.includes(String(d.dimension_value).toUpperCase())) ? d.entitlement_usd : 0
         ).value();
 
         const paymentsEl = document.getElementById('total-payments');
@@ -690,25 +694,31 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Payment pipeline: actual status buckets plus a separate reconciliation estimate.
     function updatePipeline() {
-        const total = { usd: 0, payments: 0 };
-        const pending = { usd: 0, payments: 0 };
+        const totalDelivered = { usd: 0, payments: 0 };
+        const pending = { entitlement: 0, payments: 0 };
         const delivered = { usd: 0, payments: 0 };
 
         statusFunnelGroup.all().forEach(d => {
             if (d.key === '' || d.key === null) return;
             const key = String(d.key).toUpperCase();
-            ['usd', 'payments'].forEach(f => {
-                total[f] += d.value[f];
-                if (pendingList.includes(key)) pending[f] += d.value[f];
-                else if (successfulList.includes(key)) delivered[f] += d.value[f];
-            });
+            totalDelivered.usd += d.value.usd;
+            totalDelivered.payments += d.value.payments;
+            if (pendingList.includes(key)) {
+                pending.entitlement += d.value.entitlement;
+                pending.payments += d.value.payments;
+            } else if (successfulList.includes(key)) {
+                delivered.usd += d.value.usd;
+                delivered.payments += d.value.payments;
+            }
         });
 
         const field = currentMetric === 'usd' ? 'usd' : 'payments';
-        const totalValue = total[field];
-        const deliveredValue = delivered[field];
-        const outstandingValue = pending[field];
-        const otherValue = Math.max(0, totalValue - deliveredValue - outstandingValue);
+        const deliveredValue = delivered[field] || 0;
+        const outstandingValue = field === 'usd' ? pending.entitlement : pending.payments;
+        const otherValue = field === 'usd'
+            ? Math.max(0, totalDelivered.usd - deliveredValue)
+            : Math.max(0, totalDelivered.payments - deliveredValue - outstandingValue);
+        const totalValue = deliveredValue + outstandingValue + otherValue;
         const rates = getReconciliationRate();
         const rate = Math.max(0, Math.min(1, rates[field] !== undefined ? rates[field] : 0));
         const reconciledValue = deliveredValue * rate;
@@ -910,7 +920,8 @@ document.addEventListener('DOMContentLoaded', function () {
             const dateFormat = d3.timeParse('%Y-%m-%d');
             data.forEach(d => {
                 d.date = dateFormat(d.date);
-                d.total_usd = +d.total_usd;
+                d.total_usd = +d.total_usd || 0;
+                d.entitlement_usd = +d.entitlement_usd || 0;
                 d.total_qty = +d.total_qty || 0;
                 d.payment_count = +d.payment_count;
                 d.program_type = d.program_type || 'STANDARD';

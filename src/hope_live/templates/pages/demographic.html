@@ -112,12 +112,20 @@
         <div id="time-range-chart" style="display: none;"></div>
     </div>
 
+    <!-- Age and gender composition -->
+    <div class="bg-white rounded-lg shadow-sm border border-black/10 p-3.5 mb-4">
+        <h3 id="age-gender-title" class="text-base font-bold text-black mb-1">{% translate "Reach by Age Group and Gender" %}</h3>
+        {% chart_info "demographic.age_gender" %}
+        <p class="text-xs text-black/60 mb-2 italic">{% translate "Household composition counters with KAB fallback. Counts may not sum to total individuals where composition is missing." %}</p>
+        <div id="age-gender-chart" class="w-full h-[300px]"></div>
+    </div>
+
     <!-- Main Demographic Charts -->
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
         <div class="bg-white rounded-lg shadow-sm border border-black/10 p-3.5 flex flex-col">
             <h3 id="sector-share-title" class="text-base font-bold text-black mb-1">{% translate "Sector share of reached population" %}</h3>
             {% chart_info "demographic.sector" %}
-            <p class="text-xs text-black/60 mb-2 italic">{% translate "Note: children and PWD figures rely on recorded household composition." %}</p>
+            <p class="text-xs text-black/60 mb-2 italic">{% translate "Note: children use household composition with the TFR/KAB fallback; PWD uses recorded or KAB disability counts. Missing composition may understate the figures." %}</p>
             <div id="sector-children-chart" class="w-full h-[250px]"></div>
         </div>
         <div class="bg-white rounded-lg shadow-sm border border-black/10 p-3.5">
@@ -135,7 +143,7 @@
 
     <details class="bg-white rounded-lg shadow-sm border border-black/10 p-3.5 mb-4 text-xs text-black/60">
         <summary class="cursor-pointer font-semibold text-black/80">{% translate "Method and caveats" %}</summary>
-        <p class="mt-2 leading-relaxed">{% translate "Metrics use payees with at least one qualifying payment in the selected period. Qualifying payments must belong to accepted, finished or closed payment plans; failed, removed, conflicted and excluded payments are not included. Household metrics (individuals, children and persons with disabilities) use recorded household composition; social-worker programmes report workforce counts separately, and organisation payees are included only where payee-level demographic data exists. The timeline uses the payment delivery date, then the entitlement date, then the payment status date. Missing composition or dates of birth may understate children and disability figures." %}</p>
+        <p class="mt-2 leading-relaxed">{% translate "Metrics use households with at least one qualifying payment in the selected period. Qualifying payments must belong to accepted, finished or closed payment plans; failed, removed, conflicted and excluded payments are not included. Households are deduplicated per month, so multiple payments do not multiply their size. Individuals use KAB household size when available, otherwise recorded size; children use recorded household composition, then the country/year World Bank TFR, then KAB children count, capped at household size minus one; PWD uses KAB disability counts when declared, otherwise recorded disability counts. Social-worker programmes count one worker per record and report workforce counts separately. The timeline uses the payment delivery date, then the entitlement date, then the payment status date. Missing composition or dates of birth may understate children and disability figures." %}</p>
     </details>
 
 </div>

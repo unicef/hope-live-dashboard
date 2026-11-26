@@ -81,8 +81,16 @@ document.addEventListener('DOMContentLoaded', function () {
     const countryDimension = ndx.dimension(d => d.country_slug);
     const ticketSourceDimension = ndx.dimension(d => d.ticket_source || 'GRIEVANCE');
     const resolutionDimension = ndx.dimension(d => d.dimension_type === 'resolution' ? d.dimension_value : '');
+    const programTypeDimension = ndx.dimension(d => d.program_type || 'UNSPECIFIED');
 
-    const primaryDimFilter = d => d.dimension_type === 'category';
+    // Status is the canonical ticket base: one status per ticket, so the total
+    // card and the status chart always reconcile.
+    const primaryDimFilter = d => d.dimension_type === 'status';
+
+    function applyCohortFilter() {
+        if (activeCohort === 'ALL') programTypeDimension.filterAll();
+        else programTypeDimension.filter(activeCohort);
+    }
 
     // Groups
     const moveDays = dateDimension.group(d3.timeDay);
@@ -183,6 +191,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     let activeSource = 'GRIEVANCE';
+    let activeCohort = 'ALL';
 
     // Initialize ECharts instances with macarons theme
     const timelineChart = echarts.init(document.getElementById('time-focus-chart'), 'macarons');
@@ -860,10 +869,12 @@ document.addEventListener('DOMContentLoaded', function () {
             priorityDimension.filterAll();
             countryDimension.filterAll();
             ticketSourceDimension.filterAll();
+            programTypeDimension.filterAll();
             dateDimension.filterAll();
 
             ndx.remove();
             ndx.add(data);
+            applyCohortFilter();
             countryFilter.populate(data);
             countryFilter.apply();
             selectedCountries.clear();
@@ -879,6 +890,21 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // --- Source Toggle ---
+    const cohortTabs = document.querySelectorAll('.cohort-tab');
+    cohortTabs.forEach(btn => {
+        btn.addEventListener('click', function () {
+            cohortTabs.forEach(b => {
+                b.classList.remove('bg-white', 'shadow-sm', 'text-unicef-blue-dark');
+                b.classList.add('text-black/60');
+            });
+            this.classList.add('bg-white', 'shadow-sm', 'text-unicef-blue-dark');
+            this.classList.remove('text-black/60');
+            activeCohort = this.dataset.cohort || 'ALL';
+            applyCohortFilter();
+            updateAll();
+        });
+    });
+
     const sourceTabs = document.querySelectorAll('.source-tab');
     sourceTabs.forEach(btn => {
         btn.addEventListener('click', function () {

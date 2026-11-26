@@ -68,6 +68,6 @@ def test_methodology_panel_renders_page_definitions() -> None:
 
     assert "data-methodology-toggle" in rendered
     assert "data-methodology-panel" in rendered
-    assert "Payment pipeline" in rendered
+    assert "Payment status breakdown plus a separate reconciliation estimate" in rendered
     assert "Total payment volume = Delivered + Outstanding + Other statuses" in rendered
     assert "Cash delivered to beneficiaries for successful payment statuses" in rendered

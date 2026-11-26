@@ -13,6 +13,7 @@ class ProgramType(models.TextChoices):
 
     STANDARD = "STANDARD", "Standard programmes"
     SOCIAL = "SOCIAL", "Social workers"
+    UNSPECIFIED = "UNSPECIFIED", "Unspecified payee type"
 
 
 class BaseAggregate(models.Model):
@@ -55,6 +56,7 @@ class BaseAggregate(models.Model):
 
 class FinancialAggregate(BaseAggregate):
     total_usd = models.DecimalField(max_digits=20, decimal_places=2, default=0)
+    entitlement_usd = models.DecimalField(max_digits=20, decimal_places=2, default=0)
     total_qty = models.DecimalField(max_digits=20, decimal_places=2, default=0)
     payment_count = models.IntegerField(default=0)
 

@@ -17,8 +17,8 @@ CHART_INFO = {
         "method": _(
             "Payments are dated by delivery date, then entitlement date, then status date. "
             "Only payments in accepted, finished or closed payment plans are included; failed, "
-            "removed and conflicted payments are excluded. USD uses delivered quantity when "
-            "present, otherwise entitlement quantity. Payments count counts payment records."
+            "removed and conflicted payments are excluded. USD uses delivered quantity only; "
+            "entitlement is not used for paid amounts. Payments count counts payment records."
         ),
         "note": _(
             "The metric toggle switches between USD and payment count. The selected programme "
@@ -27,17 +27,18 @@ CHART_INFO = {
         ),
     },
     "financial.pipeline": {
-        "definition": _("Payment pipeline from total payment volume through delivered to reconciled."),
+        "definition": _("Payment status breakdown plus a separate reconciliation estimate."),
         "source": _("HOPE payments and the completion reconciliation rate."),
         "method": _(
-            "In pipeline is the total payment volume for the active metric — the funnel's "
-            "starting population, not only pending payments. Delivered counts Distribution "
-            "Successful, Partially Distributed and Transaction Successful. Reconciled is "
-            "delivered multiplied by the reconciliation rate from the completion dataset for the "
-            "same period and cohort."
+            "Total payment volume is Delivered plus Outstanding plus other non-failed statuses. "
+            "Delivered uses delivered quantity for Distribution Successful, Partially Distributed "
+            "and Transaction Successful. Outstanding uses entitlement for SENT TO PAYMENT GATEWAY, "
+            "SENT TO FSP and PENDING only. Estimated reconciled is Delivered multiplied by the "
+            "reconciliation rate from the completion feed for the same period and cohort."
         ),
         "note": _(
-            "Pending in pipeline is shown below the chart as a subset of in-pipeline, not as a separate failure stage."
+            "The cards show Delivered and Outstanding actuals. Reconciliation is a separate "
+            "estimate from the completion feed; there is no reconciled financial status card."
         ),
     },
     "financial.sector": {
@@ -45,8 +46,7 @@ CHART_INFO = {
         "source": _("HOPE payments — country report financial feed."),
         "method": _(
             "Payment rows are grouped by programme sector using the same date and status filters "
-            "as the financial timeline. USD uses delivered quantity when present, otherwise "
-            "entitlement quantity; payments count counts payment records."
+            "as the financial timeline. USD uses delivered quantity only; payments count counts payment records."
         ),
     },
     "financial.delivery": {
@@ -54,7 +54,7 @@ CHART_INFO = {
         "source": _("HOPE payments — country report financial feed."),
         "method": _(
             "Payment rows are grouped by the delivery mechanism name using the same date and "
-            "status filters as the financial timeline."
+            "status filters as the financial timeline. USD uses delivered quantity only."
         ),
     },
     "financial.region": {
@@ -62,7 +62,7 @@ CHART_INFO = {
         "source": _("HOPE payments — country report financial feed."),
         "method": _(
             "Payment rows are grouped by the business area region name using the same date and "
-            "status filters as the financial timeline."
+            "status filters as the financial timeline. USD uses delivered quantity only."
         ),
         "note": _(
             "Bars are ordered by value and shaded from dark (highest) to light (lowest). Axis "
@@ -75,7 +75,7 @@ CHART_INFO = {
         "source": _("HOPE payments — country report financial feed."),
         "method": _(
             "Payment rows are grouped by the business area country slug using the same date and "
-            "status filters as the financial timeline."
+            "status filters as the financial timeline. USD uses delivered quantity only."
         ),
         "note": _(
             "All countries with financial data in the period are shown. Outstanding by country is shown beside it."
@@ -86,7 +86,7 @@ CHART_INFO = {
         "source": _("HOPE payments — country report financial feed."),
         "method": _(
             "Payment rows are grouped by programme name using the same date and status filters as "
-            "the financial timeline."
+            "the financial timeline. USD uses delivered quantity only."
         ),
         "note": _("The chart shows the top 10 programmes, plus an Other bucket."),
     },
@@ -95,7 +95,7 @@ CHART_INFO = {
         "source": _("HOPE payments — country report financial feed."),
         "method": _(
             "Payment rows are grouped by financial service provider name using the same date and "
-            "status filters as the financial timeline."
+            "status filters as the financial timeline. USD uses delivered quantity only."
         ),
         "note": _("The chart shows the top 10 providers, plus an Other bucket."),
     },
@@ -103,9 +103,10 @@ CHART_INFO = {
         "definition": _("Outstanding payment amount by country, in USD."),
         "source": _("HOPE payments — country report financial feed (status dimension)."),
         "method": _(
-            "Sums the entitlement quantity in USD for payments still in pending statuses "
-            "(SENT TO PAYMENT GATEWAY, SENT TO FSP, PENDING), grouped by country. Payments in "
-            "successful statuses have already been paid and are excluded."
+            "Sums entitlement USD for payments still in pending statuses (SENT TO PAYMENT GATEWAY, "
+            "SENT TO FSP, PENDING), grouped by country. Failed, not-delivered and partially "
+            "reconciled amounts are excluded by decision. Payments in successful statuses have "
+            "already been paid and are excluded."
         ),
         "note": _(
             "Always shown in USD, independent of the amount/payment-count toggle. All countries "
@@ -117,7 +118,7 @@ CHART_INFO = {
         "source": _("HOPE payments — country report financial feed."),
         "method": _(
             "Payment rows are grouped by the programme's implementing partner using the same "
-            "date and status filters as the financial timeline."
+            "date and status filters as the financial timeline. USD uses delivered quantity only."
         ),
         "note": _(
             "The card appears once the financial feed provides the implementing-partner "
@@ -131,29 +132,37 @@ CHART_INFO = {
         "definition": _("People reached in households with at least one qualifying payment in the period."),
         "source": _("HOPE households and payments — country report demographic feed."),
         "method": _(
-            "A household counts once per period when it has a qualifying payment. Individuals, "
-            "children and persons with disabilities come from the household's recorded "
-            "composition. Date basis: payment delivery date, then entitlement date, then payment "
-            "status date. Only accepted, finished or closed plans are included; failed, removed, "
-            "conflicted and excluded payments are excluded."
+            "One row per household per month after deduplication. A household counts when it "
+            "has at least one qualifying payment in the period. Qualifying payments must belong "
+            "to accepted, finished or closed payment plans; failed, removed, conflicted and "
+            "excluded payments are excluded. Date basis: delivery date, then entitlement date, "
+            "then payment status date. Household size uses KAB size when available, otherwise "
+            "the recorded household size. Social-worker programmes count one worker per record."
         ),
         "note": _(
-            "Children and PWD figures rely on recorded household fields, so missing composition "
-            "or dates of birth understate the totals."
+            "Children use recorded composition first, then the TFR/KAB fallback with a "
+            "household-size cap. PWD uses KAB disability counts when declared, otherwise legacy "
+            "disability counts. Missing composition, disability data or dates of birth "
+            "understate the figures."
         ),
     },
     "demographic.children": {
         "definition": _("Children reached in households with at least one qualifying payment in the period."),
-        "source": _("HOPE households and payments — country report demographic feed."),
+        "source": _("HOPE households and payments, plus World Bank fertility rates — country report demographic feed."),
         "method": _(
-            "Sums each household's recorded children count (the household composition count "
-            "where available, otherwise the beneficiary-recorded children count). Households "
-            "with no recorded count contribute zero."
+            "One row per household per month. Social-worker programmes contribute zero children. "
+            "Recorded household composition children_count wins. If it is missing, use the "
+            "country/year World Bank TFR from the Fertility rates query; if the payment year is "
+            "absent, use the latest available year. If TFR is unavailable, use KAB children "
+            "count. The fallback is capped at household_size - 1, using KAB size when available, "
+            "otherwise household size; no estimate is made when household size is unknown. "
+            "Totals are rounded and capped at total beneficiaries."
         ),
         "note": _(
-            "Where household composition has not been recalculated or children's dates of birth "
-            "are missing, the figure is understated. An improved estimate based on household "
-            "members is being added to the feed."
+            "TFR is a lifetime births-per-woman rate, not a current children-per-household count, "
+            "so the household-size cap prevents one-person households and other small households "
+            "from being overstated. Missing composition or dates of birth understate recorded "
+            "counts. This is period reach, not annual unique children."
         ),
     },
     "demographic.timeline": {
@@ -171,11 +180,11 @@ CHART_INFO = {
             "delivery date, then entitlement date, then payment status date."
         ),
         "note": _(
-            "Under the current legacy calculation, a household with more than one qualifying "
-            "payment in a month can contribute its size, children and PWD counts once per "
-            "payment; total households remains distinct. Missing composition or dates of birth "
-            "understate the totals, and PWD figures may be under-reported where programmes do "
-            "not collect them."
+            "Households are deduplicated per month, so multiple qualifying payments do not "
+            "multiply their size, children or PWD counts. Children use recorded composition first, "
+            "then the TFR/KAB fallback capped by household size. Missing composition, disability "
+            "data or dates of birth understate the totals, and PWD figures may be under-reported "
+            "where programmes do not collect them."
         ),
     },
     "demographic.sector": {
@@ -187,7 +196,9 @@ CHART_INFO = {
             "households, children or persons with disabilities). Household metrics use recorded "
             "composition; social-worker programmes report workforce counts separately."
         ),
-        "note": _("Children and PWD under-reporting caveats also apply here."),
+        "note": _(
+            "Children use the TFR/KAB fallback described under Children; PWD under-reporting caveats also apply."
+        ),
     },
     "demographic.country": {
         "definition": _("Share of the reached population by country."),
@@ -198,7 +209,9 @@ CHART_INFO = {
             "metrics use recorded composition; social-worker programmes report workforce counts "
             "separately."
         ),
-        "note": _("All countries with data in the period are shown. Children and PWD caveats apply."),
+        "note": _(
+            "All countries with data in the period are shown. Children use the TFR/KAB fallback; PWD caveats apply."
+        ),
     },
     "demographic.region": {
         "definition": _("Share of the reached population by region."),
@@ -217,10 +230,11 @@ CHART_INFO = {
         "definition": _("Reconciled and still-open payments or amount over time."),
         "source": _("HOPE payments — country report completion feed."),
         "method": _(
-            "Reconciled uses the completion feed's RECONCILED reconciliation status. Open covers "
-            "every other non-failed reconciliation status. Only payments in accepted, finished or "
-            "closed plans are included; failed, removed and conflicted payments are excluded. USD "
-            "is entitlement USD."
+            "The completion feed maps Sent to Payment Gateway, Sent to FSP, Distribution Successful, "
+            "Partially Distributed and Transaction Successful payments to Reconciled. All other "
+            "non-failed statuses are Open/Pending Reconciliation. Only payments in accepted, "
+            "finished or closed plans are included; failed, removed and conflicted payments are "
+            "excluded. USD is entitlement USD."
         ),
         "note": _(
             "Reconciled is green and Pending Reconciliation is amber across the timeline and country charts. "
@@ -464,9 +478,9 @@ CHART_INFO.update(
             "definition": _("Cash delivered to beneficiaries for successful payment statuses."),
             "source": _("HOPE payments — country report financial feed."),
             "method": _(
-                "Sums USD for Distribution Successful, Partially Distributed and Transaction "
-                "Successful statuses. Uses delivered quantity when present, otherwise entitlement "
-                "quantity, under the selected period, country and cohort."
+                "Sums delivered USD for Distribution Successful, Partially Distributed and "
+                "Transaction Successful statuses. Entitlement is not used for paid amounts, so "
+                "payments without a delivery record contribute zero."
             ),
             "note": _("This is the Delivered amount, not the reconciled amount."),
         },
@@ -486,8 +500,9 @@ CHART_INFO.update(
             "definition": _("Entitlement amount for payments still pending."),
             "source": _("HOPE payments — country report financial feed."),
             "method": _(
-                "Sums USD for SENT TO PAYMENT GATEWAY, SENT TO FSP and PENDING statuses under "
-                "the selected period, country and cohort."
+                "Sums entitlement USD for SENT TO PAYMENT GATEWAY, SENT TO FSP and PENDING "
+                "statuses under the selected period, country and cohort. Failed, not-delivered "
+                "and partially reconciled amounts are excluded."
             ),
             "note": _("This is the Outstanding amount in the payment pipeline, not a failure rate."),
         },
@@ -591,9 +606,56 @@ CHART_INFO.update(
 )
 
 
+CHART_INFO.update(
+    {
+        "completion.payee_type": {
+            "definition": _("Payee Type filter for payment reconciliation."),
+            "source": _("HOPE payments — country report completion feed."),
+            "method": _(
+                "Filters reconciliation and verification rows by the payment programme cohort: "
+                "STANDARD (Household) or SOCIAL (Social Worker). Payments without a programme "
+                "cohort are treated as STANDARD."
+            ),
+            "note": _("The same cohort filter applies to reconciliation, verification and delivery-success views."),
+        },
+        "grievance.payee_type": {
+            "definition": _("Payee Type filter for grievance tickets."),
+            "source": _("HOPE grievances — country report grievance feed."),
+            "method": _(
+                "Each ticket is assigned to one cohort only. It is SOCIAL if any linked programme is "
+                "a social-worker programme, otherwise STANDARD if any linked programme is a household "
+                "programme, otherwise UNSPECIFIED. The ticket is never duplicated across cohorts."
+            ),
+            "note": _("Unspecified Payee Type covers tickets with no linked programme."),
+        },
+    }
+)
+
+
+CHART_INFO.update(
+    {
+        "demographic.age_gender": {
+            "definition": _("Reach by age group and gender."),
+            "source": _("HOPE household composition with KAB fallback — country report demographic feed."),
+            "method": _(
+                "Sums household age-group and gender counters, using KAB counters when available "
+                "and legacy household composition otherwise. Households are deduplicated per month. "
+                "Counts may not sum to total individuals where composition is missing."
+            ),
+            "note": _(
+                "This is period reach, not annual unique children or people. Social-worker "
+                "programmes contribute age/gender counts when their household composition is recorded."
+            ),
+        },
+    }
+)
+
+
 CHART_GUIDANCE = {
     "financial.kpi_total_paid": {
-        "formula": _("Sum USD for Distribution Successful + Partially Distributed + Transaction Successful statuses."),
+        "formula": _(
+            "Sum delivered USD for Distribution Successful + Partially Distributed + Transaction Successful statuses."
+        ),
         "how_to_read": _(
             "This is the Delivered amount. It is not the reconciled amount and it matches the "
             "Delivered segment of the payment pipeline."
@@ -604,12 +666,17 @@ CHART_GUIDANCE = {
         "how_to_read": _("Not unique recipients, payment plans, or only completed payments."),
     },
     "financial.kpi_outstanding": {
-        "formula": _("Sum USD for SENT TO PAYMENT GATEWAY + SENT TO FSP + PENDING statuses."),
-        "how_to_read": _("This is the Outstanding amount in the payment pipeline."),
+        "formula": _("Sum entitlement USD for SENT TO PAYMENT GATEWAY + SENT TO FSP + PENDING statuses."),
+        "how_to_read": _(
+            "This is the Outstanding amount in the payment pipeline. Failed, not-delivered "
+            "and partially reconciled amounts are excluded."
+        ),
     },
     "financial.timeline": {
-        "formula": _("Sum the selected metric by delivery date; fall back to entitlement date, then status date."),
-        "how_to_read": _("The line shows the selected metric over time under the active filters."),
+        "formula": _(
+            "Sum delivered USD or payment count by delivery date; fall back to entitlement date, then status date."
+        ),
+        "how_to_read": _("USD is delivered quantity only; entitlement is not used for paid amounts."),
     },
     "financial.pipeline": {
         "formula": _(
@@ -624,35 +691,35 @@ CHART_GUIDANCE = {
         ),
     },
     "financial.sector": {
-        "formula": _("Group the selected metric by programme sector."),
+        "formula": _("Group delivered USD or payment count by programme sector."),
         "how_to_read": _("The metric toggle switches between USD and payment records."),
     },
     "financial.delivery": {
-        "formula": _("Group the selected metric by delivery mechanism."),
+        "formula": _("Group delivered USD or payment count by delivery mechanism."),
         "how_to_read": _("The metric toggle switches between USD and payment records."),
     },
     "financial.region": {
-        "formula": _("Group the selected metric by UNICEF region."),
+        "formula": _("Group delivered USD or payment count by UNICEF region."),
         "how_to_read": _("Bars are ordered by value and shaded from highest to lowest."),
     },
     "financial.country": {
-        "formula": _("Group the selected metric by country."),
+        "formula": _("Group delivered USD or payment count by country."),
         "how_to_read": _("Outstanding by country is shown separately and is always in USD."),
     },
     "financial.outstanding_country": {
-        "formula": _("Sum USD for pending statuses by country."),
+        "formula": _("Sum entitlement USD for pending statuses by country."),
         "how_to_read": _("Always USD, independent of the amount/payment-count toggle."),
     },
     "financial.program": {
-        "formula": _("Group the selected metric by programme."),
+        "formula": _("Group delivered USD or payment count by programme."),
         "how_to_read": _("Top 10 programmes plus an Other bucket."),
     },
     "financial.fsp": {
-        "formula": _("Group the selected metric by financial service provider."),
+        "formula": _("Group delivered USD or payment count by financial service provider."),
         "how_to_read": _("Top 10 providers plus an Other bucket."),
     },
     "financial.implementing_partner": {
-        "formula": _("Group the selected metric by implementing partner."),
+        "formula": _("Group delivered USD or payment count by implementing partner."),
         "how_to_read": _("The card appears when the feed provides the implementing-partner dimension."),
     },
     "demographic.kpi_individuals": {
@@ -664,8 +731,15 @@ CHART_GUIDANCE = {
         "how_to_read": _("Households, not payment records or unique payment plans."),
     },
     "demographic.children": {
-        "formula": _("Sum the recorded children in reached households."),
-        "how_to_read": _("Missing household composition understates the count; this is period reach."),
+        "formula": _(
+            "Recorded children_count, or the country/year TFR fallback, or KAB children count; "
+            "cap at household size - 1."
+        ),
+        "how_to_read": _(
+            "Social-worker programmes contribute zero children. The TFR fallback is capped so "
+            "it cannot exceed the household size minus one adult. Missing composition "
+            "understates recorded counts; this is period reach."
+        ),
     },
     "demographic.kpi_pwd": {
         "formula": _("Sum total_pwd for STANDARD programme sector rows."),
@@ -676,7 +750,10 @@ CHART_GUIDANCE = {
             "Count households with at least one qualifying payment; individuals, children and PWD "
             "come from household composition."
         ),
-        "how_to_read": _("Qualifying payments must belong to accepted, finished or closed plans."),
+        "how_to_read": _(
+            "Households are deduplicated per month, so multiple payments do not multiply their "
+            "size. Qualifying payments must belong to accepted, finished or closed plans."
+        ),
     },
     "demographic.timeline": {
         "formula": _("Show the selected demographic metric by period."),
@@ -796,5 +873,26 @@ CHART_GUIDANCE = {
             "Sum issue_count by risk code; use the latest percentage, severity, trend and description; group by module."
         ),
         "how_to_read": _("Select a module in Risk distribution by module to focus the cards."),
+    },
+    "completion.payee_type": {
+        "formula": _("Filter by programme cohort: STANDARD = Household, SOCIAL = Social Worker."),
+        "how_to_read": _("The cohort filter applies to reconciliation, verification and delivery-success views."),
+    },
+    "grievance.payee_type": {
+        "formula": _(
+            "SOCIAL if any linked programme is social; otherwise STANDARD if any linked "
+            "programme is household; otherwise UNSPECIFIED."
+        ),
+        "how_to_read": _("Each ticket is assigned to one cohort only, so totals across cohorts add up to All."),
+    },
+    "demographic.age_gender": {
+        "formula": _(
+            "Sum female and male age-band household counters, using KAB values when available "
+            "and legacy composition otherwise."
+        ),
+        "how_to_read": _(
+            "Counts may not sum to total individuals where composition is missing. This is "
+            "period reach and respects the country and Payee Type filters."
+        ),
     },
 }

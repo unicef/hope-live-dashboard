@@ -34,6 +34,7 @@ class FinancialAggregateFactory(AutoRegisterModelFactory):
     dimension_value = factory.Faker("word")
 
     total_usd = factory.Faker("pydecimal", left_digits=10, right_digits=2, positive=True)
+    entitlement_usd = factory.Faker("pydecimal", left_digits=10, right_digits=2, positive=True)
     total_qty = factory.Faker("pydecimal", left_digits=10, right_digits=2, positive=True)
     payment_count = factory.Faker("random_int", min=1, max=1000)
 

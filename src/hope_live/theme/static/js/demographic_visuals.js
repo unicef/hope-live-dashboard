@@ -109,6 +109,11 @@ document.addEventListener('DOMContentLoaded', function () {
         reduceDemographics('region').init
     );
 
+    const ageGenderDimension = ndx.dimension(d => d.dimension_type === 'age_gender' ? d.dimension_value : '');
+    const ageGenderGroup = ageGenderDimension.group().reduceSum(
+        d => d.dimension_type === 'age_gender' ? d.total_beneficiaries : 0
+    );
+
 
     // Active Filters Sets
     const selectedSectors = new Set();
@@ -128,6 +133,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const sectorChildChart = echarts.init(document.getElementById('sector-children-chart'), 'macarons');
     const countryPwdChart = echarts.init(document.getElementById('country-pwd-chart'), 'macarons');
     const regionShareChart = echarts.init(document.getElementById('region-share-chart'), 'macarons');
+    const ageGenderChart = echarts.init(document.getElementById('age-gender-chart'), 'macarons');
 
     // Resize Handler
     window.addEventListener('resize', function () {
@@ -135,6 +141,7 @@ document.addEventListener('DOMContentLoaded', function () {
         sectorChildChart.resize();
         countryPwdChart.resize();
         regionShareChart.resize();
+        ageGenderChart.resize();
     });
 
     function updateTotals() {
@@ -376,6 +383,82 @@ document.addEventListener('DOMContentLoaded', function () {
                     fontSize: 11
                 }
             }]
+        }, { notMerge: true });
+
+        // Age group and gender composition. These rows use household age/gender
+        // counters with KAB fallback and do not affect the headline reach totals.
+        const ageLabels = ['0-5', '6-11', '12-17', '18-59', '60+'];
+        const ageValues = {};
+        ageGenderGroup.all().forEach(d => { ageValues[d.key] = +d.value || 0; });
+        const female = ageLabels.map(label => ageValues[`Female ${label}`] || 0);
+        const male = ageLabels.map(label => ageValues[`Male ${label}`] || 0);
+        const hasAgeGender = female.some(Boolean) || male.some(Boolean);
+        const ageTotal = arr => arr.reduce((a, b) => a + b, 0);
+        ageGenderChart.setOption({
+            title: hasAgeGender ? { show: false } : {
+                text: gettext('No age/gender composition data for the selected period.'),
+                left: 'center',
+                top: 'middle',
+                textStyle: { fontSize: 13, fontWeight: 'normal', color: 'rgba(0,0,0,0.6)' }
+            },
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: { type: 'shadow' },
+                formatter: params => {
+                    const label = params[0] ? params[0].axisValue : '';
+                    const femaleValue = params.find(p => p.seriesName === gettext('Female'));
+                    const maleValue = params.find(p => p.seriesName === gettext('Male'));
+                    const total = (femaleValue ? +femaleValue.value : 0) + (maleValue ? +maleValue.value : 0);
+                    return `${label}<br/>${gettext('Female')}: <b>${d3.format(',')(femaleValue ? +femaleValue.value : 0)}</b><br/>`
+                        + `${gettext('Male')}: <b>${d3.format(',')(maleValue ? +maleValue.value : 0)}</b><br/>`
+                        + `${gettext('Total')}: <b>${d3.format(',')(total)}</b>`;
+                }
+            },
+            legend: { top: 0, right: 0, textStyle: { color: '#000000' } },
+            grid: { top: 34, bottom: 25, left: 60, right: 20 },
+            xAxis: {
+                type: 'category',
+                data: ageLabels,
+                axisLabel: { color: 'rgba(0,0,0,0.6)' },
+                axisLine: { lineStyle: { color: 'rgba(0,0,0,0.08)' } }
+            },
+            yAxis: {
+                type: 'value',
+                axisLabel: { formatter: val => d3.format(',')(val), color: 'rgba(0,0,0,0.6)' },
+                splitLine: { lineStyle: { color: 'rgba(0,0,0,0.08)' } }
+            },
+            series: [
+                {
+                    name: gettext('Female'),
+                    type: 'bar',
+                    stack: 'total',
+                    data: female,
+                    itemStyle: { color: '#0047BB' },
+                    label: {
+                        show: true,
+                        position: 'inside',
+                        formatter: params => params.value ? d3.format(',')(params.value) : '',
+                        color: '#FFFFFF',
+                        fontWeight: 600,
+                        fontSize: 11
+                    }
+                },
+                {
+                    name: gettext('Male'),
+                    type: 'bar',
+                    stack: 'total',
+                    data: male,
+                    itemStyle: { color: '#FF7100' },
+                    label: {
+                        show: true,
+                        position: 'inside',
+                        formatter: params => params.value ? d3.format(',')(params.value) : '',
+                        color: '#000000',
+                        fontWeight: 600,
+                        fontSize: 11
+                    }
+                }
+            ]
         }, { notMerge: true });
 
     }

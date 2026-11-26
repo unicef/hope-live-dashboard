@@ -4,6 +4,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     let currentMetric = 'payments'; // Default metric: payments. Can be 'payments' or 'usd'
     let countryView = 'absolute'; // Country chart: 'absolute' or 'share' (100% stacked)
+    let activeCohort = 'ALL';
 
     // Shared semantic colours: green = reconciled, amber = still open,
     // blue = delivered (matches the financial dashboard's Delivered stage).
@@ -54,8 +55,14 @@ document.addEventListener('DOMContentLoaded', function () {
     const dateDimension = ndx.dimension(d => d.date);
     const countryDimension = ndx.dimension(d => d.country_slug);
     const verificationDimension = ndx.dimension(d => d.dimension_type === 'verification' ? d.dimension_value : '');
+    const programTypeDimension = ndx.dimension(d => d.program_type || 'STANDARD');
 
     const primaryDimFilter = d => d.dimension_type === 'status';
+
+    function applyCohortFilter() {
+        if (activeCohort === 'ALL') programTypeDimension.filterAll();
+        else programTypeDimension.filter(activeCohort);
+    }
 
     const moveDays = dateDimension.group(d3.timeDay);
     const moveMonths = dateDimension.group(d3.timeMonth);
@@ -522,20 +529,26 @@ document.addEventListener('DOMContentLoaded', function () {
             reconciliation[d.key] = { reconciled: reconciled, opened: opened };
         });
 
-        const metricKey = currentMetric === 'usd' ? 'total_usd' : 'payment_count';
         const delivery = {};
         financialRows.forEach(r => {
             if (r.dimension_type !== 'status') return;
             if (activeRange && r.date && (r.date < activeRange.start || r.date > activeRange.end)) return;
             if (selectedCountries.size > 0 && !selectedCountries.has(r.country_slug)) return;
+            if (activeCohort !== 'ALL' && (r.program_type || 'STANDARD') !== activeCohort) return;
 
             const key = String(r.dimension_value || '').toUpperCase();
             if (!pendingList.includes(key) && !successfulList.includes(key)) return;
 
             if (!delivery[r.country_slug]) delivery[r.country_slug] = { delivered: 0, pending: 0 };
-            const value = +r[metricKey] || 0;
-            if (successfulList.includes(key)) delivery[r.country_slug].delivered += value;
-            else delivery[r.country_slug].pending += value;
+            if (successfulList.includes(key)) {
+                delivery[r.country_slug].delivered += currentMetric === 'usd'
+                    ? (+r.total_usd || 0)
+                    : (+r.payment_count || 0);
+            } else {
+                delivery[r.country_slug].pending += currentMetric === 'usd'
+                    ? (+r.entitlement_usd || 0)
+                    : (+r.payment_count || 0);
+            }
         });
 
         const points = [];
@@ -765,6 +778,21 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
+    const cohortTabs = document.querySelectorAll('.cohort-tab');
+    cohortTabs.forEach(btn => {
+        btn.addEventListener('click', function () {
+            cohortTabs.forEach(b => {
+                b.classList.remove('bg-white', 'shadow-sm', 'text-unicef-blue-dark');
+                b.classList.add('text-black/60');
+            });
+            this.classList.add('bg-white', 'shadow-sm', 'text-unicef-blue-dark');
+            this.classList.remove('text-black/60');
+            activeCohort = this.dataset.cohort || 'ALL';
+            applyCohortFilter();
+            updateAll();
+        });
+    });
+
     // --- Load Data ---
     async function loadRange(startDate, endDate) {
         try {
@@ -801,10 +829,12 @@ document.addEventListener('DOMContentLoaded', function () {
             selectedCountries.clear();
             countryDimension.filterAll();
             verificationDimension.filterAll();
+            programTypeDimension.filterAll();
             dateDimension.filterAll();
 
             ndx.remove();
             ndx.add(data);
+            applyCohortFilter();
             countryFilter.populate(data);
             countryFilter.apply();
             selectedCountries.clear();

@@ -112,6 +112,31 @@ def demographic_aggregates(db):
             total_pwd=10,
             total_households=150,
         )
+    # Age/gender composition rows used by the age and gender chart.
+    age_gender_counts = {
+        "Female 0-5": 30,
+        "Female 6-11": 25,
+        "Female 12-17": 20,
+        "Female 18-59": 40,
+        "Female 60+": 10,
+        "Male 0-5": 28,
+        "Male 6-11": 24,
+        "Male 12-17": 19,
+        "Male 18-59": 35,
+        "Male 60+": 9,
+    }
+    for label, count in age_gender_counts.items():
+        DemographicAggregateFactory(
+            date=datetime.date(year, 1, 1),
+            time_grain="monthly",
+            country_slug="kenya",
+            dimension_type="age_gender",
+            dimension_value=label,
+            total_beneficiaries=count,
+            total_children=0,
+            total_pwd=0,
+            total_households=0,
+        )
     # Previous year
     for i, country in enumerate(countries):
         DemographicAggregateFactory(
@@ -219,15 +244,16 @@ def grievance_aggregates(db):
 @pytest.fixture
 def grievance_status_aggregates(db):
     year = datetime.datetime.now().year
-    statuses = ["OPEN", "CLOSED", "PENDING", "RESOLVED"]
-    for idx, status in enumerate(statuses):
+    status_counts = {"OPEN": 20, "CLOSED": 5, "PENDING": 20, "RESOLVED": 5}
+    previous_counts = {"OPEN": 40, "CLOSED": 10, "PENDING": 40, "RESOLVED": 10}
+    for idx, status in enumerate(status_counts):
         GrievanceAggregateFactory(
             date=datetime.date(year, 1, idx + 1),
             time_grain="daily",
             country_slug="country-test",
             dimension_type="status",
             dimension_value=status,
-            ticket_count=5,
+            ticket_count=status_counts[status],
         )
         # Previous year status aggregates
         GrievanceAggregateFactory(
@@ -236,7 +262,7 @@ def grievance_status_aggregates(db):
             country_slug="country-test",
             dimension_type="status",
             dimension_value=status,
-            ticket_count=10,
+            ticket_count=previous_counts[status],
         )
 
 
@@ -493,6 +519,7 @@ def test_demographic_dashboard_loads(browser, demographic_aggregates, financial_
     browser.wait_for_element_visible("#country-pwd-chart canvas")
     browser.wait_for_element_visible("#region-share-chart canvas")
     browser.wait_for_element_visible("#time-focus-chart canvas")
+    browser.wait_for_element_visible("#age-gender-chart canvas")
 
     browser.assert_text("Children reached", "#card-children h3")
     browser.assert_text("Persons with disabilities reached", "#card-pwd h3")
@@ -508,6 +535,14 @@ def test_demographic_dashboard_loads(browser, demographic_aggregates, financial_
     )
     assert country_option["series"][0]["type"] == "bar"
     assert len(country_option["series"][0]["data"]) == 5
+
+    age_gender_option = browser.execute_script(
+        "return echarts.getInstanceByDom(document.getElementById('age-gender-chart')).getOption();"
+    )
+    assert age_gender_option["xAxis"][0]["data"] == ["0-5", "6-11", "12-17", "18-59", "60+"]
+    assert len(age_gender_option["series"]) == 2
+    assert sum(age_gender_option["series"][0]["data"]) == 125
+    assert sum(age_gender_option["series"][1]["data"]) == 115
 
     browser.wait_for_element_visible('[data-chart-info="demographic.timeline"]')
     browser.wait_for_element_visible('[data-chart-info="demographic.country"]')
@@ -723,7 +758,8 @@ def test_completion_rates_chart_loads(browser, completion_aggregates, financial_
                 country_slug=country,
                 dimension_type="status",
                 dimension_value=status,
-                total_usd=1000 * count,
+                total_usd=1000 * count if status == "DISTRIBUTION SUCCESSFUL" else 0,
+                entitlement_usd=1000 * count,
                 payment_count=count,
             )
 
@@ -935,6 +971,15 @@ def test_grievance_resolution_and_source_filter(browser, grievance_aggregates, g
         country_slug="country-test",
         dimension_type="category",
         dimension_value="9",
+        ticket_count=100,
+        ticket_source="SYSTEM_FLAG",
+    )
+    GrievanceAggregateFactory(
+        date=datetime.date(year, 1, 1),
+        time_grain="daily",
+        country_slug="country-test",
+        dimension_type="status",
+        dimension_value="OPEN",
         ticket_count=100,
         ticket_source="SYSTEM_FLAG",
     )
@@ -1332,6 +1377,7 @@ def test_financial_pipeline_maps_cards_and_methodology(browser, db):
         dimension_type="status",
         dimension_value="DISTRIBUTION SUCCESSFUL",
         total_usd=269_270_193,
+        entitlement_usd=269_270_193,
         payment_count=1000,
     )
     FinancialAggregateFactory(
@@ -1340,7 +1386,8 @@ def test_financial_pipeline_maps_cards_and_methodology(browser, db):
         country_slug="kenya",
         dimension_type="status",
         dimension_value="PENDING",
-        total_usd=45_239_413,
+        total_usd=0,
+        entitlement_usd=45_239_413,
         payment_count=100,
     )
     CompletionAggregateFactory(
@@ -1397,3 +1444,64 @@ def test_every_dashboard_has_a_methodology_drawer(browser):
         browser.assert_text("Methodology", "[data-methodology-panel] h2")
         browser.click("[data-methodology-panel] button[data-methodology-close]")
         browser.assert_element_not_visible("[data-methodology-panel] [role='dialog']")
+
+
+def test_grievance_payee_type_tabs(browser):
+    from hope_live.analysis.models import ProgramType
+
+    year = datetime.datetime.now().year
+    for cohort, count in [
+        (ProgramType.STANDARD, 7),
+        (ProgramType.SOCIAL, 3),
+        (ProgramType.UNSPECIFIED, 2),
+    ]:
+        GrievanceAggregateFactory(
+            date=datetime.date(year, 1, 1),
+            time_grain="daily",
+            country_slug="country-test",
+            dimension_type="status",
+            dimension_value="OPEN",
+            ticket_count=count,
+            program_type=cohort,
+        )
+
+    browser.login_as_user()
+    browser.open("/grievance/")
+    browser.wait_for_text("12", "#total-tickets")
+
+    browser.click('.cohort-tab[data-cohort="SOCIAL"]')
+    browser.wait_for_text("3", "#total-tickets")
+    browser.click('.cohort-tab[data-cohort="UNSPECIFIED"]')
+    browser.wait_for_text("2", "#total-tickets")
+    browser.click('.cohort-tab[data-cohort="STANDARD"]')
+    browser.wait_for_text("7", "#total-tickets")
+    browser.click('.cohort-tab[data-cohort="ALL"]')
+    browser.wait_for_text("12", "#total-tickets")
+
+
+def test_completion_payee_type_tabs(browser):
+    from hope_live.analysis.models import ProgramType
+
+    year = datetime.datetime.now().year
+    for cohort, count in [(ProgramType.STANDARD, 8), (ProgramType.SOCIAL, 2)]:
+        CompletionAggregateFactory(
+            date=datetime.date(year, 1, 1),
+            time_grain="daily",
+            country_slug="kenya",
+            dimension_type="status",
+            dimension_value="RECONCILED",
+            payment_count=count,
+            total_usd=1000 * count,
+            program_type=cohort,
+        )
+
+    browser.login_as_user()
+    browser.open("/completion/")
+    browser.wait_for_text("10 (100.0% out of 10 total)", "#total-reconciled")
+
+    browser.click('.cohort-tab[data-cohort="SOCIAL"]')
+    browser.wait_for_text("2 (100.0% out of 2 total)", "#total-reconciled")
+    browser.click('.cohort-tab[data-cohort="STANDARD"]')
+    browser.wait_for_text("8 (100.0% out of 8 total)", "#total-reconciled")
+    browser.click('.cohort-tab[data-cohort="ALL"]')
+    browser.wait_for_text("10 (100.0% out of 10 total)", "#total-reconciled")

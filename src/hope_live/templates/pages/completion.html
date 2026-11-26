@@ -37,6 +37,22 @@
         </div>
     </div>
 
+    <!-- Payee Type -->
+    <div class="mb-3 flex flex-wrap gap-2 items-center justify-between">
+        <div class="text-xs font-bold text-black/60">{% translate "Payee Type:" %}</div>
+        <div class="flex w-full flex-wrap gap-1 bg-black/5 p-0.5 rounded-lg border border-black/10 sm:w-auto sm:flex-nowrap">
+            <button type="button" class="cohort-tab px-3 py-1 text-xs font-bold rounded-md bg-white shadow-sm text-unicef-blue-dark transition-all duration-200 cursor-pointer" data-cohort="ALL">
+                {% translate "All" %}
+            </button>
+            <button type="button" class="cohort-tab px-3 py-1 text-xs font-bold rounded-md text-black/60 hover:text-black transition-all duration-200 cursor-pointer" data-cohort="STANDARD">
+                {% translate "Household" %}
+            </button>
+            <button type="button" class="cohort-tab px-3 py-1 text-xs font-bold rounded-md text-black/60 hover:text-black transition-all duration-200 cursor-pointer" data-cohort="SOCIAL">
+                {% translate "Social Worker" %}
+            </button>
+        </div>
+    </div>
+
     <!-- Stats Cards (Headline KPIs - Above Timeline!) -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-3.5">
         <div class="bg-white rounded-lg shadow-sm border border-black/10 p-3.5 border-l-4 border-unicef-green flex items-center justify-between gap-3 min-h-[92px]">

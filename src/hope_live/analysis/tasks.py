@@ -36,6 +36,8 @@ PROGRAM_TYPE_ALIASES: dict[str, str] = {
     "HOUSEHOLD": ProgramType.STANDARD,
     "HOUSEHOLDS": ProgramType.STANDARD,
     "STANDARD": ProgramType.STANDARD,
+    "UNSPECIFIED": ProgramType.UNSPECIFIED,
+    "UNKNOWN": ProgramType.UNSPECIFIED,
 }
 
 
@@ -133,7 +135,11 @@ def sync_daily_aggregates(
         headers = {"Authorization": f"Token {token}"}
 
         configs = [
-            (config.HOPE_FINANCIAL_REPORT_QUERY_ID, "FinancialAggregate", ["total_usd", "total_qty", "payment_count"]),
+            (
+                config.HOPE_FINANCIAL_REPORT_QUERY_ID,
+                "FinancialAggregate",
+                ["total_usd", "entitlement_usd", "total_qty", "payment_count"],
+            ),
             (
                 config.HOPE_DEMOGRAPHIC_REPORT_QUERY_ID,
                 "DemographicAggregate",
