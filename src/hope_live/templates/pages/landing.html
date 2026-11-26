@@ -50,23 +50,23 @@
                              class="text-4xl lg:text-5xl font-bold text-black leading-none">${{ total_cash_disbursed|default:"1.2B" }}</div>
                         <div class="text-base font-normal text-black/70 mt-1">{% translate "Direct cash transfers" %}</div>
                     </div>
-                    <div class="grid grid-cols-2 gap-4 pt-4">
-                        <div class="flex items-start gap-2">
+                    <div class="grid grid-cols-1 gap-4 pt-4 sm:grid-cols-2">
+                        <div class="flex min-w-0 items-start gap-2">
                             <span class="w-7 h-7 shrink-0 rounded bg-unicef-blue text-white flex items-center justify-center mt-0.5">
                                 {% icon "globe" "h-4 w-4" %}
                             </span>
-                            <div>
+                            <div class="min-w-0">
                                 <div class="text-3xl font-bold text-black leading-none">{{ total_countries_glance }}+</div>
-                                <div class="text-base font-bold text-black mt-1">{% translate "Countries & territories" %}</div>
+                                <div class="break-words text-base font-bold text-black mt-1">{% translate "Countries & territories" %}</div>
                             </div>
                         </div>
-                        <div class="flex items-start gap-2">
+                        <div class="flex min-w-0 items-start gap-2">
                             <span class="w-7 h-7 shrink-0 rounded bg-unicef-blue text-white flex items-center justify-center mt-0.5">
                                 {% icon "layers" "h-4 w-4" %}
                             </span>
-                            <div>
+                            <div class="min-w-0">
                                 <div class="text-3xl font-bold text-black leading-none">{{ total_programs_glance }}+</div>
-                                <div class="text-base font-bold text-black mt-1">{% translate "Programmes" %}</div>
+                                <div class="break-words text-base font-bold text-black mt-1">{% translate "Programmes" %}</div>
                             </div>
                         </div>
                     </div>

@@ -36,12 +36,17 @@ def test_every_chart_has_definition_source_and_method() -> None:
         assert meta.get("method"), key
 
 
-def test_chart_info_tag_renders_metadata() -> None:
+def test_chart_info_tag_renders_methodology_and_note_only() -> None:
     rendered = Template('{% load chart_info %}{% chart_info "financial.program" %}').render(Context())
 
     assert 'data-chart-info="financial.program"' in rendered
+    assert "Methodology:" in rendered
     assert "top 10 programmes" in rendered
-    assert "country report financial feed" in rendered
+    assert "Note:" in rendered
+    assert "Formula:" not in rendered
+    assert "Source:" not in rendered
+    assert "How to read:" not in rendered
+    assert "Cash disbursed or payments by programme." not in rendered
 
 
 def test_unknown_chart_key_renders_an_empty_panel() -> None:
@@ -63,14 +68,10 @@ def test_every_internal_metric_has_formula_and_how_to_read() -> None:
         assert guidance.get("how_to_read"), key
 
 
-def test_methodology_panel_renders_page_definitions() -> None:
-    rendered = Template('{% load chart_info %}{% methodology_panel "financial" %}').render(Context())
-
-    assert "data-methodology-toggle" in rendered
-    assert "data-methodology-panel" in rendered
-    assert "Payment status breakdown plus a separate reconciliation estimate" in rendered
-    assert "Total payment volume = Delivered + Outstanding + Other statuses" in rendered
-    assert "Cash delivered to beneficiaries for successful payment statuses" in rendered
+def test_dashboards_no_longer_use_the_page_level_methodology_panel() -> None:
+    for name in ("dashboard.html", "demographic.html", "completion.html", "grievance.html", "risk.html"):
+        text = (PAGES / name).read_text(encoding="utf-8")
+        assert "methodology_panel" not in text, name
 
 
 def test_methodology_matches_the_delivered_and_children_rules() -> None:

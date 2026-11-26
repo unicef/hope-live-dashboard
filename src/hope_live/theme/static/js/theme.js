@@ -46,37 +46,6 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    // Page-level methodology drawer. Each dashboard has one panel containing
-    // all card and chart definitions in a single scrollable view.
-    const methodologyToggle = document.querySelector("[data-methodology-toggle]");
-    const methodologyPanel = document.querySelector("[data-methodology-panel]");
-    if (methodologyToggle && methodologyPanel) {
-        const methodologyDialog = methodologyPanel.querySelector('[role="dialog"]');
-        const openMethodology = () => {
-            methodologyPanel.classList.remove("hidden");
-            methodologyPanel.setAttribute("aria-hidden", "false");
-            methodologyToggle.setAttribute("aria-expanded", "true");
-            document.body.classList.add("overflow-hidden");
-            if (methodologyDialog) methodologyDialog.focus();
-        };
-        const closeMethodology = () => {
-            methodologyPanel.classList.add("hidden");
-            methodologyPanel.setAttribute("aria-hidden", "true");
-            methodologyToggle.setAttribute("aria-expanded", "false");
-            document.body.classList.remove("overflow-hidden");
-            methodologyToggle.focus();
-        };
-        methodologyToggle.addEventListener("click", openMethodology);
-        methodologyPanel.querySelectorAll("[data-methodology-close]").forEach((button) => {
-            button.addEventListener("click", closeMethodology);
-        });
-        document.addEventListener("keydown", (event) => {
-            if (event.key === "Escape" && !methodologyPanel.classList.contains("hidden")) {
-                closeMethodology();
-            }
-        });
-    }
-
     // Chart information popovers. The panel is fixed and moved to <body> so it
     // never expands or clips inside the card that owns the info button.
     let openInfo = null;
@@ -86,10 +55,18 @@ document.addEventListener("DOMContentLoaded", function () {
         const panelRect = panel.getBoundingClientRect();
         const gap = 8;
         const margin = 8;
+        const sidebar = document.querySelector('aside[aria-label="Sidebar"]');
+        const sidebarRight = sidebar ? sidebar.getBoundingClientRect().right : 0;
+        const minLeft = Math.max(margin, sidebarRight + gap);
         let left = rect.right - panelRect.width;
         let top = rect.bottom + gap;
 
-        if (left < margin) left = margin;
+        if (left < minLeft) {
+            // Prefer the right of the icon so the popover does not cover the
+            // dashboard sidebar when the icon is near the left edge.
+            left = Math.min(rect.left, window.innerWidth - panelRect.width - margin);
+        }
+        if (left < minLeft) left = minLeft;
         if (left + panelRect.width > window.innerWidth - margin) {
             left = window.innerWidth - panelRect.width - margin;
         }

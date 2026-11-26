@@ -1252,6 +1252,9 @@ def test_brand_header_and_mobile_sidebar(browser, financial_aggregates):
     browser.login_as_user()
     browser.open("/")
     browser.wait_for_element_visible("#landing-hero")
+    browser.wait_for_element_visible('aside[aria-label="Sidebar"]')
+    browser.assert_element_visible('aside[aria-label="Sidebar"] a[href="/dashboard/"]')
+    browser.assert_element_visible('aside[aria-label="Sidebar"] a[href="/demographic/"]')
 
     landing = browser.execute_script(
         """
@@ -1304,7 +1307,9 @@ def test_brand_header_and_mobile_sidebar(browser, financial_aggregates):
 
     browser.set_window_size(390, 844)
     browser.sleep(0.5)
-    sidebar_width = browser.execute_script("return document.querySelector('aside').getBoundingClientRect().width;")
+    sidebar_width = browser.execute_script(
+        "return document.querySelector('aside[aria-label=\"Sidebar\"]').getBoundingClientRect().width;"
+    )
     assert sidebar_width <= 60
 
     for path in ("/dashboard/", "/demographic/", "/completion/", "/grievance/", "/risk/"):
@@ -1314,6 +1319,16 @@ def test_brand_header_and_mobile_sidebar(browser, financial_aggregates):
         overflow = browser.execute_script("return document.documentElement.scrollWidth - window.innerWidth;")
         assert overflow <= 1, f"{path} overflows by {overflow}px"
 
+    browser.set_window_size(1280, 900)
+    browser.open("/")
+    browser.wait_for_element_visible("#landing-hero")
+    landing_tablet = browser.execute_script(
+        "return {header: document.querySelector('header').scrollWidth, viewport: document.documentElement.clientWidth,"
+        " page: document.documentElement.scrollWidth};"
+    )
+    assert landing_tablet["header"] <= landing_tablet["viewport"] + 1
+    assert landing_tablet["page"] <= landing_tablet["viewport"] + 1
+
     browser.set_window_size(1024, 900)
     browser.open("/dashboard/")
     browser.wait_for_element_visible("main")
@@ -1321,6 +1336,15 @@ def test_brand_header_and_mobile_sidebar(browser, financial_aggregates):
         "return {header: document.querySelector('header').scrollWidth, viewport: window.innerWidth};"
     )
     assert tablet["header"] <= tablet["viewport"] + 1
+
+
+def test_sidebar_is_visible_on_secondary_pages(browser):
+    browser.set_window_size(1600, 1000)
+    browser.login_as_user()
+    for path in ("/about/", "/contacts/"):
+        browser.open(path)
+        browser.wait_for_element_visible('aside[aria-label="Sidebar"]')
+        browser.assert_element_visible('aside[aria-label="Sidebar"] a[href="/dashboard/"]')
 
 
 def test_landing_mobile_header_language_and_localized_logo(browser):
@@ -1369,6 +1393,7 @@ def test_internal_mobile_sidebar_language_switcher(browser):
 
 
 def test_financial_pipeline_maps_cards_and_methodology(browser, db):
+    browser.set_window_size(1600, 1000)
     year = datetime.datetime.now().year
     FinancialAggregateFactory(
         date=datetime.date(year, 1, 1),
@@ -1423,27 +1448,32 @@ def test_financial_pipeline_maps_cards_and_methodology(browser, db):
     browser.assert_text("$215,416,154", "#pipeline-reconciled")
     browser.assert_text("$53,854,039", "#pipeline-awaiting")
 
-    browser.click("[data-methodology-toggle]")
-    browser.wait_for_element_visible("[data-methodology-panel] [role='dialog']")
-    browser.assert_text("Methodology", "#methodology-title-financial")
-    browser.assert_text(
-        "Total payment volume = Delivered + Outstanding + Other statuses",
-        "[data-methodology-panel]",
+    browser.assert_element_absent("[data-methodology-toggle]")
+    browser.assert_element_absent("[data-methodology-panel]")
+    browser.click('[data-chart-info="financial.pipeline"] [data-chart-info-toggle]')
+    browser.wait_for_element_visible("#chart-info-financialpipeline")
+    panel = browser.get_text("#chart-info-financialpipeline")
+    assert "Methodology:" in panel
+    assert "Note:" in panel
+    assert "Formula:" not in panel
+    assert "Source:" not in panel
+    assert "How to read:" not in panel
+    geometry = browser.execute_script(
+        "const panel = document.getElementById('chart-info-financialpipeline');"
+        "const sidebar = document.querySelector('aside[aria-label=\"Sidebar\"]');"
+        "return {panel: panel.getBoundingClientRect().left, sidebar: sidebar.getBoundingClientRect().right};"
     )
-    browser.click("[data-methodology-panel] button[data-methodology-close]")
-    browser.assert_element_not_visible("[data-methodology-panel] [role='dialog']")
+    assert geometry["panel"] >= geometry["sidebar"]
 
 
-def test_every_dashboard_has_a_methodology_drawer(browser):
+def test_every_dashboard_has_chart_methodology_without_a_page_drawer(browser):
     browser.login_as_user()
     for path in ("/dashboard/", "/demographic/", "/completion/", "/grievance/", "/risk/"):
         browser.open(path)
         browser.wait_for_element_visible("main")
-        browser.click("[data-methodology-toggle]")
-        browser.wait_for_element_visible("[data-methodology-panel] [role='dialog']")
-        browser.assert_text("Methodology", "[data-methodology-panel] h2")
-        browser.click("[data-methodology-panel] button[data-methodology-close]")
-        browser.assert_element_not_visible("[data-methodology-panel] [role='dialog']")
+        browser.assert_element_absent("[data-methodology-toggle]")
+        browser.assert_element_absent("[data-methodology-panel]")
+        assert browser.execute_script("return document.querySelectorAll('[data-chart-info]').length;") > 0
 
 
 def test_grievance_payee_type_tabs(browser):

@@ -175,6 +175,7 @@ class IndexView(LoginRequiredMixin, TemplateView):
 
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
+        context["sidebar"] = True
 
         # Calculate Total Cash Disbursed (filtering by sector to avoid double counting)
         total_usd = (

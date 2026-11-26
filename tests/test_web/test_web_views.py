@@ -69,7 +69,7 @@ def test_landing_page_requires_login(client):
 
 
 @pytest.mark.django_db
-def test_landing_page_authenticated_hides_dashboard_launcher(client, user_factory):
+def test_landing_page_authenticated_shows_sidebar_without_public_launcher(client, user_factory):
     user = user_factory()
     client.force_login(user)
 
@@ -78,9 +78,12 @@ def test_landing_page_authenticated_hides_dashboard_launcher(client, user_factor
 
     content = response.content.decode()
 
-    # The public page does not advertise the dashboard endpoint.
+    # The public header no longer advertises a dashboard launcher, but the
+    # authenticated sidebar links to every internal dashboard.
     assert "Go to Dashboards" not in content
-    assert 'href="/dashboard/"' not in content
+    assert 'aria-label="Sidebar"' in content
+    for path in ("/dashboard/", "/demographic/", "/completion/", "/grievance/", "/risk/"):
+        assert path in content
 
 
 @pytest.mark.django_db
@@ -90,3 +93,37 @@ def test_protected_dashboards_redirect_unauthenticated(client):
         response = client.get(url)
         assert response.status_code == 302
         assert "/login/" in response["Location"]
+
+
+@pytest.mark.django_db
+def test_sidebar_is_present_on_all_authenticated_pages(client, user_factory, monkeypatch):
+    client.force_login(user_factory())
+    from hope_live.web import views
+
+    monkeypatch.setattr(
+        views,
+        "fetch_hope_news",
+        lambda limit=None: [
+            {
+                "version": "HOPE v1",
+                "slug": "hope-v1",
+                "date": None,
+                "snippet": "",
+                "description": "Update body",
+            }
+        ],
+    )
+
+    for url in ("/", "/about/", "/contacts/", "/updates/hope-v1/"):
+        response = client.get(url)
+        assert response.status_code == 200, url
+        content = response.content.decode()
+        assert 'aria-label="Sidebar"' in content, url
+        assert "/dashboard/" in content, url
+
+
+@pytest.mark.django_db
+def test_login_page_does_not_show_the_sidebar(client):
+    response = client.get("/login/")
+    assert response.status_code == 200
+    assert 'aria-label="Sidebar"' not in response.content.decode()
