@@ -384,20 +384,30 @@ document.addEventListener('DOMContentLoaded', function () {
 
         timelineChart.setOption(timelineOption, { notMerge: true });
 
-        // 2. Country chart (all countries): absolute values or 100% share
-        const countryData = countryStatusGroup.all()
-            .map(d => {
-                const reconciled = currentMetric === 'usd' ? d.value.reconciled_usd : d.value.reconciled_payments;
-                const opened = currentMetric === 'usd' ? d.value.opened_usd : d.value.opened_payments;
-                return {
-                    key: d.key,
-                    reconciled: reconciled,
-                    opened: opened,
-                    total: reconciled + opened
-                };
+        // 2. Country chart: top 10 by volume plus Other, in absolute values or
+        // 100% share mode.
+        const countryData = chartHelpers.collapseTopRows(
+            countryStatusGroup.all()
+                .map(d => {
+                    const reconciled = currentMetric === 'usd' ? d.value.reconciled_usd : d.value.reconciled_payments;
+                    const opened = currentMetric === 'usd' ? d.value.opened_usd : d.value.opened_payments;
+                    return {
+                        key: d.key,
+                        reconciled: reconciled,
+                        opened: opened,
+                        total: reconciled + opened
+                    };
+                })
+                .filter(d => d.key !== '' && d.key !== null && d.total > 0)
+                .sort((a, b) => b.total - a.total),
+            10,
+            gettext('Other'),
+            rest => ({
+                reconciled: rest.reduce((sum, d) => sum + d.reconciled, 0),
+                opened: rest.reduce((sum, d) => sum + d.opened, 0),
+                total: rest.reduce((sum, d) => sum + d.total, 0)
             })
-            .filter(d => d.key !== '' && d.key !== null && d.total > 0)
-            .sort((a, b) => b.total - a.total);
+        );
 
         const isShareView = countryView === 'share';
         const hasAnyCountrySelection = selectedCountries.size > 0;
@@ -408,6 +418,8 @@ document.addEventListener('DOMContentLoaded', function () {
             const opacity = isSelected ? 1 : (hasAnyCountrySelection ? 0.35 : 1);
             return {
                 value: isShareView ? reconciledShare(d) : d.reconciled,
+                slug: d.key,
+                isOther: !!d.isOther,
                 itemStyle: { color: RECONCILED_COLOR, opacity: opacity },
                 label: {
                     show: isShareView ? reconciledShare(d) >= 8 : true,
@@ -425,6 +437,8 @@ document.addEventListener('DOMContentLoaded', function () {
             const opacity = isSelected ? 1 : (hasAnyCountrySelection ? 0.35 : 1);
             return {
                 value: isShareView ? 100 - reconciledShare(d) : d.opened,
+                slug: d.key,
+                isOther: !!d.isOther,
                 itemStyle: { color: OPEN_COLOR, opacity: opacity },
                 label: {
                     show: !isShareView && d.opened > 0 && (d.opened / d.total) >= 0.05,
@@ -571,9 +585,29 @@ document.addEventListener('DOMContentLoaded', function () {
             });
         });
 
-        // Order every country by reconciliation rate (category axes render
-        // bottom-up, so the highest rate ends up at the top).
-        const visible = points.sort((a, b) => a.reconciliationRate - b.reconciliationRate);
+        // Keep the 10 biggest countries by reconciliation volume, then add an
+        // Other row with volume-weighted rates for the remainder. Category axes
+        // render bottom-up, so Other is first and the highest rate is last.
+        const ranked = points.slice().sort((a, b) => b.totalReconciled - a.totalReconciled);
+        const visible = ranked.slice(0, 10).sort((a, b) => a.reconciliationRate - b.reconciliationRate);
+        const rest = ranked.slice(10);
+        if (rest.length > 0) {
+            const totalReconciled = rest.reduce((sum, p) => sum + p.totalReconciled, 0);
+            const reconciled = rest.reduce((sum, p) => sum + p.reconciled, 0);
+            const totalDelivery = rest.reduce((sum, p) => sum + p.totalDelivery, 0);
+            const delivered = rest.reduce((sum, p) => sum + p.delivered, 0);
+            visible.unshift({
+                country: gettext('Other'),
+                reconciliationRate: totalReconciled > 0 ? (reconciled / totalReconciled) * 100 : 0,
+                deliveryRate: totalDelivery > 0 ? (delivered / totalDelivery) * 100 : 0,
+                reconciled: reconciled,
+                totalReconciled: totalReconciled,
+                delivered: delivered,
+                totalDelivery: totalDelivery,
+                isOther: true,
+                countryCount: rest.length
+            });
+        }
 
         const ratesEl = document.getElementById('completion-rates-chart');
         if (ratesEl) {
@@ -714,11 +748,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // --- Interaction Bindings ---
     countryChart.on('click', function (params) {
-        const countryName = params.name;
-        if (selectedCountries.has(countryName)) {
-            selectedCountries.delete(countryName);
+        const data = params.data || {};
+        if (data.isOther) return;
+        const country = data.slug || params.name;
+        if (!country) return;
+        if (selectedCountries.has(country)) {
+            selectedCountries.delete(country);
         } else {
-            selectedCountries.add(countryName);
+            selectedCountries.add(country);
         }
 
         if (selectedCountries.size === 0) {

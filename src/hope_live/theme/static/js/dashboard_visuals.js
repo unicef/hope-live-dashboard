@@ -397,15 +397,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
         timelineChart.setOption(timelineOption, { notMerge: true });
 
-        // Collapse long category lists into the top N plus an "Other" bucket.
-        function collapseTopBars(rows, maxBars, otherLabel) {
-            if (rows.length <= maxBars) return rows;
-            const top = rows.slice(0, maxBars);
-            const otherValue = rows.slice(maxBars).reduce((sum, d) => sum + d.value, 0);
-            top.push({ key: otherLabel, value: otherValue, isOther: true });
-            return top;
-        }
-
         // Shared horizontal bar renderer: single colour scale, abbreviated
         // values at the bar ends, exact values in the tooltip.
         function renderHorizontalBars(chartObj, rows, options = {}) {
@@ -429,7 +420,9 @@ document.addEventListener('DOMContentLoaded', function () {
                     value: d.value,
                     isOther: !!d.isOther,
                     itemStyle: {
-                        color: (hasAnySelection && !d.isOther && !activeSet.has(d.key)) ? '#BDBDBD' : baseColor
+                        color: d.isOther
+                            ? '#BDBDBD'
+                            : ((hasAnySelection && !activeSet.has(d.key)) ? '#BDBDBD' : baseColor)
                     }
                 };
             });
@@ -482,8 +475,8 @@ document.addEventListener('DOMContentLoaded', function () {
             }, { notMerge: true });
         }
 
-        // Country charts are never truncated: grow the canvas so every country
-        // remains readable instead of collapsing the tail into "Other".
+        // Country charts show the top 10 plus Other; size the canvas for the
+        // visible rows so the card stays compact.
         function resizeCountryChart(chartObj, count) {
             const el = chartObj.getDom();
             if (!el) return;
@@ -498,7 +491,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 .filter(d => d.key !== '' && d.key !== null && d.value > 0)
                 .sort((a, b) => b.value - a.value);
 
-            renderHorizontalBars(chartObj, collapseTopBars(rows, maxBars, gettext('Other')), {
+            renderHorizontalBars(chartObj, chartHelpers.collapseTopRows(rows, maxBars, gettext('Other')), {
                 leftMargin,
                 activeSet: activeFiltersSet,
                 wrapLabels
@@ -642,13 +635,17 @@ document.addEventListener('DOMContentLoaded', function () {
         });
 
         // Country Charts: cash disbursed (paid) and outstanding, side by side.
-        const countryRows = countryGroup.all()
-            .map(d => {
-                const valObj = d.value[activeDimType] || { usd: 0, qty: 0, payments: 0 };
-                return { key: d.key, value: valObj[currentMetric] };
-            })
-            .filter(d => d.key !== '' && d.key !== null && d.value > 0)
-            .sort((a, b) => b.value - a.value);
+        const countryRows = chartHelpers.collapseTopRows(
+            countryGroup.all()
+                .map(d => {
+                    const valObj = d.value[activeDimType] || { usd: 0, qty: 0, payments: 0 };
+                    return { key: d.key, value: valObj[currentMetric] };
+                })
+                .filter(d => d.key !== '' && d.key !== null && d.value > 0)
+                .sort((a, b) => b.value - a.value),
+            10,
+            gettext('Other')
+        );
 
         resizeCountryChart(countryChart, countryRows.length);
         renderHorizontalBars(countryChart, countryRows, {
@@ -660,10 +657,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
         // Outstanding by country: entitlement of payments still pending. This
         // chart always reports USD and does not follow the metric toggle.
-        const outstandingRows = outstandingByCountryGroup.all()
-            .map(d => ({ key: d.key, value: d.value.usd }))
-            .filter(d => d.key !== '' && d.key !== null && d.value > 0)
-            .sort((a, b) => b.value - a.value);
+        const outstandingRows = chartHelpers.collapseTopRows(
+            outstandingByCountryGroup.all()
+                .map(d => ({ key: d.key, value: d.value.usd }))
+                .filter(d => d.key !== '' && d.key !== null && d.value > 0)
+                .sort((a, b) => b.value - a.value),
+            10,
+            gettext('Other')
+        );
 
         resizeCountryChart(outstandingCountryChart, outstandingRows.length);
         renderHorizontalBars(outstandingCountryChart, outstandingRows, {

@@ -606,16 +606,25 @@ document.addEventListener('DOMContentLoaded', function () {
             }]
         }, { notMerge: true });
 
-        // 6. Country Chart (all countries)
-        const countryData = countryGroup.all()
-            .map(d => ({
-                key: d.key,
-                open: d.value.open,
-                resolved: d.value.resolved,
-                total: d.value.open + d.value.resolved
-            }))
-            .filter(d => d.key !== null && d.total > 0)
-            .sort((a, b) => b.total - a.total);
+        // 6. Country Chart: top 10 by ticket volume plus Other.
+        const countryData = chartHelpers.collapseTopRows(
+            countryGroup.all()
+                .map(d => ({
+                    key: d.key,
+                    open: d.value.open,
+                    resolved: d.value.resolved,
+                    total: d.value.open + d.value.resolved
+                }))
+                .filter(d => d.key !== null && d.total > 0)
+                .sort((a, b) => b.total - a.total),
+            10,
+            gettext('Other'),
+            rest => ({
+                open: rest.reduce((sum, d) => sum + d.open, 0),
+                resolved: rest.reduce((sum, d) => sum + d.resolved, 0),
+                total: rest.reduce((sum, d) => sum + d.total, 0)
+            })
+        );
 
         const hasAnyCountrySelection = selectedCountries.size > 0;
         const countryTicketTotal = countryGroup.all().reduce(
@@ -630,6 +639,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 value: d.resolved,
                 total: d.total,
                 share: countryTicketTotal > 0 ? (d.total / countryTicketTotal) * 100 : 0,
+                slug: d.key,
+                isOther: !!d.isOther,
                 itemStyle: { color: '#004C45', opacity: opacity }
             };
         });
@@ -641,6 +652,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 value: d.open,
                 total: d.total,
                 share: countryTicketTotal > 0 ? (d.total / countryTicketTotal) * 100 : 0,
+                slug: d.key,
+                isOther: !!d.isOther,
                 itemStyle: { color: '#FF7100', opacity: opacity }
             };
         });
@@ -797,11 +810,14 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     countryChart.on('click', function (params) {
-        const name = params.name;
-        if (selectedCountries.has(name)) {
-            selectedCountries.delete(name);
+        const data = params.data || {};
+        if (data.isOther) return;
+        const country = data.slug || params.name;
+        if (!country) return;
+        if (selectedCountries.has(country)) {
+            selectedCountries.delete(country);
         } else {
-            selectedCountries.add(name);
+            selectedCountries.add(country);
         }
         if (selectedCountries.size === 0) countryDimension.filterAll();
         else countryDimension.filterFunction(d => selectedCountries.has(d));

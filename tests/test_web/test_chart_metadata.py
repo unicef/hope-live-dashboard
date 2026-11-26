@@ -84,3 +84,16 @@ def test_methodology_matches_the_delivered_and_children_rules() -> None:
     assert "TFR" in children
     assert "household_size - 1" in children
     assert "UNSPECIFIED" in grievance
+
+
+def test_country_chart_notes_describe_the_top_ten_and_other_bucket() -> None:
+    for key in (
+        "financial.country",
+        "financial.outstanding_country",
+        "demographic.country",
+        "completion.country",
+        "completion.rates",
+        "grievance.country",
+    ):
+        note = str(CHART_INFO[key]["note"])
+        assert "Top 10 countries" in note, key

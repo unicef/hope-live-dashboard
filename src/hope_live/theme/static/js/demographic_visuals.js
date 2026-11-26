@@ -261,7 +261,10 @@ document.addEventListener('DOMContentLoaded', function () {
             .filter(d => d.key && d.value > 0)
             .sort((a, b) => b.value - a.value);
         const countryTotal = allCountryData.reduce((sum, d) => sum + d.value, 0);
-        const countryBars = allCountryData.map(d => ({ ...d, name: formatCountry(d.key) }));
+        const countryBars = chartHelpers.collapseTopRows(allCountryData, 10, gettext('Other')).map(d => ({
+            ...d,
+            name: d.isOther ? d.key : formatCountry(d.key)
+        }));
         const countryShare = value => countryTotal > 0 ? (value / countryTotal) * 100 : 0;
         const hasAnyCountrySelection = selectedCountries.size > 0;
         const countryChartEl = countryPwdChart.getDom();

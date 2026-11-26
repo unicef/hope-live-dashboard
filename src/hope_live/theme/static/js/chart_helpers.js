@@ -82,6 +82,23 @@
         return String(name).replace(/[-_]/g, ' ').replace(/\b\w/g, ch => ch.toUpperCase());
     }
 
+    // Collapse a ranked list into the first N rows plus an Other bucket.
+    // mergeRest can aggregate a custom row shape (for stacked charts); the
+    // default sums the numeric `value` field.
+    function collapseTopRows(rows, maxBars = 10, otherLabel = 'Other', mergeRest = null) {
+        if (!Array.isArray(rows) || rows.length <= maxBars) return rows;
+        const top = rows.slice(0, maxBars);
+        const rest = rows.slice(maxBars);
+        const other = mergeRest
+            ? mergeRest(rest)
+            : { value: rest.reduce((sum, row) => sum + (+row.value || 0), 0) };
+        other.key = otherLabel;
+        other.isOther = true;
+        other.count = rest.length;
+        top.push(other);
+        return top;
+    }
+
     // Normalise a database slug and a GeoJSON feature name to the same key.
     // The map uses shortened names ("Dem. Rep. Congo", "S. Sudan") while the
     // database stores slugs ("democratic-republic-of-congo", "south-sudan").
@@ -191,6 +208,7 @@
         timeAxisLabel: timeAxisLabel,
         formatLabel: formatLabel,
         formatCountryName: formatCountryName,
+        collapseTopRows: collapseTopRows,
         countryKey: countryKey,
         initCountryFilter: initCountryFilter,
         setDataAsOf: setDataAsOf

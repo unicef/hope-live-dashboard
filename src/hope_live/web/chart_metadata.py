@@ -78,7 +78,8 @@ CHART_INFO = {
             "status filters as the financial timeline. USD uses delivered quantity only."
         ),
         "note": _(
-            "All countries with financial data in the period are shown. Outstanding by country is shown beside it."
+            "Top 10 countries by the active metric plus an Other bucket for the remainder. "
+            "Outstanding by country is shown beside it; use the country filter to inspect any country."
         ),
     },
     "financial.program": {
@@ -109,8 +110,9 @@ CHART_INFO = {
             "already been paid and are excluded."
         ),
         "note": _(
-            "Always shown in USD, independent of the amount/payment-count toggle. All countries "
-            "with outstanding amounts are shown."
+            "Always shown in USD, independent of the amount/payment-count toggle. Top 10 "
+            "countries by outstanding USD plus an Other bucket; use the country filter to inspect "
+            "any country."
         ),
     },
     "financial.implementing_partner": {
@@ -210,7 +212,8 @@ CHART_INFO = {
             "separately."
         ),
         "note": _(
-            "All countries with data in the period are shown. Children use the TFR/KAB fallback; PWD caveats apply."
+            "Top 10 countries by the active metric plus an Other bucket. Children use the TFR/KAB "
+            "fallback; PWD caveats apply. Use the country filter to inspect any country."
         ),
     },
     "demographic.region": {
@@ -252,8 +255,9 @@ CHART_INFO = {
         ),
         # xgettext:no-python-format
         "note": _(
-            "All countries with completion data are shown. Absolute values is the default; 100% "
-            "share shows each country's reconciled and pending split as percentages."
+            "Top 10 countries by the active metric plus Other for the remaining countries. "
+            "Absolute values is the default; 100% share shows each country's reconciled and "
+            "pending split as percentages."
         ),
     },
     "completion.rates": {
@@ -267,7 +271,8 @@ CHART_INFO = {
         ),
         # xgettext:no-python-format
         "note": _(
-            "All countries present in both feeds are shown, sorted by reconciliation rate. The "
+            "Top 10 countries by reconciliation volume plus Other, which is a volume-weighted "
+            "average of the remaining countries in both feeds. Sorted by reconciliation rate; the "
             "dashed 80% line is a reference guide, not a threshold."
         ),
     },
@@ -362,7 +367,10 @@ CHART_INFO = {
             "Uses the same ticket base as the grievance timeline, grouped by business area "
             "country. Each bar is the stacked total of closed/resolved and open/active tickets."
         ),
-        "note": _("All countries with tickets in the period are shown; long country names wrap on the axis."),
+        "note": _(
+            "Top 10 countries by ticket volume plus Other; long country names wrap on the axis. "
+            "Use the country filter to inspect any country."
+        ),
     },
     # ------------------------------------------------------------------
     # Landing
